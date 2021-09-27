@@ -73,6 +73,7 @@ struct BtvPlayer: PageComponent{
                         PlayerOptionSelectBox(viewModel: self.viewModel)
                         PlayerGuide(viewModel: self.viewModel)
                     }
+                    
                 }
                 .opacity(self.isWaiting == false ? 1.0 : 0)
                 .gesture(
@@ -146,7 +147,38 @@ struct BtvPlayer: PageComponent{
                         prerollModel: self.prerollModel,
                         type: .btv
                     )
+                    .gesture(
+                        self.playerType != .simple ?
+                            DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                                .onChanged({ value in
+                                    if self.viewModel.isLock { return }
+                                    
+                                    if let type = dragGestureType {
+                                        switch type {
+                                        case .brightness: self.onBrightnessChange(value: value)
+                                        case .volume: self.onVolumeChange(value: value)
+                                        default : return
+                                        }
+                                    }else {
+                                        let diffX = value.translation.width
+                                        let diffY = value.translation.height
+                                        if abs(diffX) > abs(diffY) {
+                                            return
+                                        }else{
+                                            let half = geometry.size.width/2
+                                            let posX = value.startLocation.x
+                                            if posX > half {self.dragGestureType = .volume}
+                                            else {self.dragGestureType = .brightness}
+                                        }
+                                    }
+                                })
+                                .onEnded({ value in
+                                    self.resetDragGesture()
+                                })
+                        : nil
+                    )
                 }
+                
                 PlayerDisable(
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel

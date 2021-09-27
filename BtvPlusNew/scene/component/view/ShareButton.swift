@@ -22,8 +22,10 @@ struct ShareButton: PageView {
     var srisId:String? = nil
     var epsdId:String? = nil
     var isRecommand:Bool? = nil
+    var isActive:Bool = true
     var body: some View {
         Button(action: {
+            if !self.isActive {return}
             self.share()
             
         }) {
@@ -54,6 +56,7 @@ struct ShareButton: PageView {
             }
             
         }//btn
+        .opacity(self.isActive ? 1.0 : 0.5)
         
     }//body
     

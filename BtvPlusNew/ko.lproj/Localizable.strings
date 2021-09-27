@@ -291,7 +291,7 @@
 "alertConnectNotFound" = "연결가능한\nB tv가 없습니다.";
 "alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
 "alertNeedConnect" = "B tv와 연결이 필요합니다.\n연결하시겠습니까?";
-"alertNeedConnectSubPossession" = "B tv를 연결하시면 이전 B tv의 소장 VOD 확인 및 시청이 불가합니다.";
+"alertNeedConnectSubPossession" = "※ B tv를 연결하시면 이전 B tv의 소장 VOD 확인 및 시청이 불가합니다.";
 "alertNeedConnectForView" = "전체 영상은 B tv와 연결 후\n시청 가능합니다. 연결하시겠습니까?";
 "alertNeedConnectStatus" = "B tv와 연결 상태 확인이 필요합니다.\n다시 시도 하시겠습니까?";
 "alertCheckConnectStatus" = "B tv와 연결 상태 확인 중 입니다.";

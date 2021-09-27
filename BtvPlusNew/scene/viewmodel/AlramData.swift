@@ -151,7 +151,9 @@ class AlramData:InfinityData,ObservableObject{
     private(set) var isCoreData: Bool = false
     private(set) var moveTitle: String? = nil
     private(set) var moveButton: String? = nil
+    
     var isExpand:Bool = false
+    var isMove:Bool = false
     @Published var isRead:Bool = false
     
     private(set) var move:PageID? = nil
@@ -166,8 +168,11 @@ class AlramData:InfinityData,ObservableObject{
     private(set) var blob:String? = nil
     func setData(data:NotificationEntity, idx:Int = -1) -> AlramData{
         self.isCoreData = true
+        
+        
         if let userData = data.userInfo as? [String: Any] {
             self.setUserData(userData)
+            self.setSystemData(userData)
         }
         
         title = data.title
@@ -192,7 +197,8 @@ class AlramData:InfinityData,ObservableObject{
         self.parseAction()
         return self
     }
-    private func setSystemData(_ systemData:[String: Any]){
+    private func setSystemData(_ userData:[String: Any]){
+        guard let systemData = userData["system_data"] as? [String: Any] else {return}
         if let value = systemData["messageId"] as? String {
             self.messageId = value
         }
@@ -204,14 +210,6 @@ class AlramData:InfinityData,ObservableObject{
         if let value = systemData["blob"] as? String {
             self.blob = value
         }
-        /*
-        if let value = systemData["hasMore"] as? String {
-            self.imageType = AlramImageType.getType(value)
-        }
-        
-        if let value = systemData["type"] as? String {
-            self.image = value
-        }*/
     }
     
     private func setUserData(_ userData:[String: Any]){
@@ -224,6 +222,8 @@ class AlramData:InfinityData,ObservableObject{
         if let value = userInfo ["msgType"] as? String {
             self.msgType = AlramMsgType.getType(value)
         }
+        
+        
         
         if let value = userInfo ["landingPath"] as? String {
             self.landingType = AlramLandingType.getType(value.uppercased())
@@ -388,6 +388,7 @@ class AlramData:InfinityData,ObservableObject{
             }
             let arrParam = url.components(separatedBy: "/")
             guard let menuId = arrParam.first(where: {!$0.isEmpty}) else { return }
+            let gnbType = EuxpNetwork.GnbTypeCode.getType(menuId)
             if self.msgType == .marketKids {
                 // 키즈페이지 이동시 홈이 없으면 인트로에서 홈깔아줌 그냥 팝업호출
                 var param = [PageParam:Any]()
@@ -402,15 +403,21 @@ class AlramData:InfinityData,ObservableObject{
                 self.actionLog.menu_name = "B4.MENU"
                 
             } else {
-                
                 var param = [PageParam:Any]()
-                let gnbType = EuxpNetwork.GnbTypeCode.getType(menuId)
+                
                 if gnbType != nil {
                     param[.id] = gnbType!.rawValue
                     self.move = gnbType == EuxpNetwork.GnbTypeCode.GNB_CATEGORY ? .category : .home
                     if arrParam.count >= 1 {
-                        param[.subId] = url.replace(menuId, with: "")
+                        if self.move == .category
+                            , let subId = arrParam.first(where: {$0 == EuxpNetwork.MenuTypeCode.MENU_KIDS.rawValue}) {
+                            param[.subId] = subId
+                            param[.link] = url.replace(menuId, with: "")
+                        } else {
+                            param[.subId] = url.replace(menuId, with: "")
+                        }
                     }
+                
                 } else {
                     param[.data] = menuId
                     self.move = .home

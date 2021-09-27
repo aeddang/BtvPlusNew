@@ -28,6 +28,7 @@ class PosterData:InfinityData{
     private(set) var pageType:PageType = .btv
     private(set) var usePrice:Bool = true
     private(set) var isPeople:Bool = false
+    private(set) var isPreview:Bool = false
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
     var actionLogKids:MenuNaviActionBodyItem? = nil
@@ -53,13 +54,14 @@ class PosterData:InfinityData{
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: type.size, isAdult: self.isAdult)
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-       
+        isPreview = data.rsv_orgnz_yn?.toBool() ?? false
         index = idx
         epsdId = data.epsd_id
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
-            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id, kidZone:data.kids_yn)
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id,
+            kidZone:data.kids_yn, isPreview:self.isPreview)
         
         return self
     }

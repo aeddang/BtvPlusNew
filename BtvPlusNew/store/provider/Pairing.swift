@@ -269,6 +269,7 @@ class Pairing:ObservableObject, PageProtocol {
                 self.kid = self.kids.first(where: {$0.id == kidId})
                 if self.kid == nil {
                     self.storage?.selectedKidsProfileId = nil
+                    self.kidStudyData = nil
                     self.event = .notFoundKid
                     return
                 }
@@ -310,6 +311,7 @@ class Pairing:ObservableObject, PageProtocol {
                 let f = updateKids.first(where: {$0.profile_id == editedKid.id})
                 isSuccess = f == nil
                 isUpdated = isSuccess ? true : (originCount != updateCount)
+            
             case .put:
                 let f = updateKids.first(where: {$0.profile_id == editedKid.id})
                 if let updateData = f {

@@ -55,11 +55,11 @@ class SynopsisPlayerData {
     private(set) var nextSeason:SeasonData? = nil
     private(set) var openingTime:Double? = nil
     private(set) var endingTime:Double? = nil
-    func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil) -> SynopsisPlayerData {
+    func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil, isPairing:Bool? = nil) -> SynopsisPlayerData {
         self.type = type
         switch type {
         case .preview:
-            self.previews = synopsis.previews
+            self.previews = isPairing == true ? synopsis.previews : []
         case .preplay:break
         case .vod, .vodChange, .vodNext:
             

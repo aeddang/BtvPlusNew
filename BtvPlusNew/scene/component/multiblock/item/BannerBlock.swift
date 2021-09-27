@@ -32,11 +32,9 @@ struct BannerBlock:BlockProtocol, PageComponent {
         .onAppear{
             if self.bannerData != nil { return }
             if let datas = data.banners {
-                //DispatchQueue.global(qos: .background).async {
-                    withAnimation{
-                        self.bannerData = datas.first
-                    }
-                //}
+                withAnimation{
+                    self.bannerData = datas.first
+                }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 return
             }

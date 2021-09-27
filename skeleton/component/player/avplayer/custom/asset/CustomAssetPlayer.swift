@@ -31,7 +31,7 @@ class CustomAssetPlayer: AVPlayer , PageProtocol{
     
     func playAsset(drm:FairPlayDrm? = nil) {
         let customScheme = CustomAssetResourceLoader.scheme
-        guard let customURL = drm == nil
+        guard let customURL = drm != nil
                 ? replaceURLWithScheme(customScheme,url: m3u8URL)
                 : m3u8URL
         else { return }

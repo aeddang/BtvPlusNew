@@ -13,15 +13,8 @@ extension BtvWebView{
         switch fn {
         case WebviewMethod.setAutoRemoconInfo.rawValue :
             guard let jsonData = getRemoteData(jsonParams:jsonParams) else { return }
-            let isShowAutoRemocon = jsonData["isShowAutoRemocon"] as? String ?? ""
-            //let isShowRemoconSelectPopup = jsonData["isShowRemoconSelectPopup"] as? String ?? ""
-            if isShowAutoRemocon.toBool() == true {
-                self.setup.autoRemocon = true
-            } else {
-                self.setup.autoRemocon = false
-            }
-            
-            
+            guard let isShowAutoRemocon = jsonData["isShowAutoRemocon"] as? Bool else { return }
+            self.setup.autoRemocon = isShowAutoRemocon
         
         case WebviewMethod.requestRemoconFunction.rawValue :
             guard let jsonData = getRemoteData(jsonParams:jsonParams) else { return }

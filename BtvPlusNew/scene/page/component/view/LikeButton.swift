@@ -32,9 +32,11 @@ struct LikeButton: PageView {
     @Binding var isLike:LikeStatus?
     var useText:Bool = true
     var isThin:Bool = false
+    var isActive:Bool = true
     var action: ((_ ac:LikeStatus?) -> Void)? = nil
     var body: some View {
         Button(action: {
+            if !self.isActive {return}
             let status = self.pairing.status
             if status != .pairing {
                 self.appSceneObserver.alert = .needPairing()
@@ -62,6 +64,7 @@ struct LikeButton: PageView {
                 }
             }
         }//btn
+        .opacity(self.isActive ? 1.0 : 0.5)
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             if !res.id.hasPrefix(self.srisId) { return }

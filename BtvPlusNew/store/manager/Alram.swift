@@ -11,8 +11,7 @@ class Alram : ObservableObject, PageProtocol{
     @discardableResult
     func updateNew() -> Int {
         if !self.needUpdateNew {return self.newCount}
-        self.newCount = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
-        self.needUpdateNew = false
+        self.updateBadge()
         return self.newCount
     }
     func getHistorys() -> [NotificationEntity] {
@@ -27,8 +26,15 @@ class Alram : ObservableObject, PageProtocol{
         self.isChangeNotification = true
     }
     func updatedNotification(){
-        self.needUpdateNew = true
+        self.updateBadge()
     }
     
-   
+    func updateBadge(){
+        let num = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
+        self.newCount = num
+        self.needUpdateNew = false
+        DispatchQueue.main.async {
+            UIApplication.shared.applicationIconBadgeNumber = num
+        }
+    }
 }

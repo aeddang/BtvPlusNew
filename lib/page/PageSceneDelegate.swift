@@ -241,7 +241,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             return
         }
         PageLog.d("changePage " + newPage.pageID + " " + isBack.description, tag: self.tag)
-        self.isRock = true
         if pageModel.currentPageObject?.pageID == newPage.pageID {
             if( pageModel.currentPageObject?.params?.keys == newPage.params?.keys){
                 pageModel.currentPageObject?.params = newPage.params
@@ -288,8 +287,9 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         if pageModel.isChangedCategory(prevPage: prevPage, nextPage: newPage) { nextContent.categoryChanged(prevPage) }
         
         let delay = newPage.isAnimation ? self.changeAniDelay : self.changeDelay
+        self.isRock = true
         changeSubscription = Timer.publish(
-            every: delay, on: .current, in: .common)
+            every: delay, on: .main, in: .common)
             .autoconnect()
             .sink() {_ in
                 if prevContent != nil { self.contentController?.removePage()}
@@ -337,7 +337,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         let key = popup.id
         let subscription = Timer.publish(
             every: delay,
-            on: .current,
+            on: .main,
             in: .common)
             .autoconnect()
             .sink() {_ in
@@ -359,8 +359,8 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         popups.remove(at: findIdx)
         pagePresenter.hasPopup = !popups.isEmpty
         guard let popupContent = contentController?.getPopup(id) else { return }
-       
         popupContent.removeAnimationStart()
+        PageLog.d("closePopup Start" + id, tag: self.tag)
         var delay = self.changeDelay
         if let pageObject = popupContent.pageObject {
             delay = pageObject.animationType == .none ? self.changeDelay : self.changeAniDelay
@@ -381,10 +381,11 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         
         let subscription = Timer.publish(
             every: delay,
-            on: .current,
+            on: .main,
             in: .common)
             .autoconnect()
             .sink() {_ in
+                PageLog.d("closePopup completed" + id, tag: self.tag)
                 self.popupSubscriptions[id]?.cancel()
                 self.popupSubscriptions.removeValue(forKey: id)
                 self.contentController?.removePopup(id)
@@ -411,7 +412,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         })
         
         pagePresenter.hasPopup = !popups.isEmpty
-        self.popupSubscriptions[key]?.cancel()
         var delay = self.changeDelay
         contentController?.pageControllerObservable.popups.forEach{  pop in
             let key = pop.pageObject?.id
@@ -446,7 +446,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         
         let subscription = Timer.publish(
             every: delay,
-            on: .current,
+            on: .main,
             in: .common)
             .autoconnect()
                 .sink() {_ in

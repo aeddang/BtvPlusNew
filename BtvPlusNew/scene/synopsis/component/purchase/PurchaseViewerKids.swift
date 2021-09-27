@@ -13,6 +13,7 @@ struct PurchaseViewerKids: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
+    var synopsisModel:SynopsisModel?
     var isPairing:Bool?
     @State var optionIdx:Int = 0
     var body: some View {
@@ -54,7 +55,7 @@ struct PurchaseViewerKids: PageComponent{
                     self.componentViewModel.uiEvent = .purchase
                 }
                 .buttonStyle(BorderlessButtonStyle())
-            } else  if self.isPairing == false {
+            } else  if self.isPairing == false && self.synopsisModel?.isRecommandAble == true {
                 RectButtonKids(
                     text: String.button.connectBtv,
                     isSelected: true,

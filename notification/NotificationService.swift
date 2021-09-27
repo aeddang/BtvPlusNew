@@ -17,15 +17,19 @@ class NotificationService: UNNotificationServiceExtension {
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
         if let content = bestAttemptContent {
-            // Modify the notification content here...
-             if isPushOn() {
+            //content.title = "modify " + isPushOn().description
+            //content.subtitle = "modify " + NotificationCoreData().getAllNotices().filter{!$0.isRead}.count.description
+            //content.badge = NSNumber(value: 10 )
+           
+            if isPushOn() {
                 let num = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
-                content.badge = NSNumber(value: num )
+                content.badge = NSNumber(value: (num + 1))
+                NotificationCoreData().addNotice(content.userInfo)
             } else {
                 content.badge = NSNumber(value: 0)
                 content.sound = nil
             }
-            NotificationCoreData().addNotice(content.userInfo)
+            
             //content.badge = NSNumber(value: 10 )
             //contentHandler(content)
             
@@ -43,7 +47,7 @@ class NotificationService: UNNotificationServiceExtension {
 
     
     func isPushOn() -> Bool {
-        return LocalStorage().isPush
+        return GroupStorage().isPush
     }
 
 }

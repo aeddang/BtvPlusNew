@@ -233,9 +233,11 @@ struct PageCategory: PageView {
                     .addParam(key: .subId, value: openId)
             )
         case .kids :
+            let link = self.pageObject?.getParamValue(key: .link) as? String
             self.pagePresenter.changePage(PageKidsProvider
                                             .getPageObject(.kidsHome)
                                             .addParam(key: .id, value: openId)
+                                            .addParam(key: .link, value: link)
             )
             
         case .event :

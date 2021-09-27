@@ -16,9 +16,11 @@ struct BtvButton: PageView {
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     var type:PageType = .btv
+    var isActive:Bool = true
     var action: () -> Void
     var body: some View {
         Button(action: {
+            if !self.isActive {return}
             action()
             
         }) {
@@ -47,7 +49,7 @@ struct BtvButton: PageView {
                         height: DimenKids.icon.light)
             }
         }//btn
-        
+        .opacity(self.isActive ? 1.0 : 0.5)
     }//body
 }
 

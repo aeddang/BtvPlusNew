@@ -119,7 +119,7 @@ struct SynopsisBody: PageComponent{
                     )
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                 }
-                if self.hasAuthority == false && self.isPairing == false && !self.isPosson {
+                if self.hasAuthority == false && self.isPairing == false && !self.isPosson && self.synopsisModel?.isRecommandAble == true{
                     FillButton(
                         text: String.button.connectBtv
                     ){_ in
@@ -241,7 +241,7 @@ struct SynopsisBodyHeader: PageComponent{
                     data: purchaseViewerData, isPosson:self.isPosson)
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
             }
-            if self.hasAuthority == false && self.isPairing == false {
+            if self.hasAuthority == false && self.isPairing == false && !self.isPosson && self.synopsisModel?.isRecommandAble == true {
                 FillButton(
                     text: String.button.connectBtv
                 ){_ in

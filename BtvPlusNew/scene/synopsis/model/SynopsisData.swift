@@ -54,8 +54,8 @@ struct SynopsisData{
     var isLimitedWatch:Bool = false
     var progress:Float? = nil
     var progressTime:Double? = nil
-    //naviLog
     var synopType:SynopsisType = SynopsisType.none
+    var isPreview:Bool = false
     
 }
 

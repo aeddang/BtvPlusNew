@@ -38,7 +38,19 @@ extension KesNetwork{
         case favorite = "516" // 좋아하는것이에요  513:UI5.0-KES_FAV
         case friends = "517" // 친구들이많이봐요  513:UI5.0-KES_FRN
         case teacher = "518" // 선생님이추천해요  513:UI5.0-KES_TCR
+        
+        var cwIds:[String] {
+            get {
+                switch self {
+                case .teacher: return [ "KESV50101", "KESV50201" , "KESV50301", "KESV50401"]
+                case .last: return  [ "KESV50102", "KESV50202" , "KESV50302", "KESV50402", "KESV50602"]
+                default : return []
+                }
+            }
+        }
     }
+    
+    
 }
 
 class Kes: Rest{

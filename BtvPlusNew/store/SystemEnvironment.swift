@@ -26,7 +26,7 @@ struct SystemEnvironment {
     }
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
-    static var isReleaseMode:Bool? = nil
+    static var isReleaseMode:Bool? = true
     static var isEvaluation = false
     static var needUpdate = false
     static var isTablet = AppUtil.isPad()
@@ -76,7 +76,6 @@ struct SystemEnvironment {
         }
     }
     
-    
     private static func getDeviceId() -> String{
         let wrapper = SkbKeychainItemWrapper(identifier: "UUID", accessGroup: nil)
         
@@ -100,8 +99,6 @@ struct SystemEnvironment {
         }
         return ""
     }
-    
-    
     
     static var isLegacy:Bool = false
     //"cfb87121-4f7b-4d88-99ff-2b446c00e1c4"

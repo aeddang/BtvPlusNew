@@ -328,15 +328,27 @@ struct PageKidsMultiBlock: PageView {
         guard let studyData = self.pairing.kidStudyData else { return }
         
         var findStudy:RecommendMenuItem? = nil
-        if self.selectedTabIdx == 0 { //cwId 로 못찾음 하드코딩..
-            findStudy = studyData
-                .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
-                .items?.first(where: {$0.scn_mthd_cd == "518"})
-           
-        } else {
-            findStudy = studyData
-                .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
-                .items?.first(where: {$0.cw_id == cwId})
+        findStudy = studyData
+            .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
+            .items?.first(where: {$0.cw_id == cwId})
+        
+        if findStudy == nil { //하드코딩으로 찾음...
+            let kesType = KesNetwork.ScnMethodCode.teacher
+            if kesType.cwIds.first(where: {$0 == cwId}) != nil {
+                findStudy = studyData
+                    .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
+                    .items?.first(where: {$0.scn_mthd_cd == kesType.rawValue})
+            }
+            
+        }
+        if findStudy == nil { //하드코딩으로 찾음...
+            let kesType = KesNetwork.ScnMethodCode.last
+            if kesType.cwIds.first(where: {$0 == cwId}) != nil {
+                findStudy = studyData
+                    .recomm_menus?.first(where: {KidsPlayType.getType($0.svc_prop_cd) == type})?
+                    .items?.first(where: {$0.scn_mthd_cd == kesType.rawValue})
+            }
+            
         }
         guard let find = findStudy else { return }
         guard let text = find.guidance_sentence else {return}

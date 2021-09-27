@@ -545,6 +545,8 @@
 		31E50C79261AEBFE00D0762C /* ResultMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E50C78261AEBFE00D0762C /* ResultMessage.swift */; };
 		31E76D0B2632634A00710624 /* ShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E76D0A2632634A00710624 /* ShareManager.swift */; };
 		31E76D132632636500710624 /* Shareable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E76D122632636500710624 /* Shareable.swift */; };
+		31E7B646270198CE0017E509 /* GroupStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7B645270198CE0017E509 /* GroupStorage.swift */; };
+		31E7B64727019A510017E509 /* GroupStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E7B645270198CE0017E509 /* GroupStorage.swift */; };
 		31E8D7BC25CA5D470034BBC4 /* PlayerTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */; };
 		31E8D7C125CA85190034BBC4 /* PlayerOptionSelectBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */; };
 		31EA0D9126D705E8007BECAB /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EA0D9026D705E8007BECAB /* Push.swift */; };
@@ -559,7 +561,6 @@
 		31F2803C2673305A00F40B09 /* PlayInfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F2803B2673305A00F40B09 /* PlayInfoButton.swift */; };
 		31F2803F2673331300F40B09 /* EpisodeViewerKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F2803E2673331300F40B09 /* EpisodeViewerKids.swift */; };
 		31F28041267336FD00F40B09 /* EpisodeViewerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F28040267336FD00F40B09 /* EpisodeViewerData.swift */; };
-		31F42A0026FA129F00EE6934 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C6B1D257DACD800CF9AB8 /* LocalStorage.swift */; };
 		31F42A0226FA12BC00EE6934 /* BtvPlusPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BDEFE026F3FAD500E3E5FC /* BtvPlusPersistentContainer.swift */; };
 		31F42A0326FA12BF00EE6934 /* ApiCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DABD782589746400DF5701 /* ApiCoreDataManager.swift */; };
 		31F42A0426FA132600EE6934 /* PageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56C6982257DA09E00CF9AB8 /* PageProtocol.swift */; };
@@ -1316,6 +1317,7 @@
 		31E50C78261AEBFE00D0762C /* ResultMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultMessage.swift; sourceTree = "<group>"; };
 		31E76D0A2632634A00710624 /* ShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareManager.swift; sourceTree = "<group>"; };
 		31E76D122632636500710624 /* Shareable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shareable.swift; sourceTree = "<group>"; };
+		31E7B645270198CE0017E509 /* GroupStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupStorage.swift; sourceTree = "<group>"; };
 		31E8D7BB25CA5D470034BBC4 /* PlayerTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTop.swift; sourceTree = "<group>"; };
 		31E8D7C025CA85190034BBC4 /* PlayerOptionSelectBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerOptionSelectBox.swift; sourceTree = "<group>"; };
 		31EA0D9026D705E8007BECAB /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
@@ -3925,6 +3927,7 @@
 				314D6B1C25D122610003C749 /* Setup.swift */,
 				D56C6B1D257DACD800CF9AB8 /* LocalStorage.swift */,
 				319D7BAC26DC442F00DFAA69 /* LocalNamedStorage.swift */,
+				31E7B645270198CE0017E509 /* GroupStorage.swift */,
 			);
 			path = storage;
 			sourceTree = "<group>";
@@ -4377,10 +4380,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				31BDEFD726F3F74F00E3E5FC /* NotificationService.swift in Sources */,
-				31F42A0026FA129F00EE6934 /* LocalStorage.swift in Sources */,
 				31F42A0326FA12BF00EE6934 /* ApiCoreDataManager.swift in Sources */,
 				31F42A0526FA132B00EE6934 /* UnitUtil_group.swift in Sources */,
 				31F42A0726FA144800EE6934 /* BtvPlus.xcdatamodeld in Sources */,
+				31E7B64727019A510017E509 /* GroupStorage.swift in Sources */,
 				31F42A0826FA194200EE6934 /* NotificationCoreData.swift in Sources */,
 				31F42A0226FA12BC00EE6934 /* BtvPlusPersistentContainer.swift in Sources */,
 				31F42A0426FA132600EE6934 /* PageProtocol.swift in Sources */,
@@ -4512,6 +4515,7 @@
 				3195C1AC2665DE67001F513E /* assetKids.swift in Sources */,
 				319CF65A269545D400159575 /* CreativeGraphBox.swift in Sources */,
 				315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */,
+				31E7B646270198CE0017E509 /* GroupStorage.swift in Sources */,
 				318AA03D265DDA9400C089EC /* SetupPlay.swift in Sources */,
 				3167196225FEED00005AC3D2 /* PageAuth.swift in Sources */,
 				31C4D29A2692AF77000C7E83 /* ReadingReport.swift in Sources */,
@@ -5118,7 +5122,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7476;
+				CURRENT_PROJECT_VERSION = 7481;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5143,7 +5147,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7476;
+				CURRENT_PROJECT_VERSION = 7481;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5333,7 +5337,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7476;
+				CURRENT_PROJECT_VERSION = 7481;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5417,7 +5421,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7476;
+				CURRENT_PROJECT_VERSION = 7481;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

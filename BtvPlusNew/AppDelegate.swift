@@ -35,11 +35,13 @@ class AppObserver: ObservableObject, PageProtocol {
     let pageKey = "page"
     let apnsKey = "aps"
 
-    func handleApns(_ userInfo: [AnyHashable: Any]){
+    func handleApns(_ userInfo: [AnyHashable: Any], isMove:Bool = false){
         if let aps = userInfo[apnsKey] as? [String: Any] {
             PageLog.d("aps: \(aps)" , tag: self.tag)
             self.apns = userInfo
-            self.alram = NotificationReceiver.shareInstance().didReceiveRemoteNotification(userInfo: userInfo)
+            let alram = NotificationReceiver.shareInstance().didReceiveRemoteNotification(userInfo: userInfo)
+            alram?.isMove = isMove
+            self.alram = alram
         }
         
         if let pageJson = userInfo[pageKey] as? [String: Any] {
@@ -211,24 +213,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        //if Global.sharedInstance.isAgreementInfoPush {
-            // 수신 제한 시간인지 체크
-            //if !isLimitTime(userInfo: notification.request.content.userInfo) {
-                // 키즈 모드 진입 상태이면서 수신 가능한 PUSH가 아니면 처리 안함
-                /*
-                if isKidsModeEnabled
-                    && !PushUtil.isKidsAvailablePush(userInfo: notification.request.content.userInfo) {
-                    return
-                }*/
-                AppDelegate.appObserver.handleApns(notification.request.content.userInfo)
-                DispatchQueue.main.async {
-                    if let badgeNo = notification.request.content.badge as? Int {
-                        UIApplication.shared.applicationIconBadgeNumber = badgeNo
-                    }
+       
+            AppDelegate.appObserver.handleApns(notification.request.content.userInfo, isMove: false)
+            DispatchQueue.main.async {
+                if let badgeNo = notification.request.content.badge as? Int {
+                    UIApplication.shared.applicationIconBadgeNumber = badgeNo
                 }
-                completionHandler([.badge, .sound])
-            //}
-        //}
+            }
+            completionHandler([.badge, .sound])
+           
     }
     
    
@@ -236,7 +229,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         if let userInfo = response.notification.request.content.userInfo as? [String: Any] {
-            AppDelegate.appObserver.handleApns(userInfo)
+            AppDelegate.appObserver.handleApns(userInfo, isMove: true)
         }
         completionHandler()
     }

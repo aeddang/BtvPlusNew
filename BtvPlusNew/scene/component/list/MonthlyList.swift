@@ -86,12 +86,16 @@ class MonthlyData:InfinityData,ObservableObject{
                 self.titlePeriod = data.title_perd
                 self.isSubJoin = true
                 self.subJoinId = data.subs_id
-                self.sortIdx += 10
+                self.sortIdx += 100
             }
         }else{
             self.isJoin = true
-            self.sortIdx += 100
+            self.sortIdx += 1000
             self.subJoinId = data.subs_id
+            if self.isSubJoin {
+                self.isSubJoin = false
+                self.sortIdx -= 100
+            }
         }
         self.isUpdated = true
         return self

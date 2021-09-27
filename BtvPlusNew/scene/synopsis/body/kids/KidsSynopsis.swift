@@ -195,6 +195,7 @@ struct KidsSynopsis: PageComponent{
                                 PurchaseViewerKids(
                                     componentViewModel: self.componentViewModel,
                                     data: purchaseViewerData,
+                                    synopsisModel: self.synopsisModel,
                                     isPairing: self.isPairing)
                                     .padding(.top, DimenKids.margin.light)
                                     .frame(width:

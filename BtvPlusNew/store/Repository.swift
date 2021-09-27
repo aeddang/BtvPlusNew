@@ -423,6 +423,7 @@ class Repository:ObservableObject, PageProtocol{
     func updatePush(_ isAgree:Bool) {
         self.pairing.updateUserAgreement(isAgree)
         self.storage.isPush = isAgree
+        GroupStorage().isPush = isAgree
         self.pushManager.updateUserAgreement(isAgree)
     }
     

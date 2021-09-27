@@ -159,6 +159,12 @@ extension MultiBlockBody {
         default: break
         }
         
+        if let first = data.videos?.first {
+            if first.isWatched && first.pageType == .kids {
+                data.videos?.sort(by: {$0.sort_seq < $1.sort_seq})
+            }
+        }
+        
         var listHeight:CGFloat = 0
         var blockHeight:CGFloat = 0
         let tabHeight = self.viewModel.type == .btv ? Self.tabHeight : Self.tabHeightKids

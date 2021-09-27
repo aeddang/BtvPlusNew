@@ -96,7 +96,7 @@ struct PageRegistKid: PageView {
                                 ){
                                     
                                 }
-                                .frame(width: SystemEnvironment.isTablet ? 278 : 150)
+                                .frame(width: SystemEnvironment.isTablet ? 286 : 156)
                                 .onTapGesture {
                                     self.selectBirth()
                                 }

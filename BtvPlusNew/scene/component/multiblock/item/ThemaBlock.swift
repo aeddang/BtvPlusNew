@@ -145,9 +145,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.themas {
-                    //DispatchQueue.global(qos: .userInteractive).async {
-                        withAnimation{ self.datas = datas }
-                    //}
+                    withAnimation{ self.datas = datas }
                 }
             }
     }

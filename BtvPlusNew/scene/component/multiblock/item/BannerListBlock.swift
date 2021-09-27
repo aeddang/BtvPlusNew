@@ -136,9 +136,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.banners {
-                    //DispatchQueue.global(qos: .userInteractive).async {
-                        withAnimation{ self.datas = datas }
-                    //}
+                    withAnimation{ self.datas = datas }
                 }
             }
     }

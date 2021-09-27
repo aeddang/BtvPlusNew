@@ -52,6 +52,7 @@ struct InputCell: PageView {
                                         .keyboardType(self.keyboardType)
                                         .modifier(MediumTextStyle(
                                             size: Self.inputFontSize))
+                                        .frame(height: Dimen.tab.regular)
                                 }
                                 
                             } else {
@@ -65,7 +66,7 @@ struct InputCell: PageView {
                                         //self.input = text
                                         //self.inputHeight = min(size.height, (Self.inputHeight * CGFloat(self.lineLimited)))
                                     }
-                                ).frame(height : Self.inputHeight * CGFloat(self.lineLimited))
+                                ).frame(height : min(Dimen.tab.regular, Self.inputHeight * CGFloat(self.lineLimited)))
                             }
                         }else{
                             Text(self.input)

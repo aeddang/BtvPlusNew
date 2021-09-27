@@ -51,6 +51,7 @@ struct ContentItem : Codable {
     private(set) var play_tms_hms: String? = nil   //클립 재생 시간 (시분초) 
     private(set) var i_img_cd:String? = nil // 벳지 이미지var
     private(set) var svc_typ_cd: String? = nil // 서비스 유형 코드
+    private(set) var episode_title: String? = nil // 회차 타이틀
     private(set) var kes:StudyProgressItem? = nil
     private(set) var quiz_yn: String? // 퀴즈 여부
     private(set) var epsd_lag_capt_typ_cd: String? // 에피소드 언어 자막 유형 코드

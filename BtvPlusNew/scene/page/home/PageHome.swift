@@ -66,7 +66,18 @@ struct PageHome: PageView {
             .onReceive(self.dataProvider.bands.$event){ evt in
                 guard let evt = evt else { return }
                 switch evt {
-                case .updated: self.reset()
+                case .updated:
+                    if self.pairing.status == .pairing || self.pairing.status == .disConnect {
+                        self.reset()
+                    }
+                default: break
+                }
+            }
+            .onReceive(self.pairing.$event){ evt in
+                guard let evt = evt else { return }
+                switch evt {
+                case .pairingCompleted, .disConnected:
+                    self.reset()
                 default: break
                 }
             }
@@ -180,15 +191,12 @@ struct PageHome: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    if self.isInit {return}
-                    DispatchQueue.main.async {
-                        self.isInit = true
-                        self.reload(selectedMonthlyId: self.selectedMonthlyId)
-                        if self.pairing.status != .pairing {
-                            self.appSceneObserver.event = .pairingHitch(isOn: true)
-                        }
-                    }
+                    self.isUiReady = true
+                    self.pageInit()
                 }
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ _ in
+                self.pageInit()
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
@@ -204,6 +212,7 @@ struct PageHome: PageView {
             }
         }//geo
     }//body
+    @State var isUiReady:Bool = false
     @State var isInit:Bool = false
     @State var currentBand:Band? = nil
     @State var topDatas:[BannerData]? = nil
@@ -221,35 +230,34 @@ struct PageHome: PageView {
     @State var useQuickMenu:Bool = false
     @State var isFree:Bool = false
     @State var monthlyheader:MonthlyBlock? = nil
-  
-    private func reset(){
-        /*
-        self.currentBand  = nil
-        self.topDatas = nil
-        self.originMonthlyDatas = nil
-        self.monthlyheader = nil
-        self.monthlyAllData = nil
-        self.monthlyDatas = nil
-        self.sortedMonthlyDatas = nil
-        self.tipBlockData = nil
-        self.monthlyViewModel.isUpdate = true
-        if self.pairing.status != .pairing {
-            self.selectedMonthlyId = nil
+    private func pageInit(){
+        if !self.isUiReady {return}
+        if self.isInit {return}
+        if self.pagePresenter.currentTopPage != self.pageObject {return}
+        
+        self.isInit = true
+        DispatchQueue.main.async {
+            self.reload(selectedMonthlyId: self.selectedMonthlyId)
+            if self.pairing.status != .pairing {
+                self.appSceneObserver.event = .pairingHitch(isOn: true)
+            }
         }
-        self.reload()
-        */
+    }
+    
+    private func reset(){
+        
         if self.pairing.status != .pairing {
-            Self.finalSelectedMonthlyId = nil
+            Self.finalSelectedMonthlyId = nil //마지막 보고있던 월정액 페이지 유지로 넣어두었으나 무조건 리셋하래서 사용안함
         }
         guard let obj = self.pageObject  else { return }
         DataLog.d("UPDATEED GNBDATA reset home", tag:self.tag)
-        //DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.pagePresenter.changePage(
                 PageProvider.getPageObject(.home)
                     .addParam(key: .id, value: obj.getParamValue(key:.id)).addParam(key: UUID().uuidString , value: ""),
                 isCloseAllPopup: false
             )
-        //}
+        }
     }
     
     private func reload(selectedMonthlyId:String? = nil){
@@ -405,6 +413,7 @@ struct PageHome: PageView {
     
     //Monthly
     private func setupOriginMonthly(){
+        PageLog.d("setupOriginMonthly", tag: self.tag)
         if self.originMonthlyDatas == nil {
             //if self.selectedMonthlyId == nil { self.selectedMonthlyId = Self.finalSelectedMonthlyId }
             var originMonthlyDatas = [String:MonthlyData]()
@@ -443,19 +452,26 @@ struct PageHome: PageView {
         self.requestMonthly()
     }
 
+    @State var requestMonthlyCompletedCount:Int = 0
     private func requestMonthly(){
+        PageLog.d("requestMonthly", tag: self.tag)
         if self.monthlyheader == nil {
             if self.pairing.status == .pairing {
+                PageLog.d("pairing.authority.requestAuth", tag: self.tag)
+                self.requestMonthlyCompletedCount = 0
                 self.pairing.authority.requestAuth(.updateTicket)
             } else {
+                PageLog.d("self.pairing.status != .pairing", tag: self.tag)
                 self.syncronizeMonthly()
             }
         } else {
+            PageLog.d("self.monthlyheader == nil", tag: self.tag)
             self.setupMonthly()
         }
     }
     
     private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
+        PageLog.d("updatedMonthly " + purchases.count.description + " lowLevelPpm : " + lowLevelPpm.description, tag: self.tag)
         if self.originMonthlyDatas == nil { return }
         purchases.forEach{ purchas in
             guard let id = purchas.prod_id else {return}
@@ -472,18 +488,22 @@ struct PageHome: PageView {
     }
 
     private func syncronizeMonthly(){
+        self.requestMonthlyCompletedCount += 1
+        PageLog.d("syncronizeMonthly " + self.requestMonthlyCompletedCount.description, tag: self.tag)
+        if self.requestMonthlyCompletedCount != 2 && self.pairing.status == .pairing {return}
         guard let monthlyDatas = self.monthlyDatas else {return}
         let joins = monthlyDatas.filter{$0.isJoin}
         let subJoins = monthlyDatas.filter{$0.isSubJoin}
         //let dupleJoins:[MonthlyData] = []
-        
+        PageLog.d("syncronizeMonthly joins " + joins.count.description, tag: self.tag)
+        PageLog.d("syncronizeMonthly subJoins " + subJoins.count.description, tag: self.tag)
         let dupleJoins = subJoins.filter{ sub in
             joins.first(where: {sub.subJoinId == $0.subJoinId}) != nil
         }
         dupleJoins.forEach{
             $0.resetJoin()
         }
-         
+        PageLog.d("syncronizeMonthly dupleJoins " + dupleJoins.count.description, tag: self.tag)
         self.monthlyDatas?.sort(by: {$0.sortIdx > $1.sortIdx})
         var idx = 0
         self.monthlyDatas?.forEach{
@@ -507,6 +527,7 @@ struct PageHome: PageView {
            ){ data in
                self.reload(selectedMonthlyId: data.prdPrcId)
            }
+           
            self.setupMonthly()
           // self.monthlyViewModel.isUpdate = true
         }

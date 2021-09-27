@@ -206,9 +206,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.posters {
-                    //DispatchQueue.global(qos: .userInteractive).async {
-                        withAnimation{ self.datas = datas }
-                    //}
+                    withAnimation{ self.datas = datas }
                 }
             }
     }

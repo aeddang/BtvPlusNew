@@ -19,10 +19,12 @@ struct BookMarkButton: PageView {
     var data:SynopsisData
     var isSimple:Bool = false
     @Binding var isBookmark:Bool?
+    var isActive:Bool = true
     var action: ((_ ac:Bool) -> Void)? = nil
     
     var body: some View {
         Button(action: {
+            if !self.isActive {return}
             if self.pairing.status != .pairing {
                 self.appSceneObserver.alert = .needPairing()
             }
@@ -77,7 +79,7 @@ struct BookMarkButton: PageView {
                 }
             }
         }//btn
-        
+        .opacity(self.isActive ? 1.0 : 0.5)
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             guard let epsdId = self.data.epsdId else { return }

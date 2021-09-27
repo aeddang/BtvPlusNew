@@ -217,7 +217,7 @@ class SceneDelegate: PageSceneDelegate {
     }
     
     override func sceneDidBecomeActive(_ scene: UIScene) {
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        //UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
 }

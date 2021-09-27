@@ -149,7 +149,7 @@ struct PairingHitch: PageComponent {
             switch status {
             case .wifi :
                 self.isStbSearch = false
-                self.initHitch()
+                self.delayStart()
             default : break
             }
         }
@@ -179,7 +179,7 @@ struct PairingHitch: PageComponent {
             switch evt {
             case .pairingHitch(let isOn) :
                 if isOn {
-                    self.initHitch()
+                    self.delayStart()
                 } else if self.isHitching{
                     self.closeHitch()
                 }
@@ -192,7 +192,7 @@ struct PairingHitch: PageComponent {
                 self.closeHitch()
             }
             if !self.isPairing && self.isHitching{
-                self.initHitch()
+                self.delayStart()
             }
            
         }
@@ -250,8 +250,11 @@ struct PairingHitch: PageComponent {
         }
         .onDisappear(){
             self.pairing.requestPairing(.cancel)
+            self.delayStartCancel()
         }
     }//body
+    
+    
     @State var hasPopup:Bool = false
     @State var isHitching:Bool = false
     @State var isPairing:Bool = false
@@ -302,6 +305,7 @@ struct PairingHitch: PageComponent {
     }
     
     func closeHitch(sendLog:Bool = false) {
+        self.delayStartCancel()
         withAnimation{
             self.isAutoPairing = nil
             self.isHitching = false
@@ -313,20 +317,8 @@ struct PairingHitch: PageComponent {
     }
     
     func findSSID() {
+        //공유기 위치정보 생략
         self.findDevice()
-        /*
-        let status = self.locationObserver.status
-        if status == .authorizedWhenInUse || status == .authorizedAlways {
-            self.findDevice()
-        } else if status == .denied {
-            self.isLocationRequest = true
-            self.appSceneObserver.alert = .requestLocation{ retry in
-                if retry { AppUtil.goLocationSettings() }
-                else { self.findDevice() }
-            }
-        } else {
-            self.locationObserver.requestWhenInUseAuthorization()
-        }*/
     }
     
     func findDevice() {
@@ -374,6 +366,23 @@ struct PairingHitch: PageComponent {
         self.pairing.user = User().setDefault(isAgree: self.isAgreeOption)
         self.selectedDevice = stb
         self.pairing.requestPairing(.device(stb))
+    }
+    
+    @State var delayStarter:AnyCancellable?
+    func delayStart(){
+        self.delayStarter?.cancel()
+        self.delayStarter = Timer.publish(
+            every: 1.0, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.delayStartCancel()
+                self.initHitch()
+            }
+    }
+    
+    func delayStartCancel(){
+        self.delayStarter?.cancel()
+        self.delayStarter = nil
     }
     
     private func sendLog(action:NaviLog.Action,  category:String? = nil) {

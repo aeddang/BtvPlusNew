@@ -20,6 +20,7 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -36,7 +37,7 @@ struct AppLayout: PageComponent{
                     }
                 }
             }
-            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv {
+            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv && !self.isVSGranted {
                 PairingHitch()
             }
             if self.useLogCollector {
@@ -175,11 +176,14 @@ struct AppLayout: PageComponent{
             self.deepLinkMove(url)
         }
         .onReceive (self.appObserver.$alram) { alram in
-            if alram == nil {return}
+            guard let alram = alram else {return}
+            self.repository.pushManager.recivePush(alram.messageId)
             if !self.isInit { return }
-            self.appSceneObserver.alert = .recivedApns(alram)
-            self.repository.pushManager.recivePush(alram?.messageId)
-            
+            if alram.isMove {
+                self.moveAlram(alram)
+            } else {
+                self.repository.alram.updatedNotification()
+            }
         }
         .onReceive (self.appObserver.$apnsToken) { token in
             guard let token = token else { return }
@@ -210,6 +214,9 @@ struct AppLayout: PageComponent{
             default: break
             }
         }
+        .onReceive (self.vsManager.$isGranted) { granted in
+            self.isVSGranted = granted
+        }
         .onReceive(self.pageObservable.$isBackground){isBack in
             if !isBack && self.isInit{
                 self.vsManager.checkAccess()
@@ -233,7 +240,7 @@ struct AppLayout: PageComponent{
     @State var isLoading = false
     @State var isStoreInit = false
     @State var isInit = false
-  
+    @State var isVSGranted = false
     @State var isInitDataAlram = false
     @State var useLogCollector = false
     @State var toastMsg:String = ""
@@ -371,21 +378,25 @@ struct AppLayout: PageComponent{
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
             self.deepLinkMove(self.appObserver.deepLinkUrl)
             if let alram = self.appObserver.alram  {
-                AlramData.move(
-                    pagePresenter: self.pagePresenter,
-                    dataProvider: self.dataProvider,
-                    data: alram)
-                NotificationCoreData().readNotice(title: alram.title ?? "", body: alram.text ?? "")
-                self.repository.pushManager.confirmPush(alram.messageId)
-                self.repository.alram.changedNotification()
-                DispatchQueue.main.async {
-                    self.repository.alram.updatedNotification()
-                }
-                self.appObserver.resetApns()
+                self.moveAlram(alram)
             }
         }
        
     }
+    
+    func moveAlram(_ alram:AlramData){
+
+        NotificationCoreData().readNotice(title: alram.title , body: alram.text, messageId:alram.messageId)
+        self.repository.pushManager.confirmPush(alram.messageId)
+        self.repository.alram.changedNotification()
+        self.repository.alram.updatedNotification()
+        self.appObserver.resetApns()
+        AlramData.move(
+            pagePresenter: self.pagePresenter,
+            dataProvider: self.dataProvider,
+            data: alram)
+    }
+    
     
     func onPageReset(){
         self.appSceneObserver.event = .toast("on PageReset " + (SystemEnvironment.isStage ? "stage" : "release"))

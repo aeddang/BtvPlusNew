@@ -149,9 +149,8 @@ class BtvPlayerModel:PlayerModel{
         self.reset()
         self.playData = data
         self.btvPlayType = type
-        var header = [String:String]()
-        header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
-        self.header = header 
+        
+        var useDrm:Bool = false
         if let playData = self.synopsisPlayerData {
             self.playInfo = playData.type.name
             switch playData.type {
@@ -176,6 +175,7 @@ class BtvPlayerModel:PlayerModel{
                 self.initPlay = autoPlay
                 self.useInside = true
                 self.isFullVod = true
+                useDrm = true
             case .vodNext(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? -1
                 self.endingTime = playData.endingTime ?? -1
@@ -183,10 +183,15 @@ class BtvPlayerModel:PlayerModel{
                 self.isFullVod = true
                 self.initPlay = autoPlay
                 self.useInside = true
+                useDrm = true
             default: break
             }
         }
-        
+        if useDrm {
+            var header = [String:String]()
+            header["x-ids-cinfo"] = type.type + "," + type.cid + "," + type.title
+            self.header = header
+        }
         if let autoPlay = autoPlay {
             ComponentLog.d("force setup initPlay " + autoPlay.description , tag: self.tag)
             self.initPlay = autoPlay

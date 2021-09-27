@@ -29,9 +29,12 @@ class VideoData:InfinityData{
     private(set) var useAge:Bool = true
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
+    private(set) var sort_seq:Int = 0
     private(set) var pageType:PageType = .btv
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+
+    private(set) var isWatched:Bool = false
     var actionLogKids:MenuNaviActionBodyItem? = nil
     var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
     var hasLogKids:Bool { get{ return actionLogKids != nil }}
@@ -88,8 +91,21 @@ class VideoData:InfinityData{
             isClip = cardType == .clip
         }
         count = data.brcast_tseq_nm
-        title = data.title
-       
+        let count = data.brcast_tseq_nm?.isEmpty == false
+        ? (data.brcast_tseq_nm ?? "") + String.app.count + " "
+        : ""
+        if data.episode_title?.isEmpty == false, let epsdTitle = data.episode_title {
+            title = data.title
+            subTitle = count + epsdTitle
+        } else {
+            title = count + (data.title ?? "")
+        }
+        if cardType == .watchedVideo {
+            self.usePrice = false
+            self.isWatched = true
+            self.progress = 0 //프로그래스 업데이트예정
+        }
+        sort_seq = data.sort_seq ?? 0
         originImage = data.poster_filename_h
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
         /*
@@ -111,7 +127,8 @@ class VideoData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,
+            kidZone:data.kids_yn)
         
         return self
     }
@@ -168,6 +185,7 @@ class VideoData:InfinityData{
             watchLv = data.level?.toInt() ?? 0
             isAdult = data.adult?.toBool() ?? false
             useAge = false
+            isWatched = true
         }
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         

@@ -247,7 +247,7 @@ struct MultiBlockBody: PageComponent {
         }
         .onReceive(dataProvider.$error) { err in
             guard let data = self.loadingBlocks.first(where: { $0.id == err?.id}) else {return}
-            PageLog.d("request onDataBinding error", tag: "BlockProtocolB")
+            PageLog.d("request onDataBinding error", tag: self.tag)
             data.setError(err)
         }
         .onReceive(self.sceneObserver.$isUpdated){update in
@@ -282,6 +282,7 @@ struct MultiBlockBody: PageComponent {
     @State var currentOpenId:String? = nil
     
     func reload(){
+        PageLog.d("reload", tag: self.tag)
         if self.viewModel.isAdult && !SystemEnvironment.isAdultAuth {
             withAnimation {self.needAdult = true}
             return
@@ -308,6 +309,7 @@ struct MultiBlockBody: PageComponent {
         }
         self.currentOpenId = self.viewModel.openId
         self.viewModel.openId = nil
+        PageLog.d("reload init", tag: self.tag)
         self.setupBlocks()
     }
 
@@ -317,6 +319,7 @@ struct MultiBlockBody: PageComponent {
                 self.onBlock(stat:stat, block:block)
             }).store(in: &anyCancellable)
         }
+        PageLog.d("setupBlocks ", tag: self.tag)
         self.addBlock()
     
     }
@@ -358,14 +361,14 @@ struct MultiBlockBody: PageComponent {
         DispatchQueue.main.async {
             switch stat {
             case .passive:
-                DataLog.d("passive " + block.name, tag: "BlockProtocolB")
+                DataLog.d("passive " + block.name, tag: self.tag)
             case .active:
-                DataLog.d("active " + block.name, tag: "BlockProtocolB")
+                DataLog.d("active " + block.name, tag: self.tag)
             default: return
             }
             self.completedNum += 1
-            PageLog.d("requestNum " + requestNum.description, tag: "BlockProtocolB")
-            PageLog.d("completedNum " + completedNum.description, tag: "BlockProtocolB")
+            PageLog.d("requestNum " + requestNum.description, tag: self.tag)
+            PageLog.d("completedNum " + completedNum.description, tag: self.tag)
             if self.completedNum == self.requestNum {
                 self.completedNum = 0
                 self.addLoadedBlocks(self.loadingBlocks)
@@ -398,7 +401,7 @@ struct MultiBlockBody: PageComponent {
             } else {
                 addBlocks.append(contentsOf:$0.childrenBlock)
             }
-            DataLog.d("addLoadedBlocks " + $0.name + " " + $0.status.rawValue, tag: "BlockProtocolB")
+            DataLog.d("addLoadedBlocks " + $0.name + " " + $0.status.rawValue, tag: self.tag)
             $0.index = idx
             idx += 1
         }
@@ -425,6 +428,7 @@ struct MultiBlockBody: PageComponent {
 
     private func addBlock(){
         self.addBlockSubscription?.cancel()
+        PageLog.d("addBlockLoad prev originBlocks " + self.originBlocks.count.description, tag: self.tag)
         let max = min(self.viewModel.requestSize, self.originBlocks.count)
         if max == 0 {
             self.requestBlockCompleted()
@@ -432,7 +436,7 @@ struct MultiBlockBody: PageComponent {
         }
         let set = self.originBlocks[..<max]
         self.originBlocks.removeSubrange(..<max)
-        PageLog.d("addBlockLoad originBlocks " + self.originBlocks.count.description, tag: self.tag)
+        PageLog.d("addBlockLoad next originBlocks " + self.originBlocks.count.description, tag: self.tag)
         PageLog.d("addBlockLoad blocks " + set.count.description, tag: self.tag)
         if set.isEmpty { return }
         self.requestNum = set.count
@@ -443,6 +447,7 @@ struct MultiBlockBody: PageComponent {
         let usePrice:Bool = !self.viewModel.isFree
         self.loadingBlocks.forEach{ block in
             if let apiQ = block.getRequestApi(pairing:self.pairing.status, kid:self.pairing.kid) {
+                DataLog.d("request api " + block.name, tag: self.tag)
                 dataProvider.requestData(q: apiQ)
             } else{
                 if block.uiType == .kidsHome || block.uiType == .kidsTicket {
@@ -458,7 +463,7 @@ struct MultiBlockBody: PageComponent {
                             block.listHeight = size.size.height + Self.tabHeight
                         }
                         block.themas = themas
-                        DataLog.d("ThemaData " + block.name, tag: "BlockProtocolA")
+                        DataLog.d("ThemaData " + block.name, tag: self.tag)
                     } else {
                         let tickets = blocks.map{ data in
                             TicketData().setData(data: data, cardType: block.cardType)
@@ -467,7 +472,7 @@ struct MultiBlockBody: PageComponent {
                             block.listHeight = size.size.height + Self.tabHeight
                         }
                         block.tickets = tickets
-                        DataLog.d("TicketData " + block.name, tag: "BlockProtocolA")
+                        DataLog.d("TicketData " + block.name, tag: self.tag)
                     }
                     block.setDatabindingCompleted(parentTitle: self.viewModel.title)
                     return
@@ -510,7 +515,7 @@ struct MultiBlockBody: PageComponent {
             
         case .theme:
             guard let data = opneBlock.themas?.filter({$0.menuId != nil}).first(where: { openId.contains($0.menuId!) }) else {
-                ComponentLog.e("not found data", tag: "ThemasDataMove")
+                ComponentLog.e("not found data", tag: self.tag)
                 return true
             }
             if data.blocks != nil && data.blocks?.isEmpty == false {

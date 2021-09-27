@@ -137,9 +137,7 @@ struct TvBlock:PageComponent, BlockProtocol {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.tvs {
-                    //DispatchQueue.global(qos: .userInteractive).async {
-                        withAnimation{ self.datas = datas }
-                    //}
+                    withAnimation{ self.datas = datas }
                 }
             }
     }

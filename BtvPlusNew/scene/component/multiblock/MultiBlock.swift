@@ -136,25 +136,26 @@ struct MultiBlock:PageComponent {
                                             
                 ))
             }
-            
+           
             if !self.datas.isEmpty {
-                if let headerBlock = self.getHeaderBlock() {
-                    headerBlock
-                        
-                    if headerCount < self.datas.count {
-                        ForEach( self.datas[headerCount..<self.datas.count]) { data in
-                            MultiBlockCell(
-                                pageObservable:self.pageObservable,
-                                pageDragingModel: self.pageDragingModel,
-                                data: data ,
-                                useTracking: self.useTracking)
-                                .modifier(ListRowInset(spacing: Self.spacing))
-                                .onAppear(){
-                                    if data.index == self.datas.last?.index {
-                                        self.infinityScrollModel.event = .bottom
-                                    }
+                if #available(iOS 15.0, *) {
+                    if let data = self.tipBlock {
+                        TipBlock(data:data)
+                            .modifier(MatchHorizontal(height:  Dimen.tab.light))
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                    }
+                    ForEach( self.datas ){ data in
+                        MultiBlockCell(
+                            pageObservable:self.pageObservable,
+                            pageDragingModel: self.pageDragingModel,
+                            data: data ,
+                            useTracking: self.useTracking)
+                            .modifier(ListRowInset(spacing: Self.spacing))
+                            .onAppear(){
+                                if data.index == self.datas.last?.index {
+                                    self.infinityScrollModel.event = .bottom
                                 }
-                        }
+                            }
                     }
                     if self.useFooter {
                         Footer(){
@@ -164,9 +165,38 @@ struct MultiBlock:PageComponent {
                         Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
                             .id(Self.footerIdx)
                     }
+                    
+                } else {
+                    if let headerBlock = self.getHeaderBlock() {
+                        headerBlock
+                        if headerCount < self.datas.count {
+                            ForEach( self.datas[headerCount..<self.datas.count]) { data in
+                                MultiBlockCell(
+                                    pageObservable:self.pageObservable,
+                                    pageDragingModel: self.pageDragingModel,
+                                    data: data ,
+                                    useTracking: self.useTracking)
+                                    .modifier(ListRowInset(spacing: Self.spacing))
+                                    .onAppear(){
+                                        if data.index == self.datas.last?.index {
+                                            self.infinityScrollModel.event = .bottom
+                                        }
+                                    }
+                            }
+                        }
+                        if self.useFooter {
+                            Footer(){
+                                self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
+                            }
+                            .modifier(ListRowInset(spacing: Dimen.margin.medium))
+                            Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
+                                .id(Self.footerIdx)
+                        }
+                    }
                 }
                 
             }
+            
         }
     }
     

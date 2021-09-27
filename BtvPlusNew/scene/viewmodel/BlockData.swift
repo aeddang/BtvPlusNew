@@ -312,10 +312,11 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setDataKids(_ data:BlockItem) -> BlockData{
-        name = data.menu_nm ?? ""
-        menuId = data.menu_id
-        cwCallId = data.cw_call_id_val
+    func setDataKids(_ data:BlockItem, usePrice:Bool = true)-> BlockData{
+        self.name = data.menu_nm ?? ""
+        self.menuId = data.menu_id
+        self.usePrice = usePrice
+        self.cwCallId = data.cw_call_id_val
         if data.btm_bnr_blk_exps_cd == KidsHomeBlockData.code {
             self.uiType = .kidsHome
             self.dataType = .none

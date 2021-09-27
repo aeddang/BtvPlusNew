@@ -133,10 +133,7 @@ struct AlramList: PageComponent{
             self.hasNew = false
             self.datas.filter{!$0.isRead}.forEach{$0.isRead = true}
             NotificationCoreData().readAllNotice()
-            DispatchQueue.main.async {
-                self.repository.alram.updatedNotification()
-            }
-            
+            self.repository.alram.updatedNotification()
         }
     }
     
@@ -294,11 +291,10 @@ struct AlramItem: PageView {
         self.isRead = true
         self.data.isRead = true
         if !self.data.isCoreData { return }
-        NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+        NotificationCoreData().readNotice(title: data.title, body: data.text, messageId: data.messageId)
         self.repository.pushManager.confirmPush(data.messageId) 
-        DispatchQueue.main.async {
-            self.repository.alram.updatedNotification()
-        }
+        self.repository.alram.updatedNotification()
+        
     }
     
     private func checkExpand() {

@@ -46,16 +46,18 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let isOnlyPurchasedBtv = synopsisModel.isOnlyPurchasedBtv
         let isOnlyBtvPurchasable = synopsisModel.isOnlyBtvPurchasable
         let holdbackType = synopsisModel.holdbackType
+        
+        
         self.hasAuthority = false
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
-            serviceInfoDesc = String.alert.bsText
+            serviceInfoDesc = String.alert.bsText // 서비스중지
             isPlayAble = false
            
            
         } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
-            serviceInfoDescBottom = String.alert.bcText
+            serviceInfoDescBottom = String.alert.bcText // 결방
             isPlayAble = false
             
             

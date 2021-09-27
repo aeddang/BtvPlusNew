@@ -7,8 +7,6 @@
 
 import Foundation
 import CoreData
-
-
 class NotificationCoreData:PageProtocol { 
     static let model = "NotificationEntity"
     struct Keys {
@@ -73,19 +71,28 @@ class NotificationCoreData:PageProtocol {
         } catch {
             DataLog.e(error.localizedDescription, tag: self.tag)
         }
+        
     }
     
-    func readNotice(title:String, body:String){
+    func readNotice(title:String?, body:String?, messageId:String?){
         let container = self.persistentContainer
         do {
             let fetchRequest:NSFetchRequest<NotificationEntity> = NotificationEntity.fetchRequest()
-            let predicateTitle = NSPredicate(format: "title == '" + title + "'")
-            let predicateBody = NSPredicate(format: "body == '" + body + "'")
+            let predicateTitle = NSPredicate(format: "title == '" + (title ?? "") + "'")
+            let predicateBody = NSPredicate(format: "body == '" + (body ?? "") + "'")
             let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateTitle,predicateBody])
             fetchRequest.predicate = predicateCompound
             let objects = try container.viewContext.fetch(fetchRequest)
             for obj in objects {
-                obj.setValue(true, forKey: Self.Keys.isRead)
+                if let userData = obj.userInfo as? [String: Any] {
+                    if let systemInfo = userData["system_data"] as? [String: Any] {
+                        if let value = systemInfo ["messageId"] as? String {
+                            if value == messageId {
+                                obj.setValue(true, forKey: Self.Keys.isRead)
+                            }
+                        }
+                    }
+                }
             }
             self.saveContext()
         } catch {
@@ -116,8 +123,8 @@ class NotificationCoreData:PageProtocol {
     
     
     // MARK: - Core Data stack
-    private lazy var persistentContainer: NSPersistentCloudKitContainer = {
-        let container = NSPersistentCloudKitContainer(name: ApiCoreDataManager.name)
+    private lazy var persistentContainer: NSPersistentContainer = {
+        let container = BtvPlusPersistentContainer(name: ApiCoreDataManager.name)
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")

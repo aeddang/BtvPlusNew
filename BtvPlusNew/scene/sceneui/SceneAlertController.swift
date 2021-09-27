@@ -212,13 +212,11 @@ struct SceneAlertController: PageComponent{
                 pagePresenter: self.pagePresenter,
                 dataProvider: self.dataProvider,
                 data: alram)
-            NotificationCoreData().readNotice(title: data.title ?? "", body: data.text ?? "")
+            NotificationCoreData().readNotice(title: data.title , body: data.text, messageId:data.messageId)
             self.repository.pushManager.confirmPush(data.messageId)
         }
         self.repository.alram.changedNotification()
-        DispatchQueue.main.async {
-            self.repository.alram.updatedNotification()
-        }
+        self.repository.alram.updatedNotification()
         self.appObserver.resetApns()
     }
     

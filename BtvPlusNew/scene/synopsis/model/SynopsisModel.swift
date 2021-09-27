@@ -48,6 +48,7 @@ class SynopsisModel : PageProtocol {
     private(set) var imgContentMode:ContentMode = .fit
     private(set) var cwCallId:String? = nil
     private(set) var cpId:String? = nil
+    
     private(set) var playGradeData:PlayGradeData? = nil
     private(set) var isQuiz:Bool = false
     private(set) var isRecommand:Bool = false
@@ -60,6 +61,7 @@ class SynopsisModel : PageProtocol {
     private(set) var brcastChnlNm:String? = nil
     private(set) var metaTypCd:String? = nil
     private(set) var watchLevel:Int = 0
+    private(set) var playTime:Int = 999
     init(type:MetvNetwork.SynopsisType = .none ) {
         self.synopsisType = type
     }
@@ -91,6 +93,7 @@ class SynopsisModel : PageProtocol {
             self.srisTitle = contents.title
             self.kidsYn = contents.kids_yn
             self.setupThumbImage(contents: contents)
+            self.playTime = contents.play_tms_val?.toInt() ?? 999
             self.hasExamPreview = contents.pre_exam_yn?.toBool() ?? false
             if let preview = contents.preview { 
                 self.previews = preview
@@ -121,6 +124,7 @@ class SynopsisModel : PageProtocol {
             self.seriesInfoList = contents.series_info
             self.isDistProgram = self.distStsCd != .stop
             self.cwCallId = contents.cw_call_id_val
+            
         }
         
         //epsdRsluId

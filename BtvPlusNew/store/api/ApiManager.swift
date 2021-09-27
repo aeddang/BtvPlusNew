@@ -84,12 +84,13 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var vls:Vls = Vls(network: VlsNetwork())
     private lazy var cbs:Cbs = Cbs(network: CbsNetwork())
     
-    // 로그 서버 페이지이동시 켄슬 안함
+    // 로그 서버 || 권한등  페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
     private(set) lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
     private(set) lazy var navilogNpi:Navilog = Navilog(network: NavilogNpiNetwork())
     private lazy var pucr:Pucr = Pucr(network: PucrNetwork())
     private lazy var push:Push = Push(network: PushNetwork())
+    private lazy var metvAuth:Metv = Metv(network: MetvNetwork())
     private lazy var metvEvent:Metv = Metv(network: MetvNetwork())
     private(set) var updateFlag: UpdateFlag = .none
     
@@ -273,18 +274,7 @@ class ApiManager :PageProtocol, ObservableObject{
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getPurchaseMonthly(let page, let count) : self.metv.getPurchaseMonthly(
-            page: page, pageCnt: count,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
-        case .getPeriodPurchaseMonthly(let page, let count) : self.metv.getPeriodPurchaseMonthly(
-            page: page, pageCnt: count,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
-        case .getMonthly(let lowLevelPpm, let page, let count) : self.metv.getMonthly(
-            lowLevelPpm:lowLevelPpm, page: page, pageCnt: count,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
+        
         case .getMonthlyData(let prcPrdId, let isDetail) :  self.metv.getMonthlyData(
             prdPrcId: prcPrdId, isDetail: isDetail,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -319,6 +309,19 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
             
+        //ME_AUTH
+        case .getPurchaseMonthly(let page, let count) : self.metvAuth.getPurchaseMonthly(
+            page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .getPeriodPurchaseMonthly(let page, let count) : self.metvAuth.getPeriodPurchaseMonthly(
+            page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .getMonthly(let lowLevelPpm, let page, let count) : self.metvAuth.getMonthly(
+            lowLevelPpm:lowLevelPpm, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         //ME_EVENT
         case .postAttendance(let pcid, _): self.metvEvent.postAttendance(
             pcId: pcid,

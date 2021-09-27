@@ -112,10 +112,10 @@ struct PlayerBottomBody: PageComponent{
                     }
                 }
                 
-                if  self.showPreview {
+                if  self.showPreview , let previewText = self.previewText {
                     RectButton(
                         text: String.player.preview,
-                        textTrailing: self.previewText ?? ""
+                        textTrailing: previewText
                         ){_ in
                            
                     }

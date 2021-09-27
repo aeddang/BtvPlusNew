@@ -46,8 +46,8 @@
             filePath = "BtvPlusNew/scene/sceneui/SceneAlertController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "518"
-            endingLineNumber = "518"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
             landmarkName = "selectedUpdateAlram(_:id:isAlram:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -231,16 +231,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "413ACD34-23EE-4C14-9B05-94E1AD4B9581"
+            uuid = "34A721DA-80F1-4AF7-AA29-3CEF77F81D65"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/component/list/PosterList.swift"
+            filePath = "BtvPlusNew/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "setData(data:prdPrcId:cardType:isPosson:anotherStb:idx:)"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "handleApns(_:isMove:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -154,7 +154,7 @@ struct CPPlayer: PageComponent {
     func delayAutoUiHidden(){
         self.autoUiHidden?.cancel()
         self.autoUiHidden = Timer.publish(
-            every: 1.5, on: .current, in: .common)
+            every: 2.0, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.viewModel.playerUiStatus = .hidden

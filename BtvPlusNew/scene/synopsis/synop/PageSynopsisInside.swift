@@ -95,8 +95,12 @@ extension PageSynopsis {
         case .preplay:
             self.preplayCompleted()
         case .preview(let count, _):
-            if !self.nextPreview(count: count) {
-                self.previewCompleted()
+            if self.isPairing == true {
+                if !self.nextPreview(count: count) {
+                    self.preplayCompleted()
+                }
+            } else {
+                self.preplayCompleted()
             }
         case .clip: break
         default :
@@ -214,21 +218,23 @@ extension PageSynopsis {
         }
         let playAble = self.purchaseViewerData?.isPlayAble ?? false
         let playAbleBtv = self.purchaseViewerData?.isPlayAbleBtv ?? false
-        if !playAble && !playAbleBtv{
-            if self.synopsisModel?.isCancelProgram == true {
-                self.appSceneObserver.alert = .alert(
-                    String.alert.purchaseDisable,
-                    String.alert.purchaseDisableService
-                )
-                return
-            }
-        }
-        if !(!playAble && playAbleBtv) && self.hasAuthority != true{
-            //btv에서만 가능한 컨텐츠 권한없어도 비티로 보기 지원
-            self.purchaseConfirm(msg: String.alert.purchaseContinueBtv)
+        
+        if self.synopsisModel?.isCancelProgram == true {
+            self.appSceneObserver.alert = .alert(
+                String.alert.purchaseDisable,
+                String.alert.purchaseDisableService
+            )
             return
         }
         self.onDefaultViewMode()
+        if self.synopsisModel?.isDistProgram == true{ //결방일경우 비티비로 보냄
+            if !(!playAble && playAbleBtv) && self.hasAuthority != true{
+                //btv에서만 가능한 컨텐츠 권한없어도 비티로 보기 지원
+                self.purchaseConfirm(msg: String.alert.purchaseContinueBtv)
+                return
+            }
+        }
+        
         let msg:NpsMessage = NpsMessage().setPlayVodMessage(
             contentId: self.epsdRsluId ,
             playTime: self.playerModel.time)

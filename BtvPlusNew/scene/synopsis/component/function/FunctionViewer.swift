@@ -16,7 +16,7 @@ struct FunctionViewer: PageComponent{
     var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
     var funtionLayout:Axis = .vertical
-    
+   
     //var srisId:String?
     //var epsdId:String?
     @Binding var isBookmark:Bool?
@@ -32,7 +32,8 @@ struct FunctionViewer: PageComponent{
                 if let synopsisData = self.synopsisData {
                     BookMarkButton(
                         data:synopsisData,
-                        isBookmark: self.$isBookmark
+                        isBookmark: self.$isBookmark,
+                        isActive: self.synopsisData?.isPosson != true
                     )
                     .buttonStyle(BorderlessButtonStyle())
                     .fixedSize()
@@ -46,7 +47,7 @@ struct FunctionViewer: PageComponent{
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }
-                BtvButton(){
+                BtvButton(isActive: self.synopsisData?.isPosson != true){
                     self.componentViewModel.uiEvent = .watchBtv
                 }
                 .buttonStyle(BorderlessButtonStyle())
@@ -56,7 +57,8 @@ struct FunctionViewer: PageComponent{
                         ShareButton(
                             srisId:srisId,
                             epsdId:self.synopsisData?.epsdId,
-                            isRecommand: self.isPairing ? self.synopsisModel?.isRecommand : false
+                            isRecommand: self.isPairing ? self.synopsisModel?.isRecommand : false,
+                            isActive: self.synopsisData?.isPosson != true
                         )
                         .buttonStyle(BorderlessButtonStyle())
                         .fixedSize()

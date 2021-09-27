@@ -617,21 +617,21 @@ struct PageSynopsis: PageView {
                     return
                 }
                 if self.isPairing == true {
-                    if model.hasPreview{
+                    if model.hasExamPreview  && model.playTime > 5{
+                        self.synopsisPlayType = .preplay()
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
+                    } else if model.hasPreview {
                         self.synopsisPlayType = .preview(0)
                         let item = model.previews[0]
                         self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice )))
-                    } else if model.hasExamPreview {
-                        self.synopsisPlayType = .preplay()
-                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
-                    } else {
+                    }  else {
                         PageLog.d("no preview", tag: self.tag)
                         self.errorProgress()
                     }
                 
                 } else {
                     if model.hasExamPreview {
-                        self.synopsisPlayType = .preplay()
+                        self.synopsisPlayType = model.playTime > 5 ?  .preplay() : .preview(0)
                         self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
                     } else {
                         PageLog.d("no preview", tag: self.tag)
@@ -950,7 +950,7 @@ struct PageSynopsis: PageView {
             
             self.playerData = SynopsisPlayerData()
                 .setData(type: self.synopsisPlayType,
-                         synopsis: synopsis, relationContentsModel: self.relationContentsModel)
+                         synopsis: synopsis, relationContentsModel: self.relationContentsModel, isPairing:self.isPairing)
             
             
             self.playerModel

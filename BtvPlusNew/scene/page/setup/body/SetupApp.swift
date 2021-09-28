@@ -13,7 +13,7 @@ struct SetupApp: PageView {
     @EnvironmentObject var naviLogManager:NaviLogManager
     var isInitate:Bool = false
     var isPairing:Bool = false
-    var pairingType:PairingDeviceType = .btv
+    var pairingStbType:PairingDeviceType = .btv
     @Binding var isDataAlram:Bool
     @Binding var isAutoRemocon:Bool
     @Binding var isRemoconVibration:Bool
@@ -27,7 +27,7 @@ struct SetupApp: PageView {
                     subTitle: String.pageText.setupAppDataAlramText
                 )
                 
-                if self.pairingType == .btv {
+                if self.pairingStbType == .btv {
                     Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                     SetupItem (
                         isOn: self.$isAutoRemocon,

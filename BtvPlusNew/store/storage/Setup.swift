@@ -203,6 +203,20 @@ class Setup:ObservableObject, PageProtocol {
         }
     }
     
+    func isRegistUnvisibleDate()-> Bool {
+        let prevDateKey = self.kidsRegistUnvisibleDate
+        if !prevDateKey.isEmpty,
+           let prevDate = prevDateKey.toDate(dateFormat: Setup.dateFormat)
+        {
+            let diffTime = abs(prevDate.timeIntervalSinceNow)
+            let diffDay = diffTime / (24 * 60 * 60 * 1000)
+            if diffDay < 7 {
+                return true
+            }
+        }
+        return false
+    }
+    
     var possession:String{
         set(newVal){
             storage.set(newVal, forKey: Keys.possession)

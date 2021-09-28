@@ -57,14 +57,14 @@ struct SetupAlram: PageView {
             guard let res = res else { return }
             switch res.type {
             case .updateAgreement(let isAgree, _) : self.onUpdatedPush(res, isAgree: isAgree)
-            default: do{}
+            default: break
             }
         }
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else { return }
             switch err.type {
             case .updateAgreement : self.onUpdatePushError()
-            default: do{}
+            default: break
             }
         }
     }//body

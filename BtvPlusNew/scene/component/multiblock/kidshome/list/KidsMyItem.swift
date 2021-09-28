@@ -25,6 +25,7 @@ extension KidsMyItem{
 struct KidsMyItem:PageView  {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var setup:Setup
     @EnvironmentObject var pairing:Pairing
     var data:KidsMyItemData
     @State var profileImg:String? = nil
@@ -84,6 +85,13 @@ struct KidsMyItem:PageView  {
                 self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
                 return
             }
+            if self.pairing.kids.isEmpty || self.pairing.kid == nil{
+                if !self.setup.isRegistUnvisibleDate() {
+                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                    return
+                }
+            }
+            
             if self.pairing.kids.isEmpty {
                 self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
             } else if self.pairing.kid == nil {

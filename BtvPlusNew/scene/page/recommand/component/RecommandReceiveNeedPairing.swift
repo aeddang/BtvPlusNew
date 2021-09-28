@@ -16,6 +16,7 @@ struct RecommandReceiveNeedPairing: PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var vsManager:VSManager
    
     var mgmId:String? = nil
     var recommandFriend:String = "???"
@@ -71,6 +72,11 @@ struct RecommandReceiveNeedPairing: PageComponent {
                     margin: 0,
                     bgColor:Color.brand.primary
                 ){_ in
+                    
+                    if self.vsManager.isGranted {
+                        self.vsManager.accountPairingAlert()
+                        return
+                    }
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
                     )

@@ -49,13 +49,16 @@ struct SummaryViewer: PageComponent{
     @State var needExpand = false
     var body: some View {
         VStack(alignment:.leading , spacing:0) {
-            if !self.isSimple {
-                Text(String.pageText.synopsisSummry)
-                    .modifier(BoldTextStyle( size: Font.size.regular ))
-                    .padding(.vertical, Dimen.margin.regularExtra )
-                    .modifier(ContentHorizontalEdges())
-            }
+            Spacer().frame( height: Dimen.margin.regularExtra)
+            
             if self.data.peoples != nil && self.data.peoples?.isEmpty == false {
+                if !self.isSimple {
+                    Text(String.pageText.synopsisSummry)
+                        .modifier(BoldTextStyle( size: Font.size.regular ))
+                        .padding(.bottom, Dimen.margin.regularExtra )
+                        .modifier(ContentHorizontalEdges())
+                }
+                
                 PeopleList(
                     viewModel:self.peopleScrollModel,
                     datas: self.data.peoples!,

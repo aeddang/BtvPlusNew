@@ -56,7 +56,7 @@ struct MyPointInfo: View {
                             .addParam(key: .id, value: PageMyBenefits.MenuType.point.rawValue)
                     )
                 }
-            if self.pairing.pairingDeviceType == .btv {
+            if self.pairing.pairingStbType == .btv {
                 Spacer().modifier(LineVertical())
                     .frame(height:Dimen.button.lightExtra)
                 ValueInfo(key: String.app.bcash, value: self.cash)

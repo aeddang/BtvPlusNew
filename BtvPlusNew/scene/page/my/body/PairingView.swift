@@ -22,7 +22,7 @@ struct PairingView: PageComponent{
     @State var character:String = Asset.characterList[0]
     @State var nick:String = ""
     @State var newAlramCount:Int = 0
-    @State var pairingType:PairingDeviceType = .btv
+    @State var pairingStbType:PairingDeviceType = .btv
     var body: some View {
         VStack (alignment: .center, spacing:0){
             VStack (alignment: .center, spacing: Dimen.margin.lightExtra){
@@ -45,10 +45,10 @@ struct PairingView: PageComponent{
                     defaultText: self.nick,
                     textModifier: TextModifier( family: Font.family.medium,
                         size: Font.size.mediumExtra, color:Color.app.white),
-                    image: self.pairingType == .btv ? Asset.icon.profileEdit : nil,
+                    image: self.pairingStbType == .btv ? Asset.icon.profileEdit : nil,
                     imageSize: Dimen.icon.thinExtra
                 ) { _ in
-                        if self.pairingType != .btv {return}
+                        if self.pairingStbType != .btv {return}
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.modifyProile)
                         )
@@ -112,7 +112,7 @@ struct PairingView: PageComponent{
                     )
                 }
                 Spacer().modifier(LineHorizontal())
-                if self.pairingType != .btv {
+                if self.pairingStbType != .btv {
                     FillButton(
                         text: String.pageText.setupChildrenHabit,
                         isMore: true,
@@ -126,7 +126,7 @@ struct PairingView: PageComponent{
             }
             .modifier(ContentHorizontalEdgesTablet())
             .padding(.top, Dimen.margin.tiny)
-            if self.pairingType == .btv {
+            if self.pairingStbType == .btv {
                 MySetup()
                     .modifier(ContentHorizontalEdgesTablet())
                     .padding(.top, Dimen.margin.mediumExtra)
@@ -237,7 +237,7 @@ struct PairingView: PageComponent{
         .onReceive(self.pairing.$user){ user in
             guard let user = user else {return}
             self.character = Asset.characterList[user.characterIdx]
-            self.pairingType = self.pairing.pairingDeviceType
+            self.pairingStbType = self.pairing.pairingStbType
             self.nick = user.nickName
         }
         .onReceive(self.dataProvider.$result){ res in

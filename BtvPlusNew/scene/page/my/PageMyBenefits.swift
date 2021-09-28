@@ -77,7 +77,7 @@ struct PageMyBenefits: PageView {
                                 case 1 :
                                     self.pointModel.initUpdate()
                                 case 2 :
-                                    if self.pairing.pairingDeviceType == .apple {
+                                    if self.pairing.pairingStbType == .apple {
                                         self.cardModel.initUpdate(type: .member)
                                     } else {
                                         self.cashModel.initUpdate()
@@ -138,7 +138,7 @@ struct PageMyBenefits: PageView {
                         cardModel: self.cardModel,
                         pageObservable: self.pageObservable
                     )
-                    if self.pairing.pairingDeviceType == .apple {
+                    if self.pairing.pairingStbType == .apple {
                         self.pages = [
                             coupon, point, discount
                         ]

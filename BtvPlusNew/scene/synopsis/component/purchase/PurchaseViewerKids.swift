@@ -11,6 +11,7 @@ import SwiftUI
 struct PurchaseViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var vsManager:VSManager
     var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
     var data:PurchaseViewerData
     var synopsisModel:SynopsisModel?
@@ -61,6 +62,10 @@ struct PurchaseViewerKids: PageComponent{
                     isSelected: true,
                     isFixSize: false
                 ){_ in
+                    if self.vsManager.isGranted {
+                        self.vsManager.accountPairingAlert()
+                        return
+                    }
                     self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                     DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                         self.pagePresenter.openPopup(

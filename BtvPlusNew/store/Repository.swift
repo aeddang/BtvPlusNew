@@ -219,14 +219,24 @@ class Repository:ObservableObject, PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getGnb))
                 self.pushManager.retryRegisterPushToken()
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
-                self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
                 self.userSetup.isPurchaseAuth = true
-                if !NpsNetwork.isAutoPairing {
+                let prevName = self.namedStorage?.tvUserId
+                let pairingDeviceType:PairingDeviceType = SystemEnvironment.currentPairingDeviceType
+                if pairingDeviceType == .apple {
+                    self.pairing.authority.requestAuth(.updateMyinfo(isReset: false))
+                }
+                if pairingDeviceType == .apple && prevName == nil{
+                    self.pagePresenter?.openPopup(
+                        PageProvider.getPageObject(.pairingAppleTv)
+                    )
+                } else if !NpsNetwork.isAutoPairing {
                     self.appSceneObserver?.event = .toast(  self.pairing.user?.isAutoPairing == true
                         ? String.alert.pairingCompletedAuto
                         : String.alert.pairingCompleted
                     )
                 }
+                self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
+                
                 
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
@@ -393,6 +403,10 @@ class Repository:ObservableObject, PageProtocol{
         }
         //self.appSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
+        if self.status == .reset {
+            self.event = .reset
+            self.status = .ready
+        }
     }
     
     private func onReadyRepository(gnbData:GnbBlock){

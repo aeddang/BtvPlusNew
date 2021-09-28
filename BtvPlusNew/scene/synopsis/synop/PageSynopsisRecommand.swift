@@ -14,7 +14,7 @@ extension PageSynopsis {
             if let rcmdid = params.first(where: {$0.name == "rcmd_id"})?.value,
                let type = params.first(where: {$0.name == "type"})?.value
             {
-                
+                self.isCheckRecommand = false
                 //let created = params.first(where: {$0.name == "created"})?.value,
                 //let from = params.first(where: {$0.name == "from"})?.value,
                 let nickname = params.first(where: {$0.name == "rcmd_nickname"})?.value

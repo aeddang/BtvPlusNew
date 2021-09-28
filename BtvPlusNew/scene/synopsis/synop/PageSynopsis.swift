@@ -515,8 +515,7 @@ struct PageSynopsis: PageView {
     @State var firstPurchase:Bool = false
     @State var currentRedirectSris:String? = nil
     @State var isProhibitionCheckComplete:Bool = false
-    
-    
+    @State var isCheckRecommand:Bool = true
     
     private func initPage(){
         if self.synopsisData == nil {
@@ -539,6 +538,9 @@ struct PageSynopsis: PageView {
     
     func resetPage(isAllReset:Bool = false, isRedirectPage:Bool = false){
         PageLog.d("resetPage", tag: self.tag)
+        if isAllReset {
+            self.isCheckRecommand = true
+        }
         self.playerModel.event = .pause
         self.isUIView = false
         self.hasAuthority = nil
@@ -560,6 +562,7 @@ struct PageSynopsis: PageView {
         self.onResetPageRelationContent(isAllReset: isAllReset)
         self.onResetPageProhibitionSimultaneous()
         self.pageDataProviderModel.initate()
+
         withAnimation{
             self.isPlayViewActive = false
         }
@@ -834,7 +837,10 @@ struct PageSynopsis: PageView {
                 self.onFullScreenViewMode()
             }
         }
-        self.checkRecommand(obj: self.pageObject)
+        if self.isCheckRecommand {
+            
+            self.checkRecommand(obj: self.pageObject)
+        }
     }
     
     
@@ -860,7 +866,7 @@ struct PageSynopsis: PageView {
                         self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
                     }else{
                         self.prevDirectView = nil
-                        self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
+                        self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
                     }
                 }
             } else { //최초진입

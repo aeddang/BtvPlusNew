@@ -264,9 +264,11 @@
 "alertUpdateRecommend"  = "새로운 버전이 출시되었습니다. 업데이트 하시겠습니까?";
 "alertUpdateAfter" = "나중에 하기";
 
-"alertApi" = "알림";
-"alertApiErrorServer" = "일시적인 문제가 발생하였습니다.\n잠시 후 다시 이용해주세요.";
-"alertApiErrorClient" = "네트워크 연결 상태를 확인하시고 다시 시도해 주세요.";
+"alertApi" = "서비스 연결 불가 안내";
+"alertApiErrorServer" = "현재 서비스 연결이\n원활하지 않습니다.\n잠시 후 다시 시도해 주세요.";
+"alertApiErrorClient" = "현재 서비스 연결이\n원활하지 않습니다.\n잠시 후 다시 시도해 주세요.";
+
+
 "alertNetworkError" = "네트워크 연결이 원활하지 않습니다.";
 "alertDataError" = "데이타가 없습니다.";
 
@@ -1318,9 +1320,12 @@
 "vsAccountSynchronizationDenied" = "TV프로바이더와 연결된\n페어링이 해재됩니다.\nTV프로바이더와 다시 연결하시려면\nTV프로바이더 로그인을\n실행해주세요";
 "vsAccountSynchronizationFail" = "TV프로바이더 로그인정보와\n현제 페어링 정보가 다릅니다.\nTV프로바이더에서 다시 로그인 해주세요";
 "vsAccountSynchronizationFailDifferentStb" = "TV프로바이더 로그인정보와\n현제 페어링 정보가 다릅니다.\nTV프로바이더에서 다시 로그인 하거나\nTV프로바이더와 동기화해주세요.";
+"vsAccountSynchronizationFailExistPairing" = "TV프로바이더 사용함으로 설정되어있습니다.\nTV프로바이더를 사용안함으로 설정해주세요";
 
 "vsAccountForbiddenUnpairing" = "TV프로바이더 에서\n로그아웃 하셔야 합니다.";
-
+"vsAccountProviderPairing" = "TV프로바이더 에서\n로그인 하셔야 합니다.";
+"vsAccountProviderPairingTip" = "TV프로바이더를 사용으로 설정해둔경우\nTV프로바이더에서 로그인하셔야합니다";
+"vsAccountProviderPairingInfo" = "TV프로바이더를 사용하시려면\n현재 페어링해재 후 TV프로바이더로\n로그인하셔야합니다";
 "vsAccountUnpairing" = "TV프로바이더 로그아웃후 다시 실행 해주세요.\nTV프로바이더 로그아웃이\n완료된 후 연결이 끊어집니다.";
 "vsAccountAutoPairingConfirm" = "TV프로바이더 로그인 되어있습니다. TV프로바이더 로그아웃후 재실행시 연결이 끊어집니다.";
 

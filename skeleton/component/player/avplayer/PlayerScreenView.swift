@@ -95,15 +95,11 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
-        
-        
         /*
         center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)*/
         //center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
         
     }
-    
-
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -175,20 +171,21 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         self.startPlayer(player:player)
     }
     private func startPlayer(player:AVPlayer){
-        self.player = player
-        player.allowsExternalPlayback = false
-        player.usesExternalPlaybackWhileExternalScreenIsActive = true
-        player.preventsDisplaySleepDuringVideoPlayback = true
-        player.volume = currentVolume
-        //player.rate = currentRate
-        //player?.isClosedCaptionDisplayEnabled = true
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-        }
-        catch {
-            ComponentLog.e("Setting category to AVAudioSessionCategoryPlayback failed." , tag: self.tag)
-        }
-        DispatchQueue.global(qos: .background).async {
+       // DispatchQueue.global(qos: .default).async {
+            self.player = player
+            player.allowsExternalPlayback = false
+            player.usesExternalPlaybackWhileExternalScreenIsActive = true
+            player.preventsDisplaySleepDuringVideoPlayback = true
+            player.volume = self.currentVolume
+            //player.rate = currentRate
+            //player?.isClosedCaptionDisplayEnabled = true
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            }
+            catch {
+                ComponentLog.e("Setting category to AVAudioSessionCategoryPlayback failed." , tag: self.tag)
+            }
+            
             if let avPlayerViewController = self.playerController as? AVPlayerViewController {
                 avPlayerViewController.player = player
                 avPlayerViewController.updatesNowPlayingInfoCenter = false
@@ -198,16 +195,17 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
                 self.playerLayer?.contentsScale = self.currentRatio
                 self.playerLayer?.videoGravity = self.currentVideoGravity
             }
-        }
-        ComponentLog.d("startPlayer currentVolume " + currentVolume.description , tag: self.tag)
-        ComponentLog.d("startPlayer currentRate " + currentRate.description , tag: self.tag)
-        ComponentLog.d("startPlayer videoGravity " + currentVideoGravity.rawValue , tag: self.tag)
-        self.createdPlayer()
+            
+            ComponentLog.d("startPlayer currentVolume " + self.currentVolume.description , tag: self.tag)
+            ComponentLog.d("startPlayer currentRate " + self.currentRate.description , tag: self.tag)
+            ComponentLog.d("startPlayer videoGravity " + self.currentVideoGravity.rawValue , tag: self.tag)
+            self.createdPlayer()
         
-        DispatchQueue.main.async {
+        //DispatchQueue.main.async {
             if self.isAutoPlay { self.resume() }
             else { self.pause() }
-        }
+        //}
+       // }
     }
     
 

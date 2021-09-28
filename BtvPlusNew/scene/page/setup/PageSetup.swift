@@ -20,7 +20,7 @@ struct PageSetup: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     
     @State var sceneOrientation: SceneOrientation = .portrait
-    @State var pairingType:PairingDeviceType = .btv
+    @State var pairingStbType:PairingDeviceType = .btv
     
     var body: some View {
         GeometryReader { geometry in
@@ -43,7 +43,7 @@ struct PageSetup: PageView {
                                     SetupApp(
                                         isInitate:self.isInitate,
                                         isPairing: self.isPairing,
-                                        pairingType: self.pairingType,
+                                        pairingStbType: self.pairingStbType,
                                         isDataAlram: self.$isDataAlram,
                                         isAutoRemocon: self.$isAutoRemocon,
                                         isRemoconVibration: self.$isRemoconVibration)
@@ -62,7 +62,7 @@ struct PageSetup: PageView {
                                     SetupCertification(
                                         isInitate:self.isInitate,
                                         isPairing: self.isPairing,
-                                        pairingType: self.pairingType,
+                                        pairingStbType: self.pairingStbType,
                                         isPurchaseAuth: self.$isPurchaseAuth,
                                         isSetWatchLv: self.$isSetWatchLv,
                                         isKidsExitAuth: self.$isKidsExitAuth,
@@ -70,7 +70,7 @@ struct PageSetup: PageView {
                                         selectedWatchLv: self.$selectedWatchLv)
                                     
                                     
-                                    if self.pairingType == .btv && !self.isPairing{
+                                    if self.pairingStbType == .btv && !self.isPairing{
                                         //SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
                                         SetupPossession(isInitate:self.isInitate)
                                         //SetupHappySenior()
@@ -85,7 +85,7 @@ struct PageSetup: PageView {
                                 SetupApp(
                                     isInitate:self.isInitate,
                                     isPairing: self.isPairing,
-                                    pairingType: self.pairingType,
+                                    pairingStbType: self.pairingStbType,
                                     isDataAlram: self.$isDataAlram,
                                     isAutoRemocon: self.$isAutoRemocon,
                                     isRemoconVibration: self.$isRemoconVibration)
@@ -102,7 +102,7 @@ struct PageSetup: PageView {
                                 SetupCertification(
                                     isInitate:self.isInitate,
                                     isPairing: self.isPairing,
-                                    pairingType: self.pairingType,
+                                    pairingStbType: self.pairingStbType,
                                     isPurchaseAuth: self.$isPurchaseAuth,
                                     isSetWatchLv: self.$isSetWatchLv,
                                     isKidsExitAuth: self.$isKidsExitAuth,
@@ -110,7 +110,7 @@ struct PageSetup: PageView {
                                     selectedWatchLv: self.$selectedWatchLv)
                                 
                                 
-                                if self.pairingType == .btv && !self.isPairing {
+                                if self.pairingStbType == .btv && !self.isPairing {
                                     //SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
                                     SetupPossession(isInitate:self.isInitate)
                                     //SetupHappySenior()
@@ -134,10 +134,10 @@ struct PageSetup: PageView {
             .onReceive(self.pairing.$event){ evt in
                 switch evt{
                 case .connected :
-                    self.pairingType = self.pairing.pairingDeviceType
+                    self.pairingStbType = self.pairing.pairingStbType
                     break
                 case .disConnected :
-                    self.pairingType = self.pairing.pairingDeviceType
+                    self.pairingStbType = self.pairing.pairingStbType
                     break
                 default :break
                 }
@@ -150,7 +150,7 @@ struct PageSetup: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
-                self.pairingType = self.pairing.pairingDeviceType
+                self.pairingStbType = self.pairing.pairingStbType
             }
             
         }//geo

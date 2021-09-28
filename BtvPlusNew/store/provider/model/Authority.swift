@@ -13,7 +13,7 @@ enum AuthRequest{
 }
 
 enum AuthEvent{
-    case updatedMyinfo, updateMyinfoError(ApiResultError?)
+    case updatedMyinfo, updatedMyTicketInfo, updateMyinfoError(ApiResultError?)
 }
 
 
@@ -165,10 +165,14 @@ class Authority:ObservableObject, PageProtocol {
     
     
     private func checkMyInfoUpdate(){
-        if !self.isMyInfoUpdate { return }
-        if self.totalPointInfo == nil { return }
+        
         if self.monthlyPurchaseInfo == nil { return }
         if self.periodMonthlyPurchaseInfo == nil { return }
+        if !self.isMyInfoUpdate {
+            self.event = .updatedMyTicketInfo
+            return
+        }
+        if self.totalPointInfo == nil { return }
         self.completedMyInfo()
     }
 }

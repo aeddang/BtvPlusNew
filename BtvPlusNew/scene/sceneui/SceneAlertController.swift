@@ -55,7 +55,7 @@ struct SceneAlertController: PageComponent{
     @EnvironmentObject var appObserver:AppObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var setup:Setup
-    
+    @EnvironmentObject var vsManager:VSManager
     @State var isShow = false
     @State var title:String? = nil
     @State var image:UIImage? = nil
@@ -228,9 +228,13 @@ struct SceneAlertController: PageComponent{
         }else{
             if self.networkObserver.status == .none {
                 self.text = String.alert.apiErrorClient
+                /*
                 self.buttons = [
                     AlertBtnData(title: String.app.cancel, index: 0),
                     AlertBtnData(title: String.app.retry, index: 1),
+                ]*/
+                self.buttons = [
+                    AlertBtnData(title: String.app.confirm, index: 2),
                 ]
                 self.naviLogManager.actionLog(.pageShow, pageId:.networkError)
                 
@@ -389,6 +393,10 @@ struct SceneAlertController: PageComponent{
         
         self.title = String.alert.connect
         self.text = msg ?? String.alert.needConnect
+        if self.vsManager.isGranted {
+            self.tipText = String.vs.accountProviderPairingTip
+        }
+        
         if self.setup.possession.isEmpty == false {
             self.subText = String.alert.needConnectSubPossession
         }
@@ -400,6 +408,10 @@ struct SceneAlertController: PageComponent{
     
     func selectedNeedPairing(_ idx:Int, move:PageObject? = nil, cancelHandler: @escaping () -> Void) {
         if idx == 1 {
+            if self.vsManager.isGranted {
+                self.vsManager.checkSync(isInterruptionAllowed: true)
+                return
+            }
             self.appSceneObserver.pairingCompletedMovePage = move
             if SystemEnvironment.currentPageType == .kids {
                 self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)

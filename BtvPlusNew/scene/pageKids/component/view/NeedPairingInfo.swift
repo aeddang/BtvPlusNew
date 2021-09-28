@@ -11,6 +11,7 @@ import SwiftUI
 struct NeedPairingInfo: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var vsManager:VSManager
     var title:String? = nil
     var text:String? = nil
     var body: some View {
@@ -37,6 +38,11 @@ struct NeedPairingInfo: PageView {
             RectButtonKids(
                 text: String.button.connectBtv,  isFixSize: true
             ){ _ in
+                
+                if self.vsManager.isGranted {
+                    self.vsManager.accountPairingAlert()
+                    return
+                }
                 self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                     self.pagePresenter.openPopup(

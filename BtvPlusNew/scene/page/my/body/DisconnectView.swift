@@ -14,6 +14,8 @@ struct DisconnectView: PageComponent{
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var vsManager:VSManager
     
     var pageObservable:PageObservable = PageObservable()
     @State var safeAreaBottom:CGFloat = 0
@@ -46,6 +48,10 @@ struct DisconnectView: PageComponent{
                 FillButton(
                     text: String.button.connectBtv
                 ){_ in
+                    if self.vsManager.isGranted {
+                        self.vsManager.accountPairingAlert()
+                        return
+                    }
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
                     )

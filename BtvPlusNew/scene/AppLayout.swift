@@ -215,7 +215,9 @@ struct AppLayout: PageComponent{
             }
         }
         .onReceive (self.vsManager.$isGranted) { granted in
-            self.isVSGranted = granted
+            withAnimation{
+                self.isVSGranted = granted
+            }
         }
         .onReceive(self.pageObservable.$isBackground){isBack in
             if !isBack && self.isInit{
@@ -428,7 +430,6 @@ struct AppLayout: PageComponent{
                 withAnimation{ floatBannerDatas = datas }
             }
         }
-        
     }
     
     func floatingBannerToDayUnvisible() {

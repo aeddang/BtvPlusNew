@@ -24,9 +24,15 @@ struct SystemEnvironment {
             return id
         }
     }
+    static var currentPairingDeviceType:PairingDeviceType {
+        get{
+            return Self.tvUserId?.isEmpty == false ? .apple : .btv
+        }
+    }
+
     static var firstLaunch :Bool = false
     static var serverConfig: [String:String] = [String:String]()
-    static var isReleaseMode:Bool? = true
+    static var isReleaseMode:Bool? = nil
     static var isEvaluation = false
     static var needUpdate = false
     static var isTablet = AppUtil.isPad()

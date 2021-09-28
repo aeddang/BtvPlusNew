@@ -16,6 +16,7 @@ extension SynopsisBody {
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var vsManager:VSManager
     var componentViewModel:PageSynopsis.ComponentViewModel
     var infinityScrollModel: InfinityScrollModel
     var relationContentsModel:RelationContentsModel
@@ -123,6 +124,10 @@ struct SynopsisBody: PageComponent{
                     FillButton(
                         text: String.button.connectBtv
                     ){_ in
+                        if self.vsManager.isGranted {
+                            self.vsManager.accountPairingAlert()
+                            return
+                        }
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.pairing)
                         )
@@ -175,6 +180,8 @@ SynopsisBodyHeader(
 
 struct SynopsisBodyHeader: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var vsManager:VSManager
+    
     var componentViewModel:PageSynopsis.ComponentViewModel
     var relationContentsModel:RelationContentsModel
     var peopleScrollModel: InfinityScrollModel
@@ -245,6 +252,10 @@ struct SynopsisBodyHeader: PageComponent{
                 FillButton(
                     text: String.button.connectBtv
                 ){_ in
+                    if self.vsManager.isGranted {
+                        self.vsManager.accountPairingAlert()
+                        return
+                    }
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
                     )

@@ -173,16 +173,7 @@ struct PageKidsIntro: PageView {
     }
     
     func emptyKids(){
-        let prevDateKey = self.setup.kidsRegistUnvisibleDate
-        if !prevDateKey.isEmpty,
-           let prevDate = prevDateKey.toDate(dateFormat: Setup.dateFormat)
-        {
-            let diffTime = abs(prevDate.timeIntervalSinceNow)
-            let diffDay = diffTime / (24 * 60 * 60 * 1000)
-            if diffDay < 7 {
-                return
-            }
-        }
+        if self.setup.isRegistUnvisibleDate() {return}
         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
     }
     

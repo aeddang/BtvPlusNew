@@ -69,6 +69,7 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var status:PairingStatus = .initate
     @Published var user:User? = nil
     private(set) var pairingDeviceType:PairingDeviceType = .btv
+    private(set) var pairingStbType:PairingDeviceType = .btv
     private(set) var pairingType:PairingType? = nil
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false

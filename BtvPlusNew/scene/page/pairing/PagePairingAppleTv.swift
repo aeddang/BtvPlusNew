@@ -8,10 +8,13 @@ import Foundation
 import SwiftUI
 
 struct PagePairingAppleTv: PageView {
+    @EnvironmentObject var vsManager:VSManager
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
+    @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var pageObservable:PageObservable = PageObservable()
    
     @State var isAgree1:Bool = true
@@ -20,10 +23,10 @@ struct PagePairingAppleTv: PageView {
     var body: some View {
         ZStack(alignment: .center) {
             Button(action: {
-                self.pagePresenter.closePopup(self.pageObject?.id)
+                //self.pagePresenter.closePopup(self.pageObject?.id)
             }) {
                Spacer().modifier(MatchParent())
-                   .background(Color.transparent.black70)
+                   .background(Color.transparent.black45)
             }
             VStack(spacing:0){
                 Image(Asset.image.pairindPopup)
@@ -57,6 +60,7 @@ struct PagePairingAppleTv: PageView {
                 .padding(.horizontal, Dimen.margin.regular)
                 
                 HStack(spacing:0){
+                    /*
                     FillButton(
                         text: String.app.cancel,
                         isSelected: true ,
@@ -71,7 +75,8 @@ struct PagePairingAppleTv: PageView {
                     ){_ in
                         self.sendLog(category: String.app.cancel)
                         self.pagePresenter.closePopup(self.pageObject?.id)
-                    }
+                        
+                    }*/
                     FillButton(
                         text: String.app.confirm,
                         isSelected: (self.isAgree1 && self.isAgree2),
@@ -94,7 +99,7 @@ struct PagePairingAppleTv: PageView {
                             self.appSceneObserver.event = .toast(String.alert.needAgreePrivacy)
                             return
                         }
-                        self.pagePresenter.closePopup(self.pageObject?.id)
+                        self.setupPush()
                         
                     }
                 }
@@ -108,12 +113,57 @@ struct PagePairingAppleTv: PageView {
         .onAppear(){
            
         }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            if res.id != self.tag { return }
+            switch res.type {
+            case .updateAgreement : self.onUpdatedPush(res)
+            default: break
+            }
+        }
+        .onReceive(self.dataProvider.$error){ err in
+            guard let err = err else { return }
+            if err.id != self.tag { return }
+            switch err.type {
+            case .updateAgreement : self.onUpdatePushError()
+            default: break
+            }
+        }
         
     }//body
     
     private func sendLog(category:String? = nil) {
         let actionBody = MenuNaviActionBodyItem( category: category)
         self.naviLogManager.actionLog(.clickConfirmButton, actionBody: actionBody)
+    }
+    
+    private func setupPush(){
+        let select = self.isAgree3
+        self.dataProvider.requestData(q: .init(id:self.tag, type: .updateAgreement(select)))
+        //self.sendLog(category: String.pageText.setupAlramMarketing, config: select)
+    }
+    
+    private func onUpdatedPush(_ res:ApiResultResponds){
+        guard let data = res.data as? NpsResult  else { return onUpdatePushError() }
+        guard let resultCode = data.header?.result else { return onUpdatePushError() }
+        if resultCode == NpsNetwork.resultCode.success.code {
+            let today = Date().toDateFormatter(dateFormat: "yy.MM.dd")
+            self.appSceneObserver.event = .toast(
+                self.isAgree3 ? today+"\n"+String.alert.pushOn : today+"\n"+String.alert.pushOff
+            )
+            self.pagePresenter.closePopup(self.pageObject?.id)
+        } else {
+            onUpdatePushError()
+        }
+    }
+    
+    private func onUpdatePushError(){
+        self.appSceneObserver.event = .toast( String.alert.pushError )
+    }
+    
+    private func sendLog(category:String, config:Bool) {
+        let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
 }
 

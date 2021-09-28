@@ -17,7 +17,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @State var showAlram:Bool = false
     @State var newCount:Int = 0
-    @State var pairingType:PairingDeviceType = .btv
+    @State var pairingStbType:PairingDeviceType = .btv
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
@@ -93,7 +93,7 @@ struct TopTab: PageComponent{
                     .frame(width: Dimen.icon.regular,
                            height: Dimen.icon.regular)
             }
-            if self.pairingType == .btv {
+            if self.pairingStbType == .btv {
                 Button(action: {
                     
                     if self.pairing.status != .pairing {
@@ -119,10 +119,10 @@ struct TopTab: PageComponent{
         .onReceive(self.pairing.$event){ evt in
             switch evt{
             case .connected :
-                self.pairingType = self.pairing.pairingDeviceType
+                self.pairingStbType = self.pairing.pairingStbType
                 break
             case .disConnected :
-                self.pairingType = self.pairing.pairingDeviceType
+                self.pairingStbType = self.pairing.pairingStbType
                 break
             default :break
             }
@@ -141,7 +141,7 @@ struct TopTab: PageComponent{
             }
         }
         .onAppear(){
-            self.pairingType = self.pairing.pairingDeviceType
+            self.pairingStbType = self.pairing.pairingStbType
         }
         
     }

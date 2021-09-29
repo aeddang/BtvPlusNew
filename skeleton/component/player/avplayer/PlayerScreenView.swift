@@ -171,7 +171,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         self.startPlayer(player:player)
     }
     private func startPlayer(player:AVPlayer){
-       // DispatchQueue.global(qos: .default).async {
+        //DispatchQueue.global(qos: .default).async {
             self.player = player
             player.allowsExternalPlayback = false
             player.usesExternalPlaybackWhileExternalScreenIsActive = true
@@ -200,12 +200,8 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
             ComponentLog.d("startPlayer currentRate " + self.currentRate.description , tag: self.tag)
             ComponentLog.d("startPlayer videoGravity " + self.currentVideoGravity.rawValue , tag: self.tag)
             self.createdPlayer()
-        
-        //DispatchQueue.main.async {
-            if self.isAutoPlay { self.resume() }
-            else { self.pause() }
+            
         //}
-       // }
     }
     
 
@@ -284,7 +280,9 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         if self.currentRate != 1 {
             currentPlayer.rate = self.currentRate
         }
-        if !self.isAutoPlay { pause() }
+        if self.isAutoPlay { self.resume() }
+        else { self.pause() }
+       
         /*
         guard let currentItem = currentPlayer.currentItem else { return }
         

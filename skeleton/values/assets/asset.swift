@@ -328,6 +328,7 @@ extension Asset{
         public static let empty = "imgMyEmpty01"
         public static let myEmpty = "imgMyEmpty01"
         public static let myEmpty2 = "imgMyEmpty02"
+        public static let myEmpty3 = "imgMyEmpty03"
         public static let pairingCharacter = "imgPairingCharacter"
         public static let deviceEmpty = "imgPairingNostbB"
         

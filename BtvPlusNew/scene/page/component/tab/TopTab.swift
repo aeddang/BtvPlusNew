@@ -18,6 +18,7 @@ struct TopTab: PageComponent{
     @State var showAlram:Bool = false
     @State var newCount:Int = 0
     @State var pairingStbType:PairingDeviceType = .btv
+    @State var character:String? = nil
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
@@ -26,7 +27,7 @@ struct TopTab: PageComponent{
                 )
             }) {
                 ZStack(alignment: .topLeading){
-                    Image(Asset.gnbTop.my)
+                    Image(self.character ?? Asset.gnbTop.my)
                         .renderingMode(.original)
                         .resizable()
                         .scaledToFit()
@@ -120,12 +121,23 @@ struct TopTab: PageComponent{
             switch evt{
             case .connected :
                 self.pairingStbType = self.pairing.pairingStbType
-                break
             case .disConnected :
                 self.pairingStbType = self.pairing.pairingStbType
-                break
+                self.onUpdatedUser(self.pairing.user)
+            case .pairingCompleted :
+                self.onUpdatedUser(self.pairing.user)
+        
             default :break
             }
+        }
+        .onReceive(self.pairing.$event){ evt in
+            guard let evt = evt else {return}
+            switch evt {
+            case .updatedUser :
+                self.onUpdatedUser(self.pairing.user)
+            default: break
+            }
+            
         }
         .onReceive(self.repository.alram.$newCount){ count in
             if self.pairing.status != .pairing { return }
@@ -145,6 +157,17 @@ struct TopTab: PageComponent{
         }
         
     }
+    
+    private func onUpdatedUser(_ user:User?){
+        if self.pairing.status != .pairing {
+            self.character = nil
+        } else if let user = user {
+            self.character = Asset.characterList[user.characterIdx]
+        } else {
+            self.character = nil
+        }
+    }
+    
 }
 
 #if DEBUG

@@ -168,6 +168,7 @@ class BtvPlayerModel:PlayerModel{
                 self.initPlay = autoPlay
                 self.fullVod = fullVod
                 //self.useInside = true
+                
             case .vod(let t, let autoPlay), .vodChange(let t, let autoPlay):
                 self.openingTime = playData.openingTime ?? -1
                 self.endingTime = playData.endingTime ?? -1

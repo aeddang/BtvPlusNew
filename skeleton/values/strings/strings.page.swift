@@ -41,6 +41,8 @@ extension String{
         
         public static let myRegistCardMember = "titleMyRegistCardMember".loaalized()
         public static let myRegistCardOk = "titleMyRegistCardOk".loaalized()
+        public static let mobileBtv = "titleMobileBtv".loaalized()
+        public static let btv = "titleBtv".loaalized()
         
     }
     
@@ -190,6 +192,8 @@ extension String{
         public static let myRegistPictureFammly = "myRegistPictureFammly".loaalized()
         public static let myWatchedInfo = "myWatchedInfo".loaalized()
         public static let myWatchedEmpty = "myWatchedEmpty".loaalized()
+        public static let myWatchedKids = "myWatchedKids".loaalized()
+        public static let myWatchedKidsButton = "myWatchedKidsButton".loaalized()
         public static let myPurchaseEmpty = "myPurchaseEmpty".loaalized()
         public static let myCollectedEmpty = "myCollectedEmpty".loaalized()
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()

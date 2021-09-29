@@ -70,6 +70,8 @@
 		313F8D11269C1A490055F775 /* PosterBlockKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313F8D10269C1A490055F775 /* PosterBlockKids.swift */; };
 		313F8D13269C3F8E0055F775 /* VideoBlockKids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */; };
 		313F8D16269C60700055F775 /* resource_fairplay.json in Resources */ = {isa = PBXBuildFile; fileRef = 313F8D15269C60700055F775 /* resource_fairplay.json */; };
+		31422D4E2703FC0E00FF24C8 /* PageMyWatchedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31422D4D2703FC0E00FF24C8 /* PageMyWatchedList.swift */; };
+		31422D5027041D3C00FF24C8 /* EmptyMyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31422D4F27041D3C00FF24C8 /* EmptyMyData.swift */; };
 		3144984E26DFFF23000D0ACD /* PrerollUi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144984D26DFFF23000D0ACD /* PrerollUi.swift */; };
 		3144985026E0704A000D0ACD /* HostNickname.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144984F26E0704A000D0ACD /* HostNickname.swift */; };
 		3144985226E26DDD000D0ACD /* PageSynopsisInside.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */; };
@@ -832,6 +834,8 @@
 		313F8D10269C1A490055F775 /* PosterBlockKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterBlockKids.swift; sourceTree = "<group>"; };
 		313F8D12269C3F8E0055F775 /* VideoBlockKids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoBlockKids.swift; sourceTree = "<group>"; };
 		313F8D15269C60700055F775 /* resource_fairplay.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = resource_fairplay.json; sourceTree = "<group>"; };
+		31422D4D2703FC0E00FF24C8 /* PageMyWatchedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyWatchedList.swift; sourceTree = "<group>"; };
+		31422D4F27041D3C00FF24C8 /* EmptyMyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyMyData.swift; sourceTree = "<group>"; };
 		3144984D26DFFF23000D0ACD /* PrerollUi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrerollUi.swift; sourceTree = "<group>"; };
 		3144984F26E0704A000D0ACD /* HostNickname.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostNickname.swift; sourceTree = "<group>"; };
 		3144985126E26DDC000D0ACD /* PageSynopsisInside.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisInside.swift; sourceTree = "<group>"; };
@@ -2038,6 +2042,7 @@
 				314D588B25B66868007BCA34 /* ValueInfo.swift */,
 				3166CBF12611AD0000282891 /* MyPointInfo.swift */,
 				318AA04D265E3E3F00C089EC /* MySetup.swift */,
+				31422D4F27041D3C00FF24C8 /* EmptyMyData.swift */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -3210,6 +3215,7 @@
 				318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */,
 				318D12DB2664919F00BF1DD8 /* PageMyPossessionPurchase.swift */,
 				31AC66C626B78E3C00766995 /* PageMyRegistCard.swift */,
+				31422D4D2703FC0E00FF24C8 /* PageMyWatchedList.swift */,
 			);
 			path = my;
 			sourceTree = "<group>";
@@ -4746,6 +4752,7 @@
 				D56C6A61257DA0C700CF9AB8 /* FocusableTextView.swift in Sources */,
 				316A707D2670360500A93B83 /* KidsPlayerUI.swift in Sources */,
 				D56C69AC257DA09E00CF9AB8 /* SelecterbleView.swift in Sources */,
+				31422D4E2703FC0E00FF24C8 /* PageMyWatchedList.swift in Sources */,
 				312825A626AE7E8100A58DB9 /* BuzzvilFeedItemAdsPointV.swift in Sources */,
 				3167197325FF27AA005AC3D2 /* WatchedList.swift in Sources */,
 				3197FC82267AE53E006918BA /* CustomAssetResourceLoader.swift in Sources */,
@@ -5016,6 +5023,7 @@
 				D56C6A48257DA0C700CF9AB8 /* RoundRectMask.swift in Sources */,
 				3144985026E0704A000D0ACD /* HostNickname.swift in Sources */,
 				319CF658269522DB00159575 /* LvGraphBox.swift in Sources */,
+				31422D5027041D3C00FF24C8 /* EmptyMyData.swift in Sources */,
 				31AC66D426BA23B100766995 /* ScrollList.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
 				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
@@ -5122,7 +5130,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7482;
+				CURRENT_PROJECT_VERSION = 7495;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5131,7 +5139,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 4.4.5;
+				MARKETING_VERSION = 4.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.notification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusNotification_development;
@@ -5147,7 +5155,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7482;
+				CURRENT_PROJECT_VERSION = 7495;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5156,7 +5164,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 4.4.5;
+				MARKETING_VERSION = 4.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.notification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusNotification_AppStore;
@@ -5337,7 +5345,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7482;
+				CURRENT_PROJECT_VERSION = 7495;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5362,7 +5370,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 4.4.5;
+				MARKETING_VERSION = 4.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDevelopment;
@@ -5421,7 +5429,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7482;
+				CURRENT_PROJECT_VERSION = 7495;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5441,7 +5449,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 4.4.5;
+				MARKETING_VERSION = 4.4.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDistribution;

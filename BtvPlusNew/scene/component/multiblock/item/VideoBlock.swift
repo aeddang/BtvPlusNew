@@ -23,6 +23,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     var margin:CGFloat = Dimen.margin.thin
     var useTracking:Bool = false
     var useEmpty:Bool = false
+    var isMyWatch:Bool = false
     @State var datas:[VideoData] = []
     @State var isUiActive:Bool = true
     @State var hasMore:Bool = true
@@ -74,7 +75,10 @@ struct VideoBlock:BlockProtocol, PageComponent {
                                 )
                             } else {
                                 self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                                    PageProvider.getPageObject(
+                                        self.isMyWatch
+                                        ? .myWatchedList
+                                        : data.dataType == .watched ? .watchedList : .categoryList)
                                         .addParam(key: .data, value: data)
                                         .addParam(key: .type, value: CateBlock.ListType.video)
                                         .addParam(key: .subType, value:data.cardType)

@@ -100,39 +100,35 @@ struct WatchedList: PageComponent{
     @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[WatchedData]
+    var watchedType:WatchedBlockType = .btv
     var useTracking:Bool = false
     var marginBottom:CGFloat = Dimen.margin.regular
+    
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var onBottom: ((_ data:WatchedData) -> Void)? = nil
     @State var horizontalMargin:CGFloat = Dimen.margin.thin
    
     var body: some View {
-        ZStack(alignment:.topLeading){
-            InfinityScrollView(
-                viewModel: self.viewModel,
-                axes: .vertical,
-                scrollType : .reload(isDragEnd:false),
-                header: InfoAlert(
-                    text: String.pageText.myWatchedInfo,
-                    horizontalMargin: self.horizontalMargin,
-                    actionIcon: Asset.gnbTop.zemkids,
-                    actionText: String.pageTitle.watchedKids,
-                    action: {
-                        self.pagePresenter.openPopup(
-                            PageKidsProvider.getPageObject( .kidsMy, animationType: .opacity)
-                                .addParam(key: .subId, value: PageKidsMy.recentlyWatchCode)
-                               
-                        )
-                    }
-                ),
-                headerSize: Dimen.button.thinUltra + Dimen.margin.thin,
-                marginTop: Dimen.margin.regular ,
-                marginBottom: self.marginBottom,
-                spacing:0,
-                isRecycle: true,
-                useTracking: self.useTracking
-            ){
-                if !self.datas.isEmpty {
+        ZStack(alignment:.center){
+            if !self.datas.isEmpty {
+                InfinityScrollView(
+                    viewModel: self.viewModel,
+                    axes: .vertical,
+                    scrollType : .reload(isDragEnd:false),
+                    header: self.watchedType == .kids
+                        ? nil
+                        : InfoAlert(
+                            text: String.pageText.myWatchedInfo,
+                            horizontalMargin: self.horizontalMargin
+                    ),
+                    headerSize: Dimen.button.thinUltra + Dimen.margin.thin,
+                    marginTop: Dimen.margin.regular ,
+                    marginBottom: self.marginBottom,
+                    spacing:0,
+                    isRecycle: true,
+                    useTracking: self.useTracking
+                ){
+                    
                     ForEach(self.datas) { data in
                         WatchedItem( data:data , delete:self.delete)
                             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
@@ -155,10 +151,16 @@ struct WatchedList: PageComponent{
                                 }
                             }
                     }
+                    
+                }
+            } else {
+                if self.watchedType == .kids {
+                    EmptyMyKidsData()
+                       
                 } else {
                     EmptyMyData(
                         text:String.pageText.myWatchedEmpty)
-                        .modifier(PageBody())
+                        
                 }
             }
            
@@ -278,7 +280,41 @@ struct WatchedItem: PageView {
         }
         
     }
-    
+}
+
+struct EmptyMyKidsData: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
+    var icon:String = Asset.image.myEmpty3
+    var text:String = String.pageText.myWatchedKids
+    var body: some View {
+        VStack(alignment: .center, spacing: 0){
+            Image(icon)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: Dimen.icon.heavyUltra, height: Dimen.icon.heavyUltra)
+            Text(text)
+                .modifier(BoldTextStyle(size: SystemEnvironment.isTablet ? Font.size.thin : Font.size.regular, color: Color.app.white))
+                    .multilineTextAlignment(.center)
+                    .padding(.top, Dimen.margin.mediumExtra)
+            FillButton(
+                text: String.pageText.myWatchedKidsButton,
+                size: Dimen.button.regular
+            ){ _ in
+                
+                self.pagePresenter.openPopup(
+                    PageKidsProvider.getPageObject( .kidsMy, animationType: .opacity)
+                        .addParam(key: .subId, value: PageKidsMy.recentlyWatchCode)
+                       
+                )
+            }
+            .buttonStyle(BorderlessButtonStyle())
+            .padding(.top, Dimen.margin.medium)
+            .frame(width: Dimen.button.mediumHorizontal)
+        }
+        .padding(.all, Dimen.margin.medium)
+        
+    }//body
 }
 
 

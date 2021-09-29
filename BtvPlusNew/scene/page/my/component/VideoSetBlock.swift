@@ -15,8 +15,8 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
     var pageObservable:PageObservable
     var geometry:GeometryProxy
     var data: BlockData
-    
     var limitedLine: Int? = nil
+    var isMyWatch:Bool = false
     var margin:CGFloat = Dimen.margin.heavy - VideoSet.listPadding
     var body :some View {
         
@@ -37,7 +37,9 @@ struct VideoSetBlock:BlockProtocol, PageComponent {
                         textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                     ){_ in
                         self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(data.dataType == .watched ? .watchedList : .categoryList)
+                            PageProvider.getPageObject(self.isMyWatch
+                                                       ? .myWatchedList
+                                                       : data.dataType == .watched ? .watchedList : .categoryList)
                                 .addParam(key: .data, value: data)
                                 .addParam(key: .type, value: CateBlock.ListType.video)
                                 .addParam(key: .subType, value:data.cardType)

@@ -56,7 +56,7 @@ enum PairingEvent{
          syncError(NpsCommonHeader?),
          syncFail,
          pairingCompleted, pairingCheckCompleted(Bool),
-         
+         updatedUser(User?),
          updatedKids(KesNetwork.UpdateType?), notFoundKid, editedKids,
          updatedKidsError, editedKidsError(KesNetwork.UpdateType?)
 }
@@ -245,6 +245,7 @@ class Pairing:ObservableObject, PageProtocol {
     func updateUser(_ data:ModifyUserData){
         let user = self.user?.clone().update(data)
         self.user = user
+        self.event = .updatedUser(user)
     }
     
     func updateUserAgreement(_ isAgree:Bool){

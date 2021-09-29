@@ -140,7 +140,8 @@ struct PairingView: PageComponent{
                             pageObservable: self.pageObservable,
                             geometry:self.geometry,
                             data: data,
-                            limitedLine : 2
+                            limitedLine : 2,
+                            isMyWatch: true
                             )
                             .padding(.top, Dimen.margin.medium)
                     } else {
@@ -151,7 +152,8 @@ struct PairingView: PageComponent{
                             data: data,
                             margin:SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.thin ,
                             useTracking:true,
-                            useEmpty:self.isWatchedEmpty
+                            useEmpty:self.isWatchedEmpty,
+                            isMyWatch: true
                             )
                             .padding(.top, Dimen.margin.medium)
                     }

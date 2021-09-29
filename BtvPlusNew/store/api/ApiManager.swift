@@ -287,6 +287,14 @@ class ApiManager :PageProtocol, ObservableObject{
             deleteList: list, isAll: isAll,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
+        case .getWatchMobile(let isPpm, let page, let count) : self.metv.getWatchMobile(
+            isPpm:isPpm, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .deleteWatchMobile(let list, let isAll) : self.metv.deleteWatchMobile(
+            deleteList: list, isAll: isAll,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         case .getBookMark(let page, let count) : self.metv.getBookMark(
             page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},

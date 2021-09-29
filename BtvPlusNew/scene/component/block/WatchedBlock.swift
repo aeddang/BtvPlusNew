@@ -9,11 +9,16 @@ import Foundation
 import SwiftUI
 import Combine
 
+enum WatchedBlockType{
+    case mobile, btv, kids
+}
+
 class WatchedBlockModel: PageDataProviderModel {
     private(set) var dataType:BlockData.DataType = .watched
+    private(set) var watchedType:WatchedBlockType = .btv
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
-     
+    private var isInit = true
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
@@ -23,10 +28,32 @@ class WatchedBlockModel: PageDataProviderModel {
         self.key = key
         self.isUpdate = true
     }
+    
+    func updateMobile() {
+        if !self.isInit {return}
+        self.isInit = false
+        self.watchedType = .mobile
+        self.isUpdate = true
+    }
+    
+    func updateBtv() {
+        if !self.isInit {return}
+        self.isInit = false
+        self.watchedType = .btv
+        self.isUpdate = true
+    }
+    
+    func updateKids() {
+        if !self.isInit {return}
+        self.isInit = false
+        self.watchedType = .kids
+        self.isUpdate = true
+    }
 }
 
 
-struct WatchedBlock: PageComponent{
+struct WatchedBlock: PageComponent, Identifiable{
+    let id:String = UUID().uuidString
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -39,20 +66,22 @@ struct WatchedBlock: PageComponent{
     var useTracking:Bool = false
     var marginBottom : CGFloat = 0
     @State var reloadDegree:Double = 0
-   
+    @State var watchedType:WatchedBlockType = .btv
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
             viewModel : self.viewModel
         ){
             if self.isError == false {
-                ZStack(alignment: .topLeading){
+                ZStack(alignment: .center){
                     ReflashSpinner(
                         progress: self.$reloadDegree)
                         .padding(.top, Dimen.margin.regular)
+                    
                     WatchedList(
                         viewModel: self.infinityScrollModel,
                         datas: self.datas,
+                        watchedType:self.watchedType,
                         useTracking:self.useTracking,
                         marginBottom:self.marginBottom,
                         delete: { data in
@@ -62,7 +91,6 @@ struct WatchedBlock: PageComponent{
                             self.load()
                         }
                     )
-                    
                 }
                 .modifier(MatchParent())
                 .background(Color.brand.bg)
@@ -74,7 +102,7 @@ struct WatchedBlock: PageComponent{
                         withAnimation{ self.reloadDegree = 0 }
                     case .pullCancel :
                         withAnimation{ self.reloadDegree = 0 }
-                    default : do{}
+                    default : break
                     }
                     
                 }
@@ -91,6 +119,7 @@ struct WatchedBlock: PageComponent{
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
+                self.watchedType = self.viewModel.watchedType
                 self.reload()
             }
         }
@@ -99,16 +128,22 @@ struct WatchedBlock: PageComponent{
             switch evt {
             case .onResult(_, let res, _):
                 switch res.type {
-                case .getWatch : self.loaded(res)
-                case .deleteWatch :
-                    if res.id == self.currentDeleteId {
+                case .getWatch : if self.watchedType == .btv { self.loaded(res) }
+                case .getWatchMobile : if self.watchedType == .mobile { self.loaded(res) }
+                case .deleteWatch:
+                    if res.id == self.currentDeleteId && self.watchedType == .btv{
+                        self.deleted(res)
+                    }
+                case .deleteWatchMobile :
+                    if res.id == self.currentDeleteId && self.watchedType == .mobile {
                         self.deleted(res)
                     }
                 default : break
                 }
             case .onError(_,  let err, _):
                 switch err.type {
-                case .getWatch : self.onError()
+                case .getWatch : if self.watchedType == .btv {self.onError()}
+                case .getWatchMobile : if self.watchedType == .mobile {self.onError()}
                 case .deleteWatch :
                     if err.id == self.currentDeleteId {
                         PageLog.d("delete error", tag:self.tag)
@@ -127,7 +162,7 @@ struct WatchedBlock: PageComponent{
             case .pairingCheckCompleted(let isSuccess) :
                 if isSuccess { self.reload() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
-            default : do{}
+            default : break
             }
         }
         .onAppear(){
@@ -154,25 +189,50 @@ struct WatchedBlock: PageComponent{
     
     
     func load(){
+        if self.watchedType == .kids {
+            self.datas = []
+            self.setDatas(datas: [])
+            return
+        }
+        
         if  !self.infinityScrollModel.isLoadable { return }
         self.infinityScrollModel.onLoad()
-        self.viewModel.request = .init(
-            id: self.tag,
-            type: .getWatch(self.infinityScrollModel.page + 1)
-        )
+        switch self.watchedType {
+        case .mobile :
+            self.viewModel.request = .init(
+                id: self.tag,
+                type: .getWatchMobile(self.infinityScrollModel.page + 1)
+            )
+        case .btv :
+            self.viewModel.request = .init(
+                id: self.tag,
+                type: .getWatch(self.infinityScrollModel.page + 1)
+            )
+        default:break
+        }
+        
     }
     
     func delete(data:WatchedData){
-        guard  let sridId = data.srisId else {
-            return
-        }
+        
+        guard  let sridId = data.srisId else { return }
         self.appSceneObserver.alert = .confirm(nil,  String.alert.deleteWatch){ isOk in
             if !isOk {return}
             self.currentDeleteId = sridId
-            self.viewModel.request = .init(
-                id: sridId ,
-                type: .deleteWatch([sridId], isAll: false)
-            )
+            switch self.watchedType {
+            case .mobile :
+                self.viewModel.request = .init(
+                    id: sridId ,
+                    type: .deleteWatchMobile([sridId], isAll: false)
+                )
+            case .btv :
+                self.viewModel.request = .init(
+                    id: sridId ,
+                    type: .deleteWatch([sridId], isAll: false)
+                )
+            default:break
+            }
+            
         }
     }
     
@@ -220,8 +280,6 @@ struct WatchedBlock: PageComponent{
             } else {
                 self.datas.append(contentsOf: loadedDatas)
             }*/
-            
-            
             
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)

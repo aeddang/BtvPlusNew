@@ -26,11 +26,15 @@ struct PrerollUi: PageView{
             PlayerEffect(viewModel: self.viewModel)
             VStack(spacing:0){ //광고버튼 피해서 영역잡음
                 Spacer().modifier(MatchParent())
-                    .background(Color.transparent.clearUi)
+                    .background(Color.transparent.clearUi)// Color.transparent.clearUi)
                 HStack(spacing:0){
-                    Spacer().modifier(MatchHorizontal(height: SystemEnvironment.isTablet ? 124 : 86))
+                    Spacer().modifier(MatchHorizontal(height: self.isFullScreen
+                                                      ? SystemEnvironment.isTablet ? 154 : 106
+                                                      : SystemEnvironment.isTablet ? 124 : 86))
                         .background(Color.transparent.clearUi)
-                }.padding(.trailing, SystemEnvironment.isTablet ? 160 : 110)
+                }.padding(.trailing, self.isFullScreen
+                          ? SystemEnvironment.isTablet ? 300 : 200
+                          : SystemEnvironment.isTablet ? 166 : 110)
             }
             .onTapGesture {
                 self.uiViewChange()

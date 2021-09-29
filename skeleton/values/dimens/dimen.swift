@@ -87,6 +87,7 @@ struct Dimen{
         public static let regularRect:CGSize = isPad ? CGSize(width: 78, height: 40) : CGSize(width: 48, height: 26)//*
         public static let lightRect:CGSize = isPad ? CGSize(width: 62, height: 30) : CGSize(width: 38, height: 20)//*
         
+        public static let mediumHorizontal:CGFloat = isPad ?  414 : 275
         public static let regularHorizontal:CGFloat = isPad ?  374 : 259
        
     }

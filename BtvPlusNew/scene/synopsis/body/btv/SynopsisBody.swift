@@ -59,7 +59,7 @@ struct SynopsisBody: PageComponent{
             marginTop : Self.spacing,
             marginBottom : Self.spacing + Dimen.app.bottom + self.sceneObserver.safeAreaIgnoreKeyboardBottom,
             spacing:0,
-            isRecycle:false,
+            isRecycle:true,
             useTracking:true
             ){
             

@@ -72,6 +72,8 @@ enum ApiType{
          getMonthlyData(String?, isDetail:Bool = false),
          getWatch(isPpm:Bool = false, Int? = nil , Int? = nil),
          deleteWatch([String]? = nil, isAll:Bool = false),
+         getWatchMobile(isPpm:Bool = false, Int? = nil , Int? = nil),
+         deleteWatchMobile([String]? = nil, isAll:Bool = false),
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),

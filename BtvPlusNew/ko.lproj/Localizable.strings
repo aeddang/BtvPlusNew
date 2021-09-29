@@ -580,6 +580,8 @@
 "titleMyRegistCardMember" = "T멤버십 카드 등록";
 "titleMyRegistCardOk" = "OK캐쉬백 카드 등록";
 "titleKids" = "ZEM 키즈";
+"titleMobileBtv" = "모바일 B tv";
+"titleBtv" = "B tv";
 /*
  PagePairing
 */
@@ -703,6 +705,8 @@
 "myTicketMore" = "둘러보기";
 "myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
 "myWatchedEmpty" = "시청 중인 콘텐츠가 없습니다.";
+"myWatchedKids" = "키즈 콘텐츠 시청 목록은\nZEM 키즈 메뉴에서 확인하실 수 있습니다.";
+"myWatchedKidsButton" = "ZEM 키즈 시청 목록 보러 가기";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myAlramEmpty" = "수신한 알림 메시지가 없습니다.";

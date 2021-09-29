@@ -29,7 +29,7 @@ extension PageID{
     static let myRecommand:PageID = "myRecommand"
     static let myPossessionPurchase:PageID = "myPossessionPurchase"
     static let myRegistCard:PageID = "myRegistCard"
-    
+    static let myWatchedList:PageID = "myWatchedList"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let terminateStb:PageID = "terminateStb"
@@ -214,6 +214,7 @@ struct PageFactory{
         case .watchHabit : return PageWatchHabit()
         case .purchaseList : return PagePurchaseList()
         case .myPurchaseTicketList : return PageMyPurchaseTicketList()
+        case .myWatchedList : return PageMyWatchedList()
         case .couponList : return PageCouponList()
         case .privacyAndAgree : return PagePrivacyAndAgree()
         case .remotecon : return PageRemotecon()

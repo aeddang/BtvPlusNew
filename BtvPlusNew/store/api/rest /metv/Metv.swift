@@ -244,7 +244,7 @@ class Metv: Rest{
     }
     
     /**
-    * 모바일 최근시청 VOD 조회 (IF-ME-121)
+    * 최근시청 VOD 조회 (IF-ME-21)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
     * @param entryNo 요청한 페이지에 보여질 개수 (Default: 5)
     * @param isPPM 최근시청VOD조회시 MyBtv/월정액 구분 필수 Y : 월정액 N : My Btv
@@ -267,8 +267,9 @@ class Metv: Rest{
         params["yn_ppm"] = isPpm ? "Y" : "N"
         fetch(route: MetvWatch(query: params), completion: completion, error:error)
     }
+    
     /**
-    * 모바일 최근시청 VOD 삭제 (IF-ME-122)
+    * 최근시청 VOD 삭제 (IF-ME-022)
     * @param isAll 전체 삭제 여부
     * @param deleteList 시청한 VOD 컨텐트의 sris_id(시즌 ID)
     */
@@ -291,6 +292,58 @@ class Metv: Rest{
         headers["method"] = "delete"
         fetch(route: MetvDelWatch(headers:headers, body: params), completion: completion, error:error)
     }
+    
+    /**
+    * 모바일 최근시청 VOD 조회 (IF-ME-121)
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 5)
+    * @param isPPM 최근시청VOD조회시 MyBtv/월정액 구분 필수 Y : 월정액 N : My Btv
+    */
+    func getWatchMobile(
+        isPpm:Bool = false , page:Int?, pageCnt:Int?,
+        completion: @escaping (Watch) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-021"
+        params["profile_id"] = NpsNetwork.pairingId
+        params["profile_typ_cd"] = "01"
+        params["dvc_typ_cd"] = "02"
+        params["stb_id"] = stbId
+        params["mobile_id"] = SystemEnvironment.deviceId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "9999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_SENIOR
+        params["yn_ppm"] = isPpm ? "Y" : "N"
+        fetch(route: MetvWatch(query: params), completion: completion, error:error)
+    }
+    
+    /**
+    * 최근시청 VOD 삭제 (IF-ME-022)
+    * @param isAll 전체 삭제 여부
+    * @param deleteList 시청한 VOD 컨텐트의 sris_id(시즌 ID)
+    */
+    func deleteWatchMobile(
+        deleteList:[String]? = nil, isAll:Bool = false ,
+        completion: @escaping (UpdateMetv) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-022" //"IF-ME-122"
+        params["stb_id"] = stbId
+        params["isAll"] = isAll ? "Y" : "N"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["svc_code"] = MetvNetwork.SVC_CODE
+        params["deleteList"] = deleteList ?? []
+        
+        var headers = [String : String]()
+        headers["method"] = "delete"
+        fetch(route: MetvDelWatch(headers:headers, body: params), completion: completion, error:error)
+    }
+      
     
     /**
     * 즐겨찾기 조회(VOD) (IF-ME-011)

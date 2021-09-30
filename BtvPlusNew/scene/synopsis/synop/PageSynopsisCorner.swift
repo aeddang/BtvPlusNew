@@ -19,7 +19,9 @@ extension PageSynopsis {
             }
             if self.hasAuthority == true {
                 self.playerModel.continuousProgressTime = progressTime
-                self.onFullScreenViewMode()
+                if self.synopsisData?.isFullScreenProgressTime == true {
+                    self.onFullScreenViewMode()
+                }
             } else {
                 if self.pairing.status == .pairing {
                     if self.synopsisModel?.isOnlyPurchasedBtv == true {

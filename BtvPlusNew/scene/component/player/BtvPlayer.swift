@@ -307,7 +307,11 @@ struct BtvPlayer: PageComponent{
                     case .initate :
                         self.viewModel.initPlay = true
                         self.initPlayer()
-                        
+                    case .syncListScroll: 
+                        if let find = self.listData.datas.first(where: {self.contentID == $0.epsdId}) {
+                            self.listViewModel.uiEvent = .scrollTo(find.hashId, UnitPoint.center)
+                        }
+
                     case .closeList :
                         self.isPlayListShowing = false
                         self.updatePlayListOffset()

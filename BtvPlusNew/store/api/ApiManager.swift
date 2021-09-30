@@ -410,6 +410,23 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getTerminateStbInfo(let cid): self.kms.getTerminateStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
+        //OKSUSU TEST
+        case .getOksusuUser(let cid): self.kms.getTerminateStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .getOksusuUserInfo(let cid): self.kms.getTerminateStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .connectOksusuUser(let cid) : self.kms.getTerminateStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .disconnectOksusuUser(let cid) : self.kms.getTerminateStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .addOksusuUserToBtvPurchase(let cid) : self.kms.getTerminateStbList(ci: cid,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+    
         //SMD
         case .getLike(let seriesId, let device, let isTotal) : self.smd.getLike(
             seriesId: seriesId, hostDevice: device, isTotal: isTotal,

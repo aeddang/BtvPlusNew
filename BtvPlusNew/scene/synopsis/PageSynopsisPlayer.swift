@@ -17,12 +17,11 @@ struct PageSynopsisPlayer: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var naviLogManager:NaviLogManager
-    
+    @EnvironmentObject var setup:Setup
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var playerModel: BtvPlayerModel =
-        BtvPlayerModel(useFullScreenAction:false, useFullScreenButton: false)
+    @ObservedObject var playerModel: BtvPlayerModel = BtvPlayerModel(useFullScreenAction:false, useFullScreenButton: false)
     @ObservedObject var prerollModel = PrerollModel()
     
     @State var synopsisData:SynopsisData? = nil
@@ -45,9 +44,11 @@ struct PageSynopsisPlayer: PageView {
                         playerModel: self.playerModel,
                         prerollModel: self.prerollModel,
                         title: self.title,
+                        epsdId:self.epsdId,
                         imgBg: self.imgBg,
                         imgContentMode: self.imgContentMode,
                         textInfo: self.textInfo,
+                        playListData: self.playListData,
                         isPlayAble: self.isPlayAble,
                         isPlayViewActive: self.isPlayViewActive
                     )
@@ -101,7 +102,7 @@ struct PageSynopsisPlayer: PageView {
                 case .pairingCheckCompleted(let isSuccess) :
                     if isSuccess { self.initPage() }
                     else { self.appSceneObserver.alert = .pairingCheckFail }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.pageDataProviderModel.$event){evt in
@@ -178,6 +179,7 @@ struct PageSynopsisPlayer: PageView {
     @State var synopsisModel:SynopsisModel? = nil
     @State var episodeViewerData:EpisodeViewerData? = nil
     @State var playerData:SynopsisPlayerData? = nil
+    @State var playListData:PlayListData = PlayListData()
     @State var title:String? = nil
     @State var imgBg:String? = nil
     @State var textInfo:String? = nil
@@ -304,6 +306,7 @@ struct PageSynopsisPlayer: PageView {
                 category: self.synopsisPlayType.logCategory,
                 result: self.synopsisData?.synopType.logResult)
         }
+        self.playerModel.btvUiEvent = .syncListScroll
     }
     
 
@@ -323,6 +326,19 @@ struct PageSynopsisPlayer: PageView {
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
             withAnimation{self.isPlayAble = true}
+            if let infoList = self.synopsisModel?.seriesInfoList {
+                
+                let playList = zip(infoList, 0...infoList.count).map{ data, idx in
+                    PlayerListData().setData(data: data, isClip: true, idx: idx)}
+                
+                self.playListData = PlayListData(
+                    listTitle: String.pageText.synopsisClipView,
+                    datas: playList)
+            } else {
+                self.playListData = PlayListData(
+                    listTitle: String.pageText.synopsisClipView,
+                    datas: [])
+            }
             
         } else {
             self.progressError = true
@@ -356,14 +372,13 @@ struct PageSynopsisPlayer: PageView {
                 self.synopsisPlayType = .clip()
             }
             
-            let prerollData = SynopsisPrerollData()
-                .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
+            //let prerollData = SynopsisPrerollData().setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             self.playerData = SynopsisPlayerData()
-                .setData(type: self.synopsisPlayType, synopsis: synopsis)
+                .setData(type: self.synopsisPlayType, datas: self.playListData.datas, epsdId:self.epsdId ?? "")
             self.playerModel
-                .setData(synopsisPrerollData: prerollData)
+                //.setData(synopsisPrerollData: prerollData)
                 .setData(synopsisPlayData: self.playerData)
-                .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title))
+                .setData(data: dataInfo, type: .vod(self.epsdRsluId,self.title), autoPlay:true)
         }
     }
     
@@ -372,9 +387,48 @@ struct PageSynopsisPlayer: PageView {
      Player process
      */
     func playCompleted(){
-        
+        if self.playerModel.isReplay {return}
+        if !self.nextVod(auto: true) {
+            self.vodCompleted()
+        }
+    }
+    @discardableResult
+    func nextVod(auto:Bool = true)->Bool{
+        if self.playerModel.isReplay && auto {return false}
+        guard let playData = self.playerData else { return false}
+        if !playData.hasNext { return false}
+        if !self.setup.nextPlay && auto {
+            self.appSceneObserver.alert = .confirm(
+                String.pageText.synopsisNextPlay, String.pageText.synopsisNextClipPlayConfirm) { isOk in
+                if isOk {
+                    nextVod(auto:false)
+                }
+            }
+            return true
+        }
+        if let find = playData.nextEpisode {
+            self.changeVod(epsdId: find.epsdId)
+            return true
+        }
+        return false
     }
     
+    private func vodCompleted(){
+        PageLog.d("vodCompleted", tag: self.tag)
+        self.pagePresenter.closePopup(self.pageObject?.id)
+    }
+    
+    func changeVod(epsdId:String?){
+        guard let epsdId = epsdId else { return }
+        guard let cdata = self.synopsisData else { return }
+        self.synopsisData = SynopsisData(
+                srisId: cdata.srisId, searchType: .prd,
+                epsdId: epsdId, epsdRsluId: "",
+                prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
+                synopType: cdata.synopType
+            )
+        self.resetPage()
+    }
     
     func onEvent(btvUiEvent:BtvUiEvent){
         switch btvUiEvent {
@@ -390,6 +444,10 @@ struct PageSynopsisPlayer: PageView {
     
     func onEvent(btvPlayerEvent:BtvPlayerEvent){
         switch btvPlayerEvent {
+        case .changeView(let epsdId) :
+            self.changeVod(epsdId:epsdId)
+        case .nextView(let isAuto) :
+            self.nextVod(auto: isAuto)
         case .fullVod (let synopsisData):
             self.pagePresenter.closePopup(self.pageObject?.id)
             self.pagePresenter.openPopup(
@@ -443,7 +501,7 @@ struct PageSynopsisPlayer: PageView {
             self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
         case .completed:
             self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
-            self.pagePresenter.closePopup(self.pageObject?.id)
+            self.playCompleted()
         default: break
         }
     }

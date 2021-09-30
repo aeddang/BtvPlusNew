@@ -264,7 +264,11 @@ struct CateBlock: PageComponent{
         }
         .onReceive(self.viewModel.$isUpdate){ update in
             if update {
-                self.sortType = self.viewModel.type == .btv ? SortTab.finalSortType : SortTabKids.finalSortType
+                if self.viewModel.cardType != .watchedVideo {
+                    self.sortType = self.viewModel.type == .btv ? SortTab.finalSortType : SortTabKids.finalSortType
+                } else {
+                    self.sortType = .latest
+                }
                 self.setupMenu()
                 self.reload()
             }

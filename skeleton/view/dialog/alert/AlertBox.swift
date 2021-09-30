@@ -115,6 +115,7 @@ struct AlertBody: PageComponent{
         VStack (alignment: .center, spacing:0){
             if self.title != nil{
                 Text(self.title!)
+                    .multilineTextAlignment(.center)
                     .modifier(BoldTextStyle(size: Font.size.regular))
                     .fixedSize(horizontal: false, vertical: true)
                     

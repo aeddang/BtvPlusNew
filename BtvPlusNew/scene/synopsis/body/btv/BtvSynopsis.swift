@@ -138,9 +138,7 @@ struct BtvSynopsis: PageComponent{
                             relationDatas: self.relationDatas,
                             hasRelationVod: self.sceneOrientation == .portrait ? self.hasRelationVod : nil,
                             useTracking:self.useTracking,
-                            funtionLayout : (self.sceneOrientation == .portrait && SystemEnvironment.isTablet)
-                                ? .horizontal : .vertical
-                            )
+                            funtionLayout : self.getFubctionLayout())
                             .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                             .opacity(self.dragOpacity)
                         
@@ -198,6 +196,19 @@ struct BtvSynopsis: PageComponent{
                 : geometry.size.width
         }
     }//body
+    
+    
+    private func getFubctionLayout() -> Axis {
+        var axis:Axis = (self.sceneOrientation == .portrait && SystemEnvironment.isTablet) ? .horizontal : .vertical
+        if axis == .vertical && SystemEnvironment.isTablet {
+            let w = self.sceneObserver.screenSize.width
+            //ComponentLog.d(w.description, tag:"getFubctionLayout")
+            if w >= 1100 {
+                axis = .horizontal
+            }
+        }
+        return axis
+    }
 }
 
 

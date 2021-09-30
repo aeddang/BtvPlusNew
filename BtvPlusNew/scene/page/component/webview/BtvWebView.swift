@@ -25,6 +25,8 @@ extension BtvWebView {
     static let event = "/view/v3.0/event/all"
     static let tip = "/view/v3.0/tip/all"
     static let serviceTerms = "/view/v3.0/terms"
+    static let privacyAgreement = "/view/v3.0/agreement"
+
     static let happySenior = "/view/v3.0/setting/happysenior"
     static let callJsPrefix = "javascript:"
     

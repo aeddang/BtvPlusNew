@@ -91,19 +91,27 @@ class VideoData:InfinityData{
             isClip = cardType == .clip
         }
         count = data.brcast_tseq_nm
-        let count = data.brcast_tseq_nm?.isEmpty == false
-        ? (data.brcast_tseq_nm ?? "") + String.app.count + " "
-        : ""
-        if data.episode_title?.isEmpty == false, let epsdTitle = data.episode_title {
-            title = data.title
-            subTitle = count + epsdTitle
+        if pageType == .kids { //같은타입인데 키즈랑 비티비 내려오는 데이타가 다름 그럴수도 있다.. 흔한일이다
+            let count = data.brcast_tseq_nm?.isEmpty == false
+            ? (data.brcast_tseq_nm ?? "") + String.app.broCount + " "
+            : ""
+            if data.episode_title?.isEmpty == false, let epsdTitle = data.episode_title {
+                title = data.title
+                subTitle = count + epsdTitle
+            } else {
+                title = count + (data.title ?? "")
+            }
         } else {
-            title = count + (data.title ?? "")
+            title = data.title
         }
         if cardType == .watchedVideo {
             self.usePrice = false
             self.isWatched = true
-            self.progress = 0 //프로그래스 업데이트예정
+            if let rt = data.kes?.position {
+                self.progress = Float(rt) / 100.0
+            } else {
+                self.progress = 0
+            }
         }
         sort_seq = data.sort_seq ?? 0
         originImage = data.poster_filename_h
@@ -128,7 +136,7 @@ class VideoData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,
-            kidZone:data.kids_yn)
+            kidZone:data.kids_yn, progress:self.progress)
         
         return self
     }

@@ -209,6 +209,12 @@ enum ApiType{
     case certificationCoupon(String, StbInfo),
          requestBPointIssuance(pointPolicyNum:String, pointAmount:Int, callback:String? = nil)
     
+    //OKSUSU TEST
+    case getOksusuUser(String),
+         getOksusuUserInfo(String),
+         connectOksusuUser(String),
+         disconnectOksusuUser(String),
+         addOksusuUserToBtvPurchase(String)
     
     func coreDataKey() -> String? {
         switch self {

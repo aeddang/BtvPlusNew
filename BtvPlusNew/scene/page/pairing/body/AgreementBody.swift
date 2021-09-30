@@ -41,8 +41,15 @@ struct AgreementBody: PageComponent {
                 more:{
                     self.pagePresenter.openPopup(
                         PageProvider
-                            .getPageObject(.privacyAndAgree)
+                            .getPageObject(.webview)
+                            .addParam(key: .data, value: BtvWebView.privacyAgreement)
+                            .addParam(key: .title , value: String.pageTitle.privacyAndAgree)
                     )
+                    /*
+                    self.pagePresenter.openPopup(
+                        PageProvider
+                            .getPageObject(.privacyAndAgree)
+                    )*/
                 }
             )
             

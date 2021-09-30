@@ -9,30 +9,19 @@ import Foundation
 import Intents
 
 extension PageSynopsis {
-    func onSiri(userActivity:NSUserActivity){
+    func onSiri(){
+        let activity = NSUserActivity(activityType: Self.shortcutType)
         guard let epsdId = self.epsdId  else { return }
-        let isExistContentId = userActivity.externalMediaContentIdentifier == nil
+        let isExistContentId = activity.externalMediaContentIdentifier == nil
             ? false
-            : userActivity.externalMediaContentIdentifier?.contains(epsdId) ?? false
+            : activity.externalMediaContentIdentifier?.contains(epsdId) ?? false 
                   
         if isExistContentId {
-            userActivity.resignCurrent()
+            activity.resignCurrent()
         }
-        userActivity.externalMediaContentIdentifier = epsdId
-        userActivity.becomeCurrent() 
-        /*
-        userActivity.isEligibleForSearch = true
-        userActivity.title = "\(icecream.name) Ice Cream"
-        userActivity.userInfo = ["sizeId": icecream.id]
-       
-        let attributes = CSSearchableItemAttributeSet(itemContentType: kUTTypeItem as String)
-       
-        attributes.contentDescription = "Get a delicious ice cream now!"
-        attributes.thumbnailData = UIImage(named: icecream.image)?.pngData()
-        userActivity.contentAttributeSet = attributes
-       
-        print("Advertising: \(icecream.name)")
-        */
+        activity.externalMediaContentIdentifier = epsdId
+        activity.becomeCurrent()
+        
     }
     
     func onAllProgressCompletedSiri(){
@@ -42,12 +31,15 @@ extension PageSynopsis {
             activity.externalMediaContentIdentifier = epsdId 
         }
     }
+    
     func onDurationSiri(duration:Double){
         guard let epsdId = self.epsdId else {return}
         if duration > 1 {
             self.universalSearchManager.updateMetaData(
                 contentId: epsdId,
-                title: self.episodeViewerData?.episodeTitle ?? "")
+                title: self.episodeViewerData?.episodeTitle ?? "",
+                endCredit: self.playerData?.endingTime
+            )
             self.universalSearchManager.updatePlayNow(
                 duration: duration,
                 initTime: 0,

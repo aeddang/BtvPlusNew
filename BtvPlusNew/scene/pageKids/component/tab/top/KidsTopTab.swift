@@ -20,6 +20,12 @@ struct KidsTopTab: PageComponent{
     var body: some View {
         HStack(alignment: .center ,spacing:DimenKids.margin.light){
             KidProfile().onTapGesture {
+                if self.pairing.kids.isEmpty || self.pairing.kid == nil{
+                    if !self.setup.isRegistUnvisibleDate() {
+                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                        return
+                    }
+                }
                 self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
             }
             Spacer()

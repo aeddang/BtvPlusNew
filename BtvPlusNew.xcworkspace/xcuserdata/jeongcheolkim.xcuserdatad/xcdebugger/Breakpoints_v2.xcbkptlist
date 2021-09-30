@@ -39,22 +39,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "41B8C731-3509-4597-AB72-3EABF4C33280"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/sceneui/SceneAlertController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "528"
-            endingLineNumber = "528"
-            landmarkName = "selectedUpdateAlram(_:id:isAlram:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "AD55B9CB-E68A-4720-A0BD-A7D88E2F4B0D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -190,8 +174,8 @@
             filePath = "BtvPlusNew/scene/page/component/webview/BtvWebView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "110"
-            endingLineNumber = "110"
+            startingLineNumber = "112"
+            endingLineNumber = "112"
             landmarkName = "callFuncion(fn:jsonParams:callback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +190,8 @@
             filePath = "BtvPlusNew/scene/page/component/webview/BtvWebView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "callFuncion(fn:jsonParams:callback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -215,16 +199,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "34A721DA-80F1-4AF7-AA29-3CEF77F81D65"
+            uuid = "ECA63B92-5850-49EC-A73F-BE022300F20D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/AppDelegate.swift"
+            filePath = "lib/network/Network.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "41"
-            endingLineNumber = "41"
-            landmarkName = "handleApns(_:isMove:)"
+            startingLineNumber = "207"
+            endingLineNumber = "207"
+            landmarkName = "fetch(route:multipartFormData:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

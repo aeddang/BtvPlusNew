@@ -14,6 +14,7 @@ import SwiftUI
 
 struct SetupItem: PageView {
     @Binding var isOn:Bool
+    
     var title:String? = nil
     var subTitle:String? = nil
     var tips:[String]? = nil

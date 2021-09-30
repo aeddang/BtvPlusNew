@@ -508,6 +508,10 @@
 		31AC66CF26B8C82400766995 /* PagePairingAppleTv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */; };
 		31AC66D226BA1E5F00766995 /* ScrollLazeStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66D126BA1E5F00766995 /* ScrollLazeStack.swift */; };
 		31AC66D426BA23B100766995 /* ScrollList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AC66D326BA23B100766995 /* ScrollList.swift */; };
+		31AF564B2705505700045A41 /* SetupOksusu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AF564A2705505700045A41 /* SetupOksusu.swift */; };
+		31AF564D2705699E00045A41 /* PageOksusuUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AF564C2705699E00045A41 /* PageOksusuUser.swift */; };
+		31AF564F270569C800045A41 /* UserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AF564E270569C700045A41 /* UserList.swift */; };
+		31AF565127059AEB00045A41 /* PageMyOksusuPurchase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AF565027059AEB00045A41 /* PageMyOksusuPurchase.swift */; };
 		31BDEFD726F3F74F00E3E5FC /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BDEFD626F3F74F00E3E5FC /* NotificationService.swift */; };
 		31BDEFDB26F3F74F00E3E5FC /* notification.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 31BDEFD426F3F74F00E3E5FC /* notification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		31BDEFE126F3FAD500E3E5FC /* BtvPlusPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BDEFE026F3FAD500E3E5FC /* BtvPlusPersistentContainer.swift */; };
@@ -1280,6 +1284,10 @@
 		31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagePairingAppleTv.swift; sourceTree = "<group>"; };
 		31AC66D126BA1E5F00766995 /* ScrollLazeStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollLazeStack.swift; sourceTree = "<group>"; };
 		31AC66D326BA23B100766995 /* ScrollList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollList.swift; sourceTree = "<group>"; };
+		31AF564A2705505700045A41 /* SetupOksusu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupOksusu.swift; sourceTree = "<group>"; };
+		31AF564C2705699E00045A41 /* PageOksusuUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageOksusuUser.swift; sourceTree = "<group>"; };
+		31AF564E270569C700045A41 /* UserList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserList.swift; sourceTree = "<group>"; };
+		31AF565027059AEB00045A41 /* PageMyOksusuPurchase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageMyOksusuPurchase.swift; sourceTree = "<group>"; };
 		31BDEFD426F3F74F00E3E5FC /* notification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = notification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		31BDEFD626F3F74F00E3E5FC /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		31BDEFD826F3F74F00E3E5FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2474,6 +2482,7 @@
 				318AA044265DE8D100C089EC /* SetupHappySenior.swift */,
 				318AA04B265DFA4F00C089EC /* SetupPossession.swift */,
 				318AA049265DE96900C089EC /* SetupLaboratory.swift */,
+				31AF564A2705505700045A41 /* SetupOksusu.swift */,
 			);
 			path = body;
 			sourceTree = "<group>";
@@ -3214,6 +3223,7 @@
 				319745C6262010F30072945D /* PageMyPurchaseTicketList.swift */,
 				318C36BA265F6C4D009B7EC3 /* PageMyRecommand.swift */,
 				318D12DB2664919F00BF1DD8 /* PageMyPossessionPurchase.swift */,
+				31AF565027059AEB00045A41 /* PageMyOksusuPurchase.swift */,
 				31AC66C626B78E3C00766995 /* PageMyRegistCard.swift */,
 				31422D4D2703FC0E00FF24C8 /* PageMyWatchedList.swift */,
 			);
@@ -3330,6 +3340,7 @@
 				318F7B402625444C00774B17 /* CardList.swift */,
 				31C4BCCD262D745B00BB2167 /* AlramList.swift */,
 				314D0E3026DF9D0300BDCD5B /* PickerList.swift */,
+				31AF564E270569C700045A41 /* UserList.swift */,
 			);
 			path = list;
 			sourceTree = "<group>";
@@ -3375,6 +3386,7 @@
 				31A49FF72627D1620065E6C6 /* PagePairingGuide.swift */,
 				31AC66CE26B8C82400766995 /* PagePairingAppleTv.swift */,
 				3191268326BCFC08006F39E7 /* PagePairingFamilyInvite.swift */,
+				31AF564C2705699E00045A41 /* PageOksusuUser.swift */,
 			);
 			path = pairing;
 			sourceTree = "<group>";
@@ -4664,6 +4676,7 @@
 				319B07A6263A8807008C11A8 /* VideoSetBlock.swift in Sources */,
 				318ECEF8266DAD1800380B59 /* MultiPickerSelect.swift in Sources */,
 				316719A02600642D005AC3D2 /* PageIntro.swift in Sources */,
+				31AF564B2705505700045A41 /* SetupOksusu.swift in Sources */,
 				31863E10265C8F530086C40D /* PlayerGrade.swift in Sources */,
 				3192EFD22666F8760012F238 /* KidsGnb.swift in Sources */,
 				D56C5FE825930060009AE769 /* BookMark.swift in Sources */,
@@ -4761,6 +4774,7 @@
 				316A707B2670349900A93B83 /* BtvPlayerModel.swift in Sources */,
 				D56C69B5257DA09E00CF9AB8 /* NetworkObserver.swift in Sources */,
 				3195C1BB2665F121001F513E /* PageKidsFactory.swift in Sources */,
+				31AF565127059AEB00045A41 /* PageMyOksusuPurchase.swift in Sources */,
 				3152B47225DA310000147C86 /* SerisList.swift in Sources */,
 				314E755E26DB310300A8C924 /* BtvCustomWebView.swift in Sources */,
 				317F990526A6719000016C09 /* EmptySearchResultKids.swift in Sources */,
@@ -4840,6 +4854,7 @@
 				319CF6632695D0B700159575 /* AlertsKids.swift in Sources */,
 				319BAFCC26046B240007273F /* ImageAnimation.swift in Sources */,
 				318F7B632625818900774B17 /* OkCashPoint.swift in Sources */,
+				31AF564F270569C800045A41 /* UserList.swift in Sources */,
 				310755E026F76B9E000228D2 /* InputNumberField.swift in Sources */,
 				319CF6652695D8BF00159575 /* ResultEnglishReportView.swift in Sources */,
 				319B379F26B1AAAB001501B1 /* RecommandReceiveError.swift in Sources */,
@@ -5069,6 +5084,7 @@
 				3170ABF426FDE6E70065BB82 /* CustomPicker.swift in Sources */,
 				316A70A32670815600A93B83 /* PlayerListKids.swift in Sources */,
 				D56C6A35257DA0C700CF9AB8 /* CpTabDivisionNavigation.swift in Sources */,
+				31AF564D2705699E00045A41 /* PageOksusuUser.swift in Sources */,
 				D56C6B34257DACD800CF9AB8 /* Repository.swift in Sources */,
 				3177732F25FAFA2C006382AE /* Authority.swift in Sources */,
 				31AC66C926B7900E00766995 /* InputNumberGroupBox.swift in Sources */,
@@ -5130,7 +5146,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7495;
+				CURRENT_PROJECT_VERSION = 7497;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5155,7 +5171,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7495;
+				CURRENT_PROJECT_VERSION = 7497;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5345,7 +5361,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7495;
+				CURRENT_PROJECT_VERSION = 7497;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5429,7 +5445,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7495;
+				CURRENT_PROJECT_VERSION = 7497;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

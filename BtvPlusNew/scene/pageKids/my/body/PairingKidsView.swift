@@ -240,11 +240,10 @@ struct PairingKidsView: PageComponent {
                     - (DimenKids.margin.light*2) // 마진
                     - (DimenKids.margin.thin) // 마진
                     - (DimenKids.margin.regular*2) // 메이지 마진
-                    //- self.sceneObserver.safeAreaStart
-                    //- self.sceneObserver.safeAreaEnd
+
                 self.onLoaded()
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
-                    self.cateBlockModel?.update(data: watcheBlockData, listType:.video, cardType: watcheBlockData.cardType)
+                    self.cateBlockModel?.update(data: watcheBlockData, listType:.video, cardType: .watchedVideo)
                 }
                 
             } else {

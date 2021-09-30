@@ -467,7 +467,7 @@ struct PageRemotecon: PageView {
             }
         case .search:
             if host.isEnableStringInput() {
-                ctrl = .StrInput
+                ctrl = .MobileSearch
             }
         }
         self.sendAction(npsMessage: NpsMessage().setMessage(type: ctrl, value: value))

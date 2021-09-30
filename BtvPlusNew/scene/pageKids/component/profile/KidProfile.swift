@@ -21,7 +21,7 @@ struct KidProfile: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
-    
+    @EnvironmentObject var setup:Setup
     @State var profileImg:String = AssetKids.image.noProfile
     @State var title:String? = nil
     var body: some View {
@@ -43,6 +43,12 @@ struct KidProfile: PageComponent{
                     if status != .pairing {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
                         return
+                    }
+                    if self.pairing.kids.isEmpty || self.pairing.kid == nil{
+                        if !self.setup.isRegistUnvisibleDate() {
+                            self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
+                            return
+                        }
                     }
                     if self.pairing.kids.isEmpty {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))

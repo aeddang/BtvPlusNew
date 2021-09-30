@@ -12,7 +12,7 @@ import CoreTelephony
 struct SystemEnvironment {
     static let model:String = AppUtil.model
     static let systemVersion:String = UIDevice.current.systemVersion
-    static let bundleVersion:String = "4.4.4" //AppUtil.version
+    static let bundleVersion:String = "4.4.5" //AppUtil.version
     static let bundleVersionKey:String = AppUtil.version
     static let buildNumber:String = AppUtil.build.description
     

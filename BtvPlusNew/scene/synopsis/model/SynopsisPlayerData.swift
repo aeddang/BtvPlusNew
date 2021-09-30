@@ -9,7 +9,8 @@ import Foundation
 
 
 enum SynopsisPlayType:Equatable {
-    case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil), clip(Bool? = nil , SynopsisData? = nil),
+    case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil),
+         clip(Bool? = nil , SynopsisData? = nil), 
          vod(Double = 0, Bool? = nil), vodNext(Double = 0, Bool? = nil), vodChange(Double = 0, Bool? = nil)
     
     var name: String? {
@@ -51,11 +52,13 @@ class SynopsisPlayerData {
     private(set) var type:SynopsisPlayType = .unknown
     private(set) var previews:[PreviewItem]? = nil
     private(set) var hasNext:Bool = false
+    private(set) var isClip:Bool = false
     private(set) var nextEpisode:PlayerListData? = nil
     private(set) var nextSeason:SeasonData? = nil
     private(set) var openingTime:Double? = nil
     private(set) var endingTime:Double? = nil
     func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil, isPairing:Bool? = nil) -> SynopsisPlayerData {
+        
         self.type = type
         switch type {
         case .preview:
@@ -93,6 +96,19 @@ class SynopsisPlayerData {
         return self
     }
     
+    func setData(type:SynopsisPlayType,datas:[PlayerListData], epsdId:String ) -> SynopsisPlayerData {
+        self.type = type
+        self.isClip = true
+        if let find = datas.first(where: {$0.epsdId == epsdId}) {
+            if find.index < (datas.count-1) {
+                self.nextEpisode = datas[find.index+1]
+                self.hasNext = true
+                return self
+            }
+        }
+        return self
+    }
+    
     var previewCount:String {
         get{
             switch type {
@@ -110,7 +126,9 @@ class SynopsisPlayerData {
     
     var nextString:String? {
         get{
-            if self.nextEpisode != nil {
+            if self.isClip {
+                return String.player.nextClip
+            }else if self.nextEpisode != nil {
                 return String.player.next
             }else if let _ = self.nextSeason {
                 return String.player.nextSeason

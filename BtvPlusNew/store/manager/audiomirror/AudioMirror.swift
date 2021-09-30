@@ -6,10 +6,10 @@
 //
 
 import Foundation
-enum AudioMirrorStatus{
-    case connecting, call, mirroring, none
+enum AudioMirrorStatus:String{
+    case connecting, call,  mirroring, none
 }
 
-enum AudioMirrorEvent{
+enum AudioMirrorEvent:String{
     case connected, dicconnected, notFound, pause, resume, interruption
 }

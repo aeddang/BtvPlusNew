@@ -10,7 +10,7 @@ import Intents
 
 extension PageSynopsis {
     enum ComponentEvent {
-        case changeVod(String?), changeSynopsis(SynopsisData?, isSrisChange:Bool = false), changeOption(PurchaseModel?), purchase, watchBtv
+        case changeVod(String?), changeSynopsis(SynopsisData?, isSrisChange:Bool = false), changeOption(PurchaseModel?), purchase, watchBtv, srisSortChanged
     }
     class ComponentViewModel:ComponentObservable{
         @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
@@ -50,7 +50,6 @@ struct PageSynopsis: PageView {
     @State var synopsisData:SynopsisData? = nil
     @State var isPairing:Bool? = nil
     @State var isFullScreen:Bool = false
-    
     @State var isUiActive:Bool = true
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var playerWidth: CGFloat  = 0
@@ -211,6 +210,7 @@ struct PageSynopsis: PageView {
                 }
                 .onReceive(self.playerModel.$duration){duration in
                     self.onDurationSiri(duration: duration)
+                    //self.onSiri(userActivity: <#T##NSUserActivity#>)
                 }
                 .onReceive(self.playerModel.$event){evt in
                     guard let evt = evt else { return }
@@ -254,6 +254,10 @@ struct PageSynopsis: PageView {
                     case .changeOption(let option) : self.changeOption(option)
                     case .purchase : self.purchase()
                     case .watchBtv : self.watchBtv()
+                    case .srisSortChanged :
+                        if self.sceneOrientation == .landscape {
+                            self.relationBodyModel.uiEvent = .scrollTo(self.relationBodyModel.topIdx, .top)
+                        }
                     }
                     self.onEventLog(componentEvent: evt)
                 }
@@ -432,7 +436,11 @@ struct PageSynopsis: PageView {
                 self.onDisappearProhibition()
             }
         }//geo
+        
+        
     }//body
+    
+    
     
     private func setupBottom(){
         if self.isFullScreen {
@@ -653,8 +661,15 @@ struct PageSynopsis: PageView {
                 self.pageDataProviderModel.requestProgress( 
                     q: .init(type: .getPlay(self.epsdRsluId, anotherStbId: self.anotherStb )))
             }
-            if self.hasAuthority == true {
-                self.progressCompleted = self.playerModel.isContinuous
+            if self.hasAuthority == true  {
+                switch self.synopsisPlayType {
+                case .vodNext:
+                    self.progressCompleted = true
+                default:
+                    let isContinuous = self.synopsisData?.isContinuous ?? false
+                    self.progressCompleted = isContinuous
+                }
+                
             } else {
                 self.progressCompleted = true
             }

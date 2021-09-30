@@ -52,7 +52,7 @@ extension PageSynopsis {
                     nextVod(auto:false)
                 }
             }
-            return false
+            return true
         }
         if let find = playData.nextEpisode {
             self.changeVod(epsdId: find.epsdId, isNext: true)
@@ -219,7 +219,7 @@ extension PageSynopsis {
         let playAble = self.purchaseViewerData?.isPlayAble ?? false
         let playAbleBtv = self.purchaseViewerData?.isPlayAbleBtv ?? false
         
-        if self.synopsisModel?.isCancelProgram == true {
+        if self.synopsisModel?.isDistProgram == false {
             self.appSceneObserver.alert = .alert(
                 String.alert.purchaseDisable,
                 String.alert.purchaseDisableService
@@ -227,7 +227,7 @@ extension PageSynopsis {
             return
         }
         self.onDefaultViewMode()
-        if self.synopsisModel?.isDistProgram == true{ //결방일경우 비티비로 보냄
+        if self.synopsisModel?.isCancelProgram == false{ //결방일경우 비티비로 보냄
             if !(!playAble && playAbleBtv) && self.hasAuthority != true{
                 //btv에서만 가능한 컨텐츠 권한없어도 비티로 보기 지원
                 self.purchaseConfirm(msg: String.alert.purchaseContinueBtv)

@@ -28,11 +28,13 @@ extension PageID{
     static let myPurchaseTicketList:PageID = "myPurchaseTicketList"
     static let myRecommand:PageID = "myRecommand"
     static let myPossessionPurchase:PageID = "myPossessionPurchase"
+    static let myOksusuPurchase:PageID = "myOksusuPurchase"
     static let myRegistCard:PageID = "myRegistCard"
     static let myWatchedList:PageID = "myWatchedList"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
     static let terminateStb:PageID = "terminateStb"
+    static let oksusuUser:PageID = "oksusuUser"
     static let pairingSetupUser:PageID = "pairingSetupUser"
     static let pairingDevice:PageID = "pairingDevice"
     static let pairingBtv:PageID = "pairingBtv"
@@ -180,10 +182,12 @@ struct PageFactory{
         case .myAlram : return PageMyAlram()
         case .myRecommand : return PageMyRecommand()
         case .myPossessionPurchase : return PageMyPossessionPurchase()
+        case .myOksusuPurchase : return PageMyOksusuPurchase()
         case .myRegistCard : return PageMyRegistCard()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
         case .terminateStb : return PageTerminateStb()
+        case .oksusuUser : return PageOksusuUser()
         case .synopsis : return PageSynopsis()
         case .synopsisPackage : return PageSynopsisPackage()
         case .synopsisPlayer : return PageSynopsisPlayer()

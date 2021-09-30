@@ -26,9 +26,12 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
 
     init(pairing:Pairing) {
         self.pairing = pairing
+        
     }
+   
     
     private(set) var isConnected:Bool = false
+    private(set) var isCall:Bool = false
     
     var isAudioOutEnabled:Bool {
         get{
@@ -195,9 +198,17 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
         guard let type = userInfo[AVAudioSessionInterruptionTypeKey] as? Int else { return }
         if self.status != .mirroring { return }
         if (type == AVAudioSession.InterruptionType.began.rawValue) {
-            DataLog.d("AVAudioSessionInterruptionTypeBegan", tag: self.tag)
+            DataLog.d("AVAudioSessionInterruptionTypeBegan " + self.status.rawValue, tag: self.tag)
             self.event = .interruption
-            self.removeClient()
+            if self.isCall {
+                self.enableAudioOut = false
+                self.isCall = false
+            } else {
+                self.removeClient()
+            }
+            
+            
+            //self.removeClient()
         } else if (type == AVAudioSession.InterruptionType.ended.rawValue) {
             DataLog.d("AVAudioSessionInterruptionTypeEnded", tag: self.tag)
         }
@@ -205,25 +216,32 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
     
     @objc func willEnterForeground(_ notification: Notification) {
         if !self.isConnected { return }
+        DataLog.d("willEnterForeground " + self.status.rawValue, tag: self.tag)
         if self.status != .call { return }
         self.enableAudioOut = true
         self.status = .mirroring
+        DataLog.d("willEnterForeground restart mirroring", tag: self.tag)
     }
     
     func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
+        DataLog.d("callObserver hasConnected " + call.hasConnected.description, tag: self.tag)
+        DataLog.d("callObserver hasEnded " + call.hasEnded.description, tag: self.tag)
+        self.isCall = true
         if (call.hasConnected && !call.hasEnded) {
-            DataLog.d("call.hasConnected = true, hasEnded = false", tag: self.tag)
+            DataLog.d("call.hasConnected = true, hasEnded = false " + self.status.rawValue, tag: self.tag)
             if self.status != .mirroring { return }
             self.enableAudioOut = false
             self.status = .call
+            DataLog.d("callObserver " + self.status.rawValue, tag: self.tag)
             return
         }
         if (call.hasEnded) {
-            DataLog.d("hasEnded = true", tag: self.tag)
+            DataLog.d("hasEnded = true " + self.status.rawValue, tag: self.tag)
             if !self.isConnected { return }
-            if self.status != .call { return }
             self.enableAudioOut = true
             self.status = .mirroring
+            self.isCall = false
+            DataLog.d("callObserver " + self.status.rawValue, tag: self.tag)
         }
     }
     

@@ -556,6 +556,9 @@ class SynopsisModel : PageProtocol {
             DataLog.d("hasPreview : " + self.hasPreview.description , tag: self.tag)
             DataLog.d("curSynopsisItem : " + (curSynopsisItem?.debugString ?? "nil") , tag: self.tag)
         #endif
+        
+        //self.isCancelProgram = true
+        //self.isDistProgram = false
     }
     
     var isFree: Bool {

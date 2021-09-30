@@ -94,7 +94,20 @@ extension CryptoKit.SHA256.Digest {
     }
 }
 
+
+
 extension String{
+    static let formUrlencodedAllowedCharacters =
+            CharacterSet(charactersIn: "0123456789" +
+                "abcdefghijklmnopqrstuvwxyz" +
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                "-._* ")
+
+    func formUrlencoded() -> String {
+        let encoded = addingPercentEncoding(withAllowedCharacters: String.formUrlencodedAllowedCharacters)
+        return encoded?.replacingOccurrences(of: " ", with: "+") ?? ""
+    }
+
     func replace(_ originalString:String, with newString:String) -> String {
         return self.replacingOccurrences(of: originalString, with: newString)
     }

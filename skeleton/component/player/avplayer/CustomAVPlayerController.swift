@@ -259,7 +259,6 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
                 self.onPaused()
             }
         case .playing:
-            
             DispatchQueue.main.async {
                 self.onResumed()
                 
@@ -277,21 +276,6 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
             }
         case .unknown:break
         case .readyToPlay:
-            if viewModel.originDuration < 1 {
-                DispatchQueue.global(qos: .default).async {
-                    if let player = playerController.playerScreenView.player {
-                        if let d = player.currentItem?.asset.duration {
-                            let willDuration = Double(CMTimeGetSeconds(d))
-                            if willDuration > 0 {
-                                DispatchQueue.main.async {
-                                    self.onDurationChange(willDuration)
-                                    playerController.playerScreenView.playInit(duration: willDuration)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             DispatchQueue.main.async {
                 self.onReadyToPlay()
             }
@@ -311,14 +295,35 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         }
     }
     
-    func onPlayerItemStatusChange(_ playerScreenView: CustomPlayerController, status:AVPlayerItem.Status){
+    func onPlayerItemStatusChange(_ playerController: CustomPlayerController, status:AVPlayerItem.Status){
         switch status {
         case .failed:
             ComponentLog.d("onPlayerItemStatusChange failed" , tag: self.tag)
+            DispatchQueue.main.async {
+                self.onPlayerError(.playback("failed"))
+            }
         case .unknown:
             ComponentLog.d("onPlayerItemStatusChange unknown" , tag: self.tag)
         case .readyToPlay:
             ComponentLog.d("onPlayerItemStatusChange readyToPlay" , tag: self.tag)
+            if viewModel.originDuration < 1 {
+                DispatchQueue.global(qos: .default).async {
+                    if let player = playerController.playerScreenView.player {
+                        if let d = player.currentItem?.asset.duration {
+                            let willDuration = Double(CMTimeGetSeconds(d))
+                            if willDuration > 0 {
+                                DispatchQueue.main.async {
+                                    self.onDurationChange(willDuration)
+                                    playerController.playerScreenView.playInit(duration: willDuration)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            DispatchQueue.main.async {
+                self.onReadyToPlay()
+            }
         @unknown default:break
         }
     }
@@ -490,9 +495,9 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
                 self.playerDelegate?.onPlayerTimeChange(self, t:time)
             }
         }
-        player.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new], context: nil)
+        //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new], context: nil)
         //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.reasonForWaitingToPlay), options: [.new], context: nil)
-        //player.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new], context: nil)
+        player.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new], context: nil)
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus), options:[.new], context: nil)
         AVAudioSession.sharedInstance()
             .addObserver(self, forKeyPath: CustomAVPlayerController.systemVolume, options: NSKeyValueObservingOptions.new, context: nil)
@@ -502,9 +507,9 @@ open class CustomPlayerViewController: UIViewController, CustomPlayerController 
         guard let player = self.playerScreenView.player else {return}
         guard let currentTimeObservser = self.currentTimeObservser else {return}
         player.removeTimeObserver(currentTimeObservser)
-        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
+        //player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.status))
         //player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.reasonForWaitingToPlay))
-        //player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
+        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
         player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus))
         AVAudioSession.sharedInstance().removeObserver(self, forKeyPath: CustomAVPlayerController.systemVolume)
         self.currentTimeObservser = nil

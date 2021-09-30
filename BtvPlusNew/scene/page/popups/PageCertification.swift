@@ -23,6 +23,7 @@ struct PageCertification: PageView {
     @State var movePage:PageObject? = nil
     @State var isCompleted:Bool = false
     @State var marginBottom:CGFloat = Dimen.app.bottom
+    @State var title:String? = nil
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -32,7 +33,7 @@ struct PageCertification: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: String.pageTitle.certificationUser,
+                        title: self.title ?? String.pageTitle.certificationUser,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -137,6 +138,9 @@ struct PageCertification: PageView {
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? PageObject {
                     self.movePage = data
+                }
+                if let title = obj.getParamValue(key: .title) as? String {
+                    self.title = title
                 }
             }
             .onDisappear{

@@ -127,7 +127,9 @@ struct PrerollUi: PageView{
             every: 2.0, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
-                self.viewModel.playerUiStatus = .hidden
+                withAnimation{
+                    self.isUiShowing = false
+                }
                 self.clearAutoUiHidden()
             }
     }

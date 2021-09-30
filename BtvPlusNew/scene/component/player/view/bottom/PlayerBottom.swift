@@ -170,7 +170,7 @@ struct PlayerBottom: PageView{
                     }
                   
                 }
-            case .clip : break
+           // case .clip : break
             default :
                 self.setupInside(data: data, duration:t)
             }

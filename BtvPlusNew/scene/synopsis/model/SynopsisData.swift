@@ -54,8 +54,15 @@ struct SynopsisData{
     var isLimitedWatch:Bool = false
     var progress:Float? = nil
     var progressTime:Double? = nil
+    var isFullScreenProgressTime:Bool = true // progressTimed 있을때 true 이면 풀스크린s
     var synopType:SynopsisType = SynopsisType.none
     var isPreview:Bool = false
+    
+    var isContinuous:Bool {
+        if progress != nil {return true}
+        if progressTime != nil {return true}
+        return false
+    }
     
 }
 

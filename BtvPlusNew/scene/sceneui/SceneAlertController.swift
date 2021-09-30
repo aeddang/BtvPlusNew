@@ -20,7 +20,8 @@ enum SceneAlert:Equatable {
          pairingRecovery, needPairing(String? = nil, move:PageObject? = nil, cancel:(() -> Void)? = nil),
          pairingCheckFail,
         
-         needPurchase( PurchaseWebviewModel , String? = nil), needCertification( String?, String?, String? = nil, () -> Void ),
+         needPurchase( PurchaseWebviewModel , String? = nil),
+         needCertification( String?, String?, String? = nil, pageTitle:String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?), updateAlram(String, Bool),
          
@@ -99,7 +100,7 @@ struct SceneAlertController: PageComponent{
             case .needPairing(_, let move, let cancel):
                 self.selectedNeedPairing(idx, move: move){ cancel?() }
             case .needPurchase(let data, _): self.selectedNeedPurchase(idx, model: data)
-            case .needCertification(_, _, _, let cancleHandler): self.selectedNeedCertification(idx, canclenHandler: cancleHandler) 
+            case .needCertification(_, _, _, let title, let cancleHandler): self.selectedNeedCertification(idx, pageTitle:title, canclenHandler: cancleHandler)
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
@@ -140,7 +141,7 @@ struct SceneAlertController: PageComponent{
             case .pairingRecovery: self.setupPairingRecovery()
             case .needPairing(let msg, _, _): self.setupNeedPairing(msg:msg)
             case .needPurchase(_ , let msg): self.setupNeedPurchase(msg: msg)
-            case .needCertification(let title,let text, let subText, _): self.setupNeedCertification(title: title, text: text, subText: subText)
+            case .needCertification(let title,let text, let subText, _, _): self.setupNeedCertification(title: title, text: text, subText: subText)
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
@@ -539,10 +540,11 @@ struct SceneAlertController: PageComponent{
             AlertBtnData(title: String.button.certification, index: 1)
         ]
     }
-    func selectedNeedCertification(_ idx:Int, canclenHandler: @escaping () -> Void) {
+    func selectedNeedCertification(_ idx:Int, pageTitle:String? = nil, canclenHandler: @escaping () -> Void) {
         if idx == 1 {
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.userCertification)
+                    .addParam(key: .title, value: pageTitle)
             )
         } else {
             canclenHandler()

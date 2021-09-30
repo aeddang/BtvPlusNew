@@ -14,12 +14,16 @@ import MediaPlayer
 class UniversalSearchManager: NSObject, PageProtocol {
     private var contentId: String = ""
     private var title: String = ""
+    private var duration: Double = 0
+    private var endCredit: Double? = nil
+    private var isNowPlay:Bool = false
     //private var isConnected: Bool = false
     //private(set) var isPlay: Bool = false
     
-    func updateMetaData(contentId:String, title:String) {
+    func updateMetaData(contentId:String, title:String,  endCredit:Double? = nil) {
         self.contentId = contentId
         self.title = title
+        self.endCredit =  endCredit
         DataLog.d("[UniversalSearch contentId] " + contentId, tag:self.tag)
         DataLog.d("[UniversalSearch title] " + title, tag:self.tag)
         //self.isPlay = false
@@ -29,6 +33,8 @@ class UniversalSearchManager: NSObject, PageProtocol {
         //if !self.isConnected { return }
         //if self.contentId.isEmpty { return }
         //self.isPlay = true
+        self.isNowPlay = true
+        self.duration = duration
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = self.title
@@ -46,21 +52,35 @@ class UniversalSearchManager: NSObject, PageProtocol {
     func updatePlay(time: Double, isPlay: Bool = false, rate:Float) {
         //if !self.isConnected { return }
         //if !self.isPlay { return }
-        
+        let d = self.endCredit ?? self.duration
+        if d < time {
+            if self.isNowPlay { self.updateStop() }
+            return
+        } else {
+            if !self.isNowPlay {
+                self.updatePlayNow(duration: self.duration, initTime:time, isPlay:true)
+                return
+            }
+        }
+    
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-        var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo
-        if nowPlayingInfo != nil {
-            nowPlayingInfo![MPNowPlayingInfoPropertyCurrentPlaybackDate] = Date()
-            nowPlayingInfo![MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
-            nowPlayingInfo![MPNowPlayingInfoPropertyPlaybackRate] = isPlay ? rate : 0.0
-            nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-            DataLog.d("[UniversalSearch updatePlay] " + time.description + " / " + isPlay.description, tag:self.tag)
+        let nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo
+        if var nowPlaying = nowPlayingInfo {
+            nowPlaying[MPNowPlayingInfoPropertyCurrentPlaybackDate] = Date()
+            if d > 0 {
+                let ratio = time / d
+                nowPlaying[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
+                nowPlaying[MPNowPlayingInfoPropertyPlaybackProgress] = ratio
+                DataLog.d("[UniversalSearch updatePlay] " + time.description + " / " + ratio.description, tag:self.tag)
+            }
+            nowPlaying[MPNowPlayingInfoPropertyPlaybackRate] = isPlay ? rate : 0.0
+            nowPlayingInfoCenter.nowPlayingInfo = nowPlaying
         }
     }
     
     func updateStop() {
-        //self.isPlay = false
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        self.isNowPlay = false
         DataLog.d("[updateStop]", tag:self.tag)
     }
     

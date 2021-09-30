@@ -21,6 +21,7 @@ struct DisconnectView: PageComponent{
     @State var safeAreaBottom:CGFloat = 0
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var isPossession:Bool = false
+    @State var isOksusu:Bool = false
     var body: some View {
         HStack ( spacing: Dimen.margin.regular ){
             VStack (alignment: .leading, spacing: Dimen.margin.lightExtra){
@@ -93,6 +94,17 @@ struct DisconnectView: PageComponent{
                         )
                     }
                 }
+                if self.isOksusu {
+                    FillButton(
+                        text: String.pageTitle.myOksusu,
+                        isMore: true
+                    ){_ in
+                        
+                        self.pagePresenter.openPopup(
+                            PageProvider.getPageObject(.myOksusuPurchase)
+                        )
+                    }
+                }
             }
             if self.sceneOrientation == .landscape {
                 Image(Asset.image.myConnectIos)
@@ -120,10 +132,12 @@ struct DisconnectView: PageComponent{
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isPossession = self.setup.possession.isEmpty == false
+            self.isOksusu = self.setup.oksusu.isEmpty == false
         }
         .onAppear{
             self.sceneOrientation  = self.sceneObserver.sceneOrientation
             self.isPossession = self.setup.possession.isEmpty == false
+            self.isOksusu = self.setup.oksusu.isEmpty == false
         }
         
     }//body

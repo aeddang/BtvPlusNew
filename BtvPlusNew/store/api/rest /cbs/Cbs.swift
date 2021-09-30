@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 struct CbsNetwork : Network{
     var enviroment: NetworkEnvironment = ApiPath.getRestApiPath(.CBS)
     func onRequestIntercepter(request: URLRequest) -> URLRequest {
@@ -59,24 +60,31 @@ class Cbs: Rest{
        
         var headers = [String:String]()
         headers["UUID"] = uuid
-        headers["User-Service-Num"] = stbInfo.svc_num?.isEmpty == false ? ApiUtil.getCBSEncrypted(stbInfo.svc_num, uuid: uuid) : ""
+        headers["User-Service-Num"] = ApiUtil.getCBSEncrypted(stbInfo.svc_num ?? "", uuid: uuid)
         headers["Client-ID"] = "Mobile-POC"
         headers["Client-Name"] = "pocwrk1stg"
         headers["Client-Time"] = CbsNetwork.getClientTimeHeader()
         headers["API-ID"] = "CBS-POC-011"
+        headers["User-Agent"] = "BtvPlus/4.4.5 (iPhone; iOS 15.0; Scale/3.00)"
         
+        let encryptedCouponNum = ApiUtil.getCBSEncrypted(couponNum, uuid: uuid)
+        let encryptedFgCd = ApiUtil.getCBSEncrypted("10", uuid: uuid)
+        let encryptedReqId = ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid)
+            
         let qurryString =
-            "noConfirm=" + ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted(couponNum, uuid: uuid)) +
-            "&fgCd=" + ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("10", uuid: uuid)) +
-            "&reqId=" + ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid))
+            "noConfirm=" + ApiUtil.string(byUrlEncoding:encryptedCouponNum) +
+            "&fgCd=" + ApiUtil.string(byUrlEncoding:encryptedFgCd) +
+            "&reqId=" + ApiUtil.string(byUrlEncoding:encryptedReqId)
         
-        
+            
         var params = [String:Any]()
         params["noConfirm"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted(couponNum, uuid: uuid))
         params["fgCd"] =  ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("10", uuid: uuid))
         params["reqId"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid))
-        
-        fetch(route: CbsCertificationCoupon(headers:headers, jsonString: qurryString ), completion: completion, error:error)
+    
+            
+         //let postData = qurryString.formUrlencoded().data(using: String.Encoding.utf8, allowLossyConversion: false)
+        fetch(route: CbsCertificationCoupon(overrideHeaders:headers, jsonString: qurryString ), completion: completion, error:error)
     }
     
     /**
@@ -97,6 +105,7 @@ class Cbs: Rest{
         params["IF_GUBUN"] = "SKBIFC003"
         params["OP_TIME"] = CbsNetwork.getClientTime()
         let jsonString = AppUtil.getJsonString(dic: params)
+            
         let encryptedStbId = ApiUtil.getCBSBPointEncrypted(stbId, key: CbsNetwork.KEY_STBID_SVCNUM) ?? ""
         let encryptedData = ApiUtil.getCBSBPointEncrypted(jsonString, key: CbsNetwork.KEY_DATA) ?? ""
         let qurryString = "STB_ID=" + ApiUtil.string(byUrlEncoding: encryptedStbId)
@@ -115,8 +124,10 @@ class Cbs: Rest{
 struct CbsCertificationCoupon:NetworkRoute{
     var method: HTTPMethod = .post
     var path: String = "/mpoc/v1/confirmCoupon"
-    var headers: [String: String]?
-    var body: [String : Any]?
+    var overrideHeaders: [String : String]? = nil
+    //var body: [String : Any]?
+    //var bodys: [Any]?
+    //var postData: Data?
     var jsonString: String?
 }
 

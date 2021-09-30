@@ -129,7 +129,7 @@ extension MultiBlockBody {
                 if  posters.isEmpty == true { return data.setBlank() }
                  let count = posters.count
                 if count > MetvNetwork.maxWatchedCount {
-                    data.posters = posters[ 0...MetvNetwork.maxWatchedCount ].map{$0}
+                    data.posters = posters[ 0..<MetvNetwork.maxWatchedCount ].map{$0}
                 } else {
                     data.posters = posters
                 }
@@ -141,7 +141,7 @@ extension MultiBlockBody {
                 if  videos.isEmpty == true { return data.setBlank() }
                 let count = videos.count
                 if count > MetvNetwork.maxWatchedCount {
-                    data.videos = videos[ 0...MetvNetwork.maxWatchedCount ].map{$0}
+                    data.videos = videos[ 0..<MetvNetwork.maxWatchedCount ].map{$0}
                 } else {
                     data.videos = videos
                 }

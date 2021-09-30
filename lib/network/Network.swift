@@ -27,6 +27,7 @@ protocol NetworkRoute:PageProtocol {
     var query: [String: String]? { get set }
     var body: [String: Any]? { get set }
     var bodys: [Any]? { get set }
+    var postData: Data? { get set }
     var jsonString: String? { get set }
     var contentType:String? { get set }
     var withAllowedCharacters:CharacterSet? { get set }
@@ -39,6 +40,7 @@ extension NetworkRoute {
     var query: [String: String]?  { get{nil} set{query=nil} }
     var body: [String: Any]?  { get{nil} set{body=nil} }
     var bodys: [Any]?  { get{nil} set{bodys=nil} }
+    var postData: Data? { get{nil} set{postData=nil} }
     var contentType:String? { get{nil} set{contentType = nil} }
     var jsonString:String? { get{nil} set{jsonString = nil} }
     var withAllowedCharacters:CharacterSet? { get{.urlQueryAllowed} set{withAllowedCharacters = .urlQueryAllowed} }
@@ -116,12 +118,16 @@ extension NetworkRoute {
     
     private func getBody() -> Data?{
         if method == .get {return nil}
+        if let params = postData {
+            return params
+        }
         if let params = bodys {
             return try? JSONSerialization.data(withJSONObject:params)
         }
         if let params = jsonString {
             DataLog.d("jsonString : " + params, tag: self.tag)
-            return params.data(using: .utf8)
+            let data = params.data(using: .utf8)
+            return data
         }
         
         guard let param = body else { return nil }

@@ -462,10 +462,28 @@ class WebBridge :PageProtocol{
         case "synop":
             
             let contentId = param?.first(where: {$0.name == "episodeId"})?.value
-            let action = param?.first(where: {$0.name == "action"})?.value
+            var action = param?.first(where: {$0.name == "amp;action"})?.value
+            if action == nil {
+                action = param?.first(where: {$0.name == "action"})?.value
+            }
+            var resumeTime = param?.first(where: {$0.name == "amp;resumeTime"})?.value
+            if resumeTime == nil {
+                resumeTime = param?.first(where: {$0.name == "amp;resumTime"})?.value
+            }
+            if resumeTime == nil {
+                resumeTime = param?.first(where: {$0.name == "resumeTime"})?.value
+            }
+            if resumeTime == nil {
+                resumeTime = param?.first(where: {$0.name == "resumTime"})?.value
+            }
+            
             self.pagePresenter?.openPopup(
                 PageProvider.getPageObject(.synopsis)
-                    .addParam(key: .data, value: SynopsisQurry(srisId: nil, epsdId: contentId))
+                    .addParam(key: .data, value: SynopsisQurry(
+                        srisId: nil,
+                        epsdId: contentId,
+                        progressTime:resumeTime?.toDouble())
+                    )
                     .addParam(key: .autoPlay, value: action == "play" ? true : false)
             )
             return true

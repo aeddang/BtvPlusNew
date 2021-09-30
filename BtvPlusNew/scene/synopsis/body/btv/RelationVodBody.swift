@@ -145,6 +145,7 @@ struct RelationVodHeader: PageComponent{
         
         if self.relationContentsModel.hasSris && self.relationDatas.isEmpty{
             SerisTab(
+                componentViewModel:self.componentViewModel,
                 data:self.relationContentsModel,
                 seris: self.$seris
             ){ season in

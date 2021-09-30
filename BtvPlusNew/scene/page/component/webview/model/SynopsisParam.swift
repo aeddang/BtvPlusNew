@@ -22,4 +22,6 @@ struct SynopsisJson :Codable{
 struct SynopsisQurry :Codable{
     var srisId:String? = nil
     var epsdId:String? = nil
+    var progress:Float? = nil
+    var progressTime:Double? = nil
 }

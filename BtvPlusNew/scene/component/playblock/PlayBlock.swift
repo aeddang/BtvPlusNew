@@ -16,6 +16,8 @@ class PlayBlockModel: PageDataProviderModel {
     private(set) var isClip:Bool = false
     fileprivate(set) var continuousTime:Double? = nil
     fileprivate(set) var btvPlayType:BtvPlayType? = nil
+    fileprivate(set) var finalPlayData:PlayData? = nil
+    
     private(set) var data:BlockData? = nil
     
     @Published fileprivate(set) var fullPlayData:PlayInfo? = nil
@@ -123,7 +125,9 @@ struct PlayBlock: PageComponent{
                                         if self.focusIndex != data.index {
                                             self.onFocusChange(willFocus: data.index)
                                         }
-                                        self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
+                                        if !data.isClip {
+                                            self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
+                                        }
                                     }
                                 }
                                 Spacer().modifier(MatchHorizontal(height: Dimen.margin.medium))
@@ -248,6 +252,8 @@ struct PlayBlock: PageComponent{
                     if self.isFullScreen {
                         self.closeFullScreen()
                     }
+                case .changeView(let epsdId) :
+                    self.closeFullScreen(changeEpsdId:epsdId)
                 case .fullVod (let synopsisData):
                     self.closeFullScreen(fullSynopsisData:synopsisData)
                     
@@ -354,18 +360,35 @@ struct PlayBlock: PageComponent{
         }
     }
     
-    private func closeFullScreen(fullSynopsisData:SynopsisData? = nil){
+    private func closeFullScreen(fullSynopsisData:SynopsisData? = nil, changeEpsdId:String? = nil){
         if self.focusIndex == -1 {return}
+        if self.finalIndex == nil {return}
         if self.isHold {return}
         self.isHold = true
         self.delayUpdateCancel()
         self.onPlaytimeChanged(t:self.playerModel.time)
         self.playerModel.event = .pause
-        self.viewModel.fullPlayData = nil
         self.playerModel.reset()
        // self.selectedData?.completed()
         PageLog.d("onCloseFullScreen " + (self.finalIndex?.description ?? "nil"), tag:self.tag)
-        self.pagePresenter.fullScreenExit(changeOrientation: SystemEnvironment.isTablet ? nil : .portrait)
+        if changeEpsdId == nil {
+            self.pagePresenter.fullScreenExit(changeOrientation: SystemEnvironment.isTablet ? nil : .portrait)
+            self.viewModel.fullPlayData = nil
+        } else {
+            if let epsdId = changeEpsdId, let cdata = self.selectedData?.synopsisData {
+                let data = SynopsisData(
+                        srisId: cdata.srisId, searchType: .prd,
+                        epsdId: epsdId, epsdRsluId: "",
+                        prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
+                        synopType: cdata.synopType
+                    )
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.synopsisPlayer, animationType: Optional.none)
+                        .addParam(key: .data, value: data)
+                )
+            }
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.isFullScreen = false
             if let posIdx = self.finalIndex {
@@ -378,6 +401,8 @@ struct PlayBlock: PageComponent{
                                     .addParam(key: .data, value: full)
                                     .addParam(key: .watchLv, value: self.selectedData?.synopsisModel?.watchLevel)
                             )
+                        }else if self.viewModel.fullPlayData != nil {
+                            self.viewModel.fullPlayData = nil
                         } else {
                             self.onFocusChange(willFocus: posIdx)
                             PageLog.d("onCloseFullScreenUpdate " + (posIdx.description), tag:self.tag)
@@ -528,6 +553,7 @@ struct PlayBlock: PageComponent{
         self.focusPos = self.infinityScrollModel.scrollPosition
         PageLog.d("onFocusChange " + (willFocus.description) + " " + self.focusPos.description, tag: self.tag)
         DispatchQueue.main.async {
+            self.viewModel.finalPlayData = self.selectedData
             self.viewModel.currentPlayData = self.selectedData
         }
     }

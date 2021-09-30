@@ -14,6 +14,7 @@ import SwiftUI
 struct SerisTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    var componentViewModel:PageSynopsis.ComponentViewModel? = nil
     var data:RelationContentsModel
     @Binding var seris:[SerisData]
     let action: (_ idx:SeasonData) -> Void
@@ -88,6 +89,7 @@ struct SerisTab: PageComponent{
                     if type.check(key: self.tag + SelectType.sort.rawValue){
                         self.sortType = self.sortOption[idx]
                         self.seris = self.data.getSerisDatas(sort: self.sortType)
+                        self.componentViewModel?.uiEvent = .srisSortChanged
                     }
                     else if type.check(key: self.tag + SelectType.season.rawValue){
                         self.textSeason = self.data.seasons[idx].title

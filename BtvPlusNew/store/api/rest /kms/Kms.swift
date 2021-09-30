@@ -16,7 +16,6 @@ extension KmsNetwork{
     static let VERSION = "5.0"
     static let PAGE_COUNT = 30
 }
-
 class Kms: Rest{
     /**
      * STB ID 목록 조회(페어링 시 사용)
@@ -32,7 +31,6 @@ class Kms: Rest{
         //params["mode"] = "test"
         fetch(route: KmsStbList(query: params), completion: completion, error:error)
     }
-    
     func getTerminateStbList(
         ci:String?,
         completion: @escaping (StbListItem) -> Void, error: ((_ e:Error) -> Void)? = nil){

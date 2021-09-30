@@ -16,6 +16,7 @@ extension String{
         public static let pairingManagement =  "titlePairingManagement".loaalized()
         public static let pairingGuide = "titlePairingGuide".loaalized()
         public static let myTerminatePurchase =  "titleMyTerminatePurchase".loaalized()
+        public static let myOksusu =  "titleMyOksusu".loaalized()
         public static let terminateStb = "titleTerminateStb".loaalized()
         public static let setup = "titleSetup".loaalized()
         public static let purchase = "titlePurchase".loaalized()
@@ -173,6 +174,12 @@ extension String{
         public static var setupPossession = "setupPossession".loaalized()
         public static var setupPossessionSet = "setupPossessionSet".loaalized()
         public static var setupPossessionSetText = "setupPossessionSetText".loaalized()
+        
+        public static var setupOksusu = "setupOksusu".loaalized()
+        public static var setupOksusuSet = "setupOksusuSet".loaalized()
+        public static var setupOksusuSetText = "setupOksusuSetText".loaalized()
+        public static var setupOksusuPurchaseSet = "setupOksusuPurchaseSet".loaalized()
+        public static var setupOksusuPurchaseSetText = "setupOksusuPurchaseSetText".loaalized()
 
         public static let setupGuideNVersion = "setupGuideNVersion".loaalized()
         public static let setupGuide = "setupGuide".loaalized()
@@ -301,6 +308,7 @@ extension String{
         public static let synopsisSummry = "synopsisSummry".loaalized()
         public static let synopsisSiris = "synopsisSiris".loaalized()
         public static let synopsisSirisView = "synopsisSirisView".loaalized()
+        public static let synopsisClipView = "synopsisClipView".loaalized()
         public static let synopsisDDay = "synopsisDDay".loaalized()
         public static let synopsisRelationVod = "synopsisRelationVod".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVod".loaalized()
@@ -317,6 +325,8 @@ extension String{
         public static let synopsisNextPlay = "synopsisNextPlay".loaalized()
         public static let synopsisNextPlayConfirm = "synopsisNextPlayConfirm".loaalized()
         public static let synopsisNextPlayFail = "synopsisNextPlayFail".loaalized()
+        public static let synopsisNextClipPlayConfirm = "synopsisNextClipPlayConfirm".loaalized()
+        public static let synopsisNextClipPlayFail = "synopsisNextClipPlayFail".loaalized()
         
         public static let authTitle = "authTitle".loaalized()
         public static let authText = "authText".loaalized()

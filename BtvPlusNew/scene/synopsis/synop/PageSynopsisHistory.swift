@@ -24,6 +24,9 @@ extension PageSynopsis {
                 return SynopsisData(
                     srisId:  qurry.srisId, searchType:EuxpNetwork.SearchType.prd, epsdId:  qurry.epsdId,
                     epsdRsluId: nil, prdPrcId: nil, kidZone: nil,
+                    progress: qurry.progress,
+                    progressTime:qurry.progressTime,
+                    isFullScreenProgressTime:false, 
                     synopType: SynopsisType.none
                 )
             }

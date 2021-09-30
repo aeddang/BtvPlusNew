@@ -37,7 +37,9 @@ class PlayData:InfinityData,ObservableObject{
     private(set) var synopsisType:SynopsisType = .title
     private(set) var synopsisData:SynopsisData? = nil
     fileprivate(set) var synopsisModel:SynopsisModel? = nil
+    fileprivate(set) var playListData:PlayListData? = nil
     fileprivate(set) var episodeViewerData:EpisodeViewerData? = nil
+    
     
     fileprivate(set) var playRespond:ApiResultResponds? = nil
     fileprivate(set) var playData:Play? = nil
@@ -111,6 +113,7 @@ class PlayData:InfinityData,ObservableObject{
     func setData(data:ContentItem, idx:Int = -1) -> PlayData {
         isClip = true
         count = data.brcast_tseq_nm
+    
         title = data.title
         subTitle = data.title
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
@@ -580,6 +583,11 @@ struct PlayItem: PageView {
             return
         }
         if let synopsis = self.data.synopsisModel {
+            guard let epsdId = synopsis.epsdId else {
+                PageLog.d("error epsdId", tag: self.tag)
+                self.isPlay = false
+                return
+            }
             guard let epsdRsluId = synopsis.epsdRsluId else {
                 PageLog.d("error epsdRsluId", tag: self.tag)
                 self.isPlay = false
@@ -597,10 +605,20 @@ struct PlayItem: PageView {
                 synopsisPlayType = .clip()
             }
            
-            let playerData = SynopsisPlayerData()
-                .setData(type: synopsisPlayType, synopsis: synopsis)
-            
+            var playerData:SynopsisPlayerData? = nil
             self.data.playData = data
+            if let infoList = synopsis.seriesInfoList {
+                let playList = zip(infoList, 0...infoList.count).map{ data, idx in
+                    PlayerListData().setData(data: data, isClip: true, idx: idx)}
+                
+                let playListData = PlayListData(
+                    listTitle: String.pageText.synopsisClipView,
+                    datas: playList)
+                self.data.playListData = playListData
+                playerData = SynopsisPlayerData()
+                    .setData(type: synopsisPlayType , datas: playListData.datas, epsdId:epsdId)
+            }
+            
             DispatchQueue.main.async {
                 self.playerModel
                     .setData(synopsisPlayData: playerData)

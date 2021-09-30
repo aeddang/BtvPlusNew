@@ -17,12 +17,15 @@ class PlayerListData:InfinityData{
     private(set) var epsdId:String? = nil
     private(set) var srisId:String? = nil
     
-    func setData(data:SeriesInfoItem, title:String? = nil, idx:Int = -1) -> PlayerListData {
-        self.title = title
-        if let count = data.brcast_tseq_nm {
-            self.count = count + String.app.broCount
+    func setData(data:SeriesInfoItem, title:String? = nil, isClip:Bool = false, idx:Int = -1) -> PlayerListData {
+        if  isClip {
+            self.title = data.sub_title
+        } else {
+            self.title = title
+            if let count = data.brcast_tseq_nm {
+                self.count = count + String.app.broCount
+            }
         }
-       
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItemKids.video.size)
         index = idx
         epsdId = data.epsd_id

@@ -13,6 +13,7 @@ struct PairingView: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var setup:Setup
     
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -23,6 +24,7 @@ struct PairingView: PageComponent{
     @State var nick:String = ""
     @State var newAlramCount:Int = 0
     @State var pairingStbType:PairingDeviceType = .btv
+    @State var isOksusu:Bool = false
     var body: some View {
         VStack (alignment: .center, spacing:0){
             VStack (alignment: .center, spacing: Dimen.margin.lightExtra){
@@ -223,6 +225,18 @@ struct PairingView: PageComponent{
                                 PageProvider.getPageObject(.myPurchase)
                             )
                         }
+                        if self.isOksusu {
+                            Spacer().modifier(LineHorizontal())
+                            FillButton(
+                                text: String.pageTitle.myOksusu,
+                                isMore: true
+                            ){_ in
+                                
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.myOksusuPurchase)
+                                )
+                            }
+                        }
                         
                     }
                     .modifier(ContentHorizontalEdgesTablet())
@@ -274,6 +288,12 @@ struct PairingView: PageComponent{
                 self.repository.alram.updateNew()
                 self.dataProvider.requestData(q: .init(type: .getWatch(isPpm:false, 1, 9999), isOptional: true))
             }
+        }
+        .onReceive(self.pagePresenter.$currentTopPage){ page in
+            self.isOksusu = self.setup.oksusu.isEmpty == false
+        }
+        .onAppear{
+            self.isOksusu = self.setup.oksusu.isEmpty == false
         }
         
     }//body

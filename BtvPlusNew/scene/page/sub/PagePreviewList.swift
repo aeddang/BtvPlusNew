@@ -16,7 +16,7 @@ struct PagePreviewList: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-     
+    @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
    
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -65,8 +65,11 @@ struct PagePreviewList: PageView {
                             pageObservable:self.pageObservable,
                             viewModel:self.playerModel,
                             title: self.playerTitle,
+                            contentID : self.epsdId,
+                            listData: self.playListData,
                             playerType: .normal
                         )
+                       
                     } else {
                         SimplePlayer(
                             pageObservable: self.pageObservable,
@@ -102,22 +105,32 @@ struct PagePreviewList: PageView {
                
                 self.appSceneObserver.useBottomImmediately  = false
                 self.pagePresenter.orientationLock(lockOrientation: .landscape)
-                self.isFullScreen = true
                 var changeType:BtvPlayType? = nil
                 switch type {
                 case .preview(let value,_):
+                    self.isFullScreen = true
                     changeType = .preview(value,isList:false)
+                    self.playListData = PlayListData()
                 case .vod(let value, let title):
+                    
+                    self.isFullScreen = true
                     changeType = .vod(value,title)
                     self.playerTitle = title
+                    self.epsdId = self.viewModel.finalPlayData?.epsdId
+                    self.synopsisData = self.viewModel.finalPlayData?.synopsisData
+                    self.playListData = self.viewModel.finalPlayData?.playListData ?? PlayListData()
+                    
                 default: break
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    self.playerModel.setData(
-                        data: data,
-                        type: changeType ?? .preview("", isList: false),
-                        autoPlay: true,
-                        continuousTime: time)
+                    
+                    self.playerModel
+                        .setData(
+                            data: data,
+                            type: changeType ?? .preview("", isList: false),
+                            autoPlay: true,
+                            continuousTime: time)
+                    self.playerModel.btvUiEvent = .syncListScroll
                     
                 }
             }
@@ -160,7 +173,17 @@ struct PagePreviewList: PageView {
             }
         }//geo
     }//body
-   
+    
+    @State var synopsisData:SynopsisData? = nil
+    @State var playListData:PlayListData = PlayListData()
+    @State var epsdId:String? = nil
+    
+    /*
+     Player process
+     */
+    
+    
+    
     
 }
 

@@ -114,7 +114,7 @@ struct PagePairingManagement: PageView {
                         ){_ in
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.snsShare)
-                                    .addParam(key: .type, value: PageSnsShare.ShareType.familyInvite)
+                                    .addParam(key: .type, value: PageSnsShare.ShareType.familyInvite(type: "mob-invite"))
                             )
                         }
                         .padding(.top, Dimen.margin.light)

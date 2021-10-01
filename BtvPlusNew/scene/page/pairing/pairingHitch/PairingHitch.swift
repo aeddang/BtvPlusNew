@@ -364,6 +364,7 @@ struct PairingHitch: PageComponent {
     
     private func selectePairingDevice(stb:StbData){
         self.pairing.user = User().setDefault(isAgree: self.isAgreeOption)
+        self.pairing.user?.pairingInType = "mob-autopair-popup"
         self.selectedDevice = stb
         self.pairing.requestPairing(.device(stb))
     }

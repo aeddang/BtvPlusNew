@@ -930,7 +930,7 @@ struct PageSynopsis: PageView {
                 isPairing: self.isPairing,
                 isPosson:self.isPosson)
         withAnimation{
-            self.textInfo = self.purchaseViewerData?.serviceInfo
+            self.textInfo = self.purchaseViewerData?.playerInfo ?? self.purchaseViewerData?.serviceInfo
         }
         self.epsdRsluId = self.synopsisModel?.curSynopsisItem?.epsd_rslu_id ?? self.synopsisModel?.epsdRsluId ?? ""
         if self.purchaseViewerData?.isPlayAble == true && (self.isPairing == true || self.isPosson) {

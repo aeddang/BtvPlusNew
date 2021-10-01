@@ -347,11 +347,18 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getDevicePairingStatus : self.nps.getDevicePairingStatus(
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
+        case .getUserDevicePairingStatus : self.nps.getDevicePairingStatus(
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         case .getDevicePairingInfo (let authcode, let hostDeviceid, _) : self.nps.getDevicePairingInfo(
             authcode:authcode, hostDeviceid:hostDeviceid,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .postDevicePairing (let user, let device) : self.nps.postDevicePairing(
+            user: user, device: device,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .postUserDevicePairing(let user, let device) : self.nps.postUserDevicePairing(
             user: user, device: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
@@ -384,8 +391,8 @@ class ApiManager :PageProtocol, ObservableObject{
         case .updateUser(let data) : self.nps.updateUser(data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getPairingToken(let hostDeviceid) : self.nps.getPairingToken(
-            hostDeviceid: hostDeviceid,
+        case .getPairingToken(let hostDeviceid, let pairingInType) : self.nps.getPairingToken(
+            hostDeviceid: hostDeviceid, pairingInType:pairingInType,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .validatePairingToken(let pairingToken) : self.nps.validatePairingToken(
@@ -746,8 +753,10 @@ class ApiManager :PageProtocol, ObservableObject{
             }
             self.updatePairing(res: result )
             
-        case .postAuthPairing, .postDevicePairing, .postPairingByToken :
+        case .postAuthPairing, .postDevicePairing, .postUserDevicePairing, .postPairingByToken :
             NpsNetwork.pairing(res: result)
+        case .getUserDevicePairingStatus :
+            NpsNetwork.pairingUser(res: result)
         case .postUnPairing :
             if !isLog { NpsNetwork.unpairing(res: result) }
         case .getDevicePairingStatus :

@@ -32,16 +32,18 @@ struct PageKidsConfirmNumber: PageView {
     @State var msg:String? = nil
     @State var isInit:Bool = true
     @State var isFocus:Bool = true
-    
+    @State var input:String = ""
     var body: some View {
         ZStack{
             InputNumberField(
+                input:self.$input,
                 isInit:self.isInit,
                 isFocus: self.isFocus,
                 title: self.title,
                 text: self.text,
                 tip: self.tip,
                 msg: self.msg
+                
             ){ input in
                 guard let input = input else {
                     self.closePage()
@@ -229,6 +231,7 @@ struct PageKidsConfirmNumber: PageView {
             self.pagePresenter.closePopup(self.pageObject?.id)
         } else{
             self.msg = String.alert.incorrecPassword
+            self.input = ""
         }
     }
 }

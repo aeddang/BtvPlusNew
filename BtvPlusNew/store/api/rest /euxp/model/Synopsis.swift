@@ -160,6 +160,7 @@ struct SynopsisContentsItem : Codable {
     private(set) var quiz_yn: String? = nil   // 퀴즈여부
     private(set) var quiz_call_url: String? = nil   // 퀴즈url
     private(set) var epsd_exps_typ_cd: String? = nil   // (키즈) 에피소드 노출 유형 코드 01:일반형, 02:말발굽형 / 기본값 ""
+   
 }
 
 struct EpsdRsluInfo: Codable {

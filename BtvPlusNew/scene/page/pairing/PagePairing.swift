@@ -269,7 +269,7 @@ struct PagePairing: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var sceneOrientation: SceneOrientation = .portrait
-    
+    @State var pairingInType:String? = nil
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -321,6 +321,8 @@ struct PagePairing: PageView {
             }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
+                guard let obj = self.pageObject  else { return }
+                self.pairingInType = obj.getParamValue(key: .subType) as? String ?? "mob-my"
             }
             
         }//geo
@@ -336,16 +338,20 @@ struct PagePairing: PageView {
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.wifi)
+                    .addParam(key: PageParam.subType, value: self.pairingInType)
             )
         case .btv:
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.btv)
+                    .addParam(key: PageParam.subType, value: self.pairingInType)
             )
         case .user:
            self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))
+                    .addParam(key: PageParam.subType, value: self.pairingInType)
+                
             )
             
         default: break

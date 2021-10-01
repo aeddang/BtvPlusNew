@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct TooltipBottom: PageView {
+    @EnvironmentObject var pagePresenter:PagePresenter
     var text:String = ""
     var close:() -> Void
     var body: some View {
@@ -26,19 +27,27 @@ struct TooltipBottom: PageView {
                     .fixedSize(horizontal: true, vertical: false)
                     .lineLimit(1)
                     .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin)
-                Image(Asset.icon.close)
-                .renderingMode(.original).resizable()
-                .scaledToFit()
-                .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
-                    .padding(.trailing,
-                             SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny)
+                
+                Button(action: {
+                    self.close()
+                }) {
+                    Image(Asset.icon.close)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
+                        .padding(.trailing,
+                                 SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny)
+                }
             }
             .background(Color.brand.primary)
             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.heavy))
             .padding(.top, -5)
         }
+        
         .onTapGesture {
-            self.close()
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.myAlram)
+            )
         }
     }//body
 }

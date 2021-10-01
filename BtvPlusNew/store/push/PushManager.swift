@@ -10,7 +10,7 @@ import Combine
 
 class PushManager : PageProtocol {
     static func getCurrentCuid()-> String{
-       return NpsNetwork.pairingId.isEmpty ? "btvplus" : SystemEnvironment.deviceId
+       return SystemEnvironment.originDeviceId
     }
     static func setupCurrentCuid(){
         Self.currentCuid = getCurrentCuid()
@@ -90,7 +90,7 @@ class PushManager : PageProtocol {
         let endpoint = storage.pushEndpoint
         if token == registToken && !endpoint.isEmpty {
             DataLog.d("already endpoint " + token, tag: self.tag)
-            self.updateUserAgreement(self.userAgreement)
+            //self.updateUserAgreement(self.userAgreement)
             return
         }
         self.isBusy = true

@@ -271,7 +271,11 @@ struct PagePairingDevice: PageView {
     
     private func selectePairingDevice(stb:StbData){
         self.selectedDevice = stb
-        self.pairing.requestPairing(.device(stb))
+        switch self.pairingType {
+        case .user : self.pairing.requestPairing(.device(stb, isUser: true))
+        default : self.pairing.requestPairing(.device(stb))
+        }
+       
     }
     
 }

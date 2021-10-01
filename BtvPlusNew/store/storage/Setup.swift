@@ -28,6 +28,8 @@ class Setup:ObservableObject, PageProtocol {
         
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
         static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
+        static let alramUnvisibleDate = "alramUnvisibleDate" + VS
+        
         static let nickName = "profileNickname"
         static let birth = "profileBirthYear"
         static let character = "profileCharacter"
@@ -222,6 +224,29 @@ class Setup:ObservableObject, PageProtocol {
         }
         return false
     }
+    
+    var alramUnvisibleDate:String{
+        set(newVal){
+            storage.set(newVal, forKey: Keys.alramUnvisibleDate)
+        }
+        get{
+            return storage.string(forKey: Keys.alramUnvisibleDate) ?? ""
+        }
+    }
+    
+    func isAlramUnvisibleDate()-> Bool {
+        let prevDateKey = self.alramUnvisibleDate
+        if !prevDateKey.isEmpty {
+            let now = Setup.getDateKey()
+            if now == prevDateKey {
+                return true
+            }
+        }
+        return false
+    }
+    
+   
+    
     
     var possession:String{
         set(newVal){

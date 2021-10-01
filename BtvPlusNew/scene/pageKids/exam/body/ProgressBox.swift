@@ -110,7 +110,7 @@ struct ProgressBox: PageComponent{
                     self.progress = step
                     let prev = step-1
                     let next = step
-                    let prevQ:QuestionData? = prev > 0 ? self.viewModel.questions[prev] : nil
+                    let prevQ:QuestionData? = prev >= 0 ? self.viewModel.questions[prev] : nil
                     let nextQ:QuestionData? = next < self.viewModel.questions.count ? self.viewModel.questions[next] : nil
                     self.prevActive = prevQ?.submit != nil
                     self.nextActive = nextQ?.submit != nil

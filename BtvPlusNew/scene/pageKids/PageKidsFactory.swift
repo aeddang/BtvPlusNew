@@ -100,7 +100,7 @@ struct PageKidsProvider {
 }
 
 struct PageKidsFactory{
-    static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
+    static func getPage(_ pageObject:PageObject) -> PageViewProtocol?{
         switch pageObject.pageID {
         case .kidsIntro : return PageKidsIntro()
         case .kidsHome : return PageKidsHome()
@@ -123,7 +123,7 @@ struct PageKidsFactory{
         case .kidsSearch : return PageKidsSearch()
         case .tabInfo : return PageTabInfo()
         case .detailInfo : return PageDetailInfo()
-        default : return PageTest()
+        default : return nil
         }
     }
 }

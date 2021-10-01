@@ -149,7 +149,7 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
         }
      
         let playingInfoCenter = MPNowPlayingInfoCenter.default()
-        let image = UIImage(named: Asset.appIcon)!
+        let image = UIImage(named: Asset.appLauncher)!
         let artwork = MPMediaItemArtwork.init(
             boundsSize: image.size,
             requestHandler: { (size) -> UIImage in return image}

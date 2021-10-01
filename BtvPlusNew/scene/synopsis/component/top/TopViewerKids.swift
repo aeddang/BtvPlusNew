@@ -62,6 +62,7 @@ struct TopViewerKids: PageComponent{
                                 }
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairing)
+                                        .addParam(key: PageParam.subType, value: "mob-com-popup")
                                 )
                             }
                             .buttonStyle(BorderlessButtonStyle())

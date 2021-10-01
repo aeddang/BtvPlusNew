@@ -130,6 +130,7 @@ struct SynopsisBody: PageComponent{
                         }
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.pairing)
+                                .addParam(key: PageParam.subType, value: "mob-uixp-synop")
                         )
                     }
                     .buttonStyle(BorderlessButtonStyle())
@@ -258,6 +259,7 @@ struct SynopsisBodyHeader: PageComponent{
                     }
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
+                            .addParam(key: PageParam.subType, value: "mob-uixp-synop")
                     )
                 }
                 .buttonStyle(BorderlessButtonStyle())

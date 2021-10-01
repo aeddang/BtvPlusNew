@@ -84,6 +84,15 @@ extension NpsNetwork{
         Self.hostDeviceId = resData.body?.host_deviceid
     }
     
+    static func pairingUser(res:ApiResultResponds) {
+        guard let resData = res.data as? DevicePairingStatus  else { return}
+        guard let resultCode = resData.header?.result else { return }
+        if resultCode != NpsNetwork.resultCode.success.code { return }
+        guard let pairingid = resData.body?.pairingid else { return }
+        Self.pairingId = pairingid
+        Self.hostDeviceId = resData.body?.pairing_deviceid
+    }
+    
     static func unpairing(res:ApiResultResponds) {
         guard let resData = res.data as? NpsResult  else { return }
         let resultCode = resData.header?.result
@@ -273,10 +282,44 @@ class Nps: Rest{
         params["host_deviceid"] = device?.stbid
         params["custom_param"] = customParam
         
+        params["pairing_type"] = "wifi"
+        params["pairing_subtype"] = user?.pairingInType ?? PagePairingSetupUser.pairingInType ?? "mob-my"
+        
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params
         fetch(route: NpsDevicePairing(body: body), completion: completion, error:error)
+    }
+    
+    func postUserDevicePairing(
+        user:User?, device:StbData?, customParam:[String: Any] = [String: Any](),
+        completion: @escaping (DevicePairing) -> Void, error: ((_ e:Error) -> Void)? = nil){
+    
+        NpsNetwork.resetPairing()
+        let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-541")
+        var params = [String: Any]()
+        params["service_type"] = NpsNetwork.SERVICE_TYPE
+        params["guest_deviceid"] = SystemEnvironment.deviceId
+        params["user_name"] = NpsNetwork.getNpsUsername(userName: user?.nickName)
+        params["userid"] =  NpsNetwork.USER_ID
+        if let device = device {
+            params["model_name"] = device.stbName
+            params["host_deviceid"] = device.stbid
+            params["mac_address"] = ApiUtil.getEncyptedData(
+                forNps: device.macAddress, npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+          
+        }
+        params["pairing_owner"] = "1"
+        params["muser_num"] = ""
+        params["custom_param"] = customParam
+    
+        params["pairing_type"] = "user"
+        params["pairing_subtype"] = user?.pairingInType ?? PagePairingSetupUser.pairingInType ?? "mob-my"
+            
+        var body = [String: Any]()
+        body["header"] = headers
+        body["body"] = params
+        fetch(route: NpsUserDevicePairing(body: body), completion: completion, error:error)
     }
     
     func postAuthPairing(
@@ -294,6 +337,9 @@ class Nps: Rest{
         params["muser_num"] = ""
         params["userid"] =  NpsNetwork.USER_ID
         params["custom_param"] = customParam
+            
+        params["pairing_type"] = "authcode"
+        params["pairing_subtype"] = user?.pairingInType ?? PagePairingSetupUser.pairingInType ?? "mob-my"
         
         var body = [String: Any]()
         body["header"] = headers
@@ -347,7 +393,6 @@ class Nps: Rest{
     func postGuestNickname(
         name:String?, customParam:[String: Any] = [String: Any](),
         completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        
         
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-542")
         var params = [String: Any]()
@@ -446,7 +491,7 @@ class Nps: Rest{
     * @brief 페어링 대상 HostDevice(STB)와 페어링을 하기위한 페어링 토큰을 발급 요청
     * @param completion 페어링 대상 HostDevice(STB)와 페어링을 하기위한 페어링 토큰을 발급 요청 API response
     */
-    func getPairingToken(hostDeviceid:String?,
+    func getPairingToken(hostDeviceid:String?, pairingInType:String?,
         customParam:[String: Any] = [String: Any](),
         completion: @escaping (PairingToken) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-551")
@@ -455,6 +500,8 @@ class Nps: Rest{
         params["guest_deviceid"] = SystemEnvironment.deviceId
         params["host_deviceid"] = hostDeviceid
         params["custom_param"] = customParam
+        params["pairing_type"] = "token"
+        params["pairing_subtype"] = pairingInType ?? "mob-invite"
         
         var body = [String: Any]()
         body["header"] = headers
@@ -577,6 +624,11 @@ struct NpsDevicePairing:NetworkRoute{
    var body: [String : Any]? = nil
 }
 
+struct NpsUserDevicePairing:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/nps/v5/reqPairingInfoRegist2"
+   var body: [String : Any]? = nil
+}
 struct NpsAuthPairing:NetworkRoute{
    var method: HTTPMethod = .post
    var path: String = "/nps/v5/reqAuth"

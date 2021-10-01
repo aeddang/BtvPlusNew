@@ -103,6 +103,7 @@ struct FloatRecommand:PageComponent {
                             } else {
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairing, animationType: .opacity)
+                                        .addParam(key: PageParam.subType, value: "mob-com-popup")
                                 )
                             }
                             

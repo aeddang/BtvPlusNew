@@ -50,8 +50,7 @@ class Lgs: Rest{
         params["method"] = "post";
         params["sw_ver"] = "1.0"
         params["stb_id"] = stbId
-        params["pcid"] = pcId;
-        
+       
         params["cdr_index"] = "1"
         params["svc_type"] = "1"
         params["pid"] = synopData.pId ?? "0"
@@ -65,7 +64,7 @@ class Lgs: Rest{
         params["event_type"] = evt.rawValue
         params["mobile_id"] = SystemEnvironment.deviceId
         params["mobile_ver"] = SystemEnvironment.bundleVersion
-        params["profile_id"] = NpsNetwork.pairingId
+        
         params["kidschar_id"] = isKidZone ?  pairing.kid?.id : nil
         params["g_gubun"] = gubun?.isEmpty == false ? gubun : LgsNetwork.GUBUN_ETC
         
@@ -76,6 +75,16 @@ class Lgs: Rest{
         params["end_rate"] = playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
+        
+        params["profile_id"] = NpsNetwork.pairingId //모름 기존 키즈 프로필아이디로 사용하던건데....
+        params["dvc_typ_cd"] = "" //모름
+        params["profile_typ_cd"] = ""  //모름
+        params["app_typ_cd"] = "1"
+            
+        params["pcid"] = pcId;
+        params["meta_typ_cd"] = synopData.metaTypCd
+       
+        
         fetch(route: LgsPostWatchLog(body: params), completion: completion, error:error)
     }
     

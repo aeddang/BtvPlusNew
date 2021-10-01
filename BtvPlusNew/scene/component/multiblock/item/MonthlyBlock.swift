@@ -223,9 +223,14 @@ struct MonthlyBlock: PageComponent {
                         self.tipLeading = String.monthly.textEnjoyPeriod
                     }
                 } else {
-                   
                     self.tipLeading = currentData.prodTypeCd == .omnipack
-                        ? String.monthly.textEnjoyOmnipack : String.monthly.textEnjoy
+                        ? String.monthly.textEnjoyOmnipack
+                        :  currentData.isPeriod ? String.monthly.textEnjoyPeriod : String.monthly.textEnjoy
+                    
+                    
+                    if currentData.isFirstFree == nil && self.pairing.status == .pairing {
+                        self.dataProvider.requestData(q: .init(type: .getMonthlyData(currentData.prdPrcId, isDetail: false), isOptional:true))
+                    }
                 }
             }
             

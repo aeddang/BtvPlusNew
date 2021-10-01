@@ -26,6 +26,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var isJoin: Bool = false
     private(set) var subJoinId:String? = nil
     private(set) var isSubJoin: Bool = false
+    private(set) var isPeriod: Bool = false
     private(set) var isSelected: Bool = false
     private(set) var isKidszone: Bool = false
     private(set) var isFirstFree: Bool? = nil
@@ -81,6 +82,8 @@ class MonthlyData:InfinityData,ObservableObject{
     @discardableResult
     func setData(data:MonthlyInfoItem, isLow:Bool) -> MonthlyData {
         isKidszone = data.kzone_yn?.toBool() ?? false
+        self.isPeriod = data.ncms_prod_code == "38"
+        
         if isLow {
             if !self.isJoin {
                 self.titlePeriod = data.title_perd
@@ -104,6 +107,7 @@ class MonthlyData:InfinityData,ObservableObject{
     @discardableResult
     func setData(data:MonthlyInfoData) -> MonthlyData {
         guard let item  = data.purchaseList?.first else { return self}
+        self.isPeriod = item.owned_prd_typ_cd == "32"
         self.isFirstFree = item.free_ppm_use_yn?.toBool() ?? false
         self.isPurchaseUpdated = true
         return self

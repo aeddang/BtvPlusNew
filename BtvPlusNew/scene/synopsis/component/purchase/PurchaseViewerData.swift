@@ -14,6 +14,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var infoTrailingSub: String? = nil
     private(set) var infoTip: String? = nil
     
+    private(set) var playerInfo: String? = nil
     private(set) var serviceInfo: String? = nil
     private(set) var serviceInfoDesc: String? = nil
     private(set) var serviceInfoDescBottom: String? = nil
@@ -66,11 +67,12 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 serviceInfo = String.pageText.synopsisTerminationBtv
             } else {
                 serviceInfo = purchas?.hasAuthority ?? false
-                    ? String.pageText.synopsisWatchOnlyBtv
-                    : synopsisModel.holdbackType == .holdOut
+                ? isFree ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisWatchOnlyBtv
+                : synopsisModel.holdbackType == .holdOut
                         ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
                 
             }
+            playerInfo = String.pageText.synopsisDisableNScreen
             isPlayAble = false
             isPlayAbleBtv = true
             
@@ -78,6 +80,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             serviceInfo = purchas?.isFree ?? false
                 ? String.pageText.synopsisOnlyBtv
                 : String.pageText.synopsisOnlyPurchasBtv
+            playerInfo = String.pageText.synopsisDisablePurchas
             isPlayAble = false
             isPlayAbleBtv = true
             

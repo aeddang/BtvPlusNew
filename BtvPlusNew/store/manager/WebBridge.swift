@@ -133,7 +133,6 @@ class WebBridge :PageProtocol{
         info["userAgent"] = ScsNetwork.getUserAgentParameter()
         info["isShowRemoconSelectPopup"] = setup.autoRemocon
         info["isShowAutoRemocon"] = setup.autoRemocon
-        
         info["marketingInfo"] = pairing.user?.isAgree3 == true ? 1 : 0
         info["pushInfo"] = pairing.user?.isAgree3 == true ? 1 : 0
         
@@ -637,6 +636,7 @@ class WebBridge :PageProtocol{
             }
             self.pagePresenter?.openPopup(
                 PageProvider.getPageObject(.pairing)
+                    .addParam(key: PageParam.subType, value: "mob-com-popup")
             )
             return true
         

@@ -98,8 +98,10 @@ enum ApiType{
     //NPS
     case registHello,
          getDevicePairingStatus,
+         getUserDevicePairingStatus,
          getDevicePairingInfo(String?, String?, prevResult:NpsCommonHeader? = nil),
          postDevicePairing(User?, StbData?),
+         postUserDevicePairing(User?, StbData?),
          postAuthPairing(User?, String?),
          postUnPairing,rePairing,  // rePairing 재시도용
          getHostDeviceInfo,
@@ -107,7 +109,7 @@ enum ApiType{
          postGuestNickname(String?),
          postGuestAgreement(User?), getGuestAgreement, updateAgreement(Bool, callback:String? = nil),
          updateUser(ModifyUserData?),
-         getPairingToken(String?),
+         getPairingToken(String?, pairingInType:String?),
          sendMessage(NpsMessage?),
          pushMessage(NpsMessage?),
          validatePairingToken(pairingToken:String),

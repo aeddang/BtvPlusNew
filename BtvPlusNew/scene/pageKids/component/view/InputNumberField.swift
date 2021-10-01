@@ -12,6 +12,7 @@ import SwiftUI
 struct InputNumberField: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @Binding var input:String
     var isInit:Bool = false
     var isFocus:Bool = false
     var title:String? = nil
@@ -23,7 +24,7 @@ struct InputNumberField: PageComponent {
     let size:CGFloat = SystemEnvironment.isTablet ? 821 : 346
     let inputSize:Int = 4
     let placeholder:String = "●●●●"
-    @State var input:String = ""
+   
     
     func getTextStype()-> TextModifier {
         if #available(iOS 15.0, *) {
@@ -235,9 +236,11 @@ struct InputNumberField_Previews: PreviewProvider {
     static var previews: some View {
         ZStack{
             InputNumberField(
+                input:.constant(""),
                 title: String.alert.watchLv,
                 text: String.alert.watchLvInput,
                 tip: String.alert.incorrectNumberOfCharacter
+                
             ){ input in
                 
             }

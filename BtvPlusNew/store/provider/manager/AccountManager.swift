@@ -19,6 +19,7 @@ class AccountManager : PageProtocol{
         self.dataProvider = dataProvider
     }
     
+    var isRequestDeviceUser:Bool = false
     var requestDevice:StbData? = nil
     var requestAuthcode:String? = nil
     var requestToken:String? = nil
@@ -55,9 +56,17 @@ class AccountManager : PageProtocol{
             case .user(let cid) :
                 self.dataProvider.requestData(q: .init(type: .getStbList(cid), isOptional: false))
             
-            case .device(let device) :
+            case .device(let device, let isUser) :
                 self.requestDevice = device
-                self.dataProvider.requestData(q: .init(type: .postDevicePairing(self.pairing.user, device), isOptional: true))
+                self.isRequestDeviceUser = isUser
+                if isUser {
+                    self.dataProvider.requestData(
+                        q: .init(type: .postUserDevicePairing(self.pairing.user, device), isOptional: true))
+                } else {
+                    self.dataProvider.requestData(
+                        q: .init(type: .postDevicePairing(self.pairing.user, device), isOptional: true))
+                }
+                
             
             case .auth(let code) :
                 self.requestAuthcode = code
@@ -196,9 +205,10 @@ class AccountManager : PageProtocol{
             case .postUnPairing :
                 if !self.checkConnectHeader(res) { return }
                 
-            case .postAuthPairing, .postDevicePairing, .postPairingByToken :
+            case .postAuthPairing, .postDevicePairing, .postUserDevicePairing, .postPairingByToken :
                 if !self.checkConnectHeader(res) { return }
-    
+            case .getUserDevicePairingStatus :
+                if !self.checkUserConnectHeader(res) { return }
             case .rePairing :
                 if !self.checkConnectHeader(res) { return }
                 guard let user = self.pairing.user else {
@@ -209,7 +219,11 @@ class AccountManager : PageProtocol{
                     self.dataProvider.requestData(q: .init(type: .postAuthPairing(user, code), isOptional: true))
                 }
                 if let device = self.requestDevice {
-                    self.dataProvider.requestData(q: .init(type: .postDevicePairing(user , device), isOptional: true))
+                    if self.isRequestDeviceUser {
+                        self.dataProvider.requestData(q: .init(type: .postUserDevicePairing(user , device), isOptional: true))
+                    } else {
+                        self.dataProvider.requestData(q: .init(type: .postDevicePairing(user , device), isOptional: true))
+                    }
                 }
                 if let token = self.requestToken {
                     self.dataProvider.requestData(q: .init(type: .postPairingByToken(user, pairingToken: token), isOptional: true))
@@ -330,7 +344,12 @@ class AccountManager : PageProtocol{
         apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
             switch err.type {
-            case .postUnPairing, .postAuthPairing, .postDevicePairing, .rePairing, .postPairingByToken : self.pairing.connectError()
+            case .postUnPairing: self.pairing.disConnectError()
+            case .postAuthPairing,
+                 .postDevicePairing,
+                 .postUserDevicePairing, .getUserDevicePairingStatus,
+                 .rePairing, .postPairingByToken :
+                self.pairing.connectError()
             case .getDevicePairingInfo(_, _, let prevResult) : self.pairing.connectError(header: prevResult)
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
             case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
@@ -365,12 +384,23 @@ class AccountManager : PageProtocol{
         return true
     }
     
+    
+    private func checkUserConnectHeader(_ res:ApiResultResponds ) -> Bool{
+        guard let data = res.data as? DevicePairingStatus  else {
+            self.pairing.connectError()
+            return false
+        }
+        return checkConnectHeader(header: data.header)
+    }
     private func checkConnectHeader(_ res:ApiResultResponds ) -> Bool{
         guard let data = res.data as? DevicePairing  else {
             self.pairing.connectError()
             return false
         }
-        guard let resultCode = data.header?.result else {
+        return checkConnectHeader(header: data.header, body:data.body)
+    }
+    private func checkConnectHeader( header:NpsCommonHeader?, body:DevicePairingBody? = nil) -> Bool{
+        guard let resultCode = header?.result else {
             self.pairing.connectError()
             return false
         }
@@ -378,13 +408,19 @@ class AccountManager : PageProtocol{
             self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
             return false
         }
+        
         if resultCode == NpsNetwork.resultCode.existPairing.code {
+            if self.isRequestDeviceUser{
+                self.dataProvider.requestData(q: .init(type: .getUserDevicePairingStatus , isOptional: true))
+                
+                return true
+            }
             self.pairing.syncError(header: nil)
             return false
         }
         if resultCode != NpsNetwork.resultCode.success.code {
-            let stb = data.body?.host_deviceid
-            self.pairing.connectError(header: data.header, failStbId: stb)
+            let stb = body?.host_deviceid
+            self.pairing.connectError(header: header, failStbId: stb)
             self.resetRequest()
             return false
         }

@@ -51,6 +51,7 @@ struct SynopsisData{
     var cpId:String? = nil
     var contentId:String? = nil
     var ppmIds:String? = nil
+    var metaTypCd:String? = nil
     var isLimitedWatch:Bool = false
     var progress:Float? = nil
     var progressTime:Double? = nil

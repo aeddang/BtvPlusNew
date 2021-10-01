@@ -390,16 +390,29 @@ class AlramData:InfinityData,ObservableObject{
             guard let menuId = arrParam.first(where: {!$0.isEmpty}) else { return }
             let gnbType = EuxpNetwork.GnbTypeCode.getType(menuId)
             if self.msgType == .marketKids {
-                // 키즈페이지 이동시 홈이 없으면 인트로에서 홈깔아줌 그냥 팝업호출
+                if menus.isEmpty {return}
+                let menuA = menus.split(separator: "/")
+                if menuA.isEmpty {return}
+                
+                var menuCId:String? = nil
+                var menuOpenId:String? = nil
+                if menuA.count == 2 {
+                    menuOpenId = menuA[1..<menuA.count].reduce("", {$0 + "|" + $1})
+                }else if menuA.count > 2 {
+                    menuCId = String(menuA[1])
+                    menuOpenId = menuA[2..<menuA.count].reduce("", {$0 + "|" + $1})
+                }
+    
                 var param = [PageParam:Any]()
                 if menuId == EuxpNetwork.KidsGnbCd.monthlyTicket.rawValue {
                     self.move = .kidsMonthly
-                    param[.subId] =  url
+                    param[.subId] =  menuOpenId
                 } else {
                     self.move = .kidsHome
-                    param[.link] = url
-                   
+                    param[.cid] = menuCId
+                    param[.subId] = menuOpenId
                 }
+                self.moveData = param
                 self.actionLog.menu_name = "B4.MENU"
                 
             } else {
@@ -522,14 +535,22 @@ class AlramData:InfinityData,ObservableObject{
                 )
                 
             case .kidsHome:
-                let pageObj = PageProvider.getPageObject(move)
+                let pageObj = PageKidsProvider.getPageObject(move)
                                 .addParam(params: data.moveData)
                 pagePresenter.changePage(pageObj)
                 
             default :
-                let pageObj = PageProvider.getPageObject(move)
-                pageObj.params = data.moveData
-                pagePresenter.openPopup(pageObj)
+                if PageFactory.getPage(PageProvider.getPageObject(move)) != nil {
+                    let pageObj = PageProvider.getPageObject(move)
+                    pageObj.params = data.moveData
+                    pagePresenter.openPopup(pageObj)
+                }
+                if PageKidsFactory.getPage( PageKidsProvider.getPageObject(move)) != nil {
+                    let pageObj = PageKidsProvider.getPageObject(move)
+                    pageObj.params = data.moveData
+                    pagePresenter.openPopup(pageObj)
+                }
+                
             }
         }
         else if let link = data.outLink {

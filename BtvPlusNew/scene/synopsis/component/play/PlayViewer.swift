@@ -58,6 +58,7 @@ struct PlayViewer: PageComponent{
                            height: 52)
                 if let info = self.textInfo {
                     Text(info)
+                        .multilineTextAlignment(.center)
                         .modifier(BoldTextStyle(
                             size: self.isFullScreen ? Font.size.lightExtra :Font.size.thin ))
                 }

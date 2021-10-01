@@ -48,7 +48,7 @@ class SynopsisModel : PageProtocol {
     private(set) var imgContentMode:ContentMode = .fit
     private(set) var cwCallId:String? = nil
     private(set) var cpId:String? = nil
-    
+  
     private(set) var playGradeData:PlayGradeData? = nil
     private(set) var isQuiz:Bool = false
     private(set) var isRecommand:Bool = false

@@ -110,9 +110,14 @@ struct SoundBox: PageComponent{
         self.stopSound()
         ComponentLog.d("playSound path: \(soundUrl)", tag: self.tag)
         if let url = URL(string:soundUrl) {
+            
             self.setAudioSession(isActive: true)
-            DispatchQueue.global(qos: .background).async {
+            self.audioDelegate?.sndBox = nil
+            self.audioDelegate = AudioDelegate()
+            self.audioDelegate?.sndBox = self
+           // DispatchQueue.global(qos: .background).async {
                 do{
+                    
                     let data = try Data(contentsOf: url)
                     let audioPlayer = try AVAudioPlayer(data: data)
                     self.audioPlayer = audioPlayer
@@ -121,16 +126,16 @@ struct SoundBox: PageComponent{
                     if isAutoPlay {
                         audioPlayer.play()
                     }
-                    DispatchQueue.main.async {
-                        ableSound()
-                    }
+                    audioPlayer.delegate = self.audioDelegate
+                    ableSound()
+                    
                 } catch let error {
                     ComponentLog.e("playSound error: \(error.localizedDescription)", tag: self.tag)
                     DispatchQueue.main.async {
                         unableSound()
                     }
                 }
-            }
+           // }
         } else {
             unableSound()
         }
@@ -146,25 +151,23 @@ struct SoundBox: PageComponent{
             self.audioDelegate = AudioDelegate()
             self.audioDelegate?.sndBox = self
             
-            DispatchQueue.global(qos: .background).async {
+            //DispatchQueue.global(qos: .background).async {
                 do{
                     let audioPlayer = try AVAudioPlayer(data: asset.data)
                     self.audioPlayer = audioPlayer
                     audioPlayer.prepareToPlay()
                     audioPlayer.volume = 1.5
                     audioPlayer.play()
-                
-                    DispatchQueue.main.async {
-                        audioPlayer.delegate = self.audioDelegate
-                        ableSound()
-                    }
+                    audioPlayer.delegate = self.audioDelegate
+                    ableSound()
+                    
                 } catch let error {
                     ComponentLog.e("playSound error: \(error.localizedDescription)", tag: self.tag)
                     DispatchQueue.main.async {
                         unableSound()
                     }
                 }
-            }
+            //}
         } else {
             unableSound()
         }
@@ -211,7 +214,6 @@ struct SoundBox: PageComponent{
 
 class SoundBoxModel:ObservableObject, PageProtocol{
     @Published fileprivate var isCompleted:Bool = false
-    
     @Published var isRight:Bool? = nil
 }
 class AudioDelegate:UIViewController ,AVAudioPlayerDelegate {

@@ -79,6 +79,7 @@ struct RecommandReceiveNeedPairing: PageComponent {
                     }
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
+                            .addParam(key: PageParam.subType, value: "mob-com-popup")
                     )
                 }
             }

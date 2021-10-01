@@ -16,6 +16,7 @@ struct SceneTab: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
     @State var positionTop:CGFloat = -Dimen.app.top
     @State var positionBottom:CGFloat = -Dimen.app.bottom
    
@@ -33,7 +34,7 @@ struct SceneTab: PageComponent{
     
     @State var headerBannerData:BannerData? = nil
     @State var showAlram:Bool = false
-    @State var readShowAlram:Bool = false
+    @State var readShowAlram:Bool = true
     var body: some View {
         ZStack{
             VStack(spacing:Dimen.margin.regular){
@@ -53,6 +54,7 @@ struct SceneTab: PageComponent{
                         TopTab()
                         if self.showAlram && !self.readShowAlram {
                             TooltipBottom(text: String.alert.newAlram){
+                                self.setup.alramUnvisibleDate = Setup.getDateKey()
                                 withAnimation{self.readShowAlram = true}
                             }
                             .padding(.leading, Dimen.margin.thin)
@@ -61,10 +63,15 @@ struct SceneTab: PageComponent{
                     .padding(.top, self.safeAreaTop)
                     .onReceive(self.repository.alram.$newCount){ count in
                         if self.pairing.status != .pairing {return}
-                        withAnimation{self.showAlram = count>0}
+                        let isShow = count>0
+                        withAnimation{self.showAlram = isShow}
+                        if !isShow {return}
+                        if self.setup.isAlramUnvisibleDate() {return}
+                        withAnimation{self.readShowAlram = false}
                     }
                     .onReceive(self.repository.alram.$isChangeNotification) { isChange in
                         if isChange {
+                            if self.setup.isAlramUnvisibleDate() {return}
                             withAnimation{self.readShowAlram = false}
                         }
                     }

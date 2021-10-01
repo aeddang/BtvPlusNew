@@ -78,7 +78,7 @@ extension Date{
     }
     
     func getDDay() -> Int {
-        Int(ceil(self.timeIntervalSince(AppUtil.networkTimeDate()) / 24)) - 1
+        Int(ceil(self.timeIntervalSince(AppUtil.networkTimeDate()) / (24*60*60))) - 1
     }
     
     func getWeekday()-> Int {

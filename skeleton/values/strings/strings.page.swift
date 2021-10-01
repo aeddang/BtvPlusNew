@@ -291,6 +291,8 @@ extension String{
         public static let myBenefitsDiscountTvEmpty = "myBenefitsDiscountTvEmpty".loaalized()
         public static let myBenefitsDiscountTvEmptyTip = "myBenefitsDiscountTvEmptyTip".loaalized()
         
+        public static let synopsisDisableNScreen = "synopsisDisableNScreen".loaalized()
+        public static let synopsisDisablePurchas = "synopsisDisablePurchas".loaalized()
         public static let synopsisOnlyBtvFree = "synopsisOnlyBtvFree".loaalized()
         public static let synopsisOnlyBtv = "synopsisOnlyBtv".loaalized()
         public static let synopsisWatchOnlyBtv = "synopsisWatchOnlyBtv".loaalized()

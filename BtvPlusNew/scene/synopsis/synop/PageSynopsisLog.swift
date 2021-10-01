@@ -117,6 +117,7 @@ extension PageSynopsis {
         self.synopsisData?.pId = model.curSynopsisItem?.prdPrcId
         self.synopsisData?.contentId = model.epsdRsluId
         self.synopsisData?.cpId = model.cpId ?? ""
+        self.synopsisData?.metaTypCd = model.metaTypCd
         self.synopsisData?.isLimitedWatch = model.isLimitedWatch
         let purchaseModels = model.purchasedPPMItems
         self.synopsisData?.ppmIds = purchaseModels.isEmpty

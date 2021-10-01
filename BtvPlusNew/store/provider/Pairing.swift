@@ -10,7 +10,7 @@ enum PairingRequest:Equatable{
     case wifi(retryCount:Int = 2) , btv, user(String?), cancel,
          hostInfo(auth:String?, device:String?, prevResult:NpsCommonHeader?),
          hostNickNameInfo(isAll:Bool = false),
-         recovery, device(StbData), auth(String) , token(String),
+         recovery, device(StbData, isUser:Bool = false), auth(String) , token(String),
          unPairing, check,
          userInfo, updateKids, registKid(Kid), selectKid(Kid), modifyKid(Kid), deleteKid(Kid),
          updateKidStudy

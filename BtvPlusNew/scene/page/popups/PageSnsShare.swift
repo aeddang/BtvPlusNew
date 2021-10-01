@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 struct PageSnsShare: PageView {
     enum ShareType {
-        case familyInvite
+        case familyInvite(type:String?) //mob-banner-event 찾을수없음
     }
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -17,7 +17,7 @@ struct PageSnsShare: PageView {
     @EnvironmentObject var pairing:Pairing
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @State var type:ShareType = .familyInvite
+    @State var type:ShareType = .familyInvite(type:"mob-invite")
     var body: some View {
         ZStack(alignment: .center) {
             Spacer().modifier(MatchParent())
@@ -57,8 +57,9 @@ struct PageSnsShare: PageView {
             
             
             switch type {
-            case .familyInvite :
-                self.dataProvider.requestData(q: .init(type: .getPairingToken(self.pairing.stbId)))
+            case .familyInvite(let type) :
+                self.dataProvider.requestData(
+                    q: .init(type: .getPairingToken(self.pairing.stbId, pairingInType: type)))
             }
         }
         

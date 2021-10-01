@@ -18,11 +18,12 @@ extension VlsNetwork{
     static let SERVICE_CODE = "v512.cdrLogNs"
     
     enum ProhibitionReason {
-        case R1,R2, unowned
+        case R1,R2,R4, unowned
         static func getType(_ value:String?)->ProhibitionReason{
             switch value {
                 case "R1": return .R1
                 case "R2": return .R2
+                case "R4": return .R4
             default : return .unowned
             }
         }
@@ -31,6 +32,7 @@ extension VlsNetwork{
             switch self {
             case .R1 : return String.alert.playProhibitionSimultaneous1
             case .R2: return String.alert.playProhibitionSimultaneous2
+            case .R4: return String.alert.playProhibitionSimultaneous4
             default : return String.alert.playProhibitionSimultaneous3
             }
         }
@@ -39,6 +41,7 @@ extension VlsNetwork{
             switch self {
             case .R1 : return "지상파월정액시청"
             case .R2: return "동일cp사시청"
+            case .R4: return "동일 장르영상"
             default : return "동일콘텐츠시청"
             }
         }

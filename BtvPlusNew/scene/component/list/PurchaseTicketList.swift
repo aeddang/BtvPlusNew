@@ -381,6 +381,7 @@ struct PurchaseTicketValue: View{
                             size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
                             color: Color.app.black))
                 .lineLimit(lineLimit)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }//body
 }

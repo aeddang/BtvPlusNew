@@ -383,6 +383,7 @@ struct SceneAlertController: PageComponent{
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.pairingSetupUser,animationType: ani)
                         .addParam(key: PageParam.type, value: PairingRequest.recovery)
+                        .addParam(key: PageParam.subType, value: "mob-com-popup")
                 )
             }
         }else{
@@ -392,7 +393,7 @@ struct SceneAlertController: PageComponent{
     
     func setupNeedPairing(msg:String? = nil) {
         
-        self.title = String.alert.connect
+        self.title = String.pageTitle.pairingGuide
         self.text = msg ?? String.alert.needConnect
         if self.vsManager.isGranted {
             self.tipText = String.vs.accountProviderPairingTip
@@ -414,16 +415,20 @@ struct SceneAlertController: PageComponent{
                 return
             }
             self.appSceneObserver.pairingCompletedMovePage = move
+            let  pairingInType = "mob-com-popup"
             if SystemEnvironment.currentPageType == .kids {
+                
                 self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing, animationType: .opacity)
+                            .addParam(key: PageParam.subType, value: pairingInType)
                     )
                 }
             } else {
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.pairing)
+                        .addParam(key: PageParam.subType, value: pairingInType)
                 )
             }
            

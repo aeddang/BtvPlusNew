@@ -180,8 +180,8 @@ class SceneDelegate: PageSceneDelegate {
     
     override func getPageContentProtocol(_ page: PageObject) -> PageViewProtocol {
         switch PageType.getType(page.pageGroupID) {
-        case .btv: return PageFactory.getPage(page)
-        case .kids: return PageKidsFactory.getPage(page)
+        case .btv: return PageFactory.getPage(page) ?? PageFactory.getPage(PageProvider.getPageObject(.home))!
+        case .kids: return PageKidsFactory.getPage(page) ?? PageFactory.getPage(PageKidsProvider.getPageObject(.kidsHome))!
         }
     }
     

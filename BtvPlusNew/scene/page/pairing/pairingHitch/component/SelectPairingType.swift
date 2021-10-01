@@ -74,18 +74,21 @@ struct SelectPairingType: View {
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.wifi)
+                    .addParam(key: PageParam.subType, value: "mob-home-popup")
             )
         case .btv:
             self.sendLog(menuName: "인증번호연결")
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.btv)
+                    .addParam(key: PageParam.subType, value: "mob-home-popup")
             )
         case .user:
             self.sendLog(menuName: "가입자인증")
            self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))
+                    .addParam(key: PageParam.subType, value: "mob-home-popup")
             )
             
         }

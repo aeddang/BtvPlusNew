@@ -15,6 +15,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
     @State var showAlram:Bool = false
     @State var newCount:Int = 0
     @State var pairingStbType:PairingDeviceType = .btv

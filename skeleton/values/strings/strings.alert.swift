@@ -45,7 +45,7 @@ extension String {
         public static var playProhibitionSimultaneous1  = "alertPlayProhibitionSimultaneous1".loaalized()
         public static var playProhibitionSimultaneous2  = "alertPlayProhibitionSimultaneous2".loaalized()
         public static var playProhibitionSimultaneous3 = "alertPlayProhibitionSimultaneous3".loaalized()
-        
+        public static var playProhibitionSimultaneous4 = "alertPlayProhibitionSimultaneous4".loaalized()
         
         
         public static var guide = "alertGuide".loaalized()

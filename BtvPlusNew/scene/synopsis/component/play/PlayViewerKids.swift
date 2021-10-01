@@ -65,6 +65,7 @@ struct PlayViewerKids: PageComponent{
                            height: SystemEnvironment.isTablet ? 69 : 35)
                 if let info = self.textInfo {
                     Text(info)
+                        .multilineTextAlignment(.center)
                         .modifier(BoldTextStyleKids(
                                     size: self.isFullScreen ? Font.sizeKids.medium : Font.sizeKids.tiny,
                                     color: Color.app.white))

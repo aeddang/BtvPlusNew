@@ -41,6 +41,8 @@ class User {
         return Asset.characterList[idx]
     }
     
+    var pairingInType:String? = nil
+    
     var pairingDate:String? = nil
     var pairingDeviceType:PairingDeviceType = .btv
     private(set) var gender:Gender = .mail

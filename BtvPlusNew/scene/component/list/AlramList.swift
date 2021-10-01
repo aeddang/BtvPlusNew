@@ -20,7 +20,7 @@ struct AlramList: PageComponent{
     @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[AlramData]
-    var useTracking:Bool = false
+    var useTracking:Bool = true
     var marginBottom:CGFloat = Dimen.margin.tinyExtra
     
     @State var hasNew:Bool = false

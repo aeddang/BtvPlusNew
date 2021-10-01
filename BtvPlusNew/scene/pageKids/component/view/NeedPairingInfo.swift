@@ -47,6 +47,7 @@ struct NeedPairingInfo: PageView {
                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing, animationType: .opacity)
+                            .addParam(key: PageParam.subType, value: "mob-com-popup")
                     )
                 }
             }

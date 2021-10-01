@@ -10,6 +10,7 @@ import Foundation
 struct Asset {}
 extension Asset {
     public static let appIcon = "AppIcon"
+    public static let appLauncher = "launcher_600"
     public static let noImg16_9 = "imgDefaultPosterThum"
     public static let noImg4_3 = "imgDefaultMonthlyCardB"
     public static let noImg1_1 = "img07CardDefault"

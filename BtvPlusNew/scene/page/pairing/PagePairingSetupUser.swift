@@ -6,6 +6,10 @@
 //
 import Foundation
 import SwiftUI
+extension PagePairingSetupUser {
+    static private(set) var pairingInType:String? = nil
+}
+
 struct PagePairingSetupUser: PageView {
     enum EditType {
         case nickName, birth, none
@@ -20,6 +24,7 @@ struct PagePairingSetupUser: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @State var title:String? = nil
     @State var pairingType:PairingRequest = .wifi()
+   
     @State var editType:EditType = .none
     
     @State var nickName:String = ""
@@ -242,6 +247,7 @@ struct PagePairingSetupUser: PageView {
                 guard let obj = self.pageObject  else { return }
                 self.birth = self.birthList[30]
                 let type = obj.getParamValue(key: .type)
+                Self.pairingInType = obj.getParamValue(key: .subType) as? String ?? "mob-my"
                 self.pairingType = type as? PairingRequest ?? self.pairingType
                 
                 switch self.pairingType {

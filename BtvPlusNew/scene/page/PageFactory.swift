@@ -167,7 +167,7 @@ struct PageProvider {
 
 
 struct PageFactory{ 
-    static func getPage(_ pageObject:PageObject) -> PageViewProtocol{
+    static func getPage(_ pageObject:PageObject) -> PageViewProtocol?{
         switch pageObject.pageID {
         case .auth : return PageAuth()
         case .intro : return PageIntro()
@@ -231,7 +231,7 @@ struct PageFactory{
         case .recommandReceive : return PageRecommandReceive()
         case .snsShare : return PageSnsShare()
         case .picker : return PagePicker()
-        default : return PageTest()
+        default : return nil
         }
     }
 }

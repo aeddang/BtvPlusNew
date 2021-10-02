@@ -55,6 +55,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         uiView.uiDelegate = context.coordinator
         uiView.allowsLinkPreview = false
         uiView.scrollView.bounces = false
+        uiView.keyboardDisplayRequiresUserAction = false
         uiView.isOpaque = false
         uiView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         return uiView

@@ -764,7 +764,7 @@ class ApiManager :PageProtocol, ObservableObject{
         default: break
         }
         let currentHost = (NpsNetwork.hostDeviceId ?? "") + NpsNetwork.pairingId
-        if prevHost != currentHost{
+        if prevHost != currentHost {
             self.event = .pairingHostChanged
         }
         if let trans = transition[result.id] {

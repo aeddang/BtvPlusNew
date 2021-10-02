@@ -86,7 +86,9 @@ extension PageSynopsis {
         if self.sceneOrientation == .landscape {
             self.relationBodyModel.uiEvent = .scrollTo(self.relationBodyModel.topIdx, .top)
         }
-        self.contentsListTabLog(idx: idx)
+        if self.isAllProgressCompleted {
+            self.contentsListTabLog(idx: idx)
+        }
     }
     
     func updateRelationTabButtons(idx:Int){

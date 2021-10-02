@@ -16,7 +16,7 @@ extension PageSynopsis {
         PageLog.d("onProhibitionSimultaneous " + (data.has_authority ?? ""), tag: Self.ProhibitionSimultaneous)
         if data.has_authority?.toBool() == false {
             let reason = VlsNetwork.ProhibitionReason.getType(data.has_authority_reason)
-            self.playerModel.event = .pause
+            self.playerModel.event = .pause()
             self.appSceneObserver.alert = .alert(String.alert.playProhibitionSimultaneous, reason.reason)
             self.prohibitionSimultaneousLog(reason: reason)
         } else {

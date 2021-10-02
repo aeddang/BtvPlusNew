@@ -16,6 +16,7 @@ struct PagePreviewList: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var setup:Setup
     @ObservedObject var pageObservable:PageObservable = PageObservable()
    
@@ -134,6 +135,23 @@ struct PagePreviewList: PageView {
                     
                 }
             }
+            .onReceive(self.viewModel.$naviLogPlayData){ playData in
+                guard let playData = playData else {return}
+                self.sendLogPlayData(playData)
+                
+            }
+            .onReceive(self.playerModel.$event){ evt in
+                guard let evt = evt else {return}
+                self.sendLogPlay(evt:evt)
+            }
+            .onReceive(self.playerModel.$streamEvent){ evt in
+                guard let evt = evt else {return}
+                self.onEventLog(streamEvent: evt)
+            }
+            .onReceive(self.viewModel.$logEvent){ evt in
+                guard let evt = evt else {return}
+                self.sendLogEvent(evt: evt)
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if self.isInit {return}
@@ -152,21 +170,25 @@ struct PagePreviewList: PageView {
                 guard let obj = self.pageObject  else { return }
                 
                 if let data = obj.getParamValue(key: .data) as? CateData {
+                    self.logPageId = .scheduled
                     self.title = data.title
                     if let cateData = data.blocks?.filter({ $0.menu_id != nil }).first {
                         self.menuId = cateData.menu_id
                         return
                     }
+                    
+                   
                 }
+                self.logPageId = .clipViewAll
                 if let data = obj.getParamValue(key: .data) as? BlockData {
                     self.title = data.name
                     self.block = data
+                    self.menuId = data.menuId
                 } else {
                     self.menuId = obj.getParamValue(key: .id) as? String
                     
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
-
             }
             .onDisappear{
                
@@ -177,14 +199,180 @@ struct PagePreviewList: PageView {
     @State var synopsisData:SynopsisData? = nil
     @State var playListData:PlayListData = PlayListData()
     @State var epsdId:String? = nil
-    
-    /*
-     Player process
-     */
-    
+    @State var isInitLog:Bool = true
+    @State var logPageId:NaviLog.PageId? = nil
+    @State var lastShow:String? = nil
     
     
+    func onEventLog(streamEvent:PlayerStreamEvent){
+        switch streamEvent {
+        case .resumed:
+            self.naviLogManager.contentsWatch(isPlay: true)
+        case .stoped, .paused:
+            self.naviLogManager.contentsWatch(isPlay: false)
+        default: break
+        }
+    }
     
+    private func sendLogPlayData(_ playData:PlayData){
+        if self.viewModel.currentPlayData != playData {return}
+        if self.lastShow == playData.epsdId {return}
+        self.lastShow = playData.epsdId
+        if playData.isClip {
+            let content = MenuNaviContentsBodyItem(
+                type: "clip",
+                title: playData.fullTitle,
+                episode_id: playData.epsdId,
+                episode_resolution_id: playData.epsdRsluId)
+            let action = MenuNaviActionBodyItem(
+                menu_id: self.menuId,
+                menu_name: self.title,
+                category: playData.isAutoPlay == false ? "자동재생불가" : "자동재생",
+                target: playData.subTitle)
+            
+            self.naviLogManager.actionLog(.pageShow, pageId: self.logPageId, actionBody: action, contentBody: content)
+        }else {
+            
+            let content = MenuNaviContentsBodyItem(
+                type: "vod",
+                title: playData.title,
+                genre_text:"",
+                genre_code:"",
+                episode_id: playData.epsdId,
+                episode_resolution_id: playData.epsdRsluId,
+                product_id: playData.prdId,
+                purchase_type: playData.prdTypeCd
+            )
+            let action = MenuNaviActionBodyItem(
+                result: playData.isAutoPlay == false ? "자동재생불가" : "자동재생")
+            
+            self.naviLogManager.actionLog(.pageShow, pageId: self.logPageId, actionBody: action, contentBody: content)
+            
+        }
+    }
+    
+    private func sendLogPlay(evt:PlayerUIEvent){
+        guard let playData = self.viewModel.naviLogPlayData  else {return}
+        if !playData.isClip {return} // 클립만
+        //if self.viewModel.currentPlayData != playData {return}
+        var actionType:NaviLog.Action = .none
+        switch evt {
+        case .pause(let isUser) :
+            if !isUser {return}
+            actionType = .clickContentsPause
+        case .resume(let isUser) :
+            if !isUser {return}
+            actionType = .clickContentsPlay
+        case .togglePlay(let isUser) :
+            if !isUser {return}
+            actionType =  self.playerModel.playerStatus == .resume ? .clickContentsPause : .clickContentsPlay
+        default: return
+        }
+        
+        let content = MenuNaviContentsBodyItem(
+            type: "clip",
+            title: playData.fullTitle,
+            episode_id: playData.epsdId,
+            episode_resolution_id: playData.epsdRsluId
+        )
+        let action = MenuNaviActionBodyItem(
+            menu_id: self.menuId,
+            menu_name: self.title,
+            target: playData.subTitle)
+        
+        self.naviLogManager.actionLog(actionType, pageId: self.logPageId, actionBody: action, contentBody: content)
+    }
+    
+    private func sendLogEvent(evt:PlayBlockModel.LogEvent){
+        guard let playData = self.viewModel.naviLogPlayData  else {return}
+        if self.viewModel.currentPlayData != playData {return}
+        switch evt {
+        case .select : self.sendLogEventSelect ()
+        case .play :
+            if playData.isClip { sendLogPlay(evt: .resume(isUser: true)) }
+            else { sendLogEventPlay()}
+        case .like : self.sendLogEventOption(evt:evt)
+        case .alram : self.sendLogEventOption(evt:evt)
+        }
+    
+    }
+    
+    private func sendLogEventSelect (){
+        guard let playData = self.viewModel.naviLogPlayData  else {return}
+        if playData.isClip {
+            let content = MenuNaviContentsBodyItem(
+                type: "clip",
+                title: playData.fullTitle,
+                episode_id: playData.epsdId,
+                episode_resolution_id: playData.epsdRsluId)
+            let action = MenuNaviActionBodyItem(
+                menu_id: self.menuId,
+                menu_name: self.title,
+                position: playData.index.description + "@" + self.infinityScrollModel.total.description,
+                target: playData.subTitle
+            )
+            
+            self.naviLogManager.actionLog(.clickClipStoryButton, pageId: self.logPageId, actionBody: action, contentBody: content)
+        } else {
+            
+            let content = getPreviewLogContent ()
+            self.naviLogManager.actionLog(.clickClipStoryButton, pageId: self.logPageId, contentBody: content)
+        }
+    }
+    
+    
+    // 공개예정 전용
+    private func sendLogEventOption (evt:PlayBlockModel.LogEvent){
+        var category:String? = nil
+        var actionType:NaviLog.Action = .none
+        switch evt {
+        case .like(let isLike) :
+            if let like = isLike {
+                category = like ? "like" : "dislike"
+                actionType = .clickLikeSelection
+            } else {
+                actionType = .clickLikeSelectionCancel
+            }
+            
+        case .alram(let isAlram) :
+            category = isAlram ? "alram" : "un-alarm"
+            actionType = .clickMovieOption
+        default : break
+        }
+        
+        let content = getPreviewLogContent ()
+        let action = category != nil
+            ? MenuNaviActionBodyItem(category : category)
+            : nil
+        self.naviLogManager.actionLog(actionType , pageId: self.logPageId, actionBody: action, contentBody: content)
+    }
+    
+    
+    
+    private func sendLogEventPlay (){
+        let content = getPreviewLogContent ()
+        self.naviLogManager.actionLog(.clickScheduledMoviePlay, pageId: self.logPageId, contentBody: content)
+    }
+    
+    private func getPreviewLogContent () -> MenuNaviContentsBodyItem? {
+        guard let playData = self.viewModel.naviLogPlayData  else {return nil}
+        let content = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: playData.title,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: playData.epsdId,
+            episode_resolution_id: playData.epsdRsluId,
+            cid: nil,
+            product_id: playData.prdId,
+            purchase_type: playData.prdTypeCd,
+            monthly_pay: nil,
+            list_price: nil,
+            payment_price: nil)
+        return content
+    }
 }
 
 

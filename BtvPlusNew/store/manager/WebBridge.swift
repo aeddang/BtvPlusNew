@@ -148,6 +148,7 @@ class WebBridge :PageProtocol{
         info["evaluation"] = SystemEnvironment.isEvaluation
         info["clientId"] = SystemEnvironment.deviceId
         info["expiredSTB"] = setup.possession.isEmpty == false ? 1 : 0
+        info["pairingId"] = NpsNetwork.pairingId
         
         return info
     }

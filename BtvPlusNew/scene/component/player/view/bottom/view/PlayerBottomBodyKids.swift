@@ -42,7 +42,7 @@ struct PlayerBottomBodyKids: PageComponent{
                             size : DimenKids.button.mediumRectExtra,
                             trailIconSize: DimenKids.icon.microUltra
                             ){_ in
-                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , String.player.continueView)
+                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , .continueView)
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else {

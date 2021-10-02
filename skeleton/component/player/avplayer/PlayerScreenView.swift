@@ -113,7 +113,9 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     private func createPlayer(_ url:URL, buffer:Double = 2.0, header:[String:String]? = nil, assetInfo:AssetPlayerInfo? = nil) -> AVPlayer?{
         self.destoryPlayer()
         var player:AVPlayer? = nil
-        if let header = header {
+        if self.drmData != nil {
+            player = startPlayer(url, assetInfo:assetInfo)
+        }else if let header = header {
             player = startPlayer(url, header: header)
         }else{
             player = startPlayer(url, assetInfo:assetInfo)

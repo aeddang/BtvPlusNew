@@ -18,6 +18,7 @@ struct AlramButton: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var naviLogManager:NaviLogManager
+    var playBlockModel:PlayBlockModel? = nil
     var data:NotificationData
     @Binding var isAlram:Bool?
     var action: ((_ ac:Bool) -> Void)? = nil
@@ -112,6 +113,7 @@ struct AlramButton: PageView {
             self.isAlram = true
             action?(true)
             self.appSceneObserver.event = .toast(String.alert.updateRegistAlram)
+            self.playBlockModel?.logEvent = .alram(true)
         }
     }
     private func delete(_ srisId:String?, res:ApiResultResponds){
@@ -120,6 +122,7 @@ struct AlramButton: PageView {
             self.isAlram = false
             action?(false)
             self.appSceneObserver.event = .toast(String.alert.updateUnregistAlram)
+            self.playBlockModel?.logEvent = .alram(false)
         }
     }
     

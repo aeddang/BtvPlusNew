@@ -12,7 +12,7 @@ struct PageMyPurchase: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -52,8 +52,12 @@ struct PageMyPurchase: PageView {
                             usePull: .horizontal)
                             { idx in
                                 switch idx {
-                                case 0 : self.purchaseModel.initUpdate()
-                                case 1 : self.collectionModel.initUpdate()
+                                case 0 :
+                                    self.purchaseModel.initUpdate()
+                                    self.sendLogTabMenu(0)
+                                case 1 :
+                                    self.collectionModel.initUpdate()
+                                    self.sendLogTabMenu(1)
                                 default : break
                                 }
                             }
@@ -119,7 +123,10 @@ struct PageMyPurchase: PageView {
         }//geo
     }//body
     
-   
+    private func sendLogTabMenu(_ idx:Int){
+        let action = MenuNaviActionBodyItem(category: idx == 0 ? "대여" : "소장")
+        self.naviLogManager.actionLog(.clickPurchaseListTabMenu, actionBody: action)
+    }
 }
 
 #if DEBUG

@@ -205,10 +205,10 @@ struct PlayerEffect: PageView{
         .onReceive(self.viewModel.$event) { evt in
             guard let evt = evt else { return }
             switch evt {
-            case .seekForward(let t, _):
+            case .seekForward(let t, _, _):
                 self.textWillMoveTime = t.toInt().description + String.player.moveSec
                 self.delaySeekForwardHidden()
-            case .seekBackword(let t, _):
+            case .seekBackword(let t, _, _):
                 self.textWillMoveTime = t.toInt().description + String.player.moveSec
                 self.delaySeekBackwardHidden()
             default : do{}

@@ -74,10 +74,10 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         switch evt {
         case .togglePlay: break
         case .resume: break
-        case .seekTime(let t, let play):
+        case .seekTime(let t, let play, _):
             initTime = t
             isPlay = play ?? true
-        case .seekProgress(let pct, let play):
+        case .seekProgress(let pct, let play, _):
             let t = viewModel.duration * Double(pct)
             isPlay = play ?? true
             initTime = t
@@ -122,7 +122,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         case .stop:
             player.stop()
             self.onStoped()
-        case .volume(let v):
+        case .volume(let v, _):
             MPVolumeView.setVolume(v)
             viewModel.volume = v
             if v > 0 && viewModel.isMute {
@@ -130,14 +130,14 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
                 player.mute(false)
             }
             
-        case .mute(let isMute):
+        case .mute(let isMute, _):
             viewModel.isMute = isMute
             player.mute(isMute)
         case .screenRatio(let r):
             player.currentRatio = r
             viewModel.screenRatio = r
             
-        case .rate(let r):
+        case .rate(let r, _):
             viewModel.rate = r
             player.currentRate = r
             
@@ -148,11 +148,11 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
             player.currentRatio = 1
            
             
-        case .seekTime(let t, let play): onSeek(time:t, play: play)
-        case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
-        case .seekForward(let t, let play): onSeek(time:viewModel.time + t , play: play)
-        case .seekBackword(let t, let play): onSeek(time:viewModel.time - t , play: play)
-        case .seekProgress(let pct, let play):
+        case .seekTime(let t, let play, _): onSeek(time:t, play: play)
+        case .seekMove(let t, let play, _): onSeek(time:viewModel.time + t, play: play)
+        case .seekForward(let t, let play, _): onSeek(time:viewModel.time + t , play: play)
+        case .seekBackword(let t, let play, _): onSeek(time:viewModel.time - t , play: play)
+        case .seekProgress(let pct, let play, _):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)
         case .neetLayoutUpdate :
@@ -225,7 +225,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         if self.viewModel.volume == v {return}
         self.viewModel.volume = v
         if viewModel.isMute {
-            self.viewModel.event = .volume(v)
+            self.viewModel.event = .volume(v, isUser: false)
         }
     }
     func onPlayerBitrateChanged(_ bitrate: Double) {
@@ -236,7 +236,7 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         let d = viewModel.duration
         if d > 0 {
             if viewModel.isReplay && t >= (d - 1) {
-                self.viewModel.event = .seekTime(0, true)
+                self.viewModel.event = .seekTime(0, true, isUser: false)
             }
             if t >= d {
                 if viewModel.playerStatus != .seek && viewModel.playerStatus != .pause {
@@ -424,9 +424,9 @@ extension CustomPlayerController {
         guard let type = event?.type else { return}
         if type != .remoteControl { return }
         switch event!.subtype {
-        case .remoteControlPause: self.viewModel.event = .pause
-        case .remoteControlPlay: self.viewModel.event = .resume
-        case .remoteControlEndSeekingForward: self.viewModel.event = .resume
+        case .remoteControlPause: self.viewModel.event = .pause()
+        case .remoteControlPlay: self.viewModel.event = .resume()
+        case .remoteControlEndSeekingForward: self.viewModel.event = .resume()
         //case .remoteControlEndSeekingBackward: self.viewModel.event = .seekForward(10, false)
         //case .remoteControlNextTrack: self.viewModel.event = .seekBackword(10, false)
         case .remoteControlPreviousTrack: self.viewModel.remoteEvent = .prev

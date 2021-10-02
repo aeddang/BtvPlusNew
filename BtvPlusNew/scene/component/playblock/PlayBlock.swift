@@ -30,6 +30,7 @@ class PlayBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
+    
     func update(menuId:String?, key:String? = nil) {
         self.menuId = menuId
         self.key = key
@@ -43,6 +44,14 @@ class PlayBlockModel: PageDataProviderModel {
         self.key = key
         self.isUpdate = true
     }
+    
+    enum LogEvent{
+        case select, play, like(Bool?), alram(Bool)
+    }
+    
+    fileprivate(set) var dataNum:Int = 0
+    @Published var logEvent:LogEvent? = nil {didSet{ if logEvent != nil { logEvent = nil} }}
+    @Published var naviLogPlayData:PlayData? = nil
 }
 
 struct PlayBlock: PageComponent{
@@ -102,7 +111,8 @@ struct PlayBlock: PageComponent{
                                         range: self.getRange()
                                         ){ data in
                                         
-                                        self.forcePlay(data: data)
+                                            self.viewModel.logEvent = .play
+                                            self.forcePlay(data: data)
                                     }
                                     .id(data.hashId)
                                     .modifier(
@@ -122,6 +132,7 @@ struct PlayBlock: PageComponent{
                                         self.onDisappear(idx: data.index)
                                     }
                                     .onTapGesture {
+                                        self.viewModel.logEvent = .select
                                         if self.focusIndex != data.index {
                                             self.onFocusChange(willFocus: data.index)
                                         }
@@ -343,7 +354,7 @@ struct PlayBlock: PageComponent{
         self.finalIndex = self.focusIndex
         self.delayUpdateCancel()
         PageLog.d("onOpenFullScreen " + (self.finalIndex?.description ?? ""), tag:self.tag)
-        self.playerModel.event = .pause
+        self.playerModel.event = .pause()
         self.viewModel.currentPlayData = nil
         self.onPlaytimeChanged(t:self.playerModel.time)
         let playTime = self.selectedData?.playTime
@@ -367,7 +378,7 @@ struct PlayBlock: PageComponent{
         self.isHold = true
         self.delayUpdateCancel()
         self.onPlaytimeChanged(t:self.playerModel.time)
-        self.playerModel.event = .pause
+        self.playerModel.event = .pause()
         self.playerModel.reset()
        // self.selectedData?.completed()
         PageLog.d("onCloseFullScreen " + (self.finalIndex?.description ?? "nil"), tag:self.tag)
@@ -428,7 +439,7 @@ struct PlayBlock: PageComponent{
         if self.isHold {return}
         self.isHold = true
         self.onPlaytimeChanged(t: self.playerModel.time)
-        self.playerModel.event = .pause
+        self.playerModel.event = .pause()
         self.finalIndex = self.focusIndex
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.isFullScreen = false

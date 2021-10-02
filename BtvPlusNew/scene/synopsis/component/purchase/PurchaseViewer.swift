@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import Combine
 struct PurchaseViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -106,6 +106,7 @@ struct PurchaseViewer: PageComponent{
                                 //.padding(.leading, -(Tooltip.size.width - Dimen.icon.tiny)/2)
                                 Button(action: {
                                     withAnimation { self.showInfo.toggle() }
+                                    self.delayAutoTooltipHidden()
                                 }){
                                     Image( Asset.icon.info )
                                         .renderingMode(.original).resizable()
@@ -168,7 +169,26 @@ struct PurchaseViewer: PageComponent{
                 self.option = self.data.options[self.data.optionIdx]
             }
         }
+        .onDisappear(){
+            self.clearAutoTooltipHidden()
+        }
     }//body
+    
+    @State var autoTooltipHidden:AnyCancellable?
+    func delayAutoTooltipHidden(){
+        self.autoTooltipHidden?.cancel()
+        self.autoTooltipHidden = Timer.publish(
+            every: 2.0, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                withAnimation{ self.showInfo = false }
+                self.clearAutoTooltipHidden()
+            }
+    }
+    func clearAutoTooltipHidden() {
+        self.autoTooltipHidden?.cancel()
+        self.autoTooltipHidden = nil
+    }
 }
 
 

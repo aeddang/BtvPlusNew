@@ -138,6 +138,8 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
+        params["m_drm"] = SystemEnvironment.isStage ? "fairplay" : ""
+        params["use_subtitle_yn"] = "n"
         fetch(route: ScsPreview(query: params), completion: completion, error:error)
     }
     
@@ -165,7 +167,10 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
+        params["m_drm"] = SystemEnvironment.isStage ? "fairplay" : ""
+        params["use_subtitle_yn"] = "n"
         
+       
         fetch(route: ScsPreplay(query: params), completion: completion, error:error)
     }
     
@@ -203,6 +208,8 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
+        params["m_drm"] = SystemEnvironment.isStage ? "fairplay" : ""
+        params["use_subtitle_yn"] = "n"
         fetch(route: ScsPlay(path:path, query: params, overrideHeaders: overrideHeaders), completion: completion, error:error)
 
     }

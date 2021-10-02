@@ -121,8 +121,6 @@ class Pairing:ObservableObject, PageProtocol {
             //if self.kid == nil { return }
             
         //case .unPairing :
-    
-            
         case .wifi :
             self.event = .pairingRequest
             self.pairingType = .wifi
@@ -132,10 +130,8 @@ class Pairing:ObservableObject, PageProtocol {
         case .user :
             self.event = .pairingRequest
             self.pairingType = .user
-        /*
         case .token :
             self.pairingType = .token
-        */
         default : break
         }
         self.request = request
@@ -210,6 +206,7 @@ class Pairing:ObservableObject, PageProtocol {
     
     func syncError(header:NpsCommonHeader? = nil) {
         if self.status == .unstablePairing {return}
+        if !NpsNetwork.isPairing {return}
         if self.status == .recovery {
             self.status = .unstablePairing
             self.event = .syncFail

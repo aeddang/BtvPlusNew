@@ -152,7 +152,7 @@ class AccountManager : PageProtocol{
             case .connected :
                 self.dataProvider.requestData(q: .init(type: .getHostDeviceInfo, isOptional: true))
                 if SystemEnvironment.tvUserId != nil {
-                    self.pairing.user =  User().setTvProvider(isAgree: true, savedUser: savedUser)
+                    self.pairing.user = User().setTvProvider(isAgree: true, savedUser: savedUser)
                     self.pairing.user?.pairingDeviceType = .apple
                 }
                 if let user = self.pairing.user {
@@ -203,7 +203,7 @@ class AccountManager : PageProtocol{
             
             switch res.type {
             case .postUnPairing :
-                if !self.checkConnectHeader(res) { return }
+                self.checkDisConnectHeader(res)
                 
             case .postAuthPairing, .postDevicePairing, .postUserDevicePairing, .postPairingByToken :
                 if !self.checkConnectHeader(res) { return }
@@ -363,25 +363,20 @@ class AccountManager : PageProtocol{
             }
         }).store(in: &dataCancellable)
     }
-    private func checkDisConnectHeader(_ res:ApiResultResponds ) -> Bool{
+    private func checkDisConnectHeader(_ res:ApiResultResponds){
         guard let data = res.data as? NpsResult  else {
             self.pairing.disConnectError()
-            return false
+            return
         }
         guard let resultCode = data.header?.result else {
             self.pairing.disConnectError()
-            return false
+            return
         }
-        if resultCode == NpsNetwork.resultCode.pairingRetry.code {
-            self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
-            return false
-        }
-        
         if resultCode != NpsNetwork.resultCode.success.code {
             self.pairing.disConnectError(header: data.header)
-            return false
+            return
         }
-        return true
+        self.pairing.disconnected()
     }
     
     
@@ -410,11 +405,10 @@ class AccountManager : PageProtocol{
         }
         
         if resultCode == NpsNetwork.resultCode.existPairing.code {
-            if self.isRequestDeviceUser{
-                self.dataProvider.requestData(q: .init(type: .getUserDevicePairingStatus , isOptional: true))
-                
-                return true
-            }
+            //if self.isRequestDeviceUser{
+            self.dataProvider.requestData(q: .init(type: .getUserDevicePairingStatus , isOptional: true))
+            return true
+            //}
             self.pairing.syncError(header: nil)
             return false
         }

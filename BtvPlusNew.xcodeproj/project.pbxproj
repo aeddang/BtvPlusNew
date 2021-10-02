@@ -1743,14 +1743,6 @@
 			path = model;
 			sourceTree = "<group>";
 		};
-		312D2D8326D64AA6002EE783 /* push */ = {
-			isa = PBXGroup;
-			children = (
-				312D2D8426D64AB5002EE783 /* PushManager.swift */,
-			);
-			path = push;
-			sourceTree = "<group>";
-		};
 		31373F5925C7E726004353DA /* ytplayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -2464,6 +2456,7 @@
 				3129CCA626EEC43A0094E6D9 /* appletv */,
 				319BAFA1260439AD0007273F /* voice */,
 				316C45E8265382F400A8D7F5 /* audiomirror */,
+				312D2D8426D64AB5002EE783 /* PushManager.swift */,
 				31D3F4CA25E3368A008FDFEC /* WebBridge.swift */,
 				31863E07265B364A0086C40D /* Alram.swift */,
 			);
@@ -3883,7 +3876,6 @@
 				D56C6B1C257DACD800CF9AB8 /* storage */,
 				312D2D7126D5E8C7002EE783 /* keychain */,
 				31CABAF926C2021200B4B3C3 /* log */,
-				312D2D8326D64AA6002EE783 /* push */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,

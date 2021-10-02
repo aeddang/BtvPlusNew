@@ -89,21 +89,16 @@ struct PageMyPossessionPurchase: PageView {
                         self.collectionModel.update()
                     case .info :
                         if data.stb_id != self.setup.possession {
-                            self.appSceneObserver.alert = .confirm(
+                            self.appSceneObserver.alert = .alert(
                                 String.alert.possession,
-                                String.alert.possessionDiableAlreadyChange ){ isOk in
-                                
-                                if isOk {
-                                    self.dataProvider.requestData(
-                                        q:.init(id: self.tag,
-                                                type: .connectTerminateStb(.regist, self.setup.possession)))
-                                } else {
-                                    self.setup.possession = ""
-                                    self.dataProvider.requestData(
-                                        q:.init(id: self.tag,
-                                                type: .connectTerminateStb(.delete, self.setup.possession),
-                                                isOptional: true))
-                                }
+                                String.alert.possessionDiableAlreadyChange,
+                                confirmText:String.app.close){
+                                    
+                                self.setup.possession = ""
+                                self.dataProvider.requestData(
+                                    q:.init(id: self.tag,
+                                            type: .connectTerminateStb(.delete, self.setup.possession),
+                                            isOptional: true))
                             }
                         }
                     default : break

@@ -33,6 +33,7 @@ enum BtvPlayType {
 struct Quality {
     var name:String
     let path:String
+    let drmLicense:String?
 }
 
 enum DragGestureType:String {
@@ -44,12 +45,15 @@ enum SelectOptionType:String {
 }
 enum BtvUiEvent {
     case more, guide, initate, closeList, watchBtv, syncListScroll,
-         clickInsideButton(NaviLog.Action,  String?), prevPlay
+         clickInsideButton(NaviLog.Action,
+                           BtvPlayerEvent?,
+                           config:String? = nil, result:String? = nil),
+         prevPlay
 }
 
 
 enum BtvPlayerEvent {
-    case nextView(isAuto:Bool = false), nextViewCancel,
+    case nextView(isAuto:Bool = false), nextViewCancel, nextViewSeason,
          continueView, changeView(String), cookieView, fullVod(SynopsisData),
          close, stopAd, play80, disablePreview
 }
@@ -212,10 +216,14 @@ class BtvPlayerModel:PlayerModel{
             ComponentLog.d("setup initPlay " + self.initPlay.debugDescription , tag: self.tag)
         }
         ComponentLog.d("setup continuousTime " + self.continuousTime.debugDescription , tag: self.tag)
-        if let auto = data.CNT_URL_NS_AUTO { self.appendQuality(name: "AUTO", path: auto) }
-        if let sd = data.CNT_URL_NS_SD  { self.appendQuality(name: "SD", path: sd) }
-        if let hd = data.CNT_URL_NS_HD  { self.appendQuality(name: "HD", path: hd) }
-        if let fhd = data.CNT_URL_NS_FHD { self.appendQuality(name: "FHD", path: fhd) }
+        if let auto = data.CNT_URL_NS_AUTO {
+            self.appendQuality(name: "AUTO", path: auto, drmLicense:data.HLS_AUTO_LICENSE_URL ) }
+        if let sd = data.CNT_URL_NS_SD  {
+            self.appendQuality(name: "SD", path: sd, drmLicense:data.HLS_SD_LICENSE_URL) }
+        if let hd = data.CNT_URL_NS_HD  {
+            self.appendQuality(name: "HD", path: hd, drmLicense:data.HLS_HD_LICENSE_URL) }
+        if let fhd = data.CNT_URL_NS_FHD {
+            self.appendQuality(name: "FHD", path: fhd, drmLicense:data.HLS_FHD_LICENSE_URL) }
        
         if !qualitys.isEmpty {
             var lowQuality = "SD"
@@ -256,10 +264,17 @@ class BtvPlayerModel:PlayerModel{
         
     }
     
-    private func appendQuality(name:String, path:String){
+    private func appendQuality(name:String, path:String, drmLicense:String?){
         if path.isEmpty {return}
-        let quality = Quality(name: name, path: path)
-        qualitys.append(quality)
+        if SystemEnvironment.isStage {
+            let quality = Quality(name: name, path: path, drmLicense:drmLicense)
+            qualitys.append(quality)
+        } else {
+            let quality = Quality(name: name, path: path, drmLicense:nil)
+            qualitys.append(quality)
+        }
+      
+        
     }
 }
 struct PlayListData{

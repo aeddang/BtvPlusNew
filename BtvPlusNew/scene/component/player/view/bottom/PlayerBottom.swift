@@ -165,8 +165,8 @@ struct PlayerBottom: PageView{
                         self.viewModel.btvPlayerEvent = .disablePreview
                     }
                     DispatchQueue.main.async {
-                        self.viewModel.event = .pause
-                        self.viewModel.event = .stop
+                        self.viewModel.event = .pause()
+                        self.viewModel.event = .stop()
                     }
                   
                 }

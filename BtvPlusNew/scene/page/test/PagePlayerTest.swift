@@ -98,28 +98,28 @@ struct PagePlayerTest: PageView {
                     isSelected: self.rate == 0.5
                 ) { _ in
                     self.rate = 0.5
-                    self.playerModel.event = .rate(0.5)
+                    self.playerModel.event = .rate(0.5, isUser: true)
                 }
                 FillButton(
                     text: "X1.0",
                     isSelected: self.rate == 1.0
                 ) { _ in
                     self.rate = 1.0
-                    self.playerModel.event = .rate(1.0)
+                    self.playerModel.event = .rate(1.0, isUser: true)
                 }
                 FillButton(
                     text: "X2.0",
                     isSelected: self.rate == 2.0
                 ) { _ in
                     self.rate = 2.0
-                    self.playerModel.event = .rate(2.0)
+                    self.playerModel.event = .rate(2.0, isUser: true)
                 }
                 FillButton(
                     text: "X3.0",
                     isSelected: self.rate == 3.0
                 ) { _ in
                     self.rate = 3.0
-                    self.playerModel.event = .rate(3.0)
+                    self.playerModel.event = .rate(3.0, isUser: true)
                 }
             }
             

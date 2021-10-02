@@ -68,9 +68,14 @@ class NaviLogManager : ObservableObject, PageProtocol {
     func setupWebPageVersion(_ ver:String){
         self.webPageVersion = ver
     }
-    func setupSysnopsis(_ synop:SynopsisModel){
+    func setupSysnopsis(_ synop:SynopsisModel?, type:String = "vod"  ){
+        guard let synop = synop else {
+            self.currentSysnopsisContentsItem = nil
+            self.currentPlayStartTime = nil
+            return
+        }
         var contentsItem = MenuNaviContentsBodyItem()
-        contentsItem.type = "vod"        // VOD/실시간 구분 ex)vod | live
+        contentsItem.type = type        // VOD/실시간 구분 ex)vod | live
         contentsItem.series_id = synop.srisId
         contentsItem.title = synop.title ?? ""      // 제목, ex)1박2일, 9시 뉴스
         contentsItem.channel = ""   // live방송의 채널번호
@@ -78,8 +83,8 @@ class NaviLogManager : ObservableObject, PageProtocol {
         contentsItem.genre_text = ""  // 장르, ex)영화
         contentsItem.genre_code = synop.metaTypCd ?? ""     // 장르, ex)MG0000000001 --> 드라마
         contentsItem.episode_id = synop.epsdId ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
-        
-        contentsItem.paid = synop.isFree  // 유료 여부 ex)true (유료인 경우)
+        contentsItem.episode_id = synop.epsdId ?? ""
+        contentsItem.paid = !synop.isFree  // 유료 여부 ex)true (유료인 경우)
         contentsItem.purchase = synop.curSynopsisItem?.isDirectview ?? false          // 구매 여부 ex)true (구매한 경우)
         contentsItem.episode_resolution_id = synop.epsdRsluId ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         //contentsItem.cid = contents.contrp_id?.replace("", with: "{").replace("", with: "}") ?? ""        // 4.0
@@ -97,6 +102,24 @@ class NaviLogManager : ObservableObject, PageProtocol {
         self.currentPlayStartTime = nil
     }
     
+    func contentsWatch(isPlay:Bool){
+        if isPlay {
+            self.currentPlayStartTime = Date().timeIntervalSince1970
+            DataLog.d(" contentsWatch : " + (self.currentPlayStartTime?.description ?? "") , tag: self.tag )
+        } else {
+            self.currentPlayStartTime = nil
+            DataLog.d(" contentsWatch : nil" , tag: self.tag )
+        }
+    }
+    
+    func getContentsWatchTime()->String?{
+        if let playStartTime = self.currentPlayStartTime {
+            let runTime = Int(round((Date().timeIntervalSince1970 - playStartTime)))
+            return runTime.description
+        } else {
+            return nil
+        }
+    }
     func contentsLog(pageId:NaviLog.PageId? = nil, action:NaviLog.Action,
                    actionBody:MenuNaviActionBodyItem? = nil,
                    watchType:NaviLog.watchType? = nil){
@@ -105,27 +128,19 @@ class NaviLogManager : ObservableObject, PageProtocol {
         data.actionBody = actionBody
         data.contentsBody = self.currentSysnopsisContentsItem
         data.member = self.currentMemberItem
-        if let watch = watchType {
-            switch watch {
-            case .watchStart : self.currentPlayStartTime = Date().timeIntervalSince1970
-            default : break
-            }
-        }
-        if let playStartTime = self.currentPlayStartTime {
-            self.currentSysnopsisContentsItem?.running_time = (Date().timeIntervalSince1970 - playStartTime).description
-        }
+    
         if let pageId = pageId {
-            if let realNameData = self.getRealNameData(pageID: pageId, action: action,  watchType: watchType, naviLogData: data) {
+            if let realNameData = self.getRealNameData(pageID: pageId.rawValue, action: action,  watchType: watchType, naviLogData: data) {
                 self.send(realNameData, isAnonymous: false)
             }
-            if let anonymousData = self.getAnonymousData(pageID: pageId, action: action,  watchType: watchType, naviLogData: data) {
+            if let anonymousData = self.getAnonymousData(pageID: pageId.rawValue, action: action,  watchType: watchType, naviLogData: data) {
                 self.send(anonymousData, isAnonymous: true)
             }
         } else {
-            if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+            if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId?.rawValue, action: action, naviLogData: data) {
                 self.send(realNameData, isAnonymous: false)
             }
-            if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+            if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId?.rawValue, action: action, naviLogData: data) {
                 self.send(anonymousData, isAnonymous: true)
             }
         }
@@ -137,15 +152,17 @@ class NaviLogManager : ObservableObject, PageProtocol {
         let data = NaviLogData()
         data.actionBody = actionBody
         data.member = self.currentMemberItem
-        if let realNameData = self.getRealNameData(pageID: pageId, action: .pageShow, naviLogData: data) {
+        if let realNameData = self.getRealNameData(pageID: pageId.rawValue, action: .pageShow, naviLogData: data) {
             self.send(realNameData, isAnonymous: false)
         }
-        if let anonymousData = self.getAnonymousData(pageID: pageId, action: .pageShow, naviLogData: data) {
+        if let anonymousData = self.getAnonymousData(pageID: pageId.rawValue, action: .pageShow, naviLogData: data) {
             self.send(anonymousData, isAnonymous: true)
         }
     }
     
-    func actionLog(_ action:NaviLog.Action = .pageShow, pageId:NaviLog.PageId? = nil,
+    func actionLog(_ action:NaviLog.Action = .pageShow,
+                   pageId:NaviLog.PageId? = nil,
+                   pagePageID:PageID? = nil,
                    actionBody:MenuNaviActionBodyItem? = nil,
                    contentBody:MenuNaviContentsBodyItem? = nil,
                    memberBody:MenuNaviMemberItem? = nil
@@ -155,18 +172,20 @@ class NaviLogManager : ObservableObject, PageProtocol {
         data.actionBody = actionBody
         data.contentsBody = contentBody
         data.member = memberBody ?? self.currentMemberItem
-        if let pageId = pageId {
-            if let realNameData = self.getRealNameData(pageID: pageId, action: action, naviLogData: data) {
+        let fixedPageId:String? = pageId?.rawValue ?? NaviLog.getPageID(pageID: pagePageID, repository: repository)
+        
+        if let findPageId = fixedPageId {
+            if let realNameData = self.getRealNameData(pageID: findPageId, action: action, naviLogData: data) {
                 self.send(realNameData, isAnonymous: false)
             }
-            if let anonymousData = self.getAnonymousData(pageID: pageId, action: action, naviLogData: data) {
+            if let anonymousData = self.getAnonymousData(pageID: findPageId, action: action, naviLogData: data) {
                 self.send(anonymousData, isAnonymous: true)
             }
         } else {
-            if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+            if let realNameData = self.getRealNameData(page:self.currentTopPage, pageID: self.currentPageId?.rawValue, action: action, naviLogData: data) {
                 self.send(realNameData, isAnonymous: false)
             }
-            if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId, action: action, naviLogData: data) {
+            if let anonymousData = self.getAnonymousData(page:self.currentTopPage, pageID: self.currentPageId?.rawValue, action: action, naviLogData: data) {
                 self.send(anonymousData, isAnonymous: true)
             }
         }
@@ -199,24 +218,26 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
         if !isAnonymous {
+            DataLog.d("", tag: self.tag )
+            DataLog.d("NaviLog Start", tag: self.tag )
             DataLog.d("page_id : " + (data.page_id ?? "") , tag: self.tag )
             DataLog.d("action_id : " + (data.action_id ?? "") , tag: self.tag )
+            
             if let watchType = data.vod_watch_type { DataLog.d("vod_watch_type : " + watchType , tag: self.tag )}
             if let action = data.action_body {
-                DataLog.d("send action : "
-                            + "config : " +  (action.config ?? "") + " "
-                            + "category : " +  (action.category ?? "") + " "
-                            + "menu_id : " +  (action.menu_id ?? "") + " "
-                            + "menu_name : " +  (action.menu_name ?? "") + " "
-                          , tag: self.tag )
+                DataLog.d("send action : ", tag: self.tag )
+                DataLog.d("  result : " +  (action.result ?? ""), tag: self.tag )
+                DataLog.d("  config : " +  (action.config ?? ""), tag: self.tag )
+                DataLog.d("  category : " +  (action.category ?? ""), tag: self.tag )
+                DataLog.d("  menu_id : " +  (action.menu_id ?? ""), tag: self.tag )
+                DataLog.d("  menu_name : " +  (action.menu_name ?? ""), tag: self.tag )
             }
             if let content = data.contents_body {
-                DataLog.d("send content : "
-                            + "title : " + (content.title ?? "") + " "
-                            + "episode_id : " + (content.episode_id ?? "") + " "
-                            + "paid : " + (content.paid?.description ?? "") + " "
-                            + "running_time : " + (content.running_time ?? "")
-                          , tag: self.tag )
+                DataLog.d("send content : ", tag: self.tag )
+                DataLog.d("  title : " + (content.title ?? ""), tag: self.tag )
+                DataLog.d("  episode_id : " + (content.episode_id ?? ""), tag: self.tag )
+                DataLog.d("  paid : " + (content.paid?.description ?? ""), tag: self.tag )
+                DataLog.d("  running_time : " + (content.running_time ?? ""), tag: self.tag )
             }
         }
         self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: data), isAnonymous: isAnonymous))
@@ -224,16 +245,22 @@ class NaviLogManager : ObservableObject, PageProtocol {
 
     private func getRealNameData(
         page:PageObject? = nil,
-        pageID:NaviLog.PageId? = nil,
+        pageID:String? = nil,
         action:NaviLog.Action? = nil,
         watchType:NaviLog.watchType? = nil,
         naviLogData:NaviLogData? = nil
         ) -> MenuNaviItem? {
-    
+            
+        if naviLogData?.contentsBody != nil,  let playStartTime = self.currentPlayStartTime {
+            let runTime = Int(round((Date().timeIntervalSince1970 - playStartTime)))
+            DataLog.d(" contentsWatch : runTime " + runTime.description , tag: self.tag )
+            naviLogData?.contentsBody?.running_time = runTime.description
+        }
         guard var menuNaviItem = self.getMenuNaviItem(
                 page: page, pageId: pageID , action: action, watchType: watchType, contentBody: naviLogData?.contentsBody) else {
             return nil
         }
+            
         menuNaviItem.vod_watch_type = watchType?.rawValue
         menuNaviItem.service_name = "btv_plus_pi"
         menuNaviItem.device_base_time = naviLogData?.now.toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS")
@@ -250,7 +277,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     private func getAnonymousData(
         page:PageObject? = nil,
-        pageID:NaviLog.PageId? = nil,
+        pageID:String? = nil,
         action:NaviLog.Action? = nil,
         watchType:NaviLog.watchType? = nil,
         naviLogData:NaviLogData? = nil
@@ -270,17 +297,16 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     private func getMenuNaviItem(
         page:PageObject? = nil,
-        pageId:NaviLog.PageId? = nil,
+        pageId:String? = nil,
         action:NaviLog.Action? = nil,
         watchType:NaviLog.watchType? = nil,
         contentBody:MenuNaviContentsBodyItem? = nil
         ) -> MenuNaviItem? {
         var logPageId:String = ""
         if let pageId = pageId {
-            logPageId = pageId.rawValue
+            logPageId = pageId
         } else if let page = page {
             guard let pageId = NaviLog.getPageID(page: page, repository: self.repository) else {
-                //DataLog.d("getMenuNaviItem unused pageId",tag: self.tag)
                 return nil
             }
             logPageId = pageId

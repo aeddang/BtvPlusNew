@@ -41,12 +41,12 @@ struct PlayerSimpleTopBody: PageView{
                 ){ _ in
                     if self.isMute {
                         if self.viewModel.volume == 0 {
-                            self.viewModel.event = .volume(0.5)
+                            self.viewModel.event = .volume(0.5, isUser: true)
                         }else{
-                            self.viewModel.event = .mute(false)
+                            self.viewModel.event = .mute(false, isUser: true)
                         }
                     } else {
-                        self.viewModel.event = .mute(true)
+                        self.viewModel.event = .mute(true, isUser: true)
                     }
                 }
             }

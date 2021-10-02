@@ -279,11 +279,11 @@ struct PageSynopsis: PageView {
                 case .dragInit :
                     if !self.playerModel.isPrerollPlay {
                         self.isPlayBeforeDraging = self.playerModel.isPlay
-                        self.playerModel.event = .pause
+                        self.playerModel.event = .pause()
                     }
                 case .draged:
                     if self.isPlayBeforeDraging {
-                        self.playerModel.event = .resume
+                        self.playerModel.event = .resume()
                     }
                 default: break
                 }
@@ -365,11 +365,11 @@ struct PageSynopsis: PageView {
                 if Self.useLayer {return}
                 if page != self.pageObject {
                     self.isFinalPlaying = self.playerModel.isPrerollPlay ? true : self.playerModel.isPlay
-                    self.playerModel.event = .pause
+                    self.playerModel.event = .pause()
                     //ComponentLog.d("isFinalPlaying pause" , tag: "PageSynopsis BtvPlayer")
                 } else {
                     if self.isFinalPlaying == true {
-                        self.playerModel.event = .resume
+                        self.playerModel.event = .resume()
                         self.isFinalPlaying = false
                         //ComponentLog.d("isFinalPlaying resume" , tag: "PageSynopsis BtvPlayer")
                     }
@@ -474,6 +474,7 @@ struct PageSynopsis: PageView {
     @State var isCheckdPairing:Bool? = nil
     @State var progressError = false
     @State var progressCompleted = false
+    @State var isAllProgressCompleted = false
     @State var synopsisModel:SynopsisModel? = nil
     @State var episodeViewerData:EpisodeViewerData? = nil
     @State var purchaseViewerData:PurchaseViewerData? = nil
@@ -524,7 +525,8 @@ struct PageSynopsis: PageView {
     @State var currentRedirectSris:String? = nil
     @State var isProhibitionCheckComplete:Bool = false
     @State var isCheckRecommand:Bool = true
-    
+    @State var insideChangeViewId:String? = nil
+    @State var insideChangeViewRuntime:String? = nil
     private func initPage(){
         if self.synopsisData == nil {
             self.progressError = true
@@ -549,11 +551,12 @@ struct PageSynopsis: PageView {
         if isAllReset {
             self.isCheckRecommand = true
         }
-        self.playerModel.event = .pause
+        self.playerModel.event = .pause()
         self.isUIView = false
         self.hasAuthority = nil
         self.progressError = false
         self.progressCompleted = false
+        self.isAllProgressCompleted = false
         self.episodeViewerData = nil
         self.purchaseViewerData = nil
         self.summaryViewerData = nil
@@ -832,12 +835,15 @@ struct PageSynopsis: PageView {
             self.isPlayAble = false
             self.isPlayViewActive = true
         }
-        self.playerModel.event = .pause
+        self.playerModel.event = .pause()
         self.onAllProgressCompleted()
     }
     
     func onAllProgressCompleted(){
+        if self.isAllProgressCompleted {return}
+        self.isAllProgressCompleted = true
         PageLog.d("onAllProgressCompleted", tag: self.tag)
+        
         self.onAllProgressCompletedSiri()
          
         if #available(iOS 14.0, *) {

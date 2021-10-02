@@ -144,6 +144,7 @@ struct PlayItemInfo: PageView {
 }
 
 struct PlayItemFunction: PageView {
+    var viewModel:PlayBlockModel
     var data:PlayData
     var isInit:Bool
     @Binding var isLike:LikeStatus?
@@ -151,12 +152,16 @@ struct PlayItemFunction: PageView {
   
     var body: some View {
         if self.data.srisId != nil && self.isInit {
-            LikeButton(srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
+            LikeButton(
+                playBlockModel:self.viewModel,
+                srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
                 self.data.isLike = value
             }
             .buttonStyle(BorderlessButtonStyle())
             if self.data.notificationData != nil {
-                AlramButton(data: self.data.notificationData!, isAlram: self.$isAlram){ value in
+                AlramButton(
+                    playBlockModel:self.viewModel,
+                    data: self.data.notificationData!, isAlram: self.$isAlram){ value in
                     self.data.isAlram = value 
                 }
                 .buttonStyle(BorderlessButtonStyle())

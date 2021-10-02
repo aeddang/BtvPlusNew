@@ -50,7 +50,7 @@ struct PlayerUI: PageComponent {
                     .background(Color.transparent.clearUi)
                     .onTapGesture(count: 2, perform: {
                         if self.viewModel.isLock { return }
-                        self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount())
+                        self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), isUser: true)
                     })
                     .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                         self.viewModel.playerUiStatus = .hidden
@@ -60,7 +60,7 @@ struct PlayerUI: PageComponent {
                     .background(Color.transparent.clearUi)
                     .onTapGesture(count: 2, perform: {
                         if self.viewModel.isLock { return }
-                        self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount())
+                        self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), isUser: true)
                     })
                     .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                         self.viewModel.playerUiStatus = .hidden
@@ -87,10 +87,10 @@ struct PlayerUI: PageComponent {
                         thumbSize: self.isFullScreen ? Dimen.icon.thinExtra : Dimen.icon.tiny,
                         onChange: { pct in
                             let willTime = self.viewModel.duration * Double(pct)
-                            self.viewModel.event = .seeking(willTime)
+                            self.viewModel.event = .seeking(willTime, isUser: true)
                         },
                         onChanged:{ pct in
-                            self.viewModel.event = .seekProgress(pct)
+                            self.viewModel.event = .seekProgress(pct, isUser: true)
                             self.viewModel.seeking = 0
                         
                         })
@@ -136,7 +136,7 @@ struct PlayerUI: PageComponent {
                         : CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
                     ){ _ in
                         self.viewModel.isUserPlay = self.isPlaying ? false  : true
-                        self.viewModel.event = .togglePlay
+                        self.viewModel.event = .togglePlay(isUser: true)
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                        
                     }
@@ -188,7 +188,7 @@ struct PlayerUI: PageComponent {
         .onReceive(self.viewModel.$event) { evt in
             guard let evt = evt else { return }
             switch evt {
-            case .seeking(let willTime):
+            case .seeking(let willTime, _):
                 self.progress = Float(willTime / max(self.viewModel.duration,1))
                 if !self.isSeeking {
                     withAnimation{ self.isSeeking = true }

@@ -41,7 +41,7 @@ extension PageSynopsis {
     }
 
     @discardableResult
-    func nextVod(auto:Bool = true)->Bool{
+    func nextVod(auto:Bool = true, isUser:Bool? = nil)->Bool{
         if self.playerModel.isReplay && auto {return false}
         guard let playData = self.playerData else { return false}
         if !playData.hasNext { return false}
@@ -49,18 +49,31 @@ extension PageSynopsis {
             self.appSceneObserver.alert = .confirm(
                 String.pageText.synopsisNextPlay, String.pageText.synopsisNextPlayConfirm) { isOk in
                 if isOk {
-                    nextVod(auto:false)
+                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"예")
+                    nextVod(auto:false, isUser:false)
+                } else {
+                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"아니오")
                 }
             }
             return true
         }
         if let find = playData.nextEpisode {
             self.changeVod(epsdId: find.epsdId, isNext: true)
+            if !auto && isUser != false{
+                self.playerModel.btvUiEvent =
+                    .clickInsideButton(.clickInsideSkipIntro , .nextView(isAuto:false)
+                                       , config:find.title, result:find.epsdId)
+            }
             return true
         }
         //if auto {return false}
         if let season = playData.nextSeason {
             self.changeSeasonFirst(synopsisData: season.synopsisData)
+            if !auto && isUser != false {
+                self.playerModel.btvUiEvent =
+                    .clickInsideButton(.clickInsideSkipIntro , .nextView(isAuto:false)
+                                       , config:season.title, result:season.synopsisData?.epsdId) 
+            }
             return true
         }
         return false
@@ -240,7 +253,7 @@ extension PageSynopsis {
             playTime: self.playerModel.time)
         
         self.pageDataProviderModel.request = .init(id : SingleRequestType.watchBtv.rawValue, type: .sendMessage( msg))
-        self.playerModel.event = .pause
+        self.playerModel.event = .pause()
     }
     
     func watchBtvCompleted(isSuccess:Bool){

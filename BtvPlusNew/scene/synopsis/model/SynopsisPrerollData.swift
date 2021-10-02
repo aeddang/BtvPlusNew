@@ -25,6 +25,7 @@ class SynopsisPrerollData {
     private(set) var type:SynopsisPrerollType = .unowned
     private(set) var isFree:Bool = false
     private(set) var contentId:String = ""
+    private(set) var productId:String = ""
 
     func setData(data:SynopsisModel, playType:SynopsisPlayType, epsdRsluId:String) -> SynopsisPrerollData{
        
@@ -42,7 +43,7 @@ class SynopsisPrerollData {
         
         self.type = startType
         self.contentId = epsdRsluId
-        
+        self.productId = data.curSynopsisItem?.prdPrcId ?? ""
         return self
         
     }

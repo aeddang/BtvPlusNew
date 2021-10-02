@@ -28,7 +28,7 @@ class Setup:ObservableObject, PageProtocol {
         
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
         static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
-        static let alramUnvisibleDate = "alramUnvisibleDate" + VS
+        static let alramUnvisibleDate = "alramUnvisibleDate1" + VS
         
         static let nickName = "profileNickname"
         static let birth = "profileBirthYear"

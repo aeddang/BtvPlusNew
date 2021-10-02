@@ -74,10 +74,10 @@ struct SimplePlayerUI: PageComponent {
                                 
                             onChange: { pct in
                                 let willTime = self.viewModel.duration * Double(pct)
-                                self.viewModel.event = .seeking(willTime)
+                                self.viewModel.event = .seeking(willTime, isUser: true)
                             },
                             onChanged:{ pct in
-                                self.viewModel.event = .seekProgress(pct)
+                                self.viewModel.event = .seekProgress(pct, isUser: true)
                             })
                             .frame(height: Dimen.stroke.regular )
                         Text(self.completeTime)
@@ -118,10 +118,10 @@ struct SimplePlayerUI: PageComponent {
                             
                         onChange: { pct in
                             let willTime = self.viewModel.duration * Double(pct)
-                            self.viewModel.event = .seeking(willTime)
+                            self.viewModel.event = .seeking(willTime, isUser: true)
                         },
                         onChanged:{ pct in
-                            self.viewModel.event = .seekProgress(pct)
+                            self.viewModel.event = .seekProgress(pct, isUser: true)
                             self.viewModel.seeking = 0
                         })
                         .frame(height: Dimen.stroke.regular )
@@ -139,7 +139,7 @@ struct SimplePlayerUI: PageComponent {
                         size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
                     ){ _ in
                         self.viewModel.isUserPlay = self.isPlaying ? false  : true
-                        self.viewModel.event = .togglePlay
+                        self.viewModel.event = .togglePlay(isUser: true)
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                     }
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
@@ -182,7 +182,7 @@ struct SimplePlayerUI: PageComponent {
         .onReceive(self.viewModel.$event) { evt in
             guard let evt = evt else { return }
             switch evt {
-            case .seeking(let willTime):
+            case .seeking(let willTime, _):
                 self.progress = Float(willTime / max(self.viewModel.duration,1))
                 if !self.isSeeking {
                     withAnimation{ self.isSeeking = true }

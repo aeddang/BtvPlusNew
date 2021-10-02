@@ -52,7 +52,7 @@ struct PlayerEffectAnimationKids: PageComponent{
                                 gradient:Gradient(colors: [Color.transparent.white45, Color.transparent.clear]), startPoint: .leading, endPoint: .trailing))
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
-                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount())
+                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), isUser: true)
                         })
                     }
                     if self.showBrightness {
@@ -100,7 +100,7 @@ struct PlayerEffectAnimationKids: PageComponent{
                             LinearGradient(gradient:Gradient(colors: [Color.transparent.white45, Color.transparent.clear]), startPoint: .trailing, endPoint: .leading))
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
-                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount())
+                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), isUser: true)
                         })
                     }
                     if self.showVolume {

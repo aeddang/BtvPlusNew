@@ -119,7 +119,7 @@ struct BtvPlayer: PageComponent{
                             .onEnded({ value in
                                 switch self.dragGestureType {
                                 case .progress:
-                                    self.viewModel.event = .seekMove(self.viewModel.seeking)
+                                    self.viewModel.event = .seekMove(self.viewModel.seeking, isUser: true)
                                     self.viewModel.seeking = 0
                                 case .playList:
                                     self.onPlaylistChangeCompleted()
@@ -213,9 +213,9 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {
-                case .mute(let isMute) : BtvPlayerModel.isInitMute = isMute
+                case .mute(let isMute, _) : BtvPlayerModel.isInitMute = isMute
                 case .volume : BtvPlayerModel.isInitMute = false
-                case .seeking(let willTime):
+                case .seeking(let willTime, _):
                     let diff =  willTime - self.viewModel.time
                     self.viewModel.seeking = diff
                
@@ -256,14 +256,14 @@ struct BtvPlayer: PageComponent{
                 if (self.viewModel.continuousProgress ?? 1) < MetvNetwork.maxWatchedProgress,
                    let progress = self.viewModel.continuousProgress{
                     let t = round(d * Double(progress))
-                    self.viewModel.event = .seekTime(t)
+                    self.viewModel.event = .seekTime(t, isUser: true)
                     self.viewModel.continuousProgress = nil
                     ComponentLog.d("continuousProgress play" , tag: self.tag)
                 }
                 if let progressTime = self.viewModel.continuousProgressTime {
                     let pct = progressTime/d
                     if pct > Double(MetvNetwork.maxWatchedProgress) {return}
-                    self.viewModel.event = .seekTime(progressTime)
+                    self.viewModel.event = .seekTime(progressTime, isUser: true)
                     self.viewModel.continuousProgressTime = nil
                     ComponentLog.d("continuousProgressTime play" , tag: self.tag)
                 }
@@ -343,7 +343,7 @@ struct BtvPlayer: PageComponent{
                 switch evt {
                 case .start :
                     self.viewModel.isPrerollPlay = true
-                    self.viewModel.event = .mute(false)
+                    self.viewModel.event = .mute(false, isUser: false)
                 case .finish, .skipAd : self.initPlay()
                 default : break
                 }
@@ -373,7 +373,7 @@ struct BtvPlayer: PageComponent{
             }
             .onDisappear(){
                 //self.pagePresenter.fullScreenExit()
-                self.viewModel.event = .stop
+                self.viewModel.event = .stop()
             }
         }//geo
     }//body
@@ -413,7 +413,7 @@ struct BtvPlayer: PageComponent{
             self.viewModel.isPrerollPlay = false
         }
         guard let quality = self.viewModel.currentQuality else {
-            self.viewModel.event = .stop
+            self.viewModel.event = .stop()
             return
         }
         let find = quality.path.contains("?")
@@ -425,6 +425,13 @@ struct BtvPlayer: PageComponent{
         let t = self.viewModel.continuousTime 
         self.viewModel.continuousTime = 0
         ComponentLog.d("continuousTime " + t.description, tag: self.tag)
+        if quality.drmLicense?.isEmpty == false, let drm = quality.drmLicense {
+            ComponentLog.d("fairplay DRM", tag: self.tag)
+            self.viewModel.drm = FairPlayDrm(ckcURL: drm, certificateURL: drm)
+        } else {
+            ComponentLog.d("DZC DRM", tag: self.tag)
+            self.viewModel.drm = nil
+        }
         DispatchQueue.main.async {
             self.viewModel.event = .load(path, true , t, self.viewModel.header)
             if self.viewModel.useInside, let epsdId = self.contentID {
@@ -545,7 +552,7 @@ struct BtvPlayer: PageComponent{
         var targetVolume = self.startVolume - diff
         targetVolume = max(0, targetVolume)
         targetVolume = min(1, targetVolume)
-        self.viewModel.event = .volume(targetVolume)
+        self.viewModel.event = .volume(targetVolume, isUser: true)
     }
     
     func onBrightnessChange(value:DragGesture.Value){

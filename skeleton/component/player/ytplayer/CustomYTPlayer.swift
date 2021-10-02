@@ -164,10 +164,10 @@ struct CustomYTPlayer: UIViewRepresentable, PlayBack, YTPlayerViewDelegate {
         case .resume: onResume()
         case .pause: onPause()
         case .stop: player.stopVideo()
-        case .volume(_): break
-        case .seekTime(let t, let play): onSeek(time:t, play: play)
-        case .seekMove(let t, let play): onSeek(time:viewModel.time + t, play: play)
-        case .seekProgress(let pct, let play):
+        case .volume(_, _): break
+        case .seekTime(let t, let play, _): onSeek(time:t, play: play)
+        case .seekMove(let t, let play, _): onSeek(time:viewModel.time + t, play: play)
+        case .seekProgress(let pct, let play, _):
             let t = viewModel.duration * Double(pct)
             onSeek(time:t, play: play)
         default: do{}

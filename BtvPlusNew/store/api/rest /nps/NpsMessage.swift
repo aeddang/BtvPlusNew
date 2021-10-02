@@ -21,7 +21,7 @@ enum NpsCtrlType:String{
 }
 
 enum NpsCtrlValue:String{
-    case REW, Stop, Play, FF, Prev, Next
+    case REW, Stop, Play, FF, Prev, Next, MeTV
 }
 
 enum NpsQuery:String{
@@ -31,6 +31,7 @@ enum NpsQuery:String{
 class NpsMessage{
     private(set) var ctrlType:NpsCtrlType = .SendMsg
     private(set) var ctrlValue:String = ""
+    private(set) var content:String? = nil
     private(set) var RCStatusQuery:NpsQuery = .StatusQuery
     private(set) var count:Int = 0
     

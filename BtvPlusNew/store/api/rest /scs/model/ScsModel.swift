@@ -28,6 +28,11 @@ struct PlayInfo : Decodable {
     private(set) var PREVIEW_TIME: String? = nil    // 미리보기 시간(초)
     private(set) var QUALITY_MEDIA: String? = nil   // 미디어 품질
     private(set) var SAMPLING: String? = nil
+    
+    private(set) var HLS_SD_LICENSE_URL: String? = nil    // drm
+    private(set) var HLS_HD_LICENSE_URL: String? = nil    // drm
+    private(set) var HLS_FHD_LICENSE_URL: String? = nil    // drm
+    private(set) var HLS_AUTO_LICENSE_URL: String? = nil    // drm
 
 }
 

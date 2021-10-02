@@ -28,6 +28,7 @@ struct LikeButton: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
+    var playBlockModel:PlayBlockModel? = nil
     var srisId:String
     @Binding var isLike:LikeStatus?
     var useText:Bool = true
@@ -43,6 +44,7 @@ struct LikeButton: PageView {
             }
             else{
                 self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
+                self.playBlockModel?.logEvent = .like(nil)
             }
         }) {
             VStack(spacing:0){
@@ -133,13 +135,16 @@ struct LikeButton: PageView {
         if data.like_action == "1" {
             self.isLike = .like
             action?(self.isLike)
+            self.playBlockModel?.logEvent = .like(true)
         }
         else if data.like_action == "2" {
             self.isLike = .unlike
             action?(self.isLike)
+            self.playBlockModel?.logEvent = .like(false)
         }else{
             self.isLike = .unkowned
             action?(self.isLike)
+            self.playBlockModel?.logEvent = .like(nil)
         }
     }
     

@@ -13,6 +13,7 @@ struct PageMyOksusuPurchase: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -47,7 +48,7 @@ struct PageMyOksusuPurchase: PageView {
                         pageObservable:self.pageObservable,
                         useTracking:true,
                         marginBottom: self.marginBottom,
-                        type: .possession
+                        type: .oksusu
                     )
                 }
                 .modifier(PageFull(style:.dark))
@@ -73,7 +74,7 @@ struct PageMyOksusuPurchase: PageView {
                 
                 case .connectTerminateStb(let type, _) :
                     if type == .delete {
-                        self.appSceneObserver.event = .toast( String.alert.possessionDelete )
+                        self.appSceneObserver.event = .toast( String.oksusu.disconnectCompleted )
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     }
                     
@@ -85,25 +86,21 @@ struct PageMyOksusuPurchase: PageView {
                     }
                     switch type {
                     case .regist :
-                        self.appSceneObserver.event = .toast( String.alert.possessionComplete )
+                        self.appSceneObserver.event = .toast( String.oksusu.setupCompleted )
                         self.collectionModel.update()
                     case .info :
-                        if data.stb_id != self.setup.possession {
-                            self.appSceneObserver.alert = .confirm(
-                                String.alert.possession,
-                                String.alert.possessionDiableAlreadyChange ){ isOk in
-                                
-                                if isOk {
-                                    self.dataProvider.requestData(
-                                        q:.init(id: self.tag,
-                                                type: .connectTerminateStb(.regist, self.setup.possession)))
-                                } else {
-                                    self.setup.possession = ""
-                                    self.dataProvider.requestData(
-                                        q:.init(id: self.tag,
-                                                type: .connectTerminateStb(.delete, self.setup.possession),
-                                                isOptional: true))
-                                }
+                        if data.stb_id != self.setup.oksusu {
+                            self.appSceneObserver.alert = .alert(
+                                String.oksusu.disconnect,
+                                String.oksusu.disconnectAnotherUser,
+                                confirmText:String.app.close
+                            ){
+                                self.sendLog(action: .clickContentsRetrievePopup, actionBody: .init(menu_id:"옥수수 팝업 메뉴아이디"))
+                                self.setup.oksusu = ""
+                                self.dataProvider.requestData(
+                                    q:.init(id: self.tag,
+                                            type: .connectTerminateStb(.delete, self.setup.possession),
+                                            isOptional: true))
                             }
                         }
                     default : break
@@ -122,7 +119,7 @@ struct PageMyOksusuPurchase: PageView {
                 }
             }
             .onAppear{
-                if self.setup.possession.isEmpty == false {
+                if self.setup.oksusu.isEmpty == false {
                     self.dataProvider.requestData(
                         q:.init(id: self.tag,
                                 type: .connectTerminateStb(.info, self.setup.possession), isOptional: true))
@@ -136,6 +133,9 @@ struct PageMyOksusuPurchase: PageView {
         }//geo
     }//body
     
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
+    }
    
 }
 

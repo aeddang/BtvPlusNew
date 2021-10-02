@@ -35,7 +35,7 @@ class PurchaseBlockModel: PageDataProviderModel {
 
 extension PurchaseBlock{
     enum ListType:String {
-        case normal, collection, possession
+        case normal, collection, possession, oksusu
     }
 }
 
@@ -47,6 +47,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:PurchaseBlockModel = PurchaseBlockModel()
@@ -73,6 +74,10 @@ struct PurchaseBlock: PageComponent, Identifiable{
                             EditButton(
                                 icon: self.viewModel.isEditmode ? "" : Asset.icon.edit,
                                 text: self.viewModel.isEditmode ? String.app.cancel : String.button.purchaseEdit){
+                                    
+                                if !self.viewModel.isEditmode {
+                                    self.sendLogEdit()
+                                }
                                 self.viewModel.isEditmode.toggle()
                                 self.viewModel.isSelectAll = false
                             }
@@ -311,7 +316,13 @@ struct PurchaseBlock: PageComponent, Identifiable{
                 id: self.tag,
                 type: .getPossessionPurchase( anotherStbId:self.setup.possession , self.infinityScrollModel.page + 1 )
             )
+        case .oksusu:
+            self.viewModel.request = .init(
+                id: self.tag,
+                type: .getPossessionPurchase( anotherStbId:self.setup.possession , self.infinityScrollModel.page + 1 )
+            )
         }
+
         
     }
     
@@ -335,6 +346,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
             return
         }
         self.deleteList = dels
+        self.sendLogDelete(num: dels.count)
         self.pagePresenter.openPopup(
             PageProvider.getPageObject(.confirmNumber)
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.purchase)
@@ -374,6 +386,14 @@ struct PurchaseBlock: PageComponent, Identifiable{
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
         withAnimation{ self.isError = false }
+    }
+    
+    private func sendLogEdit (){
+        self.naviLogManager.actionLog(.clickPurchaseListEdit)
+    }
+    private func sendLogDelete (num:Int){
+        let action = MenuNaviActionBodyItem(config:num.description)
+        self.naviLogManager.actionLog(.clickPurchaseListDelete ,actionBody: action)
     }
 }
 

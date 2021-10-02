@@ -236,6 +236,11 @@ class Repository:ObservableObject, PageProtocol{
                     )
                 }
                 self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
+                if self.pairing.pairingType == .wifi {
+                    self.dataProvider.requestData(
+                        q: .init(id: self.tag, type: .pushMessage(NpsMessage()))
+                    )
+                }
                 
                 
             case .syncError :
@@ -379,6 +384,11 @@ class Repository:ObservableObject, PageProtocol{
             if resultCode == NpsNetwork.resultCode.success.code {
                 self.updatePush(isAgree)
             }
+        case .registEndpoint(_, let isAgree) :
+            self.updatePush(isAgree, isSync: true)
+        case .updatePushUserAgreement(let isAgree) :
+            self.updatePush(isAgree, isSync: true)
+            
         default: break
         }
     }
@@ -434,11 +444,16 @@ class Repository:ObservableObject, PageProtocol{
         self.pairing.updateUser(data)
     }
     
-    func updatePush(_ isAgree:Bool) {
+    func updatePush(_ isAgree:Bool, isSync:Bool = false) {
         self.pairing.updateUserAgreement(isAgree)
         self.storage.isPush = isAgree
         GroupStorage().isPush = isAgree
-        self.pushManager.updateUserAgreement(isAgree)
+        if !isSync {
+            self.pushManager.updateUserAgreement(isAgree)
+            DataLog.d("updatePushUserAgreement sync " + isAgree.description, tag:"PushManager")
+        } else {
+            DataLog.d("updatePushUserAgreement sync completed " + isAgree.description, tag:"PushManager")
+        }
     }
     
     
@@ -477,14 +492,8 @@ class Repository:ObservableObject, PageProtocol{
     
     func resetSystemEnvironment(){
         SystemEnvironment.watchLv = 0
-        //SystemEnvironment.isAdultAuth = false
         SystemEnvironment.isImageLock = false
-        if #available(iOS 14.0, *) { SystemEnvironment.isLegacy = false }
-        else { SystemEnvironment.isLegacy = true }
-        
-        
         self.userSetup.watchLv = 0
-        //self.userSetup.isAdultAuth = false
         self.event = .updatedWatchLv
     }
     

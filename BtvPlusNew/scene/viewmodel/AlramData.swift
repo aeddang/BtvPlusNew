@@ -95,7 +95,8 @@ enum AlramLandingType:String {
         case .synop: return String.alert.apnsSynop
         case .season: return String.alert.apnsSeason
         case .monthly: return String.alert.apnsMonthly
-        case .reserve: return String.alert.apnsReserve
+        case .reserve, .reservation: return String.alert.apnsReserve
+            
         case .coupon: return ""
         case .point: return ""
         case .newpoint: return ""
@@ -126,7 +127,7 @@ enum AlramLandingType:String {
         case .synop: return "B2.SYNOP"
         case .season: return "B6.SEASON"
         case .monthly: return "B7.MONTH"
-        case .reserve: return "B8.RESERVATION"
+        case .reserve, .reservation: return "B8.RESERVATION"
         case .coupon: return "B9.POINT"
         case .point: return "B10.COUPON"
         case .newpoint: return "B11.NEWBPOINT"
@@ -488,7 +489,7 @@ class AlramData:InfinityData,ObservableObject{
             param[.id] = PageMyBenefits.MenuType.point.rawValue
             self.moveData = param
             self.actionLog.menu_name = "B11.NEWBPOINT"
-        case .reserve:
+        case .reserve, .reservation:
             guard let svcId = self.location else { return }
             self.move = .schedule
             var param = [PageParam:Any]()

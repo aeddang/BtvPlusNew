@@ -66,7 +66,7 @@ struct SimplePlayer: PageComponent{
             .onReceive(self.viewModel.$event) { evt in
                 guard let evt = evt else { return }
                 switch evt {
-                case .mute(let isMute) : BtvPlayerModel.isInitMute = isMute
+                case .mute(let isMute, _) : BtvPlayerModel.isInitMute = isMute
                 case .volume : BtvPlayerModel.isInitMute = false
                 case .resume :
                     if self.isWaiting != false {
@@ -152,7 +152,7 @@ struct SimplePlayer: PageComponent{
             self.viewModel.isPrerollPlay = false
         }
         guard let quality = self.viewModel.currentQuality else {
-            self.viewModel.event = .stop
+            self.viewModel.event = .stop()
             return
         }
         let find = quality.path.contains("?")
@@ -163,7 +163,16 @@ struct SimplePlayer: PageComponent{
        // ComponentLog.d("path : " + path, tag: self.tag)
         let t = self.viewModel.continuousTime
         PageLog.d("initPlay continuousTime " + t.description, tag: self.tag)
-        self.viewModel.event = .load(path, true , t, self.viewModel.header)
+        if quality.drmLicense?.isEmpty == false, let drm = quality.drmLicense {
+            ComponentLog.d("fairplay DRM", tag: self.tag)
+            self.viewModel.drm = FairPlayDrm(ckcURL: drm, certificateURL: drm)
+        } else {
+            ComponentLog.d("DZC DRM", tag: self.tag)
+            self.viewModel.drm = nil
+        }
+        DispatchQueue.main.async {
+            self.viewModel.event = .load(path, true , t, self.viewModel.header)
+        }
     }
 }
 

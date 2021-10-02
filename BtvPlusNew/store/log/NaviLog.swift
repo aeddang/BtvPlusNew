@@ -20,7 +20,6 @@ struct NaviLog {
         case pairingCompleted = "/my/connect_stb/btv_auth_number/completed"
         case pairingDeviceNotfound = "/my/connect_stb/detail/subscriber_auth/there_is_no_stb"
         case autoPairing = "/autopairing" // 자동연결페어링
-        
         case searchResult = "/search/result"                      // 검색결과
         case zemSearchResult = "/category/zemkids/search" // ZEM 키즈|검색결과
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
@@ -29,20 +28,27 @@ struct NaviLog {
         case event = "/event"
         
         case networkError = "/network_error"
-        
         case appPush = "/app_push"
         
+        case clipViewAll = "/category/clip_view_all"
+        case scheduled = "/scheduled"
+        
     }
-    static func getPageID(pageID:PageID)-> String?{
-        return getPageID(page: PageProvider.getPageObject(pageID), repository: nil)
+    static func getPageID(pageID:PageID? = nil, repository:Repository?)-> String?{
+        guard let pageID = pageID else {return nil}
+        return Self.getPageID(page: nil, pageID: pageID, repository: repository)
     }
-    static func getPageID(page:PageObject, repository:Repository?)-> String?{
-        switch page.pageID {
+    static func getPageID(page:PageObject? = nil, repository:Repository?)-> String?{
+        guard let page = page else {return nil}
+        return Self.getPageID(page: page, pageID: page.pageID, repository: repository)
+    }
+    static func getPageID(page:PageObject?, pageID:PageID, repository:Repository?)-> String?{
+        switch pageID {
         case .intro : return "/guide"
         case .auth: return nil
         case .serviceError: return nil
         case .home:
-            if let menuId = page.getParamValue(key: .id) as? String,
+            if let menuId = page?.getParamValue(key: .id) as? String,
                let band = repository?.dataProvider.bands.getData(menuId: menuId) {
                 switch  band.gnbTypCd{
                 case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue: return "/ocean"
@@ -74,6 +80,7 @@ struct NaviLog {
         case .modifyProile: return "/my/profile/edit"
         case .setup: return "/setup"
         case .terminateStb: return nil
+        case .myOksusuPurchase : return "/my/oksusu_contents"
             
         case .pairing: return "/my/connect_stb/detail"
         case .pairingSetupUser: return "/my/profile/registration"
@@ -89,7 +96,7 @@ struct NaviLog {
         case .purchase: return nil
         case .multiBlock: return "/category"
         case .categoryList: return nil
-        case .previewList: return "/scheduled"
+        case .previewList: return nil //페이지에서 직접처리
         case .watchedList: return "/my/recent_contents"
         case .fullPlayer: return nil
         
@@ -137,7 +144,7 @@ struct NaviLog {
         case .selectKidCharacter: return nil
         case .kidsConfirmNumber: return "/zemkids_certification_popup"
         case .kidsMultiBlock:
-            if let pageType = page.getParamValue(key: .type) as? BlockData.UiType{
+            if let pageType = page?.getParamValue(key: .type) as? BlockData.UiType{
                 switch  pageType{
                 case .kidsTicket: return "/category/zemkids/monthly_payment/tab_menu"
                 default: return "/category/zemkids/tabmenu"
@@ -212,7 +219,8 @@ struct NaviLog {
         // 07 성인인증
         case clickCertificationExit = "click.certification.exit"    // 1. 나가기 선택
         // 08 시놉
-        case clickContentsPlay = "click.contents.play"              // 1. 미리보기/바로시청 선택
+        case clickContentsPlay = "click.contents.play"
+        case clickContentsPause = "click.contents.pause"   // 1. 미리보기/바로시청 선택
         case clickContentsPick = "click.contents.pick"              // 2-1. 찜하기 선택
         case clickContentsLike = "click.contents.like"              // 2-2. 평가하기 선택
         case clickContentsWatchBtv = "click.contents.watch_btv"     // 2-3. Btv로보기 선택
@@ -398,6 +406,12 @@ struct NaviLog {
         // /category/zemkids/monthly_payment/tab_menu
         case clickSubscriptionButton = "click.subscription.button" // 5.
         case clickCloseButton = "click.close.button"
+        
+        case clickClipStoryButton = "click.clip_story.button"
+        case clickContentsRetrievePopup = "click.contents_retrieve.popup"
+        case clickContinuousPlayButton = "click.continuous_play.button"
+        case clickInsidePlayButton = "click.inside_play.button"
+       
     }
     
     enum watchType: String {

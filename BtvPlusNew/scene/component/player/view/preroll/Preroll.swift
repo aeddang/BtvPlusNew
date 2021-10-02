@@ -61,6 +61,7 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             extParams["contentId"] = data.contentId
             extParams["isFree"] = data.isFree ? "true" : "false"
             extParams["startType"] = data.type.adCode
+            extParams["productId"] = data.productId
             
             ComponentLog.d("Preroll load " + data.contentId , tag: self.tag)
             ComponentLog.d("Preroll load " + data.isFree.description , tag: self.tag)

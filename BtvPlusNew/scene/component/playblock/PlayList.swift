@@ -15,10 +15,13 @@ class PlayData:InfinityData,ObservableObject{
     
     private(set) var watchLv:Int = 0
     private(set) var isAdult:Bool = false
+    
     private(set) var openDate: String? = nil
     private(set) var date: String? = nil
     private(set) var srisId: String? = nil
     private(set) var epsdId: String? = nil
+    private(set) var prdId: String? = nil
+    private(set) var prdTypeCd: String? = nil
     fileprivate(set) var epsdRsluId: String? = nil
     private(set) var summary: String? = nil
     var isLike:LikeStatus? = nil
@@ -39,7 +42,7 @@ class PlayData:InfinityData,ObservableObject{
     fileprivate(set) var synopsisModel:SynopsisModel? = nil
     fileprivate(set) var playListData:PlayListData? = nil
     fileprivate(set) var episodeViewerData:EpisodeViewerData? = nil
-    
+    fileprivate(set) var isAutoPlay:Bool = false
     
     fileprivate(set) var playRespond:ApiResultResponds? = nil
     fileprivate(set) var playData:Play? = nil
@@ -62,6 +65,8 @@ class PlayData:InfinityData,ObservableObject{
         summary = data.epsd_snss_cts
         epsdId = data.epsd_id
         epsdRsluId = data.epsd_rslu_id
+        prdId = data.prd_id
+        prdTypeCd = data.prd_typ_cd
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = data.adlt_lvl_cd?.toBool() ?? false
         if isAdult { watchLv = Setup.WatchLv.lv4.rawValue }
@@ -227,6 +232,7 @@ struct PlayItem: PageView {
     var range:CGFloat = 0
     var onPlay:(PlayData)->Void
     @State var isSelected:Bool = false
+    @State var isForcePlay:Bool = false
     @State var isPlay:Bool = false
     @State var isRecovery:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
@@ -245,6 +251,7 @@ struct PlayItem: PageView {
                         isPlay : self.isPlay,
                         isLoading: self.isLoading,
                         action:{
+                            self.isForcePlay = true
                             self.onPlay(self.data)
                         })
                     .frame(width: Self.listSize.width, height: Self.listSize.height)
@@ -262,6 +269,7 @@ struct PlayItem: PageView {
                         if !self.data.isClip {
                             HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){
                                 PlayItemFunction(
+                                    viewModel: self.viewModel,
                                     data: self.data,
                                     isInit: self.isInit,
                                     isLike: self.$isLike,
@@ -285,6 +293,7 @@ struct PlayItem: PageView {
                         isPlay : self.isPlay,
                         isLoading: self.isLoading,
                         action:{
+                            self.isForcePlay = true
                             self.onPlay(self.data)
                         })
                     .modifier(
@@ -315,6 +324,7 @@ struct PlayItem: PageView {
                                         Spacer().modifier(MatchHorizontal(height: 0))
                                     }
                                     PlayItemFunction(
+                                        viewModel: self.viewModel,
                                         data: self.data,
                                         isInit: self.isInit,
                                         isLike: self.$isLike,
@@ -332,6 +342,7 @@ struct PlayItem: PageView {
         }
         .background((SystemEnvironment.isTablet || self.data.isClip) ? Color.app.blueLight : Color.transparent.clear)
         .opacity(self.isSelected ? 1.0 : 0.5)
+        
         .onReceive(self.viewModel.$currentPlayData){ selectData in
             guard let selectData = selectData else {
                 self.isSelected = false
@@ -342,13 +353,20 @@ struct PlayItem: PageView {
             withAnimation{
                 self.isSelected = isSelect
             }
-            let isAuto = !data.isCompleted && self.setup.autoPlay && isSelect
+            let isAuto = !data.isCompleted && isSelect
             if isAuto {
+                if self.isForcePlay {
+                    self.isPlay = true
+                    self.isForcePlay = false
+                } else {
+                    self.isPlay = self.setup.autoPlay
+                }
+                PageLog.d("currentPlayData autoLoad " + self.isPlay.description, tag: self.tag)
                 PageLog.d("currentPlayData autoLoad " + (selectData.title ?? ""), tag: self.tag)
                 self.autoLoad()
             } else {
                 PageLog.d("currentPlayData cancelAutoLoad " + (selectData.title ?? ""), tag: self.tag)
-                self.playerModel.event = .pause
+                self.playerModel.event = .pause()
                 self.isPlay = false
                 self.isLoading = false
                 self.isRecovery = false
@@ -433,29 +451,6 @@ struct PlayItem: PageView {
     private func load(){
         self.isRecovery = false
         if !self.isSelected { return }
-        if self.pairing.status != .pairing && self.data.isClip {
-            self.isPlay = false
-            return
-        }
-        let watchLv = self.data.watchLv
-        if watchLv >= 19 {
-            if self.pairing.status != .pairing {
-                self.isPlay = false
-                return
-            }
-            if !SystemEnvironment.isAdultAuth {
-                self.isPlay = false
-                return
-            }
-        }
-        if !SystemEnvironment.isAdultAuth ||
-            ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 )
-        {
-            if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
-                self.isPlay = false
-                return
-            }
-        }
         withAnimation{ self.isLoading = true }
         if self.data.isClip {
             self.loadClip()
@@ -512,15 +507,39 @@ struct PlayItem: PageView {
             self.isPlay = false
             return
         }
+        
+        let watchLv = self.data.watchLv
+        if watchLv >= 19 {
+            if self.pairing.status != .pairing {
+                self.isPlay = false
+            }
+            if !SystemEnvironment.isAdultAuth {
+                self.isPlay = false
+            }
+        }
+        if !SystemEnvironment.isAdultAuth ||
+            ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 )
+        {
+            if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                self.isPlay = false
+            }
+        }
+        
+        self.data.isAutoPlay = self.isPlay
+        self.viewModel.naviLogPlayData = self.data
         self.data.playRespond = res
         PageLog.d("load Preview", tag: self.tag)
+        if !self.isPlay {
+            withAnimation{ self.isLoading = false }
+        }
+        
         DispatchQueue.main.async {
             self.playerModel.setData(data: dataInfo,
                                      type: .preview(epsdRsluId, isList:true),
-                                     autoPlay: true,
+                                     autoPlay: self.isPlay,
                                      continuousTime: self.data.playTime)
         }
-       
+        
     }
     
     
@@ -619,25 +638,51 @@ struct PlayItem: PageView {
                     .setData(type: synopsisPlayType , datas: playListData.datas, epsdId:epsdId)
             }
             
+            if self.pairing.status != .pairing && self.data.isClip {
+                self.isPlay = false
+            }
+            let watchLv = self.data.watchLv
+            if watchLv >= 19 {
+                if self.pairing.status != .pairing {
+                    self.isPlay = false
+                }
+                if !SystemEnvironment.isAdultAuth {
+                    self.isPlay = false
+                }
+            }
+            if !SystemEnvironment.isAdultAuth ||
+                ( !SystemEnvironment.isWatchAuth && SystemEnvironment.watchLv != 0 )
+            {
+                if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                    self.isPlay = false
+                }
+            }
+            self.data.isAutoPlay = self.isPlay
+            self.viewModel.naviLogPlayData = self.data
+            if !self.isPlay {
+                withAnimation{ self.isLoading = false }
+            }
+            
             DispatchQueue.main.async {
                 self.playerModel
                     .setData(synopsisPlayData: playerData)
                     .setData(data: dataInfo,
                              type: .vod(epsdRsluId,self.data.episodeViewerData?.episodeSubTitle),
-                             autoPlay: true,
+                             autoPlay: self.isPlay,
                              continuousTime: self.data.playTime)
             }
         } else {
             PageLog.d("error synopsisModel", tag: self.tag)
             self.isPlay = false
         }
+        
     }
     
     
     
     @State private var autoPlayer:AnyCancellable?
     private func autoLoad(){
-        self.isPlay = false
+        
         self.autoPlayer?.cancel()
         self.autoPlayer = Timer.publish(
             every: self.isRecovery ? 1.0 : 0.5, on: .current, in: .common)

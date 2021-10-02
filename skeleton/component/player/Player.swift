@@ -92,6 +92,7 @@ open class PlayerModel: ComponentObservable {
         playInfo = nil
         header = nil
         path = ""
+        drm = nil
         reload()
     }
     
@@ -155,11 +156,14 @@ class FairPlayDrm{
 
 enum PlayerUIEvent {//input
     case load(String, Bool = true, Double = 0.0, Dictionary<String,String>? = nil),
-         togglePlay, resume, pause, stop, volume(Float), rate(Float), mute(Bool),
-         seekTime(Double, Bool? = nil), seekProgress(Float, Bool? = nil),
-         seekMove(Double, Bool? = nil),
-         seeking(Double), seekForward(Double, Bool? = nil), seekBackword(Double, Bool? = nil),
-         addSeekForward(Double, Bool? = nil), addSeekBackword(Double, Bool? = nil),
+         togglePlay(isUser:Bool = false),
+         resume(isUser:Bool = false), pause(isUser:Bool = false), stop(isUser:Bool = false),
+         volume(Float, isUser:Bool),  rate(Float,isUser:Bool), mute(Bool, isUser:Bool),
+         seekTime(Double, Bool? = nil, isUser:Bool), seekProgress(Float, Bool? = nil, isUser:Bool),
+         seekMove(Double, Bool? = nil, isUser:Bool),
+         seeking(Double, isUser:Bool),
+         seekForward(Double, Bool? = nil, isUser:Bool), seekBackword(Double, Bool? = nil, isUser:Bool),
+         addSeekForward(Double, Bool? = nil, isUser:Bool), addSeekBackword(Double, Bool? = nil, isUser:Bool),
          check, neetLayoutUpdate, fixUiStatus(Bool),
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
          fullScreen(Bool)
@@ -307,7 +311,7 @@ extension PlayBack {
         viewModel.playerStatus = viewModel.isPlay ? .resume : .pause
         if let afterPlay = viewModel.isSeekAfterPlay {
             DispatchQueue.main.async {
-                viewModel.event = afterPlay ? .resume : .pause
+                viewModel.event = afterPlay ? .resume(): .pause()
                 viewModel.isSeekAfterPlay = nil
             }
         }

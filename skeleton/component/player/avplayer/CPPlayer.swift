@@ -25,7 +25,7 @@ struct CPPlayer: PageComponent {
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
                             if self.isSimple { return }
-                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount())
+                            self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), isUser: true)
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
@@ -36,7 +36,7 @@ struct CPPlayer: PageComponent {
                         .onTapGesture(count: 2, perform: {
                             if self.viewModel.isLock { return }
                             if self.isSimple { return }
-                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount())
+                            self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), isUser: true)
                         })
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
@@ -91,7 +91,7 @@ struct CPPlayer: PageComponent {
             switch evt {
             case .completed :
                 if self.viewModel.isReplay {
-                    self.viewModel.event = .seekTime(0, true)
+                    self.viewModel.event = .seekTime(0, true, isUser: false)
                 }
             case .seeked: self.delayAutoUiHidden()
             default : break
@@ -124,14 +124,14 @@ struct CPPlayer: PageComponent {
                     confirmText: String.button.btnRetry){retry in
                     if retry {
                         self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
-                        self.viewModel.event = .resume
+                        self.viewModel.event = .resume()
                     }
                 }
             }
         }
         .background(Color.black)
         .onDisappear(){
-            self.viewModel.event = .pause
+            self.viewModel.event = .pause()
             self.clearAutoUiHidden()
         }
         

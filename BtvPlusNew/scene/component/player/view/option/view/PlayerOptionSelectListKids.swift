@@ -39,7 +39,7 @@ struct PlayerOptionSelectListKids: PageComponent{
                         self.viewModel.selectQuality = value
                     case .rate :
                         guard let value = btn.value as? Float else { return }
-                        self.viewModel.event = .rate(value)
+                        self.viewModel.event = .rate(value, isUser: true)
                     case .ratio :
                         guard let value = btn.value as? AVLayerVideoGravity else { return }
                         self.viewModel.event = .screenGravity(value)

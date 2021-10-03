@@ -11,6 +11,14 @@ import Combine
 
 enum WatchedBlockType{
     case mobile, btv, kids
+    
+    var category: String {
+        switch self {
+        case .mobile : return "모바일btv"
+        case .btv : return "btv"
+        case .kids : return "zem키즈"
+        }
+    }
 }
 
 class WatchedBlockModel: PageDataProviderModel {
@@ -58,7 +66,7 @@ struct WatchedBlock: PageComponent, Identifiable{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:WatchedBlockModel = WatchedBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -85,6 +93,7 @@ struct WatchedBlock: PageComponent, Identifiable{
                         useTracking:self.useTracking,
                         marginBottom:self.marginBottom,
                         delete: { data in
+                            self.sendLogDelete(data: data)
                             self.delete(data:data)
                         },
                         onBottom: { _ in
@@ -284,6 +293,28 @@ struct WatchedBlock: PageComponent, Identifiable{
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
         withAnimation{ self.isError = false }
+    }
+    
+    private func sendLogDelete (data:WatchedData){
+        let content = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: data.title,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: data.originData?.epsd_id,
+            episode_resolution_id: data.originData?.epsd_rslu_id,
+        
+            product_id: data.originData?.prod_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            running_time: data.originData?.running_time,
+            list_price: nil,
+            payment_price: nil)
+        
+        let action = MenuNaviActionBodyItem(category : self.watchedType.category)
+        self.naviLogManager.actionLog(.deleteRecentContentsList ,pageId: .recentContents, actionBody: action, contentBody: content)
     }
 }
 

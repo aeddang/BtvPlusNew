@@ -18,6 +18,7 @@ struct TopViewerKids: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var vsManager:VSManager
+    var componentViewModel:SynopsisViewModel?
     var data:SynopsisPackageModel
    
     @State var isPairing:Bool? = nil
@@ -78,6 +79,8 @@ struct TopViewerKids: PageComponent{
                                 isSelected : true,
                                 isFixSize : false
                             ){_ in
+                                
+                                self.componentViewModel?.uiEvent = .purchase
                                 guard let model = self.data.purchaseWebviewModel else {return}
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.purchase)

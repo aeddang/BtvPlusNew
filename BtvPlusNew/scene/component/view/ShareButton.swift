@@ -17,7 +17,9 @@ struct ShareButton: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
-    @EnvironmentObject var naviLogManager:NaviLogManager
+    
+    
+    var componentViewModel:SynopsisViewModel? = nil
     var type:PageType = .btv
     var srisId:String? = nil
     var epsdId:String? = nil
@@ -26,6 +28,7 @@ struct ShareButton: PageView {
     var body: some View {
         Button(action: {
             if !self.isActive {return}
+            self.componentViewModel?.uiEvent = .share(isRecommand: isRecommand == true)
             self.share()
             
         }) {
@@ -73,7 +76,6 @@ struct ShareButton: PageView {
             )
             
         } else {
-            self.naviLogManager.contentsLog(action: .clickContentsShare,  actionBody:.init(config: ""))
             let shareFullpath = ApiPath.getRestApiPath(.WEB)
             guard  let shareHost = shareFullpath.toUrl()?.host else {return}
             let domain = shareFullpath.hasPrefix("https://") ? "https://" : "http://"

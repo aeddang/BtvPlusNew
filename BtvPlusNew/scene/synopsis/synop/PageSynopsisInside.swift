@@ -60,7 +60,7 @@ extension PageSynopsis {
         if let find = playData.nextEpisode {
             self.changeVod(epsdId: find.epsdId, isNext: true)
             if !auto && isUser != false{
-                self.playerModel.btvUiEvent =
+                self.playerModel.btvLogEvent =
                     .clickInsideButton(.clickInsideSkipIntro , .nextView(isAuto:false)
                                        , config:find.title, result:find.epsdId)
             }
@@ -70,7 +70,7 @@ extension PageSynopsis {
         if let season = playData.nextSeason {
             self.changeSeasonFirst(synopsisData: season.synopsisData)
             if !auto && isUser != false {
-                self.playerModel.btvUiEvent =
+                self.playerModel.btvLogEvent =
                     .clickInsideButton(.clickInsideSkipIntro , .nextView(isAuto:false)
                                        , config:season.title, result:season.synopsisData?.epsdId) 
             }

@@ -24,6 +24,7 @@ struct PlayerMoreBoxKids: PageView{
         ZStack{
             VStack(spacing:DimenKids.margin.thin){
                 Button(action: {
+                    self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "screen_propotion")
                     self.viewModel.selectFunctionType = .quality
                     self.hideBox()
                 }) {
@@ -37,6 +38,7 @@ struct PlayerMoreBoxKids: PageView{
                 Spacer().modifier(LineHorizontal(color:Color.app.black))
                     .padding(.horizontal, DimenKids.margin.tiny)
                 Button(action: {
+                    self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "speed")
                     self.viewModel.selectFunctionType = .rate
                     self.hideBox()
                 }) {

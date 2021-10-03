@@ -87,7 +87,7 @@ extension PeopleList{
 
 struct PeopleList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var naviLogManager:NaviLogManager
+    var componentViewModel:SynopsisViewModel? = nil
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[PeopleData]
     var useTracking:Bool = false
@@ -105,15 +105,14 @@ struct PeopleList: PageComponent{
             ForEach(self.datas) { data in
                 PeopleItem( data:data )
                 .onTapGesture {
+                    self.componentViewModel?.uiEvent = .selectPerson(data)
                     if data.epsdId == nil {return}
+                    
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.person)
                             .addParam(key: .data, value: data)
                     )
-                    self.naviLogManager.contentsLog(
-                        action: .clickContentsProductionActor,
-                        actionBody:.init(target:(data.name ?? "") + "|" + (data.descriptionRole ?? ""))
-                    )
+                    
                 }
             }
         }

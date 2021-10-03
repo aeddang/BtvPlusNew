@@ -17,7 +17,7 @@ struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var vsManager:VSManager
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var infinityScrollModel: InfinityScrollModel
     var relationContentsModel:RelationContentsModel
     var peopleScrollModel: InfinityScrollModel
@@ -139,6 +139,7 @@ struct SynopsisBody: PageComponent{
                 
                 if self.summaryViewerData != nil && self.synopsisModel?.isCancelProgram == false{
                     SummaryViewer(
+                        componentViewModel:self.componentViewModel,
                         peopleScrollModel:self.peopleScrollModel,
                         data: self.summaryViewerData!,
                         useTracking: self.usePullTracking,
@@ -183,7 +184,7 @@ struct SynopsisBodyHeader: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var vsManager:VSManager
     
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var relationContentsModel:RelationContentsModel
     var peopleScrollModel: InfinityScrollModel
     var pageDragingModel:PageDragingModel
@@ -268,6 +269,7 @@ struct SynopsisBodyHeader: PageComponent{
             
             if self.summaryViewerData != nil {
                 SummaryViewer(
+                    componentViewModel:self.componentViewModel,
                     peopleScrollModel:self.peopleScrollModel,
                     data: self.summaryViewerData!,
                     useTracking: self.usePullTracking,

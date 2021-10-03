@@ -44,7 +44,7 @@ struct KidsSynopsis: PageComponent{
     
     var synopsisData:SynopsisData?
     var synopsisModel:SynopsisModel?
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     
     var playerModel: BtvPlayerModel
     var playerListViewModel:InfinityScrollModel

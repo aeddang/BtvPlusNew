@@ -82,13 +82,16 @@ class RelationContentsModel:ObservableObject {
         if let list = synopsis.seriesInfoList {
             let isTrstrs = synopsis.isTrstrs
             let isPurchasedPPM = synopsis.isPurchasedPPM
-            let metvSeasonWatchAll = synopsis.metvSeasonWatchAll
+            //let metvSeasonWatchAll = synopsis.metvSeasonWatchAll
             let filterList = isTrstrs && !isPurchasedPPM
                 ? list.filter{ $0.sale_prc_vat != 0 }
                 : list
             
             self.seris = zip(filterList, 0...filterList.count).map{data, idx in
-                SerisData(pageType: self.pageType).setData(data: data, title: self.serisTitle, idx: idx)}
+                let serisData = SerisData(pageType: self.pageType).setData(data: data, title: self.serisTitle, idx: idx)
+                serisData.logPage = self.pageType == .btv ? .synopsis : .kidsSynopsis
+                return serisData
+            }
             self.playList = zip(filterList, 0...filterList.count).map{ data, idx in
                 PlayerListData().setData(data: data, title: self.serisTitle, idx: idx)}
             self.apiSortType = synopsis.isSrisCompleted ? .count : .latest
@@ -157,7 +160,11 @@ class RelationContentsModel:ObservableObject {
         }
         let tabs:[String] = infos.filter{ $0.sub_title != nil }.map{ $0.sub_title!}
         self.relationContents = infos.filter{ $0.block != nil }.map{
-            $0.block!.map{ PosterData(pageType: self.pageType).setData(data: $0) }
+            $0.block!.map{
+                let poster = PosterData(pageType: self.pageType).setData(data: $0)
+                poster.logPage = self.pageType == .btv ? .synopsis : .kidsSynopsis
+                return poster
+            }
         }
         self.createTab(tabs: tabs)
     }

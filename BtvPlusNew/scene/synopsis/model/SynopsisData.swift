@@ -58,7 +58,22 @@ struct SynopsisData{
     var isFullScreenProgressTime:Bool = true // progressTimed 있을때 true 이면 풀스크린s
     var synopType:SynopsisType = SynopsisType.none
     var isPreview:Bool = false
-    
+    var isDemand:Bool = false
+    /*
+    SynopSvcTypCdNone = 0,
+    SynopSvcTypCdVod = 30, //일반 VOD 시놉
+    SynopSvcTypCdClip = 38, //클립 시놉
+    SynopSvcTypCdVR360 = 31, //360VR
+    SynopSvcTypCdFairyTale = 32, //동화
+    SynopSvcTypCdUseGuide = 33,  //이용가이드
+    SynopSvcTypCdDemand = 12, //디멘드
+    SynopSvcTypCdMcn = 34, //MCN
+    SynopSvcTypCdOriginal = 45,  //오리지날
+    SynopSvcTypCdCharAI = 36, //캐릭터 AI
+    SynopSvcTypCdKes = 37,  // KES
+    //contents.kids_yn. 외부진입용 키즈존.
+    SynopSvcTypCdKids = 9999
+    */
     var isContinuous:Bool {
         if progress != nil {return true}
         if progressTime != nil {return true}

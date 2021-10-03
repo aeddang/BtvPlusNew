@@ -11,7 +11,7 @@ import Combine
 struct PurchaseViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
+    var componentViewModel:SynopsisViewModel = SynopsisViewModel()
     var data:PurchaseViewerData
     var isPosson:Bool
     @State var option:String = ""

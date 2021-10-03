@@ -234,7 +234,6 @@ struct PlayItem: PageView {
     @State var isSelected:Bool = false
     @State var isForcePlay:Bool = false
     @State var isPlay:Bool = false
-    @State var isRecovery:Bool = false
     @State var sceneOrientation: SceneOrientation = .portrait
     
     
@@ -247,11 +246,10 @@ struct PlayItem: PageView {
                         playerModel : self.playerModel,
                         data: self.data,
                         isSelected : self.isSelected,
-                        isRecovery: self.isRecovery,
                         isPlay : self.isPlay,
                         isLoading: self.isLoading,
                         action:{
-                            self.isForcePlay = true
+                            //self.isForcePlay = true
                             self.onPlay(self.data)
                         })
                     .frame(width: Self.listSize.width, height: Self.listSize.height)
@@ -289,11 +287,10 @@ struct PlayItem: PageView {
                         playerModel : self.playerModel,
                         data: self.data,
                         isSelected : self.isSelected,
-                        isRecovery: self.isRecovery,
                         isPlay : self.isPlay,
                         isLoading: self.isLoading,
                         action:{
-                            self.isForcePlay = true
+                            //self.isForcePlay = true
                             self.onPlay(self.data)
                         })
                     .modifier(
@@ -369,12 +366,12 @@ struct PlayItem: PageView {
                 self.playerModel.event = .pause()
                 self.isPlay = false
                 self.isLoading = false
-                self.isRecovery = false
                 self.cancelAutoLoad()
             }
         }
         .onReceive(self.viewModel.$isPlayStatusUpdate){ update in
             if self.isSelected && update {
+                self.isPlay = true
                 self.load()
             }
         }
@@ -390,17 +387,19 @@ struct PlayItem: PageView {
                 break
             }
         }
-        .onReceive(self.playerModel.$streamEvent){stat in
+        .onReceive(self.playerModel.$event){evt in
             if !self.isSelected {return}
-            switch stat {
-                
-            case .recovery :
-                PageLog.d("recovery " + (self.data.title ?? ""), tag: self.tag)
-                self.isRecovery = true
-                self.autoLoad()
+            guard let evt = evt else {return}
+            switch evt {
+            case .recovery(let isUser) :
+                if isUser {
+                    self.isPlay = true
+                    self.load()
+                }
             default : break
             }
         }
+        
         .onReceive(self.playerModel.$streamStatus){stat in
             if !self.isSelected {return}
             switch stat {
@@ -449,7 +448,6 @@ struct PlayItem: PageView {
     
 
     private func load(){
-        self.isRecovery = false
         if !self.isSelected { return }
         withAnimation{ self.isLoading = true }
         if self.data.isClip {
@@ -685,7 +683,7 @@ struct PlayItem: PageView {
         
         self.autoPlayer?.cancel()
         self.autoPlayer = Timer.publish(
-            every: self.isRecovery ? 1.0 : 0.5, on: .current, in: .common)
+            every: 0.5, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.cancelAutoLoad()

@@ -31,14 +31,17 @@ class VideoData:InfinityData{
     private(set) var playTime:String? = nil
     private(set) var sort_seq:Int = 0
     private(set) var pageType:PageType = .btv
-    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
-
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var actionLogKids:MenuNaviActionBodyItem? = nil
     private(set) var isWatched:Bool = false
-    var actionLogKids:MenuNaviActionBodyItem? = nil
+   
     var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
     var hasLogKids:Bool { get{ return actionLogKids != nil }}
     
+    var logPage:NaviLog.PageId? = nil
+    var logAction:NaviLog.Action? = nil
     var fullTitle:String? {
         get{
             guard let title = self.title else {return nil}
@@ -62,6 +65,10 @@ class VideoData:InfinityData{
         self.actionLog = action
         return self
     }
+    func setNaviLogKids(action:MenuNaviActionBodyItem?) -> VideoData  {
+        self.actionLogKids = action
+        return self
+    }
    
     func setNaviLog(searchType:BlockData.SearchType, data:CategorySrisItem? = nil) -> VideoData  {
         self.contentLog = MenuNaviContentsBodyItem(
@@ -79,6 +86,28 @@ class VideoData:InfinityData{
             monthly_pay: nil,
             list_price: data?.price
         )
+        return self
+    }
+    
+    func setNaviLog(data:WatchItem) -> VideoData  {
+        self.logAction = .clickMyRecentsContents
+        let content = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: data.title,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: data.epsd_id,
+            episode_resolution_id: data.epsd_rslu_id,
+        
+            product_id: data.prod_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            running_time: data.watch_time,
+            list_price: nil,
+            payment_price: nil)
+        self.contentLog = content
         return self
     }
     
@@ -136,7 +165,7 @@ class VideoData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,
-            kidZone:data.kids_yn, progress:self.progress)
+            kidZone:data.kids_yn, progress:self.progress,isDemand: data.svc_typ_cd == "12")
         
         return self
     }
@@ -424,9 +453,15 @@ struct VideoList: PageComponent{
     
     func onTap(data:VideoData)  {
         if data.hasLogKids {
-            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+            self.naviLogManager.actionLog(
+                data.logAction ?? .clickContentsButton,
+                pageId: data.logPage ,
+                actionBody: data.actionLog, contentBody: data.contentLog)
         }else if data.hasLog {
-            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+            self.naviLogManager.actionLog(
+                data.logAction ?? .clickContentsList,
+                pageId: data.logPage ,
+                actionBody: data.actionLog, contentBody: data.contentLog)
         }
         if let action = self.action {
             action(data)
@@ -492,9 +527,15 @@ struct VideoSet: PageComponent{
                     VideoItem( data:data )
                     .onTapGesture {
                         if data.hasLogKids {
-                            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+                            self.naviLogManager.actionLog(
+                                data.logAction ?? .clickContentsButton,
+                                pageId: data.logPage,
+                                actionBody: data.actionLog, contentBody: data.contentLog)
                         }else if data.hasLog {
-                            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                            self.naviLogManager.actionLog(
+                                data.logAction ?? .clickContentsList,
+                                pageId: data.logPage,
+                                actionBody: data.actionLog, contentBody: data.contentLog)
                         }
                         guard let synopsisData = data.synopsisData else { return }
                         self.pagePresenter.openPopup(

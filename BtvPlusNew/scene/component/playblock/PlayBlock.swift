@@ -171,6 +171,11 @@ struct PlayBlock: PageComponent{
             .onReceive(self.pagePresenter.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt.type {
+                case .timeChange :
+                    if evt.id == "PageSynopsisPlayer", let continuousPlayTime = evt.data as? Double {
+                        self.onPlaytimeChanged(t:continuousPlayTime)
+                    }
+                    
                 case .completed :
                     guard let type = evt.data as? ScsNetwork.ConfirmType  else { return }
                     switch type {
@@ -345,6 +350,7 @@ struct PlayBlock: PageComponent{
     @State var finalIndex:Int? = nil
     @State var isFullScreen:Bool = false
     @State var isHold:Bool = false
+    
 
     private func openFullScreen(){
         if self.focusIndex == -1 {return}
@@ -361,14 +367,30 @@ struct PlayBlock: PageComponent{
         let playData = self.playerModel.playData
         let btvPlayType = self.playerModel.btvPlayType
         self.playerModel.reset()
-        self.viewModel.continuousTime =  playTime
-        self.viewModel.fullPlayData = playData
-        self.viewModel.btvPlayType = btvPlayType
-        self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.isHold = false
+        if self.viewModel.isClip {
+            if let epsdId = self.selectedData?.epsdId , let cdata = self.selectedData?.synopsisData {
+                let data = SynopsisData(
+                        srisId: cdata.srisId, searchType: .prd,
+                        epsdId: epsdId, epsdRsluId: "",
+                        prdPrcId: cdata.prdPrcId, kidZone:cdata.kidZone,
+                        progressTime: playTime,
+                        synopType: cdata.synopType
+                )
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.synopsisPlayer, animationType: Optional.none)
+                        .addParam(key: .data, value: data)
+                )
+            }
+        } else {
+            self.viewModel.continuousTime =  playTime
+            self.viewModel.fullPlayData = playData
+            self.viewModel.btvPlayType = btvPlayType
+            self.pagePresenter.fullScreenEnter(isLock: true, changeOrientation: .landscape)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.isHold = false
+            }
         }
+        
     }
     
     private func closeFullScreen(fullSynopsisData:SynopsisData? = nil, changeEpsdId:String? = nil){

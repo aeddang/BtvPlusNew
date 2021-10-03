@@ -45,12 +45,17 @@ enum SelectOptionType:String {
 }
 enum BtvUiEvent {
     case more, guide, initate, closeList, watchBtv, syncListScroll,
-         clickInsideButton(NaviLog.Action,
-                           BtvPlayerEvent?,
-                           config:String? = nil, result:String? = nil),
          prevPlay
 }
 
+enum BtvLogEvent {
+    case clickInsideButton(NaviLog.Action,
+                           BtvPlayerEvent?,
+                           config:String? = nil, result:String? = nil),
+         
+         clickConfigButton(NaviLog.Action,
+                           config:String? = nil)
+}
 
 enum BtvPlayerEvent {
     case nextView(isAuto:Bool = false), nextViewCancel, nextViewSeason,
@@ -73,6 +78,7 @@ class BtvPlayerModel:PlayerModel{
     
     @Published var selectFunctionType:SelectOptionType? = nil
     @Published var btvUiEvent:BtvUiEvent? = nil {didSet{ if btvUiEvent != nil { btvUiEvent = nil} }}
+    @Published var btvLogEvent:BtvLogEvent? = nil {didSet{ if btvLogEvent != nil { btvLogEvent = nil} }}
     @Published var btvPlayerEvent:BtvPlayerEvent? = nil {didSet{ if btvPlayerEvent != nil { btvPlayerEvent = nil} }}
     @Published var isPrerollPlay = false
     

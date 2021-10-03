@@ -9,6 +9,7 @@ import Foundation
 extension PageParam {
     static let id = "id"
     static let cid = "cid" // Certification
+    static let pushId = "pushId" // Certification
     static let index = "index" // Certification
     static let subId = "subId"
     static let link = "link"

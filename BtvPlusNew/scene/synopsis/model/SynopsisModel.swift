@@ -54,6 +54,7 @@ class SynopsisModel : PageProtocol {
     private(set) var isRecommand:Bool = false
     private(set) var isLimitedWatch:Bool = false
     private(set) var isRecommandAble:Bool = false
+    private(set) var isDemand:Bool = false
     private(set) var seasonTitle:String? = nil
     private(set) var originEpsdId:String? = nil
     private(set) var title:String? = nil

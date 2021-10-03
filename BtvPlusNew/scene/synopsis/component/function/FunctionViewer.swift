@@ -11,7 +11,7 @@ import SwiftUI
 struct FunctionViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel?
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
@@ -31,6 +31,7 @@ struct FunctionViewer: PageComponent{
             HStack(alignment: .center, spacing:SystemEnvironment.isTablet ?  Dimen.margin.thinExtra : Dimen.margin.regularUltra){
                 if let synopsisData = self.synopsisData {
                     BookMarkButton(
+                        componentViewModel: self.componentViewModel,
                         data:synopsisData,
                         isBookmark: self.$isBookmark,
                         isActive: self.synopsisData?.isPosson != true
@@ -40,6 +41,7 @@ struct FunctionViewer: PageComponent{
                 }
                 if let srisId = self.synopsisData?.srisId{
                     LikeButton(
+                        componentViewModel: self.componentViewModel,
                         srisId: srisId,
                         isLike: self.$isLike
                     ){ ac in
@@ -48,13 +50,14 @@ struct FunctionViewer: PageComponent{
                     .buttonStyle(BorderlessButtonStyle())
                 }
                 BtvButton(isActive: self.synopsisData?.isPosson != true){
-                    self.componentViewModel.uiEvent = .watchBtv
+                    self.componentViewModel?.uiEvent = .watchBtv
                 }
                 .buttonStyle(BorderlessButtonStyle())
                 .fixedSize()
                 if  self.synopsisModel?.isRecommandAble == true , let srisId = self.synopsisData?.srisId {
                     HStack(alignment: .top, spacing:0){
                         ShareButton(
+                            componentViewModel: self.componentViewModel,
                             srisId:srisId,
                             epsdId:self.synopsisData?.epsdId,
                             isRecommand: self.isPairing ? self.synopsisModel?.isRecommand : false,

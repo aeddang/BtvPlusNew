@@ -20,14 +20,13 @@ struct PlayItemScreen: PageView {
     @ObservedObject var playerModel: BtvPlayerModel
     var data:PlayData
     var isSelected:Bool
-    var isRecovery:Bool
     var isPlay:Bool = false
     var isLoading:Bool = false
     var action:()->Void
     
     var body: some View {
         ZStack{
-            if self.isSelected && !self.isRecovery{
+            if self.isSelected {
                 SimplePlayer(
                     pageObservable:self.pageObservable,
                     viewModel:self.playerModel
@@ -35,7 +34,7 @@ struct PlayItemScreen: PageView {
                 .modifier(MatchParent())
                 
             }
-            if !self.isPlay || !self.isSelected || self.isLoading || self.isRecovery {
+            if !self.isPlay || !self.isSelected || self.isLoading  {
                 if self.data.image == nil {
                     Image(Asset.noImg16_9)
                         .renderingMode(.original)
@@ -54,7 +53,7 @@ struct PlayItemScreen: PageView {
                         .modifier(MatchParent())
                 }
                 
-                if (self.isLoading || self.isRecovery) && self.isSelected{
+                if self.isLoading && self.isSelected{
                     CircularSpinner(resorce: Asset.ani.loading)
                 } else {
                     Button(action: {
@@ -122,6 +121,7 @@ struct PlayItemInfo: PageView {
                     .padding(.top, Dimen.margin.thin)
             }
         } else {
+            Spacer().modifier(MatchHorizontal(height: 0))
             Text(self.data.fullTitle)
                 .modifier(BoldTextStyle(
                         size: Font.size.regular,

@@ -12,7 +12,7 @@ import SwiftUI
 struct RelationVodBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var infinityScrollModel: InfinityScrollModel
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
@@ -71,7 +71,7 @@ extension RelationVodList {
 
 struct RelationVodList: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
     @Binding var seris:[SerisData]
@@ -108,7 +108,7 @@ struct RelationVodList: PageComponent{
 
 struct RelationVodHeader: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var relationContentsModel:RelationContentsModel
     var tabNavigationModel:NavigationModel
     var relationDatas:[PosterDataSet]
@@ -162,7 +162,7 @@ struct RelationVodListBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
     var relationContentsModel:RelationContentsModel
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var infinityScrollModel: InfinityScrollModel? = nil
     
     @Binding var seris:[SerisData]
@@ -207,7 +207,10 @@ struct RelationVodListBody: PageComponent{
                         .id(data.hashId)
                         .onTapGesture {
                             if data.hasLog {
-                                self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                                self.naviLogManager.actionLog(
+                                    .clickContentsList,
+                                    pageId: data.logPage,
+                                    actionBody: data.actionLog, contentBody: data.contentLog)
                             }
                             self.componentViewModel.uiEvent = .changeVod(data.epsdId)
                         }

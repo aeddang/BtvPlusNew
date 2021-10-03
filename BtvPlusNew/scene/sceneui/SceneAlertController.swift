@@ -504,20 +504,16 @@ struct SceneAlertController: PageComponent{
         if idx == 1 {
             if isLike == true {
                 self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice)))
-                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: ""))
             }
             else {
                 self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice)))
-                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: "like"))
             }
         }else if idx == 2 {
             if isLike == false {
                 self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice)))
-                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: ""))
             }
             else {
                 self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice)))
-                self.naviLogManager.contentsLog(action: .clickContentsLike,  actionBody:.init(config: "dislike"))
             }
         }
     }

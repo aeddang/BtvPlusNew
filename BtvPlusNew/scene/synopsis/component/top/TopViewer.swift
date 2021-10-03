@@ -19,6 +19,7 @@ struct TopViewer: PageComponent{
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var vsManager:VSManager
+    var componentViewModel:SynopsisViewModel?
     var data:SynopsisPackageModel
    
     @State var isPairing:Bool? = nil
@@ -89,6 +90,8 @@ struct TopViewer: PageComponent{
                                     trailText: self.data.salePrice ?? self.data.price,
                                     strikeText: self.data.salePrice == nil ? nil : self.data.price
                                 ){_ in
+                                    
+                                    self.componentViewModel?.uiEvent = .purchase
                                     guard let model = self.data.purchaseWebviewModel else {return}
                                     self.pagePresenter.openPopup(
                                         PageProvider.getPageObject(.purchase)

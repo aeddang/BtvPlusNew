@@ -26,9 +26,10 @@ enum LikeStatus :String {
 struct LikeButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var naviLogManager:NaviLogManager
+   
     @EnvironmentObject var pairing:Pairing
     var playBlockModel:PlayBlockModel? = nil
+    var componentViewModel:SynopsisViewModel? = nil
     var srisId:String
     @Binding var isLike:LikeStatus?
     var useText:Bool = true
@@ -45,6 +46,7 @@ struct LikeButton: PageView {
             else{
                 self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
                 self.playBlockModel?.logEvent = .like(nil)
+                self.componentViewModel?.uiEvent = .like("")
             }
         }) {
             VStack(spacing:0){
@@ -136,15 +138,18 @@ struct LikeButton: PageView {
             self.isLike = .like
             action?(self.isLike)
             self.playBlockModel?.logEvent = .like(true)
+            self.componentViewModel?.uiEvent = .like("like")
         }
         else if data.like_action == "2" {
             self.isLike = .unlike
             action?(self.isLike)
             self.playBlockModel?.logEvent = .like(false)
+            self.componentViewModel?.uiEvent = .like("dislike")
         }else{
             self.isLike = .unkowned
             action?(self.isLike)
             self.playBlockModel?.logEvent = .like(nil)
+            self.componentViewModel?.uiEvent = .like("-")
         }
     }
     

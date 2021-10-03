@@ -9,13 +9,6 @@ import SwiftUI
 import Intents
 
 extension PageSynopsis {
-    enum ComponentEvent {
-        case changeVod(String?), changeSynopsis(SynopsisData?, isSrisChange:Bool = false), changeOption(PurchaseModel?), purchase, watchBtv, srisSortChanged
-    }
-    class ComponentViewModel:ComponentObservable{
-        @Published var uiEvent:ComponentEvent? = nil {didSet{ if uiEvent != nil { uiEvent = nil} }}
-    }
-    
     static let useLayer:Bool = false
     static let getSynopData:Int = 0
     static let getAuth:Int = 1
@@ -35,7 +28,7 @@ struct PageSynopsis: PageView {
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var componentViewModel:ComponentViewModel = ComponentViewModel()
+    @ObservedObject var componentViewModel:SynopsisViewModel = SynopsisViewModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -205,8 +198,11 @@ struct PageSynopsis: PageView {
                     case .watchBtv : self.watchBtv()
                     default : break
                     }
-                    
                     self.onEventLog(btvUiEvent: evt)
+                }
+                .onReceive(self.playerModel.$btvLogEvent){evt in
+                    guard let evt = evt else { return }
+                    self.onEvent(btvLogEvent: evt)
                 }
                 .onReceive(self.playerModel.$duration){duration in
                     self.onDurationSiri(duration: duration)
@@ -217,6 +213,8 @@ struct PageSynopsis: PageView {
                     switch evt {
                     case .fullScreen(_) :
                         self.onFullScreenControl()
+                    case .recovery(let isUser) :
+                        if isUser { self.resetPage() }
                     default : break
                     }
                     self.onEventLog(event: evt)
@@ -258,7 +256,9 @@ struct PageSynopsis: PageView {
                         if self.sceneOrientation == .landscape {
                             self.relationBodyModel.uiEvent = .scrollTo(self.relationBodyModel.topIdx, .top)
                         }
+                    default : break
                     }
+                    
                     self.onEventLog(componentEvent: evt)
                 }
             }
@@ -388,6 +388,7 @@ struct PageSynopsis: PageView {
                 default : break
                 }
             }
+           
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if self.isPageUiReady {return}
@@ -525,8 +526,12 @@ struct PageSynopsis: PageView {
     @State var currentRedirectSris:String? = nil
     @State var isProhibitionCheckComplete:Bool = false
     @State var isCheckRecommand:Bool = true
+    
+    @State var pageLodId:NaviLog.PageId? = nil
     @State var insideChangeViewId:String? = nil
     @State var insideChangeViewRuntime:String? = nil
+    @State var pushId:String? = nil
+    
     private func initPage(){
         if self.synopsisData == nil {
             self.progressError = true

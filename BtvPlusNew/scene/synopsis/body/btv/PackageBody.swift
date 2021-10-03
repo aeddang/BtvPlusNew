@@ -13,6 +13,7 @@ extension PackageBody {
 struct PackageBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    var componentViewModel:SynopsisViewModel
     var infinityScrollModel: InfinityScrollModel
     var synopsisListViewModel: InfinityScrollModel
     var peopleScrollModel: InfinityScrollModel
@@ -39,11 +40,13 @@ struct PackageBody: PageComponent{
             if self.useTop {
                 if SystemEnvironment.isTablet {
                     TopViewer(
+                        componentViewModel:self.componentViewModel,
                         data: synopsisPackageModel)
                         .frame(height:TopViewer.height)
                         .modifier(ListRowInset(spacing: Dimen.margin.regular))
                 } else {
                     TopViewer(
+                        componentViewModel:self.componentViewModel,
                         data: synopsisPackageModel)
                         .frame(height:round(self.sceneObserver.screenSize.width * TopViewer.imgRatio)
                                 + (synopsisPackageModel.hasAuthority ? 0 : TopViewer.bottomHeight))
@@ -64,6 +67,8 @@ struct PackageBody: PageComponent{
                         hasAuthority: self.synopsisPackageModel.hasAuthority,
                         text: self.synopsisPackageModel.contentMoreText
                     ) { data in
+                        
+                        
                         self.action?(data)
                     }
                     .padding(.top, Dimen.margin.thinExtra)
@@ -85,6 +90,7 @@ struct PackageBody: PageComponent{
                 
             if self.summaryViewerData != nil {
                 SummaryViewer(
+                    componentViewModel:self.componentViewModel,
                     peopleScrollModel:self.peopleScrollModel,
                     data: self.summaryViewerData!,
                     useTracking: self.useTracking,

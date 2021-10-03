@@ -13,9 +13,10 @@ import SwiftUI
 struct BookMarkButton: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
+    
     var type:PageType = .btv
+    var componentViewModel:SynopsisViewModel? = nil
     var data:SynopsisData
     var isSimple:Bool = false
     @Binding var isBookmark:Bool?
@@ -29,8 +30,13 @@ struct BookMarkButton: PageView {
                 self.appSceneObserver.alert = .needPairing()
             }
             else{
-                if self.isBookmark == false { self.add() }
-                else if self.isBookmark == true { self.delete() }
+                if self.isBookmark == false {
+                    self.componentViewModel?.uiEvent = .bookMark(true)
+                    self.add() }
+                else if self.isBookmark == true {
+                    self.componentViewModel?.uiEvent = .bookMark(false)
+                    self.delete()
+                }
             }
         }) {
             if !self.isSimple{
@@ -121,7 +127,6 @@ struct BookMarkButton: PageView {
         guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
         self.dataProvider.requestData(q: .init(id: epsdId, type: .postBookMark(self.data)))
-        self.naviLogManager.contentsLog(action: .clickContentsPick,  actionBody:.init(config: "pick"))
     }
     
     func delete(){
@@ -129,7 +134,6 @@ struct BookMarkButton: PageView {
         guard let epsdId = self.data.epsdId else { return }
         self.isBusy = true
         self.dataProvider.requestData(q: .init(id: epsdId, type: .deleteBookMark(self.data)))
-        self.naviLogManager.contentsLog(action: .clickContentsPick,  actionBody:.init(config: "un-pick"))
     }
     
     func added(_ res:ApiResultResponds){

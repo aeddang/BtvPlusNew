@@ -24,34 +24,11 @@ class WatchedData:InfinityData{
     private(set) var srisId:String? = nil
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
-    var hasLog:Bool {
-        get{
-            return actionLog != nil || contentLog != nil
-        }
-    }
+    private(set) var originData:WatchItem? = nil
     
-    func setNaviLog(data:WatchItem? = nil) -> WatchedData  {
-        self.actionLog = .init(category:"모바일btv")
-        self.contentLog = MenuNaviContentsBodyItem(
-            type: "vod",
-            title: self.title,
-            channel_name: nil,
-            genre_text: nil,
-            genre_code: nil,
-            paid: nil,
-            purchase: nil,
-            episode_id: self.synopsisData?.epsdId,
-            episode_resolution_id: self.synopsisData?.epsdRsluId,
-            product_id: nil,
-            purchase_type: nil,
-            monthly_pay: nil,
-            running_time: data?.watch_time,
-            list_price: nil
-            
-        )
-        return self
-    }
+    
     func setData(data:WatchItem, idx:Int = -1, isAll:Bool) -> WatchedData {
+        self.originData = data
         if let rt = data.watch_rt?.toInt() {
             self.progress = Float(rt) / 100.0
             self.subTitle = rt.description + "% " + String.app.watch
@@ -78,7 +55,7 @@ class WatchedData:InfinityData{
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
             prdPrcId: "",  kidZone:nil, progress:self.progress)
         
-        return self.setNaviLog(data: data)
+        return self
     }
     
     func setDummy(_ idx:Int = -1) -> WatchedData {
@@ -134,11 +111,7 @@ struct WatchedList: PageComponent{
                             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                             .onTapGesture {
                                 guard let synopsisData = data.synopsisData else { return }
-                                
-                                if data.hasLog {
-                                    self.naviLogManager.actionLog(.clickRecentContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
-                                }
-                                
+                                self.sendLogData(data)
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.synopsis)
                                         .addParam(key: .data, value: synopsisData)
@@ -178,6 +151,28 @@ struct WatchedList: PageComponent{
     }//body
     
     
+    private func sendLogData(_ data:WatchedData){
+        let content = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: data.title,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: data.originData?.epsd_id,
+            episode_resolution_id: data.originData?.epsd_rslu_id,
+        
+            product_id: data.originData?.prod_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            running_time: data.originData?.watch_time,
+            list_price: nil,
+            payment_price: nil)
+        
+        let action = MenuNaviActionBodyItem(category : self.watchedType.category)
+        self.naviLogManager.actionLog(.clickRecentContentsList ,pageId: .recentContents,
+                                      actionBody: action, contentBody: content)
+    }
 }
 
 struct WatchedItem: PageView {

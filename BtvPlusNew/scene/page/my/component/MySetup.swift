@@ -9,12 +9,14 @@ import Foundation
 import SwiftUI
 struct MySetup: View {
     @EnvironmentObject var pagePresenter:PagePresenter
-     
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var body: some View {
         VStack(alignment: .leading, spacing: Dimen.margin.thinExtra){
             Text(String.pageText.mySetup).modifier(BlockTitle())
             HStack(spacing: 0){
                 Button(action: {
+                   
+                    self.sendLog(action: .clickSimpleSetup, actionBody: .init(config:"시청 습관 관리"))
                     self.setupWatchHabit()
                 }) {
                     Text(String.pageText.setupChildrenHabit)
@@ -24,6 +26,8 @@ struct MySetup: View {
                 Spacer().modifier(LineVertical())
                     .frame(height:Dimen.button.lightExtra)
                 Button(action: {
+                    self.sendLog(action: .clickSimpleSetup, actionBody: .init(config:"가족사진 등록"))
+                    
                     self.pagePresenter.openPopup(
                         PageProvider
                             .getPageObject(.webview)
@@ -65,6 +69,10 @@ struct MySetup: View {
                 .addParam(key: .data, value:move)
                 .addParam(key: .type, value: ScsNetwork.ConfirmType.adult)
         )
+    }
+    
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action , actionBody: actionBody)
     }
 
 }

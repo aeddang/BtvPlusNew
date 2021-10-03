@@ -461,17 +461,30 @@ struct PageRemotecon: PageView {
             DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayUpdate) {
                 self.checkHostDeviceStatus()
             }
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
+                config:"채널번호입력",
+                search_keyword: value,
+                category: "channel_number"
+            ))
         case .text:
             if host.isEnableStringInput() {
                 ctrl = .StrInput
             }
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
+                config:"문자입력",
+                search_keyword: value,
+                category: "character"))
         case .search:
             if host.isEnableStringInput() {
                 ctrl = .MobileSearch
             }
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
+                config:"검색어입력",
+                search_keyword: value,
+                category: "search"))
         }
         self.sendAction(npsMessage: NpsMessage().setMessage(type: ctrl, value: value))
-        
+    
     }
     
     private func sendAction(npsMessage:NpsMessage) {

@@ -12,6 +12,7 @@ struct PageMyWatchedList: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -56,9 +57,15 @@ struct PageMyWatchedList: PageView {
                             usePull: .horizontal)
                             { idx in
                                 switch idx {
-                                case 0 : self.mobileWatchedBlockModel.updateMobile()
-                                case 1 : self.btvWatchedBlockModel.updateBtv()
-                                case 2 : self.kidsWatchedBlockModel.updateKids()
+                                case 0 :
+                                    self.sendLogTabMenu(0)
+                                    self.mobileWatchedBlockModel.updateMobile()
+                                case 1 :
+                                    self.sendLogTabMenu(1)
+                                    self.btvWatchedBlockModel.updateBtv()
+                                case 2 :
+                                    self.sendLogTabMenu(2)
+                                    self.kidsWatchedBlockModel.updateKids()
                                 default : break
                                 }
                             }
@@ -132,6 +139,20 @@ struct PageMyWatchedList: PageView {
         }//geo
     }//body
     
+    //@State var isInitLog:Bool = true
+    private func sendLogTabMenu(_ idx:Int){
+        var action = MenuNaviActionBodyItem()
+        switch idx {
+        case 0 :
+            action.category = WatchedBlockType.mobile.category
+        case 1 :
+            action.category = WatchedBlockType.btv.category
+        case 2 :
+            action.category = WatchedBlockType.kids.category
+        default : break
+        }
+        self.naviLogManager.actionLog(.pageShow, pageId: .recentContents ,actionBody: action)
+    }
    
 }
 

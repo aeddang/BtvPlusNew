@@ -54,7 +54,10 @@ struct PagePreviewList: PageView {
                         infinityScrollModel:self.infinityScrollModel,
                         playerModel: self.playerModel,
                         marginTop: Dimen.margin.thin,
-                        marginBottom: self.marginBottom
+                        marginBottom: self.marginBottom,
+                        spacing: self.isClip
+                        ? SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.mediumExtra
+                        : SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.medium
                     )
                     
                 }
@@ -172,13 +175,15 @@ struct PagePreviewList: PageView {
                 if let data = obj.getParamValue(key: .data) as? CateData {
                     self.logPageId = .scheduled
                     self.title = data.title
+                    self.isClip = false
                     if let cateData = data.blocks?.filter({ $0.menu_id != nil }).first {
                         self.menuId = cateData.menu_id
                         return
                     }
-                    
-                   
+                    return
                 }
+                
+                self.isClip = true
                 self.logPageId = .clipViewAll
                 if let data = obj.getParamValue(key: .data) as? BlockData {
                     self.title = data.name
@@ -199,6 +204,7 @@ struct PagePreviewList: PageView {
     @State var synopsisData:SynopsisData? = nil
     @State var playListData:PlayListData = PlayListData()
     @State var epsdId:String? = nil
+    @State var isClip:Bool = false
     @State var isInitLog:Bool = true
     @State var logPageId:NaviLog.PageId? = nil
     @State var lastShow:String? = nil

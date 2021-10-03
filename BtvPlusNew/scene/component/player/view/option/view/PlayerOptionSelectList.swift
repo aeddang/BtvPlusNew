@@ -51,14 +51,26 @@ struct PlayerOptionSelectList: PageComponent{
                         guard let value = btn.value as? Quality else { return }
                         self.viewModel.initPlay = true
                         self.viewModel.selectQuality = value
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigDetail, config: value.name.lowercased())
                     case .rate :
                         guard let value = btn.value as? Float else { return }
                         self.viewModel.event = .rate(value, isUser: true)
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigDetail, config: "x"+value.description)
                     case .ratio :
                         guard let value = btn.value as? AVLayerVideoGravity else { return }
                         self.viewModel.event = .screenGravity(value)
+                        var config:String? = nil
+                        switch value {
+                        case .resize : config = "full_proportion"
+                        case .resizeAspect : config = "original_proportion"
+                        case .resizeAspectFill : config = "maintain_proportion"
+                        default: break
+                        }
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigDetail, config: config)
                     }
                     self.viewModel.selectFunctionType = nil
+                        
+    
                 }
             }
         }

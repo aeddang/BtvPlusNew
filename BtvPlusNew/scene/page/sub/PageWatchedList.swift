@@ -16,7 +16,7 @@ struct PageWatchedList: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -75,9 +75,12 @@ struct PageWatchedList: PageView {
                     
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
+                
+                let action = MenuNaviActionBodyItem(category:WatchedBlockType.mobile.category)  //btv
+                self.naviLogManager.actionLog(.pageShow, pageId: .recentContents , actionBody: action)
             }
             .onDisappear{
-               
+                
             }
         }//geo
     }//body

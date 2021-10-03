@@ -14,7 +14,7 @@ import SwiftUI
 struct SerisTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    var componentViewModel:PageSynopsis.ComponentViewModel? = nil
+    var componentViewModel:SynopsisViewModel? = nil
     var data:RelationContentsModel
     @Binding var seris:[SerisData]
     let action: (_ idx:SeasonData) -> Void

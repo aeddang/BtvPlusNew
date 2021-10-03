@@ -32,6 +32,9 @@ struct NaviLog {
         
         case clipViewAll = "/category/clip_view_all"
         case scheduled = "/scheduled"
+        case recentContents = "/my/recent_contents"
+        case synopsis = "/synopsis"
+        case kidsSynopsis = "/category/zemkids/synopsis"
         
     }
     static func getPageID(pageID:PageID? = nil, repository:Repository?)-> String?{
@@ -59,9 +62,9 @@ struct NaviLog {
             }
             return nil
         case .category: return "/category"
-        case .synopsis: return "/synopsis"
-        case .synopsisPackage: return "/synopsis"
-        case .synopsisPlayer: return "/synopsis"
+        case .synopsis: return nil
+        case .synopsisPackage: return nil
+        case .synopsisPlayer: return nil
         
         case .my:
             if repository?.pairing.status == .pairing {
@@ -97,7 +100,7 @@ struct NaviLog {
         case .multiBlock: return "/category"
         case .categoryList: return nil
         case .previewList: return nil //페이지에서 직접처리
-        case .watchedList: return "/my/recent_contents"
+        case .watchedList: return nil //페이지에서 직접처리
         case .fullPlayer: return nil
         
         case .webview: return nil
@@ -155,8 +158,8 @@ struct NaviLog {
            
         case .kidsCategoryList: return nil
         case .kidsMonthly: return "/category/zemkids/monthly_payment"
-        case .kidsSynopsis: return "/category/zemkids/synopsis"
-        case .kidsSynopsisPackage: return "/category/zemkids/synopsis"
+        case .kidsSynopsis: return nil
+        case .kidsSynopsisPackage: return nil
         case .kidsSearch: return nil
         case .tabInfo: return nil
         case .detailInfo: return nil
@@ -411,6 +414,9 @@ struct NaviLog {
         case clickContentsRetrievePopup = "click.contents_retrieve.popup"
         case clickContinuousPlayButton = "click.continuous_play.button"
         case clickInsidePlayButton = "click.inside_play.button"
+        case deleteRecentContentsList = "delete.recent_contents.list"
+        
+        case clickMyOksusuPurchaseList = "click.my_oksusu_purchase.list"
        
     }
     

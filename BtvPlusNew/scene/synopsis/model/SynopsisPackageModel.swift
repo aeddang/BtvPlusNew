@@ -20,8 +20,7 @@ class SynopsisPackageModel : PageProtocol {
     private(set) var price: String? = nil
     private(set) var purchaseWebviewModel:PurchaseWebviewModel? = nil
     private(set) var contentMoreText:String = String.button.preview
-    
-    
+    private(set) var originData:GatewaySynopsis? = nil
     let type:PageType
     init(type:PageType = .btv) {
         self.type = type
@@ -29,6 +28,7 @@ class SynopsisPackageModel : PageProtocol {
     
     func setData(data:GatewaySynopsis, isPosson:Bool, anotherStb:String?) -> SynopsisPackageModel {
         guard let contents = data.package else { return self}
+        self.originData = data
         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data: data) 
         self.srisId = contents.sris_id
         self.prdPrcId = contents.prd_prc_id
@@ -50,15 +50,22 @@ class SynopsisPackageModel : PageProtocol {
             self.distStsCd = dist
         }
         self.posters = zip(0...self.packages.count, self.packages).map{ idx, d in
-            PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "",
+            let poster = PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "",
                                                     isPosson: isPosson, anotherStb : anotherStb,
                                                     idx: idx)
+            poster.logPage = self.type == .btv ? .synopsis : .kidsSynopsis
+            poster.logAction = .clickContentsPreviewWatching
+            return poster
         }
         return self
     }
     
     func setData(data:DirectPackageView){
         self.hasAuthority = data.resp_directList?.first?.resp_direct_result?.toBool() ?? false
+        self.posters.forEach{
+            $0.setNaviLog(action:.init(category:"시청하기" ))
+        }
+        
         self.contentMoreText = self.hasAuthority
             ? String.button.directview
             : self.prdPrcId?.isEmpty == false ? String.button.preview : String.button.detail 

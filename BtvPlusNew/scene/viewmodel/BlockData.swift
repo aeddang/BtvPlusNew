@@ -467,7 +467,7 @@ class BlockData:InfinityData, ObservableObject{
                 target: isRace ? "Y" : "N"
             )
             zip(0...count, datas).forEach{idx, data in
-                data.actionLogKids = action
+                data.setNaviLogkids(action:action)
                 action.position = idx.description + "@" + count.description
                 action.category = ""
                 action.result = data.synopsisType.logResult
@@ -483,7 +483,7 @@ class BlockData:InfinityData, ObservableObject{
                 target: isRace ? "Y" : "N"
             )
             zip(0...count, datas).forEach{idx, data in
-                data.actionLogKids = action
+                data.setNaviLogkids(action:action)
                 action.position = idx.description + "@" + count.description
                 action.category = ""
                 action.result = data.synopsisType.logResult

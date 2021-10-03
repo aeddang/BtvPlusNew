@@ -13,7 +13,7 @@ struct RelationVodBodyKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var infinityScrollModel: InfinityScrollModel
     var relationContentsModel:RelationContentsModel
     @Binding var seris:[SerisData]
@@ -50,7 +50,10 @@ struct RelationVodBodyKids: PageComponent{
                         .id(data.hashId)
                         .onTapGesture {
                             if data.hasLog {
-                                self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                                self.naviLogManager.actionLog(
+                                    .clickContentsList,
+                                    pageId: data.logPage,
+                                    actionBody: data.actionLog, contentBody: data.contentLog)
                             }
                             
                             if data.isQuiz {
@@ -81,6 +84,12 @@ struct RelationVodBodyKids: PageComponent{
                     if let data = dataSet.datas.first {
                         PosterItem( data:data )
                         .onTapGesture {
+                            if data.hasLog {
+                                self.naviLogManager.actionLog(
+                                    .clickContentsList,
+                                    pageId: data.logPage,
+                                    actionBody: data.actionLog, contentBody: data.contentLog)
+                            }
                             self.componentViewModel.uiEvent = .changeSynopsis(data.synopsisData)
                         }
                         .frame(height: data.type.size.height)

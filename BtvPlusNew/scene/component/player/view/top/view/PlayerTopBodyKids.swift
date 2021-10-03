@@ -91,6 +91,7 @@ struct PlayerTopBodyKids: PageView{
                         self.viewModel.isLock = false
             
                     } else {
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "etc")
                         self.viewModel.btvUiEvent = .more
                     }
                 }
@@ -105,7 +106,8 @@ struct PlayerTopBodyKids: PageView{
                     ){ _ in
                         
                         self.viewModel.event = .mute(!self.isMute, isUser: true)
-                        
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "mute") 
+                      
                         if self.isMute {
                             if self.viewModel.volume == 0 {
                                 self.viewModel.event = .volume(0.5, isUser: true)
@@ -121,6 +123,7 @@ struct PlayerTopBodyKids: PageView{
                         size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
                         padding: self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing
                     ){ _ in
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "screen_lock") 
                         self.viewModel.isLock = true
                     }
                 }

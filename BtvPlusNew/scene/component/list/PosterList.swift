@@ -31,20 +31,29 @@ class PosterData:InfinityData{
     private(set) var isPreview:Bool = false
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
-    var actionLogKids:MenuNaviActionBodyItem? = nil
+    private(set) var actionLogKids:MenuNaviActionBodyItem? = nil
     var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
     var hasLogKids:Bool { get{ return actionLogKids != nil }}
+    
+    var logPage:NaviLog.PageId? = nil
+    var logAction:NaviLog.Action? = nil
     
     init(pageType:PageType = .btv, usePrice:Bool = true) {
         self.pageType = pageType
         self.usePrice = usePrice
         super.init()
     }
+    
+    @discardableResult
     func setNaviLog(action:MenuNaviActionBodyItem?) -> PosterData {
         self.actionLog = action
         return self
     }
-    
+    @discardableResult
+    func setNaviLogkids(action:MenuNaviActionBodyItem?) -> PosterData {
+        self.actionLogKids = action
+        return self
+    }
     
     func setData(data:ContentItem, cardType:BlockData.CardType = .smallPoster , idx:Int = -1) -> PosterData {
         setCardType(cardType)
@@ -61,7 +70,7 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id,
-            kidZone:data.kids_yn, isPreview:self.isPreview)
+            kidZone:data.kids_yn, isPreview:self.isPreview, isDemand: data.svc_typ_cd == "12")
         
         return self
     }
@@ -87,6 +96,26 @@ class PosterData:InfinityData{
             isPosson: isPosson, anotherStbId: isPosson ? anotherStb : nil
             )
         
+        return self.setNaviLog(data: data)
+    }
+    
+    func setNaviLog(data:PackageContentsItem? = nil) -> PosterData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: nil,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: self.tagData?.price,
+            payment_price: nil
+        )
         return self
     }
     
@@ -467,9 +496,15 @@ struct PosterList: PageComponent{
     
     func onTap(data:PosterData)  {
         if data.hasLogKids {
-            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+            self.naviLogManager.actionLog(
+                data.logAction ?? .clickContentsButton,
+                pageId: data.logPage,
+                actionBody: data.actionLog, contentBody: data.contentLog)
         }else if data.hasLog {
-            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+            self.naviLogManager.actionLog(
+                data.logAction ?? .clickContentsList,
+                pageId: data.logPage,
+                actionBody: data.actionLog, contentBody: data.contentLog)
         }
         
         if let action = self.action {
@@ -583,9 +618,15 @@ struct PosterSet: PageComponent{
                     PosterItem( data:data )
                     .onTapGesture {
                         if data.hasLogKids {
-                            self.naviLogManager.actionLog(.clickContentsButton, actionBody: data.actionLog, contentBody: data.contentLog)
+                            self.naviLogManager.actionLog(
+                                data.logAction ?? .clickContentsButton,
+                                pageId:data.logPage,
+                                actionBody: data.actionLog, contentBody: data.contentLog)
                         }else if data.hasLog {
-                            self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog)
+                            self.naviLogManager.actionLog(
+                                data.logAction ?? .clickContentsList,
+                                pageId:data.logPage,
+                                actionBody: data.actionLog, contentBody: data.contentLog)
                         }
                         if let action = self.action {
                             action(data)
@@ -712,6 +753,7 @@ struct PosterItem: PageView {
 }
 
 struct PosterViewItem: PageView {
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     var data:PosterData
     var isSelected:Bool = false
@@ -752,6 +794,19 @@ struct PosterViewItem: PageView {
                             size: Dimen.button.regular
                             ){ _ in
                             if let synopsisData = data.synopsisData {
+                                
+                                if data.hasLogKids {
+                                    self.naviLogManager.actionLog(
+                                        data.logAction ?? .clickContentsButton,
+                                        pageId:data.logPage,
+                                        actionBody: data.actionLog, contentBody: data.contentLog)
+                                }else if data.hasLog {
+                                    self.naviLogManager.actionLog(
+                                        data.logAction ?? .clickContentsList,
+                                        pageId:data.logPage,
+                                        actionBody: data.actionLog, contentBody: data.contentLog)
+                                }
+                                
                                 self.pagePresenter.openPopup(
                                    data.moveSynopsis
                                         .addParam(key: .data, value: synopsisData)
@@ -764,6 +819,20 @@ struct PosterViewItem: PageView {
                             text: self.text,
                             strokeWidth: 1){ _ in
                             if let synopsisData = data.synopsisData {
+                                
+                                if data.hasLogKids {
+                                    self.naviLogManager.actionLog(
+                                        data.logAction ?? .clickContentsButton,
+                                        pageId:data.logPage,
+                                        actionBody: data.actionLog, contentBody: data.contentLog)
+                                }else if data.hasLog {
+                                    self.naviLogManager.actionLog(
+                                        data.logAction ?? .clickContentsList,
+                                        pageId:data.logPage,
+                                        actionBody: data.actionLog, contentBody: data.contentLog)
+                                }
+                                
+        
                                 self.pagePresenter.openPopup(
                                    data.moveSynopsis
                                         .addParam(key: .data, value: synopsisData)

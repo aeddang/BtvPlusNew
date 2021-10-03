@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FunctionViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
@@ -53,7 +53,7 @@ struct FunctionViewerKids: PageComponent{
 
 struct FunctionViewerKidsBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
-    var componentViewModel:PageSynopsis.ComponentViewModel
+    var componentViewModel:SynopsisViewModel
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
@@ -79,6 +79,7 @@ struct FunctionViewerKidsBody: PageComponent{
         if !self.isPosson ,let synopsisData = self.synopsisData {
             BookMarkButton(
                 type: .kids,
+                componentViewModel: self.componentViewModel,
                 data:synopsisData,
                 isBookmark: self.$isBookmark
             )
@@ -89,6 +90,7 @@ struct FunctionViewerKidsBody: PageComponent{
         
         if self.synopsisModel?.isRecommandAble == true && !self.isPosson ,let srisId = self.synopsisData?.srisId {
             ShareButton(
+                componentViewModel: self.componentViewModel,
                 type: .kids,
                 srisId:srisId,
                 epsdId:self.synopsisData?.epsdId

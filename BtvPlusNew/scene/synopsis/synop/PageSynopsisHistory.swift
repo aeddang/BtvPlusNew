@@ -9,7 +9,7 @@ import Foundation
 extension PageSynopsis {
     func getSynopData(obj:PageObject)->SynopsisData {
         self.isAutoPlay = obj.getParamValue(key: .autoPlay) as? Bool
-        
+        self.pushId = obj.getParamValue(key: .pushId) as? String
         if let synopsisData = obj.getParamValue(key: .data) as? SynopsisData {
             return synopsisData
         } else {

@@ -76,7 +76,7 @@ struct CPPlayer: PageComponent {
             switch evt {
             //case .load : self.clearWaitDuration()
             //case .stop, .pause :  self.clearWaitDuration()
-            case .seeking(_): self.autoUiHidden?.cancel()
+            case .seeking : self.autoUiHidden?.cancel()
             case .fixUiStatus(let isFix): if isFix { self.autoUiHidden?.cancel()}
             default : break
             }
@@ -123,8 +123,12 @@ struct CPPlayer: PageComponent {
                     String.alert.playError, String.alert.playErrorPlayback, code,
                     confirmText: String.button.btnRetry){retry in
                     if retry {
-                        self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
-                        self.viewModel.event = .resume()
+                        if self.viewModel.useRecovery {
+                            self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
+                            self.viewModel.event = .resume()
+                        } else {
+                            self.viewModel.event = .recovery(isUser: true)
+                        }
                     }
                 }
             }

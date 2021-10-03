@@ -77,6 +77,7 @@ struct PlayerTopBody: PageView{
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
                         self.viewModel.event = .mute(!self.isMute, isUser: true)
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "mute")
                         
                         if self.isMute {
                             if self.viewModel.volume == 0 {
@@ -98,6 +99,7 @@ struct PlayerTopBody: PageView{
                             size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
                             ){ _ in
                             
+                            self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "resolution")
                             self.viewModel.selectFunctionType = .quality
                         }
                     }
@@ -109,6 +111,7 @@ struct PlayerTopBody: PageView{
                             size: self.isFullScreen ? Dimen.button.regularRect : Dimen.button.lightRect
                             ){ _ in
                             
+                            self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "speed")
                             self.viewModel.selectFunctionType = .rate
                             
                         }
@@ -125,8 +128,10 @@ struct PlayerTopBody: PageView{
                     size: CGSize(width:Dimen.icon.light,height:Dimen.icon.light)
                 ){ _ in
                     if self.isLock {
+                        
                         self.viewModel.isLock = false
                     } else {
+                        self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "etc")
                         self.viewModel.btvUiEvent = .more
                     }
                 }

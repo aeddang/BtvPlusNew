@@ -12,12 +12,13 @@ struct MyPointInfo: View {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var body: some View {
         HStack(spacing: 0){
             ValueInfo(key: String.app.ticket, value: self.ticket)
                 .modifier(MatchParent())
                 .onTapGesture {
+                    self.sendLog(action: .clickMyBenefitInfo, actionBody: .init(category:"이용권"))
                     if self.pairing.authority.useAbleTicket == 0 {
                         guard let blocksData = self.dataProvider.bands.getData(gnbTypCd: EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue)?.blocks else {return}
                         guard let allData = blocksData.first(where: {$0.prd_prc_id == nil}) else {return}
@@ -41,6 +42,7 @@ struct MyPointInfo: View {
             ValueInfo(key: String.app.coupon, value: self.coupon)
                 .modifier(MatchParent())
                 .onTapGesture {
+                    self.sendLog(action: .clickMyBenefitInfo, actionBody: .init(category:"쿠폰"))
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
                             .addParam(key: .id, value: PageMyBenefits.MenuType.coupon.rawValue)
@@ -51,6 +53,7 @@ struct MyPointInfo: View {
             ValueInfo(key: String.app.bpoint, value: self.point)
                 .modifier(MatchParent())
                 .onTapGesture {
+                    self.sendLog(action: .clickMyBenefitInfo, actionBody: .init(category:"B포인트"))
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myBenefits)
                             .addParam(key: .id, value: PageMyBenefits.MenuType.point.rawValue)
@@ -62,6 +65,7 @@ struct MyPointInfo: View {
                 ValueInfo(key: String.app.bcash, value: self.cash)
                     .modifier(MatchParent())
                     .onTapGesture {
+                        self.sendLog(action: .clickMyBenefitInfo, actionBody: .init(category:"B캐쉬"))
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.myBenefits)
                                 .addParam(key: .id, value: PageMyBenefits.MenuType.cash.rawValue)
@@ -110,7 +114,9 @@ struct MyPointInfo: View {
             self.appSceneObserver.alert = .alert(String.alert.connect, String.alert.needConnectStatus)
         }
     }
-
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action , actionBody: actionBody)
+    }
 
 }
 

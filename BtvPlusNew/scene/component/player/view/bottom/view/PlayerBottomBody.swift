@@ -56,7 +56,7 @@ struct PlayerBottomBody: PageComponent{
                         text: String.player.directPlay
                         ){_ in
                         
-                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro ,nil)
+                        self.viewModel.btvLogEvent = .clickInsideButton(.clickInsideSkipIntro ,nil)
                         self.viewModel.event = .seekTime(self.viewModel.openingTime, true, isUser: true)
                     }
                 }
@@ -75,7 +75,7 @@ struct PlayerBottomBody: PageComponent{
                             text: String.player.continueView,
                             icon: Asset.icon.play
                             ){_ in
-                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , .continueView)
+                            self.viewModel.btvLogEvent = .clickInsideButton(.clickInsideSkipIntro , .continueView)
                             self.viewModel.btvPlayerEvent = .continueView
                         }
                     }else{
@@ -94,7 +94,7 @@ struct PlayerBottomBody: PageComponent{
                         ){_ in
                         self.viewModel.btvPlayerEvent = .cookieView
                         self.viewModel.event = .seekTime(cookie.startTime, true, isUser: true)
-                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , .cookieView)
+                        self.viewModel.btvLogEvent = .clickInsideButton(.clickInsideSkipIntro , .cookieView)
                     }
                     if cookie.index == 1 , let next = self.nextBtnTitle {
                         RectButton(
@@ -127,7 +127,7 @@ struct PlayerBottomBody: PageComponent{
                         ){_ in
                         guard let synop = self.viewModel.fullVod else { return }
                         self.viewModel.btvPlayerEvent = .fullVod(synop)
-                        self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , .fullVod(synop))
+                        self.viewModel.btvLogEvent = .clickInsideButton(.clickInsideSkipIntro , .fullVod(synop))
                     }
                     
                 }
@@ -137,7 +137,7 @@ struct PlayerBottomBody: PageComponent{
                         RectButton(
                             text: String.player.continuePlay
                             ){_ in
-                            self.viewModel.btvUiEvent = .clickInsideButton(.clickInsideSkipIntro , .nextViewCancel)
+                            self.viewModel.btvLogEvent = .clickInsideButton(.clickInsideSkipIntro , .nextViewCancel)
                             self.viewModel.btvPlayerEvent = .nextViewCancel
                         }
                     }

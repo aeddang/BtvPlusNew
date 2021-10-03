@@ -24,6 +24,7 @@ struct PlayerMoreBox: PageView{
        
         VStack(spacing:self.isFullScreen ? Dimen.margin.regularExtra : Dimen.margin.light){
             Button(action: {
+                self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "screen_lock")
                 self.viewModel.isLock = true
                 self.hideBox()
             }) {
@@ -33,6 +34,7 @@ struct PlayerMoreBox: PageView{
             }
             .padding(.top, Dimen.margin.thin)
             Button(action: {
+                self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "screen_propotion")
                 self.viewModel.selectFunctionType = .ratio
                 self.hideBox()
             }) {
@@ -42,6 +44,7 @@ struct PlayerMoreBox: PageView{
             }
             if self.viewModel.synopsisPlayerData?.type != .clip() {
                 Button(action: {
+                    self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "view_btv")
                     self.viewModel.btvUiEvent = .watchBtv
                     self.hideBox()
                     
@@ -54,6 +57,7 @@ struct PlayerMoreBox: PageView{
             
             if self.isFullScreen {
                 Button(action: {
+                    self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "help")
                     self.viewModel.btvUiEvent = .guide
                     self.hideBox()
                     

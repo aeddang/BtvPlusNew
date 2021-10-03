@@ -13,6 +13,7 @@ struct PairingView: PageComponent{
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var setup:Setup
     
     var pageObservable:PageObservable = PageObservable()
@@ -50,17 +51,18 @@ struct PairingView: PageComponent{
                     image: self.pairingStbType == .btv ? Asset.icon.profileEdit : nil,
                     imageSize: Dimen.icon.thinExtra
                 ) { _ in
-                        if self.pairingStbType != .btv {return}
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.modifyProile)
-                        )
-                    }
+                    if self.pairingStbType != .btv {return}
+                    self.sendLog(action: .clickProfileEdit)
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.modifyProile)
+                    )
+                }
                 TextButton(
                     defaultText: String.pageTitle.pairingManagement,
                     textModifier: TextModifier( family: Font.family.medium,
                         size: Font.size.thinExtra, color:Color.app.greyLight),
                     image: Asset.icon.more) { _ in
-                     
+                        self.sendLog(action: .clickConnectTvSetup)
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.pairingManagement)
                         )
@@ -75,6 +77,7 @@ struct PairingView: PageComponent{
                     isNew: self.newAlramCount > 0,
                     count: min(99,self.newAlramCount)
                 ){_ in
+                    self.sendLog(action: .clickInfoButton, actionBody: .init(config:"알림"))
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.myAlram)
                     )
@@ -86,6 +89,7 @@ struct PairingView: PageComponent{
                     image: Asset.icon.notice,
                     isNew: false
                 ){_ in
+                    self.sendLog(action: .clickInfoButton, actionBody: .init(config:"모비소식"))
                     self.pagePresenter.openPopup(
                         PageProvider
                             .getPageObject(.webview)
@@ -121,6 +125,8 @@ struct PairingView: PageComponent{
                         moreText: "",
                         image: Asset.icon.btv
                     ){_ in
+                         
+                        self.sendLog(action: .clickSimpleSetup, actionBody: .init(config:"시청 습관 관리"))
                         self.setupWatchHabit()
                     }
                     Spacer().modifier(LineHorizontal())
@@ -169,7 +175,7 @@ struct PairingView: PageComponent{
                             bgColor: Color.transparent.clearUi
                             
                         ){_ in
-                            
+                            self.sendLog(action: .clickMyPickList)
                             let blockData = BlockData()
                                 .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
                             
@@ -188,6 +194,7 @@ struct PairingView: PageComponent{
                             bgColor: Color.transparent.clearUi
                             
                         ){_ in
+                            self.sendLog(action: .clickMyPurchaseList)
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.myPurchase)
                             )
@@ -207,6 +214,7 @@ struct PairingView: PageComponent{
                             isMore: true
                         ){_ in
                             
+                            self.sendLog(action: .clickMyPickList)
                             let blockData = BlockData()
                                 .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
                             
@@ -221,6 +229,8 @@ struct PairingView: PageComponent{
                             text: String.pageTitle.purchaseList,
                             isMore: true
                         ){_ in
+                            
+                            self.sendLog(action: .clickMyPurchaseList)
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.myPurchase)
                             )
@@ -232,6 +242,7 @@ struct PairingView: PageComponent{
                                 isMore: true
                             ){_ in
                                 
+                                self.sendLog(action: .clickMyOksusuPurchaseList)
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.myOksusuPurchase)
                                 )
@@ -308,7 +319,10 @@ struct PairingView: PageComponent{
         let allVideos = blocks.filter{MetvNetwork.isWatchCardRateIn(data: $0, isAll: true)}
             .map{ d in VideoData().setData(data: d) }
         
-        var videos = blocks.map{ d in VideoData().setData(data: d) }.filter{$0.isContinueWatch}.filter{$0.progress != 1}
+        var videos = blocks.map{ d in
+            VideoData().setData(data: d).setNaviLog(data: d)
+        }
+        .filter{$0.isContinueWatch}.filter{$0.progress != 1}
         self.isWatchedEmpty = videos.isEmpty
         let total = allVideos.count //resData.watch_tot?.toInt()
         if SystemEnvironment.isTablet && videos.count > 6 {
@@ -341,7 +355,9 @@ struct PairingView: PageComponent{
         )
     }
 
-    
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
+        self.naviLogManager.actionLog(action , actionBody: actionBody)
+    }
     
     
 }

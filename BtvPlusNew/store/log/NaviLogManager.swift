@@ -20,8 +20,8 @@ class NaviLogManager : ObservableObject, PageProtocol {
     private var currentPop:PageObject? = nil
     private var webPageVersion:String? = nil
     private var currentMemberItem:MenuNaviMemberItem? = nil
-    private var currentSysnopsisContentsItem:MenuNaviContentsBodyItem? = nil
-    private var currentPlayStartTime:Double? = nil
+    private(set) var currentSysnopsisContentsItem:MenuNaviContentsBodyItem? = nil
+    private(set) var currentPlayStartTime:Double? = nil
     
     init(pagePresenter:PagePresenter , repository:Repository) {
         self.pagePresenter = pagePresenter
@@ -68,27 +68,33 @@ class NaviLogManager : ObservableObject, PageProtocol {
     func setupWebPageVersion(_ ver:String){
         self.webPageVersion = ver
     }
-    func setupSysnopsis(_ synop:SynopsisModel?, type:String = "vod"  ){
+    
+    func clearSysnopsis(){
+        self.currentSysnopsisContentsItem = nil
+        self.currentPlayStartTime = nil
+        DataLog.d("clearSysnopsis" , tag: self.tag )
+    }
+    
+    func setupSysnopsis(_ synop:SynopsisModel?, type:String? = nil  ){
         guard let synop = synop else {
             self.currentSysnopsisContentsItem = nil
             self.currentPlayStartTime = nil
             return
         }
         var contentsItem = MenuNaviContentsBodyItem()
-        contentsItem.type = type        // VOD/실시간 구분 ex)vod | live
+        contentsItem.type = type ?? "vod"   // VOD/실시간 구분 ex)vod | live
         contentsItem.series_id = synop.srisId
         contentsItem.title = synop.title ?? ""      // 제목, ex)1박2일, 9시 뉴스
         contentsItem.channel = ""   // live방송의 채널번호
         contentsItem.channel_name = synop.brcastChnlNm ?? ""    // channel 명
         contentsItem.genre_text = ""  // 장르, ex)영화
         contentsItem.genre_code = synop.metaTypCd ?? ""     // 장르, ex)MG0000000001 --> 드라마
-        contentsItem.episode_id = synop.epsdId ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         contentsItem.episode_id = synop.epsdId ?? ""
         contentsItem.paid = !synop.isFree  // 유료 여부 ex)true (유료인 경우)
         contentsItem.purchase = synop.curSynopsisItem?.isDirectview ?? false          // 구매 여부 ex)true (구매한 경우)
         contentsItem.episode_resolution_id = synop.epsdRsluId ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         //contentsItem.cid = contents.contrp_id?.replace("", with: "{").replace("", with: "}") ?? ""        // 4.0
-        //contentsItem.product_id = ""           // 패키지상품 ID(Btv plus) or 시리즈상품 ID(Btv)
+
         if let curSynopsisItem = synop.curSynopsisItem {
             contentsItem.product_id = curSynopsisItem.prdPrcId
             contentsItem.purchase_type = curSynopsisItem.prd_typ_cd  // 구매유형, ex) ppv(단품)/pps(시리즈)/ppp(패키지)/ppm(월정액) --> 재생 버튼 선택 후 확인 가능
@@ -100,6 +106,36 @@ class NaviLogManager : ObservableObject, PageProtocol {
         //contentsItem.actor_id = ""   // 배우ID
         self.currentSysnopsisContentsItem = contentsItem
         self.currentPlayStartTime = nil
+        DataLog.d("setupSysnopsis " + (contentsItem.title ?? "") , tag: self.tag )
+    }
+    
+    func setupSysnopsis(_ synop:SynopsisPackageModel?, type:String? = nil  ){
+        guard let synop = synop else {
+            self.currentSysnopsisContentsItem = nil
+            self.currentPlayStartTime = nil
+            return
+        }
+        var contentsItem = MenuNaviContentsBodyItem()
+        contentsItem.type = type ?? "vod"   // VOD/실시간 구분 ex)vod | live
+        contentsItem.series_id = synop.srisId
+        contentsItem.title = synop.originData?.package?.title ?? ""      // 제목, ex)1박2일, 9시 뉴스
+        contentsItem.channel = ""   // live방송의 채널번호
+        contentsItem.channel_name = ""    // channel 명
+        contentsItem.genre_text = ""  // 장르, ex)영화
+        contentsItem.genre_code = synop.originData?.package?.meta_typ_cd ?? ""     // 장르, ex)MG0000000001 --> 드라마
+        contentsItem.episode_id = ""      // episode_id, btv plus 는 episode_id 없음, 5.0
+        contentsItem.paid = synop.originData?.package?.sale_prc != 0 // 유료 여부 ex)true (유료인 경우)
+        contentsItem.purchase = synop.hasAuthority         // 구매 여부 ex)true (구매한 경우)
+        contentsItem.episode_resolution_id = ""      // episode_id, btv plus 는 episode_id 없음, 5.0
+        contentsItem.product_id = synop.originData?.package?.prd_prc_id          // 패키지상품 ID(Btv plus) or 시리즈상품 ID(Btv)
+        contentsItem.list_price = synop.originData?.package?.prd_prc?.description
+        contentsItem.payment_price = synop.originData?.package?.sale_prc?.description
+ 
+        self.currentSysnopsisContentsItem = contentsItem
+        self.currentPlayStartTime = nil
+        
+        DataLog.d("setupSysnopsis Package " + (contentsItem.title ?? "") , tag: self.tag )
+
     }
     
     func contentsWatch(isPlay:Bool){

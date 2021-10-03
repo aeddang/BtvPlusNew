@@ -16,10 +16,11 @@ struct PageSynopsisPackage: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    
+    @ObservedObject var componentViewModel:SynopsisViewModel = SynopsisViewModel()
     @ObservedObject var pageDataProviderModel:PageDataProviderModel = PageDataProviderModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var synopsisListViewModel: InfinityScrollModel = InfinityScrollModel()
@@ -43,6 +44,7 @@ struct PageSynopsisPackage: PageView {
                             if self.isUIView && !self.progressError, let synopsisPackageModel = self.synopsisPackageModel {
                                 if self.sceneOrientation == .portrait {
                                     PackageBody(
+                                        componentViewModel: self.componentViewModel,
                                         infinityScrollModel: self.infinityScrollModel,
                                         synopsisListViewModel: self.synopsisListViewModel,
                                         peopleScrollModel: self.peopleScrollModel,
@@ -55,6 +57,7 @@ struct PageSynopsisPackage: PageView {
                                         useTracking: true,
                                         marginBottom: self.marginBottom)
                                     { posterData in
+                                        self.previewLog(data: posterData)
                                         self.updateSynopsis(posterData)
                                     }
                                     .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -65,6 +68,7 @@ struct PageSynopsisPackage: PageView {
                                             .padding(.bottom, self.marginBottom - Dimen.margin.regular)
                                            
                                         PackageBody(
+                                            componentViewModel: self.componentViewModel,
                                             infinityScrollModel: self.infinityScrollModel,
                                             synopsisListViewModel: self.synopsisListViewModel,
                                             peopleScrollModel: self.peopleScrollModel,
@@ -78,6 +82,7 @@ struct PageSynopsisPackage: PageView {
                                             useTracking: true,
                                             marginBottom: self.marginBottom
                                         ){ posterData in
+                                            self.previewLog(data: posterData)
                                             self.updateSynopsis(posterData)
                                         }
                                         .modifier(MatchVertical(width: Self.listWidth))
@@ -102,16 +107,18 @@ struct PageSynopsisPackage: PageView {
                     } else {
                         ZStack{
                             if self.synopsisPackageModel != nil && self.isUIView && !self.progressError {
-                                    PackageBodyKids(
-                                        synopsisListViewModel: self.synopsisListViewModel,
-                                        synopsisPackageModel: self.synopsisPackageModel!,
-                                        isPairing: self.isPairing,
-                                        contentID: self.synopsisModel?.epsdId,
-                                        episodeViewerData: self.episodeViewerData,
-                                        useTracking: true){ posterData in
-                                        self.updateSynopsis(posterData)
-                                    }
-                                    .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
+                                PackageBodyKids(
+                                    synopsisListViewModel: self.synopsisListViewModel,
+                                    synopsisPackageModel: self.synopsisPackageModel!,
+                                    isPairing: self.isPairing,
+                                    contentID: self.synopsisModel?.epsdId,
+                                    episodeViewerData: self.episodeViewerData,
+                                    useTracking: true){ posterData in
+                                        
+                                    self.previewLog(data: posterData)
+                                    self.updateSynopsis(posterData)
+                                }
+                                .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                                
                             } else {
                                 ZStack{
@@ -137,8 +144,12 @@ struct PageSynopsisPackage: PageView {
                         self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                     case .pullCancel :
                         self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                    default : do{}
+                    default : break
                     }
+                }
+                .onReceive(self.componentViewModel.$uiEvent){evt in
+                    guard let evt = evt else { return }
+                    self.onEventLog(componentEvent: evt) 
                 }
                 .onReceive(self.infinityScrollModel.$scrollPosition){ pos in
                     self.pageDragingModel.uiEvent = .dragCancel
@@ -168,9 +179,15 @@ struct PageSynopsisPackage: PageView {
                 case .pairingCompleted : self.initPage()
                 case .disConnected : self.initPage()
                 case .pairingCheckCompleted(let isSuccess) :
-                    if isSuccess { self.initPage() }
+                    
+                    if isSuccess {
+                        let isPairing = self.pairing.status == .pairing
+                        if isPairing == self.isCheckdPairing {return}
+                        self.isCheckdPairing = isPairing
+                        self.initPage()
+                    }
                     else { self.appSceneObserver.alert = .pairingCheckFail }
-                default : do{}
+                default : break
                 }
             }
             .onReceive(self.pageDataProviderModel.$event){evt in
@@ -238,6 +255,7 @@ struct PageSynopsisPackage: PageView {
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 guard let obj = self.pageObject  else { return }
+                self.pushId = obj.getParamValue(key: .pushId) as? String
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
@@ -253,6 +271,9 @@ struct PageSynopsisPackage: PageView {
                 }
                 self.initPage()
             }
+            .onDisappear(){
+                self.onDisappearLog()
+            }
             
             
         }//geo
@@ -264,11 +285,11 @@ struct PageSynopsisPackage: PageView {
      Data process
      */
    
-    
+    @State var isCheckdPairing:Bool? = nil
     @State var isInitPage = false
     @State var progressError = false
     @State var progressCompleted = false
-    
+    @State var isAllProgressCompleted = false
     @State var synopsisPackageModel:SynopsisPackageModel? = nil
     @State var synopsisModel:SynopsisModel? = nil
     @State var currentPoster:PosterData? = nil
@@ -282,6 +303,8 @@ struct PageSynopsisPackage: PageView {
     @State var isPosson:Bool = false
     @State var anotherStb:String? = nil
     @State var isUIView:Bool = false
+    @State var pushId:String? = nil
+    @State var pageLodId:NaviLog.PageId? = nil
     
     func initPage(){
         if self.synopsisData == nil {
@@ -307,6 +330,7 @@ struct PageSynopsisPackage: PageView {
         self.isUIView = false
         self.progressError = false
         self.progressCompleted = false
+        self.isAllProgressCompleted = false
         self.synopsisPackageModel = nil
         self.episodeViewerData = nil
         self.summaryViewerData = nil
@@ -399,8 +423,8 @@ struct PageSynopsisPackage: PageView {
             return
         }
         self.updateSynopsis(poster)
-        
     }
+    
     private func errorProgress(){
         PageLog.d("errorProgress", tag: self.tag)
         
@@ -408,20 +432,23 @@ struct PageSynopsisPackage: PageView {
     }
     
     private func onAllProgressCompleted(){
+        if self.isAllProgressCompleted {return}
         PageLog.d("onAllProgressCompleted(", tag: self.tag)
+        self.isAllProgressCompleted = true
+        if self.isUIView { return }
         withAnimation{ self.isUIView = true }
+        
+        self.pageStartLog()
     }
     
     private func setupGatewaySynopsis (_ data:GatewaySynopsis){
         self.synopsisPackageModel = SynopsisPackageModel(type:self.type)
             .setData(data:data, isPosson:self.isPosson, anotherStb:self.anotherStb)
-        
     }
     
     private func setupDirectPackageView (_ data:DirectPackageView){
         PageLog.d("setupDirectPackageView", tag: self.tag)
         self.synopsisPackageModel?.setData(data: data)
-       
     }
     
     private func updateSynopsis (_ data:PosterData){
@@ -442,6 +469,7 @@ struct PageSynopsisPackage: PageView {
             PageLog.d("setupSynopsis error", tag: self.tag)
         }
     }
+    
     
     
     

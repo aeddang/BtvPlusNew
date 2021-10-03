@@ -12,7 +12,7 @@ struct PurchaseViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var vsManager:VSManager
-    var componentViewModel:PageSynopsis.ComponentViewModel = PageSynopsis.ComponentViewModel()
+    var componentViewModel:SynopsisViewModel = SynopsisViewModel()
     var data:PurchaseViewerData
     var synopsisModel:SynopsisModel?
     var isPairing:Bool?

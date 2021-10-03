@@ -77,7 +77,7 @@ struct PageContentBody: PageView  {
             if pageObject == page {
                 self.isTop = true
                 self.isBelow = false
-                withAnimation{
+                withAnimation(.easeOut(duration: 0.2)){
                     self.pageOffsetX = 0.0
                     self.pageOffsetY = 0.0
                     self.dragOpacity = 0
@@ -87,11 +87,11 @@ struct PageContentBody: PageView  {
                 self.isTop = false
                 let below = self.pageChanger.getBelowPage(page: page)
                 self.isBelow = below == pageObject
-                withAnimation{
+                withAnimation(.easeOut(duration: 0.2)){
                     self.dragOpacity = 1
                 }
                 if !self.useBelowPageMove {return}
-                withAnimation{
+                withAnimation(.easeOut(duration: 0.2)){
                     switch self.topPageType {
                     case .horizontal :
                         self.pageOffsetX = Self.pageMoveAmount
@@ -133,7 +133,7 @@ struct PageContentBody: PageView  {
                 self.offsetY = pos.y
             }else{
                 if self.pageObject?.isAnimation == true {
-                    withAnimation{
+                    withAnimation(.easeOut(duration: 0.2)){
                         self.offsetX = pos.x
                         self.offsetY = pos.y
                     }

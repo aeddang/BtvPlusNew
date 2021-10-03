@@ -533,22 +533,26 @@ class AlramData:InfinityData,ObservableObject{
                         .addParam(params: data.moveData)
                         .addParam(key: .id, value: band.menuId)
                         .addParam(key: UUID().uuidString , value: "")
+                        .addParam(key: .pushId , value: data.messageId)
                 )
                 
             case .kidsHome:
                 let pageObj = PageKidsProvider.getPageObject(move)
                                 .addParam(params: data.moveData)
+                                .addParam(key: .pushId , value: data.messageId)
                 pagePresenter.changePage(pageObj)
                 
             default :
                 if PageFactory.getPage(PageProvider.getPageObject(move)) != nil {
                     let pageObj = PageProvider.getPageObject(move)
                     pageObj.params = data.moveData
+                    pageObj.addParam(key: .pushId , value: data.messageId)
                     pagePresenter.openPopup(pageObj)
                 }
                 if PageKidsFactory.getPage( PageKidsProvider.getPageObject(move)) != nil {
                     let pageObj = PageKidsProvider.getPageObject(move)
                     pageObj.params = data.moveData
+                    pageObj.addParam(key: .pushId , value: data.messageId)
                     pagePresenter.openPopup(pageObj)
                 }
                 
@@ -564,6 +568,7 @@ class AlramData:InfinityData,ObservableObject{
                     .getPageObject(.webview)
                     .addParam(key: .data, value: link)
                     .addParam(key: .title , value: data.title)
+                    .addParam(key: .pushId , value: data.messageId)
             )
         }
     }

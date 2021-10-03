@@ -55,6 +55,10 @@ struct SimplePlayerUI: PageComponent {
             .background(Color.transparent.black45)
             .opacity(self.isShowing ? 1 : 0)
             */
+            Spacer().modifier(MatchParent())
+                .background(Color.transparent.black45)
+                .opacity(self.isShowing ? 1 : 0)
+            
             if self.isLoading {
                 CircularSpinner(resorce: Asset.ani.loading)
             }

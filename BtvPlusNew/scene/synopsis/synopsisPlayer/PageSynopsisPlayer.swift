@@ -57,15 +57,20 @@ struct PageSynopsisPlayer: PageView {
             }
             .onReceive(self.prerollModel.$event){evt in
                 guard let evt = evt else { return }
-                self.onEvent(prerollEvent: evt)
+                self.onEventLog(prerollEvent: evt)
             }
             .onReceive(self.playerModel.$btvPlayerEvent){evt in
                 guard let evt = evt else { return }
+                self.onEventLog(btvPlayerEvent: evt)
                 self.onEvent(btvPlayerEvent: evt)
             }
             .onReceive(self.playerModel.$btvUiEvent){evt in
                 guard let evt = evt else { return }
-                self.onEvent(btvUiEvent: evt)
+                self.onEventLog(btvUiEvent: evt)
+            }
+            .onReceive(self.playerModel.$btvLogEvent){evt in
+                guard let evt = evt else { return }
+                self.onEventLog(btvLogEvent: evt)
             }
             .onReceive(self.playerModel.$streamEvent){evt in
                 guard let evt = evt else { return }
@@ -77,9 +82,11 @@ struct PageSynopsisPlayer: PageView {
                 case .fullScreen(let isFullScreen) :
                     if isFullScreen { return }
                     self.pagePresenter.closePopup(self.pageObject?.id)
+                case .recovery(let isUser) :
+                    if isUser { self.initPage() }
                 default : break
                 }
-                self.onEvent(event: evt)
+                self.onEventLog(event: evt)
             }
             .onReceive(self.self.pageDragingModel.$event){ evt in
                 guard let evt = evt else {return}
@@ -152,6 +159,7 @@ struct PageSynopsisPlayer: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
+                self.pushId = obj.getParamValue(key: .pushId) as? String
                 self.synopsisData = obj.getParamValue(key: .data) as? SynopsisData
                 if self.synopsisData == nil {
                     if let json = obj.getParamValue(key: .data) as? SynopsisJson {
@@ -167,6 +175,7 @@ struct PageSynopsisPlayer: PageView {
                 }
             }
             .onDisappear{
+                self.onDisappearLog()
                 self.pagePresenter.fullScreenExit()
             }
         }//geo
@@ -193,6 +202,10 @@ struct PageSynopsisPlayer: PageView {
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
     @State var isPageDataReady = false
+    @State var isContinuousPlay:Bool = false
+    
+    @State var pushId:String? = nil
+    @State var pageLodId:NaviLog.PageId? = nil
     @State var insideChangeViewId:String? = nil
     @State var insideChangeViewRuntime:String? = nil
     
@@ -223,6 +236,7 @@ struct PageSynopsisPlayer: PageView {
         self.title = nil
         self.imgBg = nil
         self.textInfo = nil
+        self.isContinuousPlay = false
         self.pageDataProviderModel.initate()
         withAnimation{
             self.isPlayViewActive = false
@@ -309,13 +323,7 @@ struct PageSynopsisPlayer: PageView {
         self.isAllProgressCompleted = true
         PageLog.d("onAllProgressCompleted(", tag: self.tag)
         self.playerModel.btvUiEvent = .syncListScroll
-        guard let synopsisModel = self.synopsisModel else {return}
-        self.checkInsideViewLog(synopsisModel)
-        
-        self.naviLog(
-            action: .pageShow,
-            category: self.synopsisPlayType.logCategory,
-            result: self.synopsisData?.synopType.logResult)
+        self.playStartLog()
     }
     
 
@@ -342,6 +350,7 @@ struct PageSynopsisPlayer: PageView {
                 
                 self.playListData = PlayListData(
                     listTitle: String.pageText.synopsisClipView,
+                    title: content.title,
                     datas: playList)
             } else {
                 self.playListData = PlayListData(
@@ -382,6 +391,10 @@ struct PageSynopsisPlayer: PageView {
             }
             
             //let prerollData = SynopsisPrerollData().setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
+            if let progress = self.synopsisData?.progressTime {
+                self.playerModel.continuousProgressTime = progress
+                self.isContinuousPlay = true
+            }
             self.playerData = SynopsisPlayerData()
                 .setData(type: self.synopsisPlayType, datas: self.playListData.datas, epsdId:self.epsdId ?? "")
             self.playerModel
@@ -391,11 +404,17 @@ struct PageSynopsisPlayer: PageView {
         }
     }
     
+    func onContinuousPlay(){
+        if !self.isContinuousPlay {return}
+        self.pagePresenter.onPageEvent(self.pageObject,
+                                       event: .init(id:self.tag,  type: .timeChange, data: self.playerModel.time))
+    }
    
     /*
      Player process
      */
     func playCompleted(){
+        self.onContinuousPlay()
         if self.playerModel.isReplay {return}
         if !self.nextVod(auto: true) {
             self.vodCompleted()
@@ -421,7 +440,7 @@ struct PageSynopsisPlayer: PageView {
         if let find = playData.nextEpisode {
             self.changeVod(epsdId: find.epsdId)
             if !auto && isUser != false{
-                self.playerModel.btvUiEvent =
+                self.playerModel.btvLogEvent =
                     .clickInsideButton(.clickInsideSkipIntro , .nextView(isAuto:false)
                                        , config:find.title, result:find.epsdId)
             }
@@ -436,6 +455,7 @@ struct PageSynopsisPlayer: PageView {
     }
     
     func changeVod(epsdId:String?){
+        self.onContinuousPlay()
         guard let epsdId = epsdId else { return }
         guard let cdata = self.synopsisData else { return }
         self.synopsisData = SynopsisData(
@@ -447,34 +467,16 @@ struct PageSynopsisPlayer: PageView {
         self.resetPage()
     }
     
-    func onEvent(btvUiEvent:BtvUiEvent){
-        switch btvUiEvent {
-        case .initate :
-            self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
-        case .guide :
-            self.naviLog(pageID: .playTouchGuide, action: .pageShow, category: nil )
-        case .clickInsideButton(let action, let btvPlayerEvent, let config, let result) :
-            switch btvPlayerEvent {
-            case .nextView :
-                self.naviLog(pageID: .playInside, action: action, config:config, category: "다음클립", result:result )
-            default : break
-            }
-        case .more :
-            self.naviLog(action: .clickVodConfig, config:"etc" )
-        default: break
-        }
-    }
     
     func onEvent(btvPlayerEvent:BtvPlayerEvent){
         switch btvPlayerEvent {
         case .changeView(let epsdId) :
-            self.insideChangeViewId = epsdId
-            self.insideChangeViewRuntime = self.naviLogManager.getContentsWatchTime()
             self.changeVod(epsdId:epsdId)
             
         case .nextView(let isAuto) :
             self.nextVod(auto: isAuto)
         case .fullVod (let synopsisData):
+            self.onContinuousPlay()
             self.pagePresenter.closePopup(self.pageObject?.id)
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.synopsis)
@@ -482,129 +484,22 @@ struct PageSynopsisPlayer: PageView {
                     .addParam(key: .watchLv, value: self.synopsisModel?.watchLevel)
             )
         case .close :
-            self.naviLog(
-                action: .clickPlayBackList,
-                config: self.sceneObserver.sceneOrientation.logConfig
-                )
+            self.onContinuousPlay()
             self.pagePresenter.closePopup(self.pageObject?.id)
-        default: break
-        }
-        
-    }
-    
-    func onEvent(prerollEvent:PrerollEvent){
-        switch prerollEvent {
-        case .moveAd :
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
-        case .skipAd :
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
         default: break
         }
     }
     
-    func onEvent(event:PlayerUIEvent){
-        switch event {
-        case .pause :
-            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
-        case .resume :
-            self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
-            self.pagePresenter.closePopup(self.pageObject?.id)
-        case .togglePlay :
-            if self.playerModel.isPlay {
-                self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
-            } else {
-                self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
-            }
-        default: break
-        }
-    }
+    
     
     func onEvent(streamEvent:PlayerStreamEvent){
         switch streamEvent {
-        case .resumed:
-            self.naviLogManager.contentsWatch(isPlay: true)
-        case .stoped, .paused:
-            self.naviLogManager.contentsWatch(isPlay: false)
         case .completed:
             self.playCompleted()
         default: break
         }
     }
     
-    func playNaviLog( action:NaviLog.Action, watchType:NaviLog.watchType){
-        self.naviLog(action: action, watchType: watchType)
-    }
-    
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
-                 watchType:NaviLog.watchType? = nil,
-                 config:String? = nil
-                 ){
-        let category = self.synopsisPlayType.logCategory
-        self.naviLog(action: action, watchType: watchType, config: config, category: category, result: nil)
-    }
-    
-    func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
-                 watchType:NaviLog.watchType? = nil,
-                 config:String? = nil,
-                 category: String? = nil , result: String? = nil
-                 ){
-        if action == .pageShow, let synopsisModel = self.synopsisModel{
-            self.naviLogManager.setupSysnopsis(synopsisModel, type:"clip")
-        }
-        let result = result ?? self.synopsisData?.synopType.logResult
-        var actionBody = MenuNaviActionBodyItem()
-        actionBody.menu_name = synopsisModel?.title
-        actionBody.menu_id = synopsisModel?.menuId
-        actionBody.category = category ?? ""
-        actionBody.result = result ?? ""
-        actionBody.config = config ?? ""
-        
-        self.naviLogManager.contentsLog(
-            pageId: pageID ?? .play,
-            action: action,
-            actionBody: actionBody,
-            watchType : watchType
-        )
-    }
-    
-    func checkInsideViewLog(_ synopsisModel:SynopsisModel){
-        if let insideChangeViewId = self.insideChangeViewId {
-            var contentsItem = MenuNaviContentsBodyItem()
-            contentsItem.type = "clip"
-            contentsItem.series_id = synopsisModel.srisId
-            contentsItem.title = synopsisModel.title ?? ""
-            contentsItem.channel = ""
-            contentsItem.channel_name = synopsisModel.brcastChnlNm ?? ""
-            contentsItem.genre_text = ""  // 장르, ex)영화
-            contentsItem.genre_code = synopsisModel.metaTypCd ?? ""
-            contentsItem.episode_id = synopsisModel.epsdId ?? ""
-            
-            contentsItem.paid = !synopsisModel.isFree
-            contentsItem.purchase = synopsisModel.curSynopsisItem?.isDirectview ?? false
-            contentsItem.episode_resolution_id = synopsisModel.epsdRsluId ?? ""
-            contentsItem.episode_id = insideChangeViewId
-            contentsItem.running_time = insideChangeViewRuntime
-            
-            if let curSynopsisItem = synopsisModel.curSynopsisItem {
-                contentsItem.product_id = curSynopsisItem.prdPrcId
-                contentsItem.purchase_type = curSynopsisItem.prd_typ_cd
-                contentsItem.monthly_pay = curSynopsisItem.ppm_prd_typ_cd
-                contentsItem.list_price = curSynopsisItem.prd_prc_vat.description
-                contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description
-            }
-            
-            var actionBody = MenuNaviActionBodyItem()
-            actionBody.config = synopsisModel.title
-            actionBody.result = insideChangeViewId
-            actionBody.menu_name = synopsisModel.seasonTitle
-            actionBody.menu_id = synopsisModel.srisId
-            
-            self.naviLogManager.actionLog(
-                .clickInsidePlayButton, pageId: .playInside,
-                 actionBody: actionBody, contentBody: contentsItem)
-        }
-    }
-
 }
 
 

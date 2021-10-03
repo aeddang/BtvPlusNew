@@ -39,6 +39,7 @@ struct PlayerSimpleTopBody: PageView{
                     isSelected: self.isMute,
                     size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                 ){ _ in
+                    self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "mute")
                     if self.isMute {
                         if self.viewModel.volume == 0 {
                             self.viewModel.event = .volume(0.5, isUser: true)
@@ -49,6 +50,8 @@ struct PlayerSimpleTopBody: PageView{
                         self.viewModel.event = .mute(true, isUser: true)
                     }
                 }
+                
+                
             }
             Spacer()
         }

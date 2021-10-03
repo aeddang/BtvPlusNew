@@ -40,6 +40,7 @@ struct SummaryViewer: PageComponent{
     @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    var componentViewModel:SynopsisViewModel? = nil
     var peopleScrollModel: InfinityScrollModel = InfinityScrollModel()
     var data:SummaryViewerData
     var useTracking:Bool = false
@@ -60,6 +61,7 @@ struct SummaryViewer: PageComponent{
                 }
                 
                 PeopleList(
+                    componentViewModel:self.componentViewModel, 
                     viewModel:self.peopleScrollModel,
                     datas: self.data.peoples!,
                     useTracking:self.useTracking)
@@ -99,7 +101,7 @@ struct SummaryViewer: PageComponent{
                     .onTapGesture {
                         if self.needExpand {
                             if !self.isExpand {
-                                self.naviLogManager.contentsLog(action: .clickViewMore)
+                                self.componentViewModel?.uiEvent = .summaryMore
                             }
                             withAnimation{ self.isExpand.toggle() }
                         }
@@ -134,6 +136,7 @@ struct SummaryViewer_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
             SummaryViewer(
+                componentViewModel: .init(),
                 data:SummaryViewerData()
             )
          

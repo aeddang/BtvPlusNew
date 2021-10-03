@@ -35,6 +35,16 @@ enum SynopsisPlayType:Equatable {
         default: return "시청하기"
         }
     }
+    
+    var logConfig: String {
+        switch self {
+        case .preview: return "trailer"
+        case .preplay: return "3m_preview"
+        default: return "watching"
+        }
+    }
+    
+    
     public static func == (l:SynopsisPlayType, r:SynopsisPlayType)-> Bool {
         switch (l, r) {
         case ( .preview, .preview):return true

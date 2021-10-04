@@ -19,6 +19,7 @@ struct DiagnosticReportCard: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var viewModel:DiagnosticReportModel = DiagnosticReportModel()
 
     var body: some View {
@@ -50,6 +51,13 @@ struct DiagnosticReportCard: PageComponent{
                         Spacer().modifier(MatchHorizontal(height: 1))
                     } else {
                         Button(action: {
+                            self.naviLogManager.actionLog(
+                                .clickThirdDepthMenu,
+                                actionBody: .init(
+                                    config:self.viewModel.logTabTitle,
+                                    category:"진단평가하기",
+                                    result:self.selectedType?.name
+                                ))
                             self.selectData()
                         }) {
                             Spacer()
@@ -67,7 +75,11 @@ struct DiagnosticReportCard: PageComponent{
                         .modifier(MatchParent())
                 }else if self.isEmpty || self.isEmptyResult{
                     Button(action: {
-                        
+                        self.naviLogManager.actionLog(
+                            .clickSecondDepthMenu,
+                            actionBody: .init(
+                                config:self.viewModel.logTabTitle,
+                                category:"진단평가하기"))
                         self.moveResultPage()
                         
                     }) {
@@ -95,6 +107,11 @@ struct DiagnosticReportCard: PageComponent{
                             .padding(.horizontal, DimenKids.margin.light)
                             .padding(.bottom, DimenKids.margin.thin)
                             .onTapGesture {
+                                self.naviLogManager.actionLog(
+                                    .clickSecondDepthMenu,
+                                    actionBody: .init(
+                                        config:self.viewModel.logTabTitle,
+                                        category:"진단리포트"))
                                 self.moveResultPage()
                             }
                     }
@@ -103,6 +120,11 @@ struct DiagnosticReportCard: PageComponent{
                             .padding(.horizontal, DimenKids.margin.light)
                             .padding(.bottom, DimenKids.margin.thin)
                             .onTapGesture {
+                                self.naviLogManager.actionLog(
+                                    .clickSecondDepthMenu,
+                                    actionBody: .init(
+                                        config:self.viewModel.logTabTitle,
+                                        category:"진단리포트"))
                                 self.moveResultPage()
                             }
                     }

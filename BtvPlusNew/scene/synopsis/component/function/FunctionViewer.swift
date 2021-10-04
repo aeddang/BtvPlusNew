@@ -91,7 +91,7 @@ struct FunctionViewer_Previews: PreviewProvider {
         VStack{
             FunctionViewer(
                 componentViewModel: .init(),
-                synopsisData:SynopsisData(),
+                synopsisData:SynopsisData(synopType: .none),
                 isBookmark: .constant(false),
                 isLike: .constant(.unlike)
             )

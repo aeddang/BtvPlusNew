@@ -115,7 +115,7 @@ class ResultEnglishReportViewData{
 struct ResultEnglishReportView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
-   
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:ResultEnglishReportViewData
     var action: (() -> Void)? = nil
    
@@ -149,6 +149,8 @@ struct ResultEnglishReportView: PageComponent{
                             size: DimenKids.button.lightRectExtra,
                             cornerRadius:  DimenKids.radius.medium
                         ) { _ in
+                            
+                            self.sendLog(config: "레벨테스트다시하기")
                             self.action?()
                            
                         }
@@ -161,6 +163,7 @@ struct ResultEnglishReportView: PageComponent{
                             size: DimenKids.button.lightRectExtra,
                             cornerRadius:  DimenKids.radius.medium
                         ) { _ in
+                            self.sendLog(config: "내답안보기")
                             var move = PageKidsProvider.getPageObject(.kidsExamViewer)
                                 .addParam(key: .type, value: DiagnosticReportType.english)
                                 .addParam(key: .datas, value: self.data.questions)
@@ -185,7 +188,9 @@ struct ResultEnglishReportView: PageComponent{
                 CommentBox(
                     icon: AssetKids.image.resultEnglish,
                     text: String.kidsText.kidsMyEnglishResultCommentText,
-                    comments: self.data.comments)
+                    comments: self.data.comments){
+                        self.sendLog(config: "총평자세히보기")
+                    }
                     .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 288 : 178))
                     .background(Color.app.whiteExtra)
             }
@@ -197,7 +202,9 @@ struct ResultEnglishReportView: PageComponent{
                 date:self.data.date,
                 type: .english,
                 retryCount:self.data.retryCountStr
-            )
+            ){
+                self.sendLog(config: "추천콘텐츠바로가기")
+            }
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
         
@@ -208,5 +215,13 @@ struct ResultEnglishReportView: PageComponent{
           
         }
         .modifier(MatchParent())
+    }
+    
+    private func sendLog(config:String){
+        self.naviLogManager.actionLog(
+            .clickOptionMenu,
+            actionBody: .init(
+                menu_name:DiagnosticReportType.english.logName,
+                config:config))
     }
 }

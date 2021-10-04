@@ -200,7 +200,12 @@ struct PagePurchase: PageView {
     }
     
     private func sendLog(action:NaviLog.Action) {
-        self.naviLogManager.contentsLog(pageId: .purchaseOrderCompleted, action: action)
+        self.naviLogManager.contentsLog(
+            pageId: .purchaseOrderCompleted,
+            action: action,
+            actionBody: .init(config:"")
+        )
+        
     }
 }
 

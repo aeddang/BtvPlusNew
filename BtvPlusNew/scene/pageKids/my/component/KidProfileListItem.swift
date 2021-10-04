@@ -11,7 +11,7 @@ import SwiftUI
 
 
 struct KidProfileListItem: PageComponent{
-   
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var data:Kid
     var isSelected:Bool = false
@@ -60,6 +60,10 @@ struct KidProfileListItem: PageComponent{
                             .padding(.leading, DimenKids.icon.tinyExtra)
                     }
                     Button(action: {
+                        self.naviLogManager.actionLog(
+                            .clickProfileEdit,
+                            actionBody: .init(menu_name:String.kidsTitle.registKidManagement, category:"프로필수정"))
+                        
                         self.pagePresenter.openPopup(
                             PageKidsProvider.getPageObject(.editKid)
                                 .addParam(key: .data, value: self.data)

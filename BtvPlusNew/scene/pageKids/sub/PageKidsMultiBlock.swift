@@ -229,6 +229,7 @@ struct PageKidsMultiBlock: PageView {
                         self.pairing.authority.requestAuth(.updateMonthlyPurchase(isPeriod: true))
                     }
                 }
+                
             }
             .onDisappear(){
                 self.autoOpen?.cancel()
@@ -293,6 +294,8 @@ struct PageKidsMultiBlock: PageView {
             )
             moveIdx = tab?.0 ?? 0
         }
+        
+        
         finalSelectedIndex = nil
         selectedTabIdx = moveIdx
         let cdata = self.tabDatas[moveIdx]
@@ -308,16 +311,21 @@ struct PageKidsMultiBlock: PageView {
             originDatas = [cdata]
             delay = 0.1
         }
-        reload(delay: delay)
-        
-        self.setupRecommandGuide(data: cdata)
         
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = cdata.menu_id
         actionBody.menu_name = cdata.menu_nm
-        //actionBody.category = EuxpNetwork.AsisPrdType.getType(cdata.asis_prd_typ_cd).logCategory
+        actionBody.config = self.title
         self.naviLogManager.actionLog(.clickTabMenuButton, actionBody: actionBody)
+        if self.monthlyData != nil {
+            self.multiBlockViewModel.setupActionLog(pageTitle: self.title, tabTitle: cdata.menu_nm)
+        }
+        reload(delay: delay)
+        self.setupRecommandGuide(data: cdata)
+        
+        
     }
+    
     
     private func setupRecommandGuide(data:BlockItem){
         withAnimation{

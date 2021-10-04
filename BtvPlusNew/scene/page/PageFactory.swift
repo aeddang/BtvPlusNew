@@ -101,6 +101,17 @@ struct PageProvider {
 
         return nil
     }
+    static func getPageLog(skimlink:String?)-> String? {
+        guard let skimlink = skimlink else { return nil }
+        if let _ = skimlink.range(of: "btvplusapp/MyPairgingManager", options: .caseInsensitive) { return "Btv연결관리" }
+        if let _ = skimlink.range(of: "btvplusapp/PairingManager", options: .caseInsensitive) { return "Btv연결관리" }
+        if let _ = skimlink.range(of: "btvplusapp/Pairing", options: .caseInsensitive) { return "Btv연결하기" }
+        if let _ = skimlink.range(of: "btvplusapp/Settings", options: .caseInsensitive) { return "설정" }
+        if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return nil }
+        if let _ = skimlink.range(of: "btvplusapp/FamilyInvite", options: .caseInsensitive) { return nil }
+
+        return nil
+    }
     
     static func isHome(_ pageID:PageID)-> Bool{
         switch pageID {

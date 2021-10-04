@@ -28,6 +28,13 @@ class MultiBlockModel: PageDataProviderModel {
         self.requestSize = requestSize ?? 12
     }
     
+    private(set) var pageTitle:String? = nil
+    private(set) var tabTitle:String? = nil
+    func setupActionLog(pageTitle:String?, tabTitle:String?) {
+        self.pageTitle = pageTitle
+        self.tabTitle = tabTitle
+    }
+    
     func reload() {
         self.datas?.forEach({$0.reset()})
         self.isUpdate = true
@@ -39,6 +46,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.isFree = isFree
         self.datas = datas.map{ block in
             BlockData().setData(block, themaType:themaType)
+                .setupActionLog(pageTitle: self.pageTitle, tabTitle: self.tabTitle)
         }
         .filter{ block in
             switch block.dataType {
@@ -59,6 +67,7 @@ class MultiBlockModel: PageDataProviderModel {
         self.title = title
         self.datas = datas.map{ block in
             BlockData(pageType: .kids).setDataKids(block)
+                .setupActionLog(pageTitle: self.pageTitle, tabTitle: self.tabTitle)
         }
         .filter{ block in
             switch block.dataType {

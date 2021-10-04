@@ -57,13 +57,13 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         }
         switch viewModel.updateType {
         case .recovery(let t, let count):
-             ComponentLog.d("recovery" , tag: self.tag)
+            ComponentLog.d("recovery" , tag: self.tag)
              //recovery(playerController, evt: evt, recoveryTime: t, retryCount: count)
         case .initate :
-             ComponentLog.d("initate" , tag: self.tag)
+            ComponentLog.d("initate" + evt.decription , tag: self.tag)
              //recovery(playerController, evt: evt, recoveryTime: 0)
         default:
-             update(playerController, evt: evt)
+            update(playerController, evt: evt)
         }
     }
     

@@ -53,7 +53,7 @@ class WatchedData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
-            prdPrcId: "",  kidZone:nil, progress:self.progress)
+            prdPrcId: "",  kidZone:nil, progress:self.progress, synopType: .none)
         
         return self
     }

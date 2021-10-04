@@ -14,6 +14,7 @@ struct MonthlyReportCard: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var viewModel:MonthlyReportModel = MonthlyReportModel() 
     
     var body: some View {
@@ -56,6 +57,13 @@ struct MonthlyReportCard: PageComponent{
                             .padding(.vertical, DimenKids.margin.thin)
                             .fixedSize()
                         Button(action: {
+                            self.naviLogManager.actionLog(
+                                .clickThirdDepthMenu,
+                                actionBody: .init(
+                                    config:self.viewModel.logTabTitle,
+                                    category:"월별리포트",
+                                    result:self.currentReport?.title
+                                ))
                             self.selectData()
                         }) {
                             Spacer()
@@ -95,6 +103,11 @@ struct MonthlyReportCard: PageComponent{
                         
                     }
                     .onTapGesture {
+                        self.naviLogManager.actionLog(
+                            .clickSecondDepthMenu,
+                            actionBody: .init(
+                                config:self.viewModel.logTabTitle,
+                                category:"월별리포트"))
                         self.moveResultPage()
                     }
                 } else {

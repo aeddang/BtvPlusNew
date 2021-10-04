@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class PosterData:InfinityData{
+class PosterData:InfinityData, Copying{
     private(set) var image: String? = nil
     private(set) var originImage: String? = nil
     private(set) var title: String? = nil
@@ -29,14 +29,42 @@ class PosterData:InfinityData{
     private(set) var usePrice:Bool = true
     private(set) var isPeople:Bool = false
     private(set) var isPreview:Bool = false
-    private(set) var actionLog:MenuNaviActionBodyItem? = nil
-    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
-    private(set) var actionLogKids:MenuNaviActionBodyItem? = nil
-    var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
-    var hasLogKids:Bool { get{ return actionLogKids != nil }}
     
+    required init(original: PosterData) {
+        image = original.image
+        originImage = original.originImage
+        title = original.title
+        subTitle = original.subTitle
+        progress = original.progress
+        epsdId = original.epsdId
+        prsId = original.prsId
+        prodId = original.prodId
+        tagData = original.tagData
+        isAdult = original.isAdult
+        watchLv = original.watchLv
+        isContinueWatch = original.isContinueWatch
+        isBookmark = original.isBookmark
+        synopsisType = original.synopsisType
+        type = original.type
+        synopsisData = original.synopsisData
+        pageType = original.pageType
+        usePrice = original.usePrice
+        isPeople = original.isPeople
+        isPreview = original.isPreview
+        actionLog = original.actionLog
+        contentLog = original.contentLog
+        logPage = original.logPage
+        logAction = original.logAction
+    }
+    
+    var hasLog:Bool { get{ return logAction != nil || actionLog != nil || contentLog != nil } }
+    
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+
     var logPage:NaviLog.PageId? = nil
     var logAction:NaviLog.Action? = nil
+
     
     init(pageType:PageType = .btv, usePrice:Bool = true) {
         self.pageType = pageType
@@ -46,12 +74,14 @@ class PosterData:InfinityData{
     
     @discardableResult
     func setNaviLog(action:MenuNaviActionBodyItem?) -> PosterData {
+        logAction = .clickContentsList
         self.actionLog = action
         return self
     }
     @discardableResult
-    func setNaviLogkids(action:MenuNaviActionBodyItem?) -> PosterData {
-        self.actionLogKids = action
+    func setNaviLogKids(action:MenuNaviActionBodyItem?) -> PosterData {
+        logAction = .clickContentsButton
+        self.actionLog = action
         return self
     }
     
@@ -70,8 +100,29 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id,
-            kidZone:data.kids_yn, isPreview:self.isPreview, isDemand: data.svc_typ_cd == "12")
+            kidZone:data.kids_yn, synopType: synopsisType, isPreview:self.isPreview,
+            isDemand: data.svc_typ_cd == "12")
         
+        return self
+    }
+    
+    func setNaviLog(data:ContentItem) -> PosterData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: data.prd_prc_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data.prd_prc?.description ?? nil,
+            payment_price: nil
+        )
         return self
     }
     
@@ -93,7 +144,7 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil,
-            isPosson: isPosson, anotherStbId: isPosson ? anotherStb : nil
+            isPosson: isPosson, anotherStbId: isPosson ? anotherStb : nil, synopType: synopsisType
             )
         
         return self.setNaviLog(data: data)
@@ -133,7 +184,8 @@ class PosterData:InfinityData{
         
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:data.yn_kzone)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",
+            kidZone:data.yn_kzone, synopType: synopsisType)
         return self
     }
     
@@ -158,7 +210,7 @@ class PosterData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
-            prdPrcId: "", kidZone:nil, progress:self.progress)
+            prdPrcId: "", kidZone:nil, progress:self.progress, synopType: synopsisType)
         return self
     }
     
@@ -177,7 +229,8 @@ class PosterData:InfinityData{
         index = idx
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: ""
+            , kidZone:nil, synopType: synopsisType)
         return self.setNaviLog(data: data)
     }
     
@@ -214,7 +267,8 @@ class PosterData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.sris,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
+            prdPrcId: "", kidZone:nil, synopType: synopsisType)
         return self.setNaviLog(searchType: searchType, data:nil)
     }
     
@@ -233,7 +287,7 @@ class PosterData:InfinityData{
     
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "", kidZone:nil, synopType: synopsisType)
         return self.setNaviLog(searchType: searchType, data:data)
     }
     
@@ -495,12 +549,7 @@ struct PosterList: PageComponent{
     }
     
     func onTap(data:PosterData)  {
-        if data.hasLogKids {
-            self.naviLogManager.actionLog(
-                data.logAction ?? .clickContentsButton,
-                pageId: data.logPage,
-                actionBody: data.actionLog, contentBody: data.contentLog)
-        }else if data.hasLog {
+        if data.hasLog {
             self.naviLogManager.actionLog(
                 data.logAction ?? .clickContentsList,
                 pageId: data.logPage,
@@ -617,12 +666,7 @@ struct PosterSet: PageComponent{
                 ForEach(self.cellDatas) { data in
                     PosterItem( data:data )
                     .onTapGesture {
-                        if data.hasLogKids {
-                            self.naviLogManager.actionLog(
-                                data.logAction ?? .clickContentsButton,
-                                pageId:data.logPage,
-                                actionBody: data.actionLog, contentBody: data.contentLog)
-                        }else if data.hasLog {
+                        if data.hasLog {
                             self.naviLogManager.actionLog(
                                 data.logAction ?? .clickContentsList,
                                 pageId:data.logPage,
@@ -698,6 +742,7 @@ struct PosterItem: PageView {
                     }
                 }
             } else {
+                
                 ImageView(url: self.data.image, contentMode: .fit, noImg: self.data.type.noImg)
                     .modifier(MatchParent())
                 Image(Asset.shape.listGradient)
@@ -705,6 +750,7 @@ struct PosterItem: PageView {
                     .scaledToFill()
                     .modifier(MatchParent())
                     .opacity(self.data.pageType == .btv ? 1 : 0.3)
+                
             }
             if let tag = self.data.tagData {
                 if tag.pageType == .btv {
@@ -795,12 +841,7 @@ struct PosterViewItem: PageView {
                             ){ _ in
                             if let synopsisData = data.synopsisData {
                                 
-                                if data.hasLogKids {
-                                    self.naviLogManager.actionLog(
-                                        data.logAction ?? .clickContentsButton,
-                                        pageId:data.logPage,
-                                        actionBody: data.actionLog, contentBody: data.contentLog)
-                                }else if data.hasLog {
+                                if data.hasLog {
                                     self.naviLogManager.actionLog(
                                         data.logAction ?? .clickContentsList,
                                         pageId:data.logPage,
@@ -820,12 +861,7 @@ struct PosterViewItem: PageView {
                             strokeWidth: 1){ _ in
                             if let synopsisData = data.synopsisData {
                                 
-                                if data.hasLogKids {
-                                    self.naviLogManager.actionLog(
-                                        data.logAction ?? .clickContentsButton,
-                                        pageId:data.logPage,
-                                        actionBody: data.actionLog, contentBody: data.contentLog)
-                                }else if data.hasLog {
+                                if data.hasLog {
                                     self.naviLogManager.actionLog(
                                         data.logAction ?? .clickContentsList,
                                         pageId:data.logPage,

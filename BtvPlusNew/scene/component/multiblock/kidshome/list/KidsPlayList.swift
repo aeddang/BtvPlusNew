@@ -23,7 +23,8 @@ class KidsPlayListData: KidsHomeBlockListData {
         self.menuId = data.menu_id
         self.cwCallId = data.cw_call_id_val
         self.blocks = data.blocks ?? []
-        self.datas = data.blocks?.map{KidsPlayListItemData().setData(data: $0)} ?? []
+        self.datas = data.blocks?.map{KidsPlayListItemData()
+            .setData(data: $0, parentMenuName: self.title, parentMenuId: self.menuId)} ?? []
         return self
     }
 }
@@ -38,7 +39,15 @@ class KidsPlayListItemData: InfinityData {
     private(set) var blocks:[BlockItem] = []
     private(set) var firstMenuId:String? = nil
     private(set) var firstCwCallId:String? = nil
-    func setData(data:BlockItem) -> KidsPlayListItemData{
+    private(set) var originData:BlockItem? = nil
+    
+    private(set) var parentMenuName:String? = nil
+    private(set) var parentMenuId:String? = nil
+    
+    func setData(data:BlockItem, parentMenuName:String?, parentMenuId:String?) -> KidsPlayListItemData{
+        self.parentMenuId = parentMenuId
+        self.parentMenuName = parentMenuName
+        self.originData = data
         self.playType = KidsPlayType.getType(data.svc_prop_cd)
        
         self.title = data.menu_nm
@@ -55,6 +64,7 @@ class KidsPlayListItemData: InfinityData {
 
 
 struct KidsPlayList:PageView  {
+    
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
@@ -108,6 +118,7 @@ extension KidsPlayListItem{
 }
 
 struct KidsPlayListItem:PageView  {
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -129,6 +140,15 @@ struct KidsPlayListItem:PageView  {
                 cornerRadius: DimenKids.radius.medium
             
             ){ _ in
+                
+                self.naviLogManager.actionLog(
+                    .clickSecondDepthMenu,
+                    actionBody:.init(
+                        menu_id: self.data.menuId,
+                        menu_name: self.data.title,
+                        config: self.data.parentMenuName,
+                        target: "Y",
+                        result: self.appSceneObserver.kidsGnbMenuTitle))
                 
                 self.pagePresenter.openPopup(
                     PageKidsProvider.getPageObject(.kidsMultiBlock)
@@ -177,6 +197,13 @@ struct KidsPlayListItem:PageView  {
                 height: Self.size.height)
             .onTapGesture {
                 if let poster = self.poster {
+                    
+                    self.naviLogManager.actionLog(
+                        .clickContentsView,
+                        actionBody:poster.actionLog,
+                        contentBody:poster.contentLog
+                    )
+                    
                     if let synopsisData = poster.synopsisData {
                         self.pagePresenter.openPopup(
                             poster.moveSynopsis
@@ -206,7 +233,15 @@ struct KidsPlayListItem:PageView  {
             guard let resData = res?.data as? CWGridKids else { return }
             guard let grids = resData.grid else { return }
             guard let block = grids.first?.block?.first else { return }
-            let poster = PosterData(pageType: .kids).setData(data: block)
+            let poster = PosterData(pageType: .kids).setData(data: block).setNaviLog(data: block)
+            poster.setNaviLogKids(action: .init(
+                menu_id: self.data.menuId,
+                menu_name: self.data.title,
+                config: self.data.parentMenuName,
+                category: self.data.playType.logCategory,
+                target: "",
+                result: self.appSceneObserver.kidsGnbMenuTitle))
+              
             self.data.poster = poster
             withAnimation{
                 self.poster = poster

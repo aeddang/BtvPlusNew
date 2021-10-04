@@ -172,6 +172,7 @@ struct PageKidsHome: PageView {
             if !self.menuId.isEmpty { self.reload() }
             return
         }
+        self.appSceneObserver.kidsGnbMenuTitle = blockData.title
         self.appSceneObserver.kidsGnbMenuId = self.menuId
         if blockData.isHome {
             self.viewModel.updateKids(datas: blockData.blocks ?? [] , openId: self.openId)

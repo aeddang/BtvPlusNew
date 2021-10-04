@@ -118,4 +118,9 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
     func updatedKid() {
         self.isUpdated = true
     }
+    
+    private(set) var logTabTitle:String? = nil
+    func setupActionLog(tabTitle:String?) {
+        self.logTabTitle = tabTitle
+    }
 }

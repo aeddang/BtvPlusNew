@@ -17,7 +17,7 @@ struct PageEditKid: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-   
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     
@@ -30,7 +30,7 @@ struct PageEditKid: PageView {
     @State var isFocus:Bool = false
     @State var isInputReady:Bool = false
     @State var isInitBirthSelect:Bool = false
-    
+    @State var title:String = ""
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -43,7 +43,7 @@ struct PageEditKid: PageView {
                     VStack (alignment: .center, spacing:0){
                         if self.editType != .nickName {
                             PageKidsTab(
-                                title:self.isEdit ? String.kidsTitle.editKid : String.kidsTitle.registKid,
+                                title:self.title,
                                 isBack: true,
                                 isSetting: true)
                         } else {
@@ -56,6 +56,10 @@ struct PageEditKid: PageView {
                                     .modifier(BoldTextStyleKids(size: Font.sizeKids.lightExtra, color: Color.app.brown))
                                     .fixedSize(horizontal: false, vertical: true)
                                 Button(action: {
+                                    self.naviLogManager.actionLog(
+                                        .clickProfileEdit,
+                                        actionBody: .init(menu_name:self.title, category:"프로필수정"))
+                                    
                                     self.selectCharacter()
                                 }) {
                                     Image(AssetKids.characterList[self.characterIdx])
@@ -144,6 +148,9 @@ struct PageEditKid: PageView {
                                 isSelected: false,
                                 size: DimenKids.button.mediumRectExtra
                             ){idx in
+                                self.naviLogManager.actionLog(
+                                    .clickProfileConfirm,
+                                    actionBody: .init(menu_name:self.title, category:"취소"))
                                 self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                             RectButtonKids(
@@ -151,6 +158,10 @@ struct PageEditKid: PageView {
                                 isSelected: true,
                                 size: DimenKids.button.mediumRectExtra
                             ){idx in
+                                
+                                self.naviLogManager.actionLog(
+                                    .clickProfileConfirm,
+                                    actionBody: .init(menu_name:self.title, category:self.isEdit ? "수정" : "등록"))
                                 self.registKid()
                             }
                             .opacity(self.isInputCompleted() ? 1.0 : 0.3)
@@ -274,6 +285,8 @@ struct PageEditKid: PageView {
                     }
                     self.isInitBirthSelect = false
                 }
+                
+                self.title = self.isEdit ? String.kidsTitle.editKid : String.kidsTitle.registKid
             }
         }//geo
     }//body

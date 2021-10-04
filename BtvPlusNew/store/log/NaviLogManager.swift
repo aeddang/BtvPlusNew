@@ -45,6 +45,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
             self.currentPop = pop
             if pop.sendLog {return}
             pop.sendLog = true
+            
             self.pageLog(pop, action: .pageShow)
            
         }).store(in: &anyCancellable)
@@ -253,8 +254,11 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
+        #if DEBUG
         if !isAnonymous {
-            DataLog.d("", tag: self.tag )
+            DataLog.d("***********", tag: self.tag )
+            DataLog.d("***********", tag: self.tag )
+            
             DataLog.d("NaviLog Start", tag: self.tag )
             DataLog.d("page_id : " + (data.page_id ?? "") , tag: self.tag )
             DataLog.d("action_id : " + (data.action_id ?? "") , tag: self.tag )
@@ -262,11 +266,13 @@ class NaviLogManager : ObservableObject, PageProtocol {
             if let watchType = data.vod_watch_type { DataLog.d("vod_watch_type : " + watchType , tag: self.tag )}
             if let action = data.action_body {
                 DataLog.d("send action : ", tag: self.tag )
-                DataLog.d("  result : " +  (action.result ?? ""), tag: self.tag )
                 DataLog.d("  config : " +  (action.config ?? ""), tag: self.tag )
                 DataLog.d("  category : " +  (action.category ?? ""), tag: self.tag )
                 DataLog.d("  menu_id : " +  (action.menu_id ?? ""), tag: self.tag )
                 DataLog.d("  menu_name : " +  (action.menu_name ?? ""), tag: self.tag )
+                DataLog.d("  result : " +  (action.result ?? ""), tag: self.tag )
+                DataLog.d("  target : " +  (action.target ?? ""), tag: self.tag )
+                DataLog.d("  search_keyword : " +  (action.search_keyword ?? ""), tag: self.tag )
             }
             if let content = data.contents_body {
                 DataLog.d("send content : ", tag: self.tag )
@@ -276,6 +282,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 DataLog.d("  running_time : " + (content.running_time ?? ""), tag: self.tag )
             }
         }
+        #endif
         self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: data), isAnonymous: isAnonymous))
     }
 

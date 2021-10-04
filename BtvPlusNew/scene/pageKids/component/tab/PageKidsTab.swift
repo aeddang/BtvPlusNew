@@ -14,6 +14,7 @@ struct PageKidsTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var title:String? = nil
     var titleTip:String? = nil
     var titleTipColor:Color = Color.app.sepia
@@ -66,7 +67,7 @@ struct PageKidsTab: PageComponent{
                 
                 if self.isSetting {
                     Button(action: {
-                        
+                        self.naviLogManager.actionLog(.clickSettingButton)
                         self.moveSetupCheck()
                         
                     }) { 

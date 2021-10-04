@@ -193,6 +193,7 @@ extension String {
        
         
         public static var couponRegistSuccess = "alertCouponRegistSuccess".loaalized()
+        public static var couponRegistIncorrectFail = "alertCouponRegistIncorrectFail".loaalized()
         public static var couponRegistFail = "alertCouponRegistFail".loaalized()
         
 

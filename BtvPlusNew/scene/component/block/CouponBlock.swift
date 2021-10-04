@@ -64,6 +64,15 @@ extension CouponBlock{
             case .cash: return String.pageText.myBenefitsCashEmpty
             }
         }
+        
+        var category: String {
+            switch self {
+            case .coupon: return "coupon"
+            case .point: return "bpoint"
+            case .cash: return "bcash"
+            }
+        }
+        
     }
 }
 

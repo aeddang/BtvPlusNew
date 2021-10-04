@@ -15,6 +15,7 @@ struct PairingKidsView: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     var pageObservable:PageObservable = PageObservable()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -48,6 +49,8 @@ struct PairingKidsView: PageComponent {
                         isMore: true
                     ) { _ in
                         
+                        self.sendLog(action: .clickTabMenu,
+                                     actionBody:.init(category: self.pairing.kid == nil ? "자녀프로필관리" : "프로필등록"))
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
                     }
                 }
@@ -251,11 +254,18 @@ struct PairingKidsView: PageComponent {
                 self.onLoaded()
             }
         }
+        if tabIdx < tabDatas.count && tabIdx > 0{
+            self.sendLog(action: .clickTabMenu, actionBody:.init(category:tabDatas[tabIdx].menu_nm))
+        }
     }
     
     private func loadMyKidData (){
         self.diagnosticReportModel = DiagnosticReportModel()
         self.monthlyReportModel = MonthlyReportModel()
+        if !self.tabDatas.isEmpty {
+            self.diagnosticReportModel?.setupActionLog(tabTitle: self.tabDatas[0].menu_nm)
+            self.monthlyReportModel?.setupActionLog(tabTitle: self.tabDatas[0].menu_nm)
+        }
         guard let kid = self.kid else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.monthlyReportModel?.reset()
@@ -267,10 +277,7 @@ struct PairingKidsView: PageComponent {
         self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, self.currentDate), isOptional: false))
     }
     
-    
-   
-    
-    
+
     @State var isError:Bool = false
     @State var errorMsg:String? = nil
     private func onError (msg:String? = nil){
@@ -283,6 +290,10 @@ struct PairingKidsView: PageComponent {
     }
     private func onLoaded (){
         self.isLoading = false
+    }
+    
+    private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil){
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
     }
 }
 

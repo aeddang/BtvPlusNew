@@ -18,6 +18,7 @@ struct PageWebview: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -112,11 +113,16 @@ struct PageWebview: PageView {
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
                 guard let obj = self.pageObject  else { return }
+                let pushId = obj.getParamValue(key: .pushId) as? String ?? ""
                 self.title = obj.getParamValue(key: .title) as? String
                 if let link = obj.getParamValue(key: .data) as? String{
+                    if link.contains(BtvWebView.event) == true {
+                        self.naviLogManager.actionLog(.pageShow, pageId: .event, actionBody: .init(category:pushId))
+                    }
                     if link.hasPrefix("http") { self.webViewModel.request = .link(link) }
                     else {self.webViewModel.request = .link(ApiPath.getRestApiPath(.WEB) + link)}
                 }
+                
             }
             .onDisappear{
             }

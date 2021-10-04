@@ -41,6 +41,7 @@ class AppSceneObserver:ObservableObject{
     
     @Published var gnbMenuId:String? = nil
     @Published var kidsGnbMenuId:String? = nil
+    var kidsGnbMenuTitle:String? = nil
     
     @Published var loadingInfo:[String]? = nil
     @Published var alert:SceneAlert? = nil

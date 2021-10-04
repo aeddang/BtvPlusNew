@@ -304,7 +304,7 @@ struct PageSynopsisPackage: PageView {
     @State var anotherStb:String? = nil
     @State var isUIView:Bool = false
     @State var pushId:String? = nil
-    @State var pageLodId:NaviLog.PageId? = nil
+    @State var pageLogId:NaviLog.PageId? = nil
     
     func initPage(){
         if self.synopsisData == nil {

@@ -18,7 +18,7 @@ struct ResultReportBottom: PageComponent{
    
     var type:DiagnosticReportType
     var retryCount:String
-    
+    var action: () -> Void
     var body: some View {
         HStack(spacing:DimenKids.margin.tiny){
             Text(String.kidsText.kidsMyDiagnosticReportDate)
@@ -54,21 +54,22 @@ struct ResultReportBottom: PageComponent{
                              height: SystemEnvironment.isTablet ? DimenKids.button.regularExtra : DimenKids.button.regular),
                 isFixSize: false){_ in
                 
-                guard let datas = self.dataProvider.bands.kidsGnbModel.home?.blocks else {return}
-                let blocks = datas.map{ block in
-                    BlockData(pageType: .kids).setDataKids(block)
-                }
-                guard let home = blocks.first(where: {$0.uiType == .kidsHome})  else {return}
-                let homeData = KidsHomeBlockData().setData(data: home)
-                guard let playList = homeData.datas.first(where: {$0.type == .playList}) as? KidsPlayListData else {return}
-                guard let find = playList.datas.first(where: {$0.playType == self.type.playType})  else {return}
-                
-                self.pagePresenter.openPopup(
-                    PageKidsProvider.getPageObject(.kidsMultiBlock)
-                        .addParam(key: .datas, value: find.blocks)
-                        .addParam(key: .title, value: find.title)
-                        .addParam(key: .type, value: find.playType)
-                )
+                    self.action()
+                    guard let datas = self.dataProvider.bands.kidsGnbModel.home?.blocks else {return}
+                    let blocks = datas.map{ block in
+                        BlockData(pageType: .kids).setDataKids(block)
+                    }
+                    guard let home = blocks.first(where: {$0.uiType == .kidsHome})  else {return}
+                    let homeData = KidsHomeBlockData().setData(data: home)
+                    guard let playList = homeData.datas.first(where: {$0.type == .playList}) as? KidsPlayListData else {return}
+                    guard let find = playList.datas.first(where: {$0.playType == self.type.playType})  else {return}
+                    
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider.getPageObject(.kidsMultiBlock)
+                            .addParam(key: .datas, value: find.blocks)
+                            .addParam(key: .title, value: find.title)
+                            .addParam(key: .type, value: find.playType)
+                    )
             }
         }
         .modifier(MatchHorizontal(height: DimenKids.button.regular))

@@ -66,6 +66,10 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var menuId:String? = nil
     private(set) var menuNm:String? = nil
     
+    private(set) var logConfig:String? = nil
+    
+    
+    
     init(pageType:PageType = .btv) {
         self.pageType = pageType
         super.init()
@@ -165,19 +169,23 @@ class BannerData:InfinityData, PageProtocol{
         if let range = callUrl.range(of: "outlink:", options: .caseInsensitive) {
             url.removeSubrange(range)
             self.outLink = url
+            self.logConfig = "아웃링크웹"
+            
         }else if let range = callUrl.range(of: "inlink:", options: .caseInsensitive) {
             url.removeSubrange(range)
             if url.hasPrefix("http://") ||  url.hasPrefix("https://") {
                 self.inLink = url
                 if self.title == nil { self.title = "" }
+                self.logConfig = "인링크웹"
                 return
             }
             
             self.move = PageProvider.getPageId(skimlink: url)
+            self.logConfig = PageProvider.getPageLog(skimlink: url)
             if move == .snsShare {
+                self.logConfig = ""
                 var param = [PageParam:Any]()
                 param[.type] = PageSnsShare.ShareType.familyInvite(type: "mob-banner")
-                
                 self.moveData = param
             }
             if self.move == nil {
@@ -186,6 +194,7 @@ class BannerData:InfinityData, PageProtocol{
         } else {
             if self.title == nil { self.title = "" }
             self.inLink = callUrl
+            self.logConfig = "인링크웹"
         }
     }
     private func parseAction(data:EventBannerItem){
@@ -215,12 +224,13 @@ class BannerData:InfinityData, PageProtocol{
                         param[.subId] = subMenu
                     }
                     self.movePageType = .kids
-                    
+                    self.logConfig = "메뉴바로가기"
                 } else {
                     let subMenu: String? = (arrParam.count > 2) ? arrParam[2] : nil
                     self.move = gnbTypeCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue ? PageID.category : PageID.home
                     param[.id] = gnbTypeCd
                     param[.subId] = subMenu
+                    self.logConfig = "메뉴바로가기"
                 }
                 self.moveData = param
                 
@@ -237,7 +247,7 @@ class BannerData:InfinityData, PageProtocol{
             var param = [PageParam:Any]()
             param[.data] = synopsisData
             self.moveData = param
-            
+            self.logConfig = "시놉시스이동"
         default:
             break
         }

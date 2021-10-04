@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class TvData:InfinityData{
+class TvData:InfinityData, Copying{
     private(set) var title: String? = nil
     private(set) var subTitle: String? = nil
     private(set) var channel:String? = nil
@@ -18,10 +18,27 @@ class TvData:InfinityData{
     private(set) var type:TvType = .list
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    
+    required init(original: TvData) {
+        title = original.title
+        subTitle = original.subTitle
+        channel = original.channel
+        startDate = original.startDate
+        endDate = original.endDate
+        data = original.data
+        type = original.type
+        actionLog = original.actionLog
+        contentLog = original.contentLog
+    }
+    
+    
     var hasLog:Bool {
         get{
             return actionLog != nil || contentLog != nil
         }
+    }
+    override init() {
+        super.init()
     }
     
     func setNaviLog(action:MenuNaviActionBodyItem?) -> TvData {

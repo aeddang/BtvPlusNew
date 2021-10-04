@@ -10,7 +10,11 @@ extension PageSynopsisPackage {
     func onEventLog(componentEvent:SynopsisViewModelEvent){
         switch componentEvent {
         case .purchase:
-            self.naviLog( action: .clickContentsOrder) 
+            if self.type == .kids {
+                self.naviLogKids(action: .clickPurchaseButton)
+            } else {
+                self.naviLog( action: .clickContentsOrder)
+            }
         case .selectPerson(let data):
             self.naviLog(
                 action: .clickContentsProductionActor,
@@ -28,25 +32,30 @@ extension PageSynopsisPackage {
         self.naviLogManager.setupSysnopsis(synopsisPackageModel, type:self.synopsisData?.isDemand == true ? "demand" : "vod")
     }
     func pageStartLog(){
-        self.pageLodId = self.type == .kids ? .kidsSynopsis : .synopsis
+        self.pageLogId = self.type == .kids ? .kidsSynopsis : .synopsis
         self.setupContent()
-        self.naviLog(
-            action: .pageShow,
-            config:self.pushId,
-            category: "ppp")
+        if self.type == .btv {
+            self.naviLog(
+                action: .pageShow,
+                config:self.pushId,
+                category: "ppp")
+        } else {
+            self.naviLogKids(action: .pageShow)
+        }
+       
     }
     
     func previewLog(data:PosterData){
-        if data.hasLogKids {
+        if self.type == .btv {
             self.naviLogManager.actionLog(
                 .clickContentsPreviewWatching,
                 pageId:data.logPage,
                 actionBody: .init(category:"미리보기"), contentBody: data.contentLog)
-        }else if data.hasLog {
+        } else {
             self.naviLogManager.actionLog(
-                .clickContentsPreviewWatching,
+                .clickRelatedContentsOption,
                 pageId:data.logPage,
-                actionBody: .init(category:"미리보기"), contentBody: data.contentLog)
+                actionBody: data.actionLog, contentBody: data.contentLog)
         }
     }
     
@@ -66,7 +75,30 @@ extension PageSynopsisPackage {
         actionBody.config = config ?? ""
         if let t = target { actionBody.target = t }
         self.naviLogManager.contentsLog(
-            pageId: self.pageLodId ,
+            pageId: self.pageLogId ,
+            action: action,
+            actionBody: actionBody
+        )
+    }
+    
+    //동일한 케이스인데 키즈와  비티비가 다름 이런일 한두번도 아니고....
+    func naviLogKids(action:NaviLog.Action,
+                target:String? = nil
+                 ){
+        
+        if self.type != .kids { return }
+        if naviLogManager.currentSysnopsisContentsItem?.series_id != self.synopsisData?.srisId {
+            self.setupContent()
+        }
+        
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.category = self.synopsisData?.synopType.logCategory
+        actionBody.result = self.synopsisData?.synopType.logResult
+        actionBody.config = self.pushId
+        if let t = target { actionBody.target = t }
+        
+        self.naviLogManager.contentsLog(
+            pageId: .kidsSynopsis,
             action: action,
             actionBody: actionBody
         )

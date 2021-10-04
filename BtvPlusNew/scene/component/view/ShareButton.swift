@@ -69,7 +69,7 @@ struct ShareButton: PageView {
         let srisId = self.srisId ?? ""
         
         if self.isRecommand == true && self.pairing.status == .pairing {
-            let data = SynopsisData(srisId: srisId, epsdId: epsdId)
+            let data = SynopsisData(srisId: srisId, epsdId: epsdId, synopType: .none)
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.recommand)
                     .addParam(key: .data, value:data)

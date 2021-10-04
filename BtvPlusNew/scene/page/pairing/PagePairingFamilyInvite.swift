@@ -71,7 +71,7 @@ struct PagePairingFamilyInvite: PageView {
                         size: Dimen.button.regular,
                         bgColor:Color.brand.secondary
                     ){_ in
-                        self.sendLog(action: .clickPopupButton, category:  String.app.cancel )
+                        self.sendLog(action: .clickPopupButton, category:  "취소" )
                         self.pagePresenter.closePopup(self.pageObject?.id)
                     }
                     FillButton(
@@ -88,7 +88,7 @@ struct PagePairingFamilyInvite: PageView {
                         bgColor:Color.brand.primary
                     ){_ in
                         
-                        self.sendLog(action: .clickPopupButton, category: String.app.confirm)
+                        self.sendLog(action: .clickPopupButton, category: "확인")
                         /* 페어링 중이라 안될거알지만 오류 문구를 보여주기 위해서 시도를 해봐야하는 상황.....
                         if self.pairing.status == .pairing {
                             if self.pairing.stbId == self.inviteHostDeviceid {
@@ -200,7 +200,10 @@ struct PagePairingFamilyInvite: PageView {
             self.pairingToken = obj.getParamValue(key: .id) as? String ?? ""
             self.sendLog(action: .pageShow, category: !self.inviteNick.isEmpty ? "mobile_invitation" : "etc" )
             
-            
+            /*
+            1. mobile_invitation → 모바일초대
+            2. etc → [STB초대, 106 상담사화면초대 등]
+            */
         }
         
     }//body

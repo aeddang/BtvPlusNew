@@ -32,7 +32,7 @@ extension PageSynopsis {
             }
         }
        
-        return SynopsisData()
+        return SynopsisData(synopType: .none)
     }
     
     func setupHistory(synopsisData:SynopsisData, isHistoryBack:Bool=true){

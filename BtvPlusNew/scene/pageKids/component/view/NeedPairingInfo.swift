@@ -12,6 +12,7 @@ struct NeedPairingInfo: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var vsManager:VSManager
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var title:String? = nil
     var text:String? = nil
     var body: some View {
@@ -38,7 +39,7 @@ struct NeedPairingInfo: PageView {
             RectButtonKids(
                 text: String.button.connectBtv,  isFixSize: true
             ){ _ in
-                
+                self.naviLogManager.actionLog(.clickConnectStbButton)
                 if self.vsManager.isGranted {
                     self.vsManager.accountPairingAlert()
                     return

@@ -116,6 +116,8 @@ enum SceneOrientation :String{
     }
 }
 
+
+
 open class PageObservable: ObservableObject  {
     @Published var status:PageStatus = .initate
     @Published var layer:PageLayer = .top
@@ -422,4 +424,15 @@ struct PageEvent {
     private(set) var id:String = ""
     private(set) var type:PageEventType = ""
     var data: Any? = nil
+}
+
+
+protocol Copying {
+    init(original: Self)
+}
+
+extension Copying {
+    func copy() -> Self {
+        return Self.init(original: self)
+    }
 }

@@ -69,6 +69,7 @@ class ResultCreativeReportViewData{
 
 struct ResultCreativeReportView: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:ResultCreativeReportViewData
     var action: (() -> Void)? = nil
     
@@ -98,7 +99,7 @@ struct ResultCreativeReportView: PageComponent{
                         size: DimenKids.button.lightRectExtra,
                         cornerRadius:  DimenKids.radius.medium
                     ) { _ in
-                        
+                        self.sendLog(config: "진단다시하기")
                         self.action?()
                        
                     }
@@ -115,7 +116,9 @@ struct ResultCreativeReportView: PageComponent{
                 CommentBox(
                     comment: self.data.comment,
                     comments: self.data.comments
-                )
+                ){
+                    self.sendLog(config: "총평자세히보기")
+                }
                 .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 436 : 269))
                 .background(Color.app.whiteExtra)
             }
@@ -127,7 +130,9 @@ struct ResultCreativeReportView: PageComponent{
                 date:self.data.date,
                 type: .creativeObservation,
                 retryCount:self.data.retryCountStr
-            )
+            ){
+                self.sendLog(config: "추천콘텐츠바로가기")
+            }
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
         
@@ -138,5 +143,12 @@ struct ResultCreativeReportView: PageComponent{
           
         }
         .modifier(MatchParent())
+    }
+    private func sendLog(config:String){
+        self.naviLogManager.actionLog(
+            .clickOptionMenu,
+            actionBody: .init(
+                menu_name:DiagnosticReportType.creativeObservation.logName,
+                config:config))
     }
 }

@@ -97,6 +97,36 @@ enum DiagnosticReportType:String, CaseIterable{
         case .finalQuiz: return AssetKids.exam.completeBg4
         }
     }
+    
+    /*
+    var logConfig: String {
+        switch self {
+        case .english: return AssetKids.exam.completeBg1
+        case .infantDevelopment: return AssetKids.exam.completeBg2
+        case .creativeObservation: return AssetKids.exam.completeBg3
+        case .finalQuiz: return AssetKids.exam.completeBg4
+        }
+    }
+    */
+    var logName: String? {
+        switch self {
+        case .english: return "영어레벨"
+        case .infantDevelopment: return "유아발달"
+        case .creativeObservation: return "창의력관찰"
+        default : return nil
+        }
+    }
+    
+    var logStartConfig: String? {
+        switch self {
+        case .english: return "영어레벨진단시작하기"
+        case .infantDevelopment: return "유아발달진단시작하기"
+        case .creativeObservation: return "창의력관찰진단시작하기"
+        default : return nil
+        }
+    }
+   
+    
 }
 
 class StudyData{
@@ -133,6 +163,11 @@ class DiagnosticReportModel:ObservableObject, PageProtocol{
     
     func updatedKid() {
         self.isUpdated = true
+    }
+    
+    private(set) var logTabTitle:String? = nil
+    func setupActionLog(tabTitle:String?) {
+        self.logTabTitle = tabTitle
     }
 }
 

@@ -820,12 +820,7 @@ struct CateBlock: PageComponent{
        
         let cellSize = self.viewModel.type == .btv ? Self.videoCellsize : Self.kidsVideoCellsize
         let count:Int = modifyCount(Int(floor(self.screenSize / cellSize)))
-        
-        if let first = self.loadedVideoDatas?.first {
-            if first.isWatched && first.pageType == .kids {
-                self.loadedVideoDatas?.sort(by: {$0.sort_seq < $1.sort_seq})
-            }
-        }
+
         
         var rows:[VideoDataSet] = []
         var cells:[VideoData] = []

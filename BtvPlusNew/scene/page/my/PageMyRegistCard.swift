@@ -39,6 +39,7 @@ struct PageMyRegistCard: PageView {
     @State var birthDate:Date? = nil
     @State var birth:String = ""
     @State var isForeigner:Bool = false
+    @State var isChange:Bool = false
     @State var safeAreaBottom:CGFloat = 0
     @State var useEdit:[EditType] = []
         
@@ -245,9 +246,10 @@ struct PageMyRegistCard: PageView {
                     if !res.id.hasPrefix(self.tag) { return }
                     guard let result = res.data as? RegistEps else { return }
                     if result.result == ApiCode.success {
-                        self.appSceneObserver.event = .toast(self.cardType == .member
-                            ? String.pageText.myBenefitsRegistT
-                            : String.pageText.myBenefitsRegistOk)
+                        self.appSceneObserver.event =
+                            .toast(self.cardType == .member
+                                    ? self.isChange ? String.pageText.myBenefitsChangedT : String.pageText.myBenefitsRegistT
+                                    : String.pageText.myBenefitsRegistOk)
                         
                         self.appSceneObserver.event =
                             .update(.registCard(type: self.cardType))
@@ -271,11 +273,13 @@ struct PageMyRegistCard: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
+                self.isChange = obj.getParamValue(key: .subType) as? Bool ?? false
                 if let type = obj.getParamValue(key: .type) as? CardBlock.ListType {
                     self.cardType = type
                     switch type {
                     case .member :
-                        self.title = String.pageTitle.myRegistCardMember
+                        
+                        self.title = self.isChange ? String.pageTitle.myChangeCardMember : String.pageTitle.myRegistCardMember
                         self.useEdit = [
                             .birth, .foreigner, .gender
                         ]
@@ -288,6 +292,7 @@ struct PageMyRegistCard: PageView {
                     default : break
                     }
                 }
+                
                 self.birth = Date().toDateFormatter(dateFormat: "yyyy-MM-dd")
                 self.updatekeyboardStatus(on:self.keyboardObserver.isOn)
 
@@ -367,7 +372,9 @@ struct PageMyRegistCard: PageView {
     }
     
     private func sendLog() {
-        let actionBody = MenuNaviActionBodyItem( category: self.cardType.title, target: self.cardMasterSequence.description)
+        let actionBody = MenuNaviActionBodyItem(
+            category: self.cardType.logConfig,
+            target: self.cardType == .okCash ? self.cardMasterSequence.description : "")
         self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
     

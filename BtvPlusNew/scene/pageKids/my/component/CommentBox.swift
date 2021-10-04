@@ -14,7 +14,8 @@ struct CommentBox: PageComponent{
     var text:String? = nil
     var comment:String? = nil
     var comments:[CommentData] = []
-    
+    var action: () -> Void
+   
     var body: some View {
         VStack(spacing:0){
             Image( self.icon )
@@ -51,15 +52,16 @@ struct CommentBox: PageComponent{
                 size: SystemEnvironment.isTablet ? DimenKids.button.regularUltra : DimenKids.button.mediumRect,
                 isFixSize: false){_ in
                 
-                let datas:[TabInfoData] = comments.map{
-                    TabInfoData(title: $0.title, text: $0.text)
-                }
-                self.pagePresenter.openPopup(
-                    PageKidsProvider
-                        .getPageObject(.tabInfo)
-                        .addParam(key: .datas, value: datas)
-                        .addParam(key: .selected, value: 0)
-                )
+                    self.action()
+                    let datas:[TabInfoData] = comments.map{
+                        TabInfoData(title: $0.title, text: $0.text)
+                    }
+                    self.pagePresenter.openPopup(
+                        PageKidsProvider
+                            .getPageObject(.tabInfo)
+                            .addParam(key: .datas, value: datas)
+                            .addParam(key: .selected, value: 0)
+                    )
                 
             }
             .padding(.top, DimenKids.margin.light)
@@ -73,7 +75,9 @@ struct CommentBox_Previews: PreviewProvider {
     
     static var previews: some View {
         Form{
-            CommentBox()
+            CommentBox(){
+                
+            }
         }
     }
 }

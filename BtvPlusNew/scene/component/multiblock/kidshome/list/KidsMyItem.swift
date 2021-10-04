@@ -23,6 +23,7 @@ extension KidsMyItem{
 }
 
 struct KidsMyItem:PageView  {
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var setup:Setup
@@ -80,6 +81,10 @@ struct KidsMyItem:PageView  {
             }
         }
         .onTapGesture {
+            self.naviLogManager.actionLog(
+                .clickProfileRegisterButton,
+                actionBody: .init(config: self.pairing.kids.isEmpty ? "N" : "Y"))
+            
             let status = self.pairing.status
             if status != .pairing {
                 self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))

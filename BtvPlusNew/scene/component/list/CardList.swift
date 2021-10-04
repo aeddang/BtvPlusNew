@@ -156,11 +156,13 @@ struct CardItem: PageView {
                             EditButton(
                                 icon: Asset.icon.edit,
                                 text: String.button.change ){
-                                self.sendLog(action: .clickCouponPointOption)
-                                self.pagePresenter.openPopup(
-                                     PageProvider.getPageObject(.myRegistCard)
-                                        .addParam(key: PageParam.type, value: self.data.type)
-                                )
+                                
+                                    self.sendLog(action: .clickCouponPointOption, result : "카드변경")
+                                    self.pagePresenter.openPopup(
+                                         PageProvider.getPageObject(.myRegistCard)
+                                            .addParam(key: PageParam.type, value: self.data.type)
+                                            .addParam(key: PageParam.subType, value: true)
+                                    )
                             }
                             Spacer().modifier(MatchVertical(width: 1))
                                 .background(Color.app.blueLightExtra)
@@ -173,7 +175,8 @@ struct CardItem: PageView {
                                 isFill: false,
                                 action:{ ck in
                                     if ck {
-                                        self.sendLog(action: .clickOkPointCheck)
+                                       
+                                        self.sendLog(action: .clickCouponPointOption, result : "대표카드로설정")
                                         let card = RegistCardData( 
                                             no: self.data.ocb?.cardNo ?? "",
                                             masterSequence: self.data.ocb?.sequence ?? 1,
@@ -204,25 +207,26 @@ struct CardItem: PageView {
                         EditButton(
                             icon: Asset.icon.delete,
                             text: self.data.type == .member ? String.button.remove :  String.pageText.myBenefitsDiscountOkDelete){
-                            self.sendLog(action: .clickCouponPointOption)
-                            self.appSceneObserver.alert =
-                                .confirm(self.data.type == .member
-                                             ? String.pageText.myBenefitsDiscountTDeleteConfirm
-                                             : String.pageText.myBenefitsDiscountOkDeleteConfirm,
-                                         self.data.type == .member
-                                            ? String.pageText.myBenefitsDiscountTDeleteConfirmText
-                                            : String.pageText.myBenefitsDiscountOkDeleteConfirmText,
-                                         nil, confirmText: String.button.remove){ isOk in
-                                    if isOk {
-                                        switch self.data.type {
-                                        case .member :
-                                            self.dataProvider.requestData(q: .init(id:self.tag, type: .deleteTMembership(self.pairing.hostDevice)))
-                                        case .okCash :
-                                            self.dataProvider.requestData(q: .init(id:self.tag, type: .deleteOkCashPoint(self.pairing.hostDevice, masterSequence:self.data.masterSequence)))
-                                        default : break
+                                
+                                self.sendLog(action: .clickCouponPointOption, result : "카드삭제")
+                                self.appSceneObserver.alert =
+                                    .confirm(self.data.type == .member
+                                                 ? String.pageText.myBenefitsDiscountTDeleteConfirm
+                                                 : String.pageText.myBenefitsDiscountOkDeleteConfirm,
+                                             self.data.type == .member
+                                                ? String.pageText.myBenefitsDiscountTDeleteConfirmText
+                                                : String.pageText.myBenefitsDiscountOkDeleteConfirmText,
+                                             nil, confirmText: String.button.remove){ isOk in
+                                        if isOk {
+                                            switch self.data.type {
+                                            case .member :
+                                                self.dataProvider.requestData(q: .init(id:self.tag, type: .deleteTMembership(self.pairing.hostDevice)))
+                                            case .okCash :
+                                                self.dataProvider.requestData(q: .init(id:self.tag, type: .deleteOkCashPoint(self.pairing.hostDevice, masterSequence:self.data.masterSequence)))
+                                            default : break
+                                            }
                                         }
                                     }
-                                }
                             
                         }
                     }
@@ -251,8 +255,12 @@ struct CardItem: PageView {
             self.point = self.data.point
         }
     }
-    private func sendLog(action:NaviLog.Action) {
-        let actionBody = MenuNaviActionBodyItem(category: self.data.type.title)
+    private func sendLog(action:NaviLog.Action, result:String? = nil) {
+        let actionBody = MenuNaviActionBodyItem( 
+            config:self.data.type.logConfig,
+            category: "다른할인수단",
+            result: result
+        )
         self.naviLogManager.actionLog(action, actionBody: actionBody)
     }
    
@@ -321,6 +329,7 @@ struct CardItemBody: PageView {
                         Text(String.pageText.myBenefitsDiscountTvText2)
                             .modifier(MediumTextStyle(size: Font.size.regular, color:Color.app.blackLight))
                         Button(action: {
+                            self.sendLog()
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.confirmNumber)
                                     .addParam(key: .type, value: PageConfirmNumber.InputType.okcash(self.data.ocb))
@@ -350,8 +359,8 @@ struct CardItemBody: PageView {
     }
     
     private func sendLog() {
-        let actionBody = MenuNaviActionBodyItem(category: self.data.type.title, target: self.data.masterSequence.description)
-        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+        let actionBody = MenuNaviActionBodyItem(category: "다른할인수단")
+        self.naviLogManager.actionLog(.clickOkPointCheck, actionBody: actionBody)
     }
 }
 

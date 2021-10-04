@@ -60,6 +60,19 @@ enum ReadingHclsAreaType{
             }
         }
     }
+    
+    var logName:String {
+        get {
+            switch self {
+            case .athletic : return "운동발달"
+            case .language: return "언어발달"
+            case .cognitive : return "인지발달"
+            case .social : return "사회정서발달"
+            case .selfhelf : return "자조행동발달"
+            case .unowned(let cd): return cd ?? ""
+            }
+        }
+    }
 }
 
 class ReadingListData:InfinityData{
@@ -84,6 +97,7 @@ struct ResultReadingListView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var kid:Kid
     var action: ((ReadingListData) -> Void)? = nil
@@ -104,6 +118,11 @@ struct ResultReadingListView: PageComponent{
                 ForEach(self.datas) { data in
                     ReadingListItem( data:data )
                         .onTapGesture {
+                            self.naviLogManager.actionLog(
+                                .clickOptionMenu,
+                                actionBody: .init(
+                                    menu_name:DiagnosticReportType.infantDevelopment.logName,
+                                    config:data.type.logName))
                             self.action?(data)
                         }
                         .frame(

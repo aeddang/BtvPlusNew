@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class VideoData:InfinityData{
+class VideoData:InfinityData, Copying{
     private(set) var image: String? = nil
     private(set) var originImage: String? = nil
     private(set) var title: String? = nil
@@ -29,19 +29,45 @@ class VideoData:InfinityData{
     private(set) var useAge:Bool = true
     private(set) var tagData: TagData? = nil
     private(set) var playTime:String? = nil
-    private(set) var sort_seq:Int = 0
     private(set) var pageType:PageType = .btv
+    private(set) var isWatched:Bool = false
     
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
-    private(set) var actionLogKids:MenuNaviActionBodyItem? = nil
-    private(set) var isWatched:Bool = false
-   
-    var hasLog:Bool { get{ return actionLog != nil || contentLog != nil } }
-    var hasLogKids:Bool { get{ return actionLogKids != nil }}
-    
+      
     var logPage:NaviLog.PageId? = nil
     var logAction:NaviLog.Action? = nil
+    
+    required init(original: VideoData) {
+        image = original.image
+        originImage = original.originImage
+        title = original.title
+        subTitle = original.subTitle
+        count = original.count
+        type = original.type
+        progress = original.progress
+        synopsisType = original.synopsisType
+        synopsisData = original.synopsisData
+        epsdId = original.epsdId
+        srisId = original.srisId
+        prodId = original.prodId
+        isClip = original.isClip
+        usePrice = original.usePrice
+        useAge = original.useAge
+        tagData = original.tagData
+        playTime = original.playTime
+        pageType = original.pageType
+        isWatched = original.isWatched
+        
+        actionLog = original.actionLog
+        contentLog = original.contentLog
+    
+        logPage = original.logPage
+        logAction = original.logAction
+    }
+    
+    var hasLog:Bool { get{ return logAction != nil || actionLog != nil || contentLog != nil } }
+   
     var fullTitle:String? {
         get{
             guard let title = self.title else {return nil}
@@ -61,12 +87,17 @@ class VideoData:InfinityData{
         super.init()
     }
     
+    @discardableResult
     func setNaviLog(action:MenuNaviActionBodyItem?) -> VideoData  {
+        logAction = .clickContentsList
         self.actionLog = action
         return self
     }
+    
+    @discardableResult
     func setNaviLogKids(action:MenuNaviActionBodyItem?) -> VideoData  {
-        self.actionLogKids = action
+        logAction = .clickContentsButton
+        self.actionLog = action
         return self
     }
    
@@ -142,7 +173,6 @@ class VideoData:InfinityData{
                 self.progress = 0
             }
         }
-        sort_seq = data.sort_seq ?? 0
         originImage = data.poster_filename_h
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
         /*
@@ -165,7 +195,8 @@ class VideoData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,
-            kidZone:data.kids_yn, progress:self.progress,isDemand: data.svc_typ_cd == "12")
+            kidZone:data.kids_yn, progress:self.progress,
+            synopType: synopsisType, isDemand: data.svc_typ_cd == "12")
         
         return self
     }
@@ -189,7 +220,7 @@ class VideoData:InfinityData{
         srisId = data.sris_id
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil, synopType: synopsisType)
         
         return self
     }
@@ -209,7 +240,7 @@ class VideoData:InfinityData{
         
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone, synopType: synopsisType)
         return self
     }
     
@@ -241,7 +272,7 @@ class VideoData:InfinityData{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
-            prdPrcId: "",  kidZone:nil, progress:self.progress)
+            prdPrcId: "",  kidZone:nil, progress:self.progress, synopType: synopsisType)
         return self
     }
 
@@ -260,7 +291,7 @@ class VideoData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil, synopType: synopsisType)
         return self.setNaviLog(searchType: searchType, data: nil)
     }
     func setData(data:CategorySrisItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
@@ -278,7 +309,7 @@ class VideoData:InfinityData{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil, synopType: synopsisType)
         return self.setNaviLog(searchType: searchType, data: data)
     }
     
@@ -299,7 +330,8 @@ class VideoData:InfinityData{
         }
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil, progressTime:progressTime)
+            epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",
+            kidZone:nil, progressTime:progressTime, synopType: synopsisType)
         
         return self.setNaviLog(searchType: searchType, data: nil)
     }
@@ -452,12 +484,7 @@ struct VideoList: PageComponent{
     }//body
     
     func onTap(data:VideoData)  {
-        if data.hasLogKids {
-            self.naviLogManager.actionLog(
-                data.logAction ?? .clickContentsButton,
-                pageId: data.logPage ,
-                actionBody: data.actionLog, contentBody: data.contentLog)
-        }else if data.hasLog {
+        if data.hasLog {
             self.naviLogManager.actionLog(
                 data.logAction ?? .clickContentsList,
                 pageId: data.logPage ,
@@ -526,12 +553,7 @@ struct VideoSet: PageComponent{
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
                     .onTapGesture {
-                        if data.hasLogKids {
-                            self.naviLogManager.actionLog(
-                                data.logAction ?? .clickContentsButton,
-                                pageId: data.logPage,
-                                actionBody: data.actionLog, contentBody: data.contentLog)
-                        }else if data.hasLog {
+                        if data.hasLog {
                             self.naviLogManager.actionLog(
                                 data.logAction ?? .clickContentsList,
                                 pageId: data.logPage,

@@ -11,8 +11,6 @@ import AVKit
 import Combine
 open class PlayerModel: ComponentObservable {
     static let TIME_SCALE:Double = 600
-    
-    
     var useAvPlayerController:Bool = false
     var useFullScreenButton:Bool = true
     var useFullScreenAction:Bool = true
@@ -167,6 +165,7 @@ enum PlayerUIEvent {//input
          check, neetLayoutUpdate, fixUiStatus(Bool),
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
          fullScreen(Bool),
+         replay(Bool),
          recovery(isUser:Bool = false)
             
     var decription: String {

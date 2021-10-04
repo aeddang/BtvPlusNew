@@ -74,7 +74,7 @@ class PurchaseData:InfinityData,ObservableObject{
             srisId: data.sris_id,
             searchType: synopsisType == .package ? .sris : EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil,
-            isPosson:self.isPosson, anotherStbId: self.isPosson ? anotherStb : nil)
+            isPosson:self.isPosson, anotherStbId: self.isPosson ? anotherStb : nil, synopType: synopsisType)
         return self
     }
     

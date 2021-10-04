@@ -58,6 +58,13 @@ extension CardBlock{
             case .tvPoint: return String.pageText.myBenefitsDiscountTv
             }
         }
+        var logConfig: String {
+            switch self {
+            case .member: return "T멤버십"
+            case .okCash: return "OK캐시백"
+            case .tvPoint: return "TV포인트"
+            }
+        }
         var empty: String {
             switch self {
             case .member: return String.pageText.myBenefitsCardEmpty

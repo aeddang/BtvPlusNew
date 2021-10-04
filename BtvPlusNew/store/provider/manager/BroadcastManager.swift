@@ -24,7 +24,9 @@ class BroadcastManager : PageProtocol{
                 self.dataProvider.requestData(q: .init(type: .getCurrentChannels(broadcasting.wepgVersion)))
             case .updateCurrentVod(let cid) :
                 self.dataProvider.requestData(q: .init( id: self.tag,
-                    type: .getSynopsis(SynopsisData(searchType: EuxpNetwork.SearchType.prd, epsdRsluId: cid)))
+                    type: .getSynopsis(SynopsisData(
+                        searchType: EuxpNetwork.SearchType.prd,
+                        epsdRsluId: cid, synopType: .title)))
                 )
             }
         }).store(in: &anyCancellable)

@@ -13,6 +13,7 @@ import struct Kingfisher.KFImage
 
 
 struct KidsGnb: PageComponent{
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
@@ -31,6 +32,11 @@ struct KidsGnb: PageComponent{
                             isSelected:self.selectedMenuId == data.menuId
                         )
                         .onTapGesture {
+                            
+                            self.naviLogManager.actionLog(
+                                .clickGnbMenu,
+                                actionBody: .init(menu_id: data.menuId, menu_name:data.title))
+                            
                             self.pagePresenter.changePage(
                                 PageKidsProvider
                                     .getPageObject(.kidsHome)

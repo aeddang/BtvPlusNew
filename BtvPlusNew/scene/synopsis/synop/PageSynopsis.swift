@@ -527,7 +527,7 @@ struct PageSynopsis: PageView {
     @State var isProhibitionCheckComplete:Bool = false
     @State var isCheckRecommand:Bool = true
     
-    @State var pageLodId:NaviLog.PageId? = nil
+    @State var pageLogId:NaviLog.PageId? = nil
     @State var insideChangeViewId:String? = nil
     @State var insideChangeViewRuntime:String? = nil
     @State var pushId:String? = nil

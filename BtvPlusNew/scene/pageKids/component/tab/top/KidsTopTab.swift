@@ -10,26 +10,31 @@ import Foundation
 import SwiftUI
 
 struct KidsTopTab: PageComponent{
-   
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
-    
+    @State var selectedMenuId:String? = nil
     var body: some View {
         HStack(alignment: .center ,spacing:DimenKids.margin.light){
             KidProfile().onTapGesture {
+                
+                self.sendLog(menuName: "프로필")
+                
                 if self.pairing.kids.isEmpty || self.pairing.kid == nil{
                     if !self.setup.isRegistUnvisibleDate() {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
                         return
                     }
                 }
+                
                 self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
             }
             Spacer()
             Button(action: {
+                self.sendLog(menuName: "이용권")
                 self.pagePresenter.openPopup(
                     PageKidsProvider.getPageObject(.kidsMonthly)
                 )
@@ -42,6 +47,7 @@ struct KidsTopTab: PageComponent{
                            height: DimenKids.icon.regular)
             }
             Button(action: {
+                self.sendLog(menuName: "검색")
                 self.pagePresenter.openPopup(
                     PageKidsProvider.getPageObject(.kidsSearch)
                 )
@@ -54,6 +60,7 @@ struct KidsTopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
+                self.sendLog(menuName: "나가기")
                 var move:PageObject? = nil
                 if let historyPage = self.appSceneObserver.finalBtvPage {
                     move = historyPage
@@ -81,10 +88,20 @@ struct KidsTopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
         }
-       
+        .onReceive(self.appSceneObserver.$kidsGnbMenuId) { id in
+            self.selectedMenuId = id
+        }
         .onAppear(){
         }
         
+    }
+    
+    private func sendLog(menuName:String){
+        self.naviLogManager.actionLog(
+            .clickTopGnbMenu,
+            actionBody: .init(menu_id: self.selectedMenuId,
+                              menu_name:menuName,
+                              target: self.pairing.kids.isEmpty ? "N" : "Y"))
     }
 }
 

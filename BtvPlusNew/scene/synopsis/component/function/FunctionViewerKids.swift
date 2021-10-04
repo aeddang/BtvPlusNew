@@ -64,7 +64,9 @@ struct FunctionViewerKidsBody: PageComponent{
     var isPosson:Bool
     var body: some View {
         if let data = summaryViewerData {
-            PlayInfoButton(data: data)
+            PlayInfoButton(
+                componentViewModel: self.componentViewModel, 
+                data: data)
             .buttonStyle(BorderlessButtonStyle())
         } else {
             Spacer().frame(width:DimenKids.icon.light, height:DimenKids.icon.light)
@@ -110,7 +112,7 @@ struct FunctionViewerKids_Previews: PreviewProvider {
         VStack{
             FunctionViewerKids(
                 componentViewModel: .init(),
-                synopsisData:SynopsisData(),
+                synopsisData:SynopsisData(synopType: .none),
                 isBookmark: .constant(false),
                 isPosson: false
             )

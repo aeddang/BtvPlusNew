@@ -113,27 +113,6 @@ enum AlramLandingType:String {
         default: return Asset.icon.noticeAd
         }
     }
-    
-   func getLogValue() -> String {
-        switch self {
-        case .notice: return ""
-        case .eventWeb: return ""
-        case .vodDetail: return ""
-        case .webInApp: return "B1.WEBINAPP"
-        case .browser: return "B3.WEB"
-        case .home: return ""
-        case .trailer: return "B5.CONTENT"
-        case .menu: return "B4.MENU"
-        case .synop: return "B2.SYNOP"
-        case .season: return "B6.SEASON"
-        case .monthly: return "B7.MONTH"
-        case .reserve, .reservation: return "B8.RESERVATION"
-        case .coupon: return "B9.POINT"
-        case .point: return "B10.COUPON"
-        case .newpoint: return "B11.NEWBPOINT"
-        default: return ""
-        }
-    }
 }
 
 class AlramData:InfinityData,ObservableObject{
@@ -172,8 +151,8 @@ class AlramData:InfinityData,ObservableObject{
         
         
         if let userData = data.userInfo as? [String: Any] {
-            self.setUserData(userData)
             self.setSystemData(userData)
+            self.setUserData(userData)
         }
         
         title = data.title
@@ -191,6 +170,7 @@ class AlramData:InfinityData,ObservableObject{
     
     func setData( title:String?, text:String?, userData:[String: Any]?) -> AlramData{
         if let userData = userData {
+            self.setSystemData(userData)
             self.setUserData(userData)
         }
         self.title = title
@@ -223,8 +203,6 @@ class AlramData:InfinityData,ObservableObject{
         if let value = userInfo ["msgType"] as? String {
             self.msgType = AlramMsgType.getType(value)
         }
-        
-        
         
         if let value = userInfo ["landingPath"] as? String {
             self.landingType = AlramLandingType.getType(value.uppercased())
@@ -271,8 +249,10 @@ class AlramData:InfinityData,ObservableObject{
                 }
             }
         }
+        self.setupActionLog(userInfo)
     }
     private func parseAction(){
+    
         switch landingType {
         case .notice:
             guard let location = self.location else { return }
@@ -283,7 +263,7 @@ class AlramData:InfinityData,ObservableObject{
                 self.inLink = BtvWebView.notice + "?menuId=" + location
                 self.inLinkTitle = String.button.notice
             }
-            self.actionLog.menu_name = "B1.WEBINAPP"
+             
 
         case .eventWeb:
             guard var url = self.location else { return }
@@ -291,12 +271,12 @@ class AlramData:InfinityData,ObservableObject{
                 if let range = url.range(of: "outlink:", options: .caseInsensitive) {
                     url.removeSubrange(range)
                     self.outLink = url
-                    self.actionLog.menu_name = "B3.WEB"
+                    
                 }else if let range = url.range(of: "inlink:", options: .caseInsensitive) {
                     url.removeSubrange(range)
                     self.inLink = url
                     self.inLinkTitle = self.text
-                    self.actionLog.menu_name = "B1.WEBINAPP"
+                    
                 } else {
                     self.move = .category
                     var param = [PageParam:Any]()
@@ -304,12 +284,12 @@ class AlramData:InfinityData,ObservableObject{
                     self.moveData = param
                     self.inLink = url
                     self.inLinkTitle = self.text
-                    self.actionLog.menu_name = "B4.MENU"
+                    
                 }
             } else {
                 self.inLink = BtvWebView.event + "?menuId=" + url
                 self.inLinkTitle = self.text
-                self.actionLog.menu_name = "B1.WEBINAPP"
+               
             }
             
         case .vodDetail:
@@ -328,12 +308,12 @@ class AlramData:InfinityData,ObservableObject{
             let synopsisData = SynopsisData(
                 srisId: serNo,
                 searchType: EuxpNetwork.SearchType.prd,
-                epsdRsluId: epsdRsluId
+                epsdRsluId: epsdRsluId, synopType: .title
             )
             var param = [PageParam:Any]()
             param[.data] = synopsisData
             self.moveData = param
-            self.actionLog.menu_name = "B2.SYNOP"
+          
             
         case .webInApp:
             guard let valueString = self.location else { return }
@@ -347,17 +327,17 @@ class AlramData:InfinityData,ObservableObject{
                 self.inLink = url
                 self.inLinkTitle = self.text
             }
-            self.actionLog.menu_name = "B1.WEBINAPP"
+            
         case .browser:
             guard let url = self.location else { return }
             self.outLink = url
-            self.actionLog.menu_name = "B3.WEB"
+           
         case .home:
             self.move = .home
             var param = [PageParam:Any]()
             param[.id] = EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue
             self.moveData = param
-            self.actionLog.menu_name = "B4.MENU"
+            
         case .trailer, .season, .monthly:
             guard let epsdId = self.location else { return }
             self.move = .synopsis
@@ -370,9 +350,6 @@ class AlramData:InfinityData,ObservableObject{
             )
             var param = [PageParam:Any]()
             param[.data] = synopsisData
-            self.actionLog.menu_name = landingType == .trailer
-                ? "B5.CONTENT"
-                : landingType == .season ? "B6.SEASON" : "B7.MONTH"
             self.moveData = param
             
         case .menu:
@@ -414,7 +391,7 @@ class AlramData:InfinityData,ObservableObject{
                     param[.subId] = menuOpenId
                 }
                 self.moveData = param
-                self.actionLog.menu_name = "B4.MENU"
+               
                 
             } else {
                 var param = [PageParam:Any]()
@@ -439,7 +416,7 @@ class AlramData:InfinityData,ObservableObject{
                         param[.subId] = url
                     }
                 }
-                self.actionLog.menu_name = "B4.MENU"
+            
                 self.moveData = param
             }
             
@@ -468,7 +445,7 @@ class AlramData:InfinityData,ObservableObject{
                 param[.data] = synopsisData
                 self.move = .synopsis
             }
-            self.actionLog.menu_name = "B2.SYNOP"
+            
             self.moveData = param
             
         case .coupon:
@@ -476,33 +453,73 @@ class AlramData:InfinityData,ObservableObject{
             var param = [PageParam:Any]()
             param[.id] = PageMyBenefits.MenuType.coupon.rawValue
             self.moveData = param
-            self.actionLog.menu_name = "B10.COUPON"
+            
         case .point:
             self.move = .myBenefits
             var param = [PageParam:Any]()
             param[.id] = PageMyBenefits.MenuType.point.rawValue
             self.moveData = param
-            self.actionLog.menu_name = "B9.POINT"
+            
         case .newpoint:
             self.move = .myBenefits
             var param = [PageParam:Any]()
             param[.id] = PageMyBenefits.MenuType.point.rawValue
             self.moveData = param
-            self.actionLog.menu_name = "B11.NEWBPOINT"
+           
         case .reserve, .reservation:
             guard let svcId = self.location else { return }
             self.move = .schedule
             var param = [PageParam:Any]()
             param[.id] = svcId
             self.moveData = param
-            self.actionLog.menu_name = "B8.RESERVATION"
-        default:
-            self.actionLog.menu_name = self.title
-            break
+            
+        default: break
         }
         
         if self.move != nil || self.inLink != nil || self.outLink != nil {
             self.moveButton = self.moveTitle ?? String.app.confirm
+        }
+    }
+    
+    func setupActionLog(_ userInfo:[String: Any]){
+        let msgType = userInfo ["msgType"] as? String ?? ""
+        let landingPath = userInfo ["landingPath"] as? String ?? ""
+        
+        var config = "", menuName = ""
+        
+        switch msgType {
+        case "market" : config = "A1.market"
+        case "content" : config = "A2.content"
+        case "reservation" : config = "A3.reservation"
+        case "service" : config = "A4.service"
+        case "inform" : config = "A5.inform"
+        default: config = ""
+        }
+        switch landingPath {
+        case "WEBINAPP" : menuName = "B1.WEBINAPP"
+        case "SYNOP" : menuName = "B2.SYNOP"
+        case "WEB" : menuName = "B3.WEB"
+        case "MENU" : menuName = "B4.MENU"
+        case "CONTENT" : menuName = "B5.CONTENT"
+        case "SEASON" : menuName = "B6.SEASON"
+        case "MONTH" : menuName = "B7.MONTH"
+        case "RESERVATION" : menuName = "B8.RESERVATION"
+        case "POINT" : menuName = "B9.POINT"
+        case "COUPON" : menuName = "B10.COUPON"
+        case "NEWBPOINT" : menuName = "B11.NEWBPOINT"
+        default: menuName = ""
+        }
+        actionLog.menu_name = menuName
+        actionLog.config = config
+        actionLog.category = self.messageId //421삭제예정인데 상용에있다....
+        if let logMessage = userInfo["logMessage"] as? [String: Any] {
+            actionLog.target = logMessage["camp_Id"] as? String ?? ""
+            actionLog.result = logMessage["camp_execseq"] as? String ?? ""
+            actionLog.menu_id = logMessage["camp_nodeId"] as? String ?? ""
+        } else {
+            actionLog.target = ""
+            actionLog.result = ""
+            actionLog.menu_id = ""
         }
     }
     

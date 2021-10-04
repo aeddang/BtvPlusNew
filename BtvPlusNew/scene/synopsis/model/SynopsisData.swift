@@ -23,7 +23,7 @@ enum SynopsisType {
         case .title: return "ppv"
         case .season: return "pps"
         case .package: return "ppp"
-        default : return ""
+        default : return "ppv"
         }
     }
     var logResult: String {
@@ -31,7 +31,7 @@ enum SynopsisType {
         case .title: return "단편"
         case .season: return "시즌"
         case .package: return "패키지"
-        default : return ""
+        default : return "단편"
         }
     }
 
@@ -56,7 +56,7 @@ struct SynopsisData{
     var progress:Float? = nil
     var progressTime:Double? = nil
     var isFullScreenProgressTime:Bool = true // progressTimed 있을때 true 이면 풀스크린s
-    var synopType:SynopsisType = SynopsisType.none
+    var synopType:SynopsisType
     var isPreview:Bool = false
     var isDemand:Bool = false
     /*

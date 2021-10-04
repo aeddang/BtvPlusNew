@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct KidProfileListEmpty: PageComponent{
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     var body: some View {
         ZStack{
@@ -20,6 +21,10 @@ struct KidProfileListEmpty: PageComponent{
             VStack(alignment: .center ,spacing:0){
                 
                 Button(action: {
+                    self.naviLogManager.actionLog(
+                        .clickProfileEdit,
+                        actionBody: .init(menu_name:String.kidsTitle.registKidManagement, category:"대표프로필등록"))
+                    
                     self.pagePresenter.openPopup(
                         PageKidsProvider.getPageObject(.editKid)
                     )

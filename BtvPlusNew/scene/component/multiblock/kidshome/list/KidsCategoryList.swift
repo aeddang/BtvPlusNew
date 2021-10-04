@@ -14,8 +14,10 @@ class KidsCategoryListData: KidsHomeBlockListData {
     private(set) var isTicket:Bool = false
     private(set) var datas:[KidsCategoryListItemData] = []
     private(set) var sets:[KidsCategoryListItemDataSet] = []
-   
+    private(set) var logTabTitle:String? = nil
     func setData(data:BlockItem, uiType:BlockData.UiType? = nil, useTitle:Bool = true) -> KidsCategoryListData{
+        self.logTabTitle = data.menu_nm
+        
         self.type = .cateList
         if useTitle {
             self.title = data.menu_nm ?? " "
@@ -29,6 +31,7 @@ class KidsCategoryListData: KidsHomeBlockListData {
             self.datas = [
                 KidsCategoryListItemData()
                     .setData(data: data, size: KidsCategoryList.size, isTicket: isTicket)
+                    .setNaviLog(action: .init(config: self.logTabTitle, category: data.menu_nm))
             ]
             
         case "08":
@@ -39,7 +42,9 @@ class KidsCategoryListData: KidsHomeBlockListData {
                 var cells:[KidsCategoryListItemData] = []
                 blocks
                     .map{KidsCategoryListItemData()
-                    .setData(data: $0, size: KidsCategoryList.sizeHalf, isTicket: isTicket)}.forEach{ d in
+                    .setData(data: $0, size: KidsCategoryList.sizeHalf, isTicket: isTicket)
+                    .setNaviLog(action: .init(config: self.logTabTitle, category: $0.menu_nm))
+                }.forEach{ d in
                     if cells.count < 2 {
                         cells.append(d)
                     }else{
@@ -47,6 +52,7 @@ class KidsCategoryListData: KidsHomeBlockListData {
                             KidsCategoryListItemDataSet(
                                 datas: cells,
                                 isFull: true)
+                            
                         )
                         cells = [d]
                     }
@@ -63,15 +69,33 @@ class KidsCategoryListData: KidsHomeBlockListData {
             
         default:
             self.blocks = data.blocks ?? []
-            self.datas = data.blocks?
-                .map{
-                    KidsCategoryListItemData()
-                        .setData(data: $0, isTicket: isTicket)
-                    
-                } ?? []
+            let count = self.blocks.count
+            self.datas = zip(0...count,  self.blocks)
+                .map{ idx,  block in
+                    if isTicket {
+                        return KidsCategoryListItemData()
+                            .setData(data: block, isTicket: isTicket)
+                            .setNaviLog(
+                                action: .init(
+                                    menu_id: block.menu_id,
+                                    menu_name: block.menu_nm,
+                                    position: (idx+1).description + "@" + count.description),
+                                contents : .init(
+                                    title: self.logTabTitle
+                                )
+                            )
+                    } else {
+                        return KidsCategoryListItemData()
+                            .setData(data: block, isTicket: isTicket)
+                            .setNaviLog(action: .init(config: self.logTabTitle, category: block.menu_nm))
+                    }
+                }
         }
         return self
     }
+    
+    
+    
 }
 
 struct KidsCategoryListItemDataSet:Identifiable {
@@ -97,6 +121,21 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
     private(set) var monthlyData:MonthlyData? = nil
     private(set) var isTicket:Bool = false
     @Published private(set) var isActive: Bool = false
+    
+    private(set) var actionLog:MenuNaviActionBodyItem? = nil
+    private(set) var contentsLog:MenuNaviContentsBodyItem? = nil
+    var logPage:NaviLog.PageId? = nil
+    var logAction:NaviLog.Action? = nil
+    var hasLog:Bool { get{ return logAction != nil || actionLog != nil || contentsLog != nil} }
+   
+    @discardableResult
+    func setNaviLog(action:MenuNaviActionBodyItem?, contents:MenuNaviContentsBodyItem? = nil) -> KidsCategoryListItemData  {
+        self.logAction = isTicket ? .clickPaymentMenu : .clickSecondDepthMenu
+        self.contentsLog = contents
+        self.actionLog = action
+        return self
+    }
+    
     func setData(data:BlockItem, size:CGSize? = nil, isTicket:Bool = false) -> KidsCategoryListItemData {
         
         let size = size ?? (isTicket ? KidsCategoryList.sizeLong : KidsCategoryList.size)
@@ -178,6 +217,7 @@ struct KidsCategoryList:PageView  {
 
 
 struct KidsCategoryListItem:PageView  {
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     @ObservedObject var data:KidsCategoryListItemData
     @State var image:String? = nil
@@ -200,6 +240,15 @@ struct KidsCategoryListItem:PageView  {
             self.image = self.data.image
         }
         .onTapGesture {
+            if data.hasLog {
+                self.naviLogManager.actionLog(
+                    data.logAction ?? .clickSecondDepthMenu,
+                    pageId: data.logPage ,
+                    actionBody: data.actionLog,
+                    contentBody: data.contentsLog
+                )
+            }
+            
             self.pagePresenter.openPopup(
                 PageKidsProvider.getPageObject(.kidsMultiBlock)
                     .addParam(key: .datas, value: data.blocks)

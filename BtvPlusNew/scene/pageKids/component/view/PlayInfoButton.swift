@@ -14,13 +14,13 @@ import SwiftUI
 
 struct PlayInfoButton: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
-    
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var appSceneObserver:AppSceneObserver
-    
+    var componentViewModel:SynopsisViewModel? = nil
     var data:SummaryViewerData
     var body: some View {
         Button(action: {
+            componentViewModel?.uiEvent = .summaryMore
             self.pagePresenter.openPopup(
                 PageKidsProvider.getPageObject(.detailInfo)
                     .addParam(key: .data, value:

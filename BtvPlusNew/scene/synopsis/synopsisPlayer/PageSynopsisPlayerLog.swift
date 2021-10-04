@@ -11,7 +11,7 @@ extension PageSynopsisPlayer {
     func onEventLog(btvUiEvent:BtvUiEvent){
         switch btvUiEvent {
         case .initate :
-            self.naviLog(pageID:self.pageLodId, action: .clickContentsPlay, config:self.synopsisPlayType.logConfig)
+            self.naviLog(pageID:self.pageLogId, action: .clickContentsPlay, config:self.synopsisPlayType.logConfig)
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
         default: break
         }
@@ -89,12 +89,12 @@ extension PageSynopsisPlayer {
     }
     
     func playStartLog(){
-        self.pageLodId = .synopsis
+        self.pageLogId = .synopsis
         guard let synopsisModel = self.synopsisModel else {return}
         self.checkInsideViewLog(synopsisModel)
         self.naviLogManager.setupSysnopsis(synopsisModel, type:self.synopsisData?.isDemand == true ? "demand" : "clip")
         self.naviLog(
-            pageID: self.pageLodId,
+            pageID: self.pageLogId,
             action: .pageShow,
             config:self.pushId,
             category: "ppv")

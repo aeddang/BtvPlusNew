@@ -59,7 +59,9 @@ struct AddCard: PageView {
                         .multilineTextAlignment(.center)
                 }
                 Button(action: {
-                    self.naviLogManager.actionLog(.clickCouponPointAdd, actionBody: .init(config: type?.title,  category: String.pageText.myBenefitsDiscount))
+                    self.naviLogManager.actionLog(
+                        .clickCouponPointAdd,
+                        actionBody: .init(config: type?.logConfig,  category: "다른할인수단"))
                     self.pagePresenter.openPopup(
                          PageProvider.getPageObject(.myRegistCard)
                             .addParam(key: PageParam.type, value: type)

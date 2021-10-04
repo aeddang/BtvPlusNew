@@ -214,7 +214,7 @@ class BlockData:InfinityData, ObservableObject{
         self.searchType = searchType
         self.allPosters = datas
         let len = min(datas.count, max)
-        self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0}
+        self.posters = datas.isEmpty ? datas : datas[0..<len].map{$0.copy()}
         let type = self.posters?.first?.pageType ?? .btv
         self.listHeight = (self.posters?.first?.type.size.height ?? 0)
             + ( type == .btv ? MultiBlockBody.tabHeight : MultiBlockBody.tabHeightKids  )
@@ -231,7 +231,7 @@ class BlockData:InfinityData, ObservableObject{
         self.searchType = searchType
         self.allVideos = datas
         let len = min(datas.count, max)
-        self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0}
+        self.videos = datas.isEmpty ? datas : datas[0..<len].map{$0.copy()}
         self.setCountName(count: datas.count)
         let type = self.videos?.first?.pageType ?? .btv
         if let video = self.videos?.first{
@@ -251,7 +251,7 @@ class BlockData:InfinityData, ObservableObject{
         self.allTvs = datas
         self.searchType = searchType
         let len = min(datas.count, max)
-        self.tvs = datas.isEmpty ? datas : datas[0..<len].map{$0}
+        self.tvs = datas.isEmpty ? datas : datas[0..<len].map{$0.copy()}
         self.listHeight = (self.tvs?.first?.type.size.height ?? 0) + MultiBlockBody.tabHeight
         self.setCountName(count: datas.count)
         return self
@@ -436,61 +436,7 @@ class BlockData:InfinityData, ObservableObject{
         status = .passive
     }
     
-    func setDatabindingCompleted(
-        total:Int? = nil,
-        parentTitle:String? = nil,
-        modifyTitle:String? = nil,
-        openId:String? = nil,
-        idx:Int = -1)
-    {
-        if self.status != .initate { return }
-        if isCountView, let count = total {
-            self.subName = count.description
-        }
-        if self.cardType == .rankingPoster , let posters = self.posters{
-            zip(posters, 0...posters.count).forEach{ data , idx in
-                data.setRank(idx)
-            }
-        }
-        if let modifyTitle = modifyTitle { self.name = modifyTitle }
-        self.openId = openId // 키즈홈에서 자동 메뉴이동
-        self.parentTitle = parentTitle
-        self.status = .active
-        
-        let isRace = self.cwCallId?.contains("RACE") ?? false
-        if self.posters?.first?.pageType == .kids, let datas = self.posters {
-            let count = datas.count
-            var action = MenuNaviActionBodyItem(
-                menu_id: self.menuId,
-                menu_name: self.name,
-                config: parentTitle,
-                target: isRace ? "Y" : "N"
-            )
-            zip(0...count, datas).forEach{idx, data in
-                data.setNaviLogkids(action:action)
-                action.position = idx.description + "@" + count.description
-                action.category = ""
-                action.result = data.synopsisType.logResult
-            }
-        }
-        
-        if self.videos?.first?.pageType == .kids, let datas = self.posters {
-            let count = datas.count
-            var action = MenuNaviActionBodyItem(
-                menu_id: self.menuId,
-                menu_name: self.name,
-                config: parentTitle,
-                target: isRace ? "Y" : "N"
-            )
-            zip(0...count, datas).forEach{idx, data in
-                data.setNaviLogkids(action:action)
-                action.position = idx.description + "@" + count.description
-                action.category = ""
-                action.result = data.synopsisType.logResult
-            }
-        }
-        
-    }
+    
     
     func setError(_ err:ApiResultError?){
         if status != .initate { return }
@@ -570,13 +516,94 @@ class BlockData:InfinityData, ObservableObject{
         }
     }
     
+    private var logPageTitle:String? = nil
+    private var logTabTitle:String? = nil
+    func setupActionLog(pageTitle:String?, tabTitle:String?) -> BlockData {
+        self.logPageTitle = pageTitle
+        self.logTabTitle = tabTitle
+        return self
+    }
+    
+    func setDatabindingCompleted(
+        total:Int? = nil,
+        parentTitle:String? = nil,
+        modifyTitle:String? = nil,
+        openId:String? = nil,
+        idx:Int = -1)
+    {
+        if self.status != .initate { return }
+        if isCountView, let count = total {
+            self.subName = count.description
+        }
+        if self.cardType == .rankingPoster , let posters = self.posters{
+            zip(posters, 0...posters.count).forEach{ data , idx in
+                data.setRank(idx)
+            }
+        }
+        if let modifyTitle = modifyTitle { self.name = modifyTitle }
+        self.openId = openId // 키즈홈에서 자동 메뉴이동
+        self.parentTitle = parentTitle
+        self.status = .active
+        
+        let isRace = self.cwCallId?.contains("RACE") ?? false
+        if self.posters?.first?.pageType == .kids, let datas = self.posters {
+            let count = datas.count
+            var action = MenuNaviActionBodyItem(
+                menu_id: self.menuId,
+                menu_name: self.name,
+                config: parentTitle,
+                target: isRace ? "Y" : "N"
+            )
+            if let logPageTitle = self.logPageTitle {
+                action.config = logPageTitle
+                action.target = self.logTabTitle
+            }
+            
+            zip(0...count, datas).forEach{idx, data in
+                action.position = (idx+1).description + "@" + count.description
+                action.category = data.synopsisType.logCategory
+                action.result = data.synopsisType.logResult
+                data.setNaviLogKids(action:action)
+            }
+        }
+        
+        if self.videos?.first?.pageType == .kids, let datas = self.videos {
+            let count = datas.count
+            var action = MenuNaviActionBodyItem(
+                menu_id: self.menuId,
+                menu_name: self.name,
+                config: parentTitle,
+                target: isRace ? "Y" : "N"
+            )
+            if let logPageTitle = self.logPageTitle {
+                action.config = logPageTitle
+                action.target = self.logTabTitle
+            }
+            zip(0...count, datas).forEach{idx, data in
+                action.position = (idx+1).description + "@" + count.description
+                action.category = data.synopsisType.logCategory
+                action.result = data.synopsisType.logResult
+                data.setNaviLogKids(action: action)
+                
+            }
+        }
+        
+    }
+    
+    
+    
     func getActionLog()->MenuNaviActionBodyItem {
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_name = self.name.replace(" ", with: "")
         actionBody.menu_id = self.cwCallId ?? self.menuId
-        actionBody.config = self.parentTitle?.replace(" ", with: "")
         actionBody.search_keyword = self.keyword
-        actionBody.target = (self.cwCallId?.contains("RACE") ?? false) ? "Y" : "N"
+        if let logPageTitle = self.logPageTitle {
+            actionBody.config = logPageTitle
+            actionBody.target = self.logTabTitle
+        } else {
+            actionBody.config = self.parentTitle?.replace(" ", with: "")
+            actionBody.target = (self.cwCallId?.contains("RACE") ?? false) ? "Y" : "N"
+        }
         return actionBody
     }
     

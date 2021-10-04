@@ -162,7 +162,7 @@ struct BookMarkButton_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             BookMarkButton(
-                data:SynopsisData(),
+                data:SynopsisData(synopType: .none),
                 isBookmark: .constant(true)
             ){ ac in
                 

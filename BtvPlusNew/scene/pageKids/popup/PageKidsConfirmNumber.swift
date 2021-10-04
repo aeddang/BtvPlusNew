@@ -9,12 +9,21 @@ import SwiftUI
 
 enum PageKidsConfirmType:String {
     case exit, exitSetup, deleteKid, watchLv
+    var  logMenuName: String {
+        switch self {
+        case .exit: return "ZEM키즈종료"
+        case .exitSetup: return "모바일Btv설정"
+        case .deleteKid: return "자녀프로필삭제"
+        case .watchLv: return "시청연령제한영상"
+        }
+    }
 }
 struct PageKidsConfirmNumber: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var keyboardObserver:KeyboardObserver
@@ -46,9 +55,15 @@ struct PageKidsConfirmNumber: PageView {
                 
             ){ input in
                 guard let input = input else {
+                    self.naviLogManager.actionLog(
+                        .clickConfirmButton,
+                        actionBody: .init(menu_name:type.logMenuName, config:"취소"))
                     self.closePage()
                     return
                 }
+                self.naviLogManager.actionLog(
+                    .clickConfirmButton,
+                    actionBody: .init(menu_name:type.logMenuName, config:"확인"))
                 switch self.type {
                 default : self.confirmPassword(input)
                 }

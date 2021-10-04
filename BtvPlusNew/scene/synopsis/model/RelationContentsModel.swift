@@ -162,7 +162,18 @@ class RelationContentsModel:ObservableObject {
         self.relationContents = infos.filter{ $0.block != nil }.map{
             $0.block!.map{
                 let poster = PosterData(pageType: self.pageType).setData(data: $0)
+               
+                if self.pageType == .kids {
+                    var actionBody = MenuNaviActionBodyItem()
+                    actionBody.category = poster.synopsisType.logCategory
+                    actionBody.result = poster.synopsisType.logResult
+                    actionBody.config = ""
+                    actionBody.menu_name = poster.title
+                    actionBody.menu_name = poster.epsdId
+                    poster.setNaviLogKids(action: actionBody)
+                }
                 poster.logPage = self.pageType == .btv ? .synopsis : .kidsSynopsis
+                poster.logAction = self.pageType == .btv ? .clickContentsList : .clickRelatedContentsOption
                 return poster
             }
         }

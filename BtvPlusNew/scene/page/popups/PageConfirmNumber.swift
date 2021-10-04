@@ -370,14 +370,14 @@ struct PageConfirmNumber: PageView {
                 self.registCouponSuccess()
             } else{
                 self.input = ""
-                self.msg = resData.reason
+                self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
             }
         } else if let  resData = res.data as? StbInfo {
             if resData.result == ApiCode.success {
                 self.dataProvider.requestData(q: .init(id:self.tag, type: .certificationCoupon(self.input, resData) ))
             } else{
                 self.input = ""
-                self.msg = resData.reason
+                self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
             }
         } else if let resData = res.data as? CertificationCoupon {
             if resData.result == ApiCode.success2 {

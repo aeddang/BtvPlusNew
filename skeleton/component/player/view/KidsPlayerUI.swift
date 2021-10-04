@@ -96,7 +96,9 @@ struct KidsPlayerUI: PageComponent {
                         padding: Self.spacing
                     ){ _ in
                         
-                        self.viewModel.isReplay.toggle()
+                        let will = !self.viewModel.isReplay
+                        self.viewModel.event = .replay(will)
+                        self.viewModel.isReplay = will
                         
                     }
                     .buttonStyle(BorderlessButtonStyle())

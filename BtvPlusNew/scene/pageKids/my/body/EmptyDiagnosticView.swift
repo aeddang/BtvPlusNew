@@ -10,6 +10,7 @@ import SwiftUI
 
 struct EmptyDiagnosticView: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var type:DiagnosticReportType = .english
     var kid:Kid = Kid()
     var action: ((DiagnosticReportType) -> Void)? = nil
@@ -41,6 +42,10 @@ struct EmptyDiagnosticView: PageView {
                 size: DimenKids.button.mediumRectUltra,
                 isFixSize: true
             ){ _ in
+                
+                self.naviLogManager.actionLog(
+                    .clickOptionMenu,
+                    actionBody: .init(menu_name:type.logName, config:type.logStartConfig))
                 self.action?(self.type)
             }
         }

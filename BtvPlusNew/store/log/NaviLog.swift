@@ -10,7 +10,7 @@ import Foundation
 struct NaviLog {
     enum PageId: String {
         case play = "/play"                                 // 09. 재생
-        case zemPlay = "/category/zemkids/play" // ZEM 키즈 재생
+        case kidsPlay = "/category/zemkids/play" // ZEM 키즈 재생
         case playTouchGuide = "/play/touch_guide"
         case playInside = "/play/inside"                    // 재생 | 인사이드
         case popup = "/popup"                               // GNB팝업
@@ -127,8 +127,8 @@ struct NaviLog {
             
         case .kidsIntro: return nil
         case .kidsHome: return "/category/zemkids"
-        case .registKid: return nil
-        case .editKid: return nil
+        case .registKid: return "/zemkids_certification_popup"
+        case .editKid: return "/category/zemkids/mypage/profile"
         case .kidsMy: return "/category/zemkids/mypage"
         case .kidsMyDiagnostic: return "/category/zemkids/mypage/level_test_report"
         case .kidsProfileManagement: return "/category/zemkids/mypage/profile"
@@ -168,19 +168,55 @@ struct NaviLog {
     }
     
     static func getPageAction(page:PageObject, repository:Repository)-> MenuNaviActionBodyItem?{
-        
         switch page.pageID {
         case .kidsHome:
             var actionBody = MenuNaviActionBodyItem()
             let dataProvider = repository.dataProvider
             let menuId = page.getParamValue(key: .id) as? String ?? dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
             let blockData = dataProvider.bands.kidsGnbModel.getGnbData(menuId: menuId)
-            actionBody.menu_id = blockData?.menuId
-            actionBody.menu_name = blockData?.title
+            //actionBody.menu_id = blockData?.menuId
+            actionBody.result = blockData?.title
+            return actionBody
+        case .kidsMultiBlock:
+            if let pageType = page.getParamValue(key: .type) as? BlockData.UiType{
+                switch  pageType{
+                case .kidsTicket:
+                   // let title = page.getParamValue(key: .title) as? String
+                    let monthly =  page.getParamValue(key: .data) as? MonthlyData
+                    var actionBody = MenuNaviActionBodyItem()
+                    actionBody.config = monthly?.title
+                    return actionBody
+                default: return nil
+                }
+            } else {
+                return nil
+            }
+        case .category:
+            let pushId = page.getParamValue(key: .pushId) as? String ?? ""
+            let actionBody = MenuNaviActionBodyItem(category:pushId )
             return actionBody
         case .myAlram:
             let actionBody = MenuNaviActionBodyItem(config:repository.pairing.user?.isAgree3 == true ? "ON" : "OFF")
             return actionBody
+        case .registKid:
+            let actionBody = MenuNaviActionBodyItem(menu_name:"자녀프로필등록")
+            return actionBody
+        case .kidsConfirmNumber:
+            let type = page.getParamValue(key: .type) as? PageKidsConfirmType
+            let actionBody = MenuNaviActionBodyItem(menu_name:type?.logMenuName)
+            return actionBody
+        case .kidsProfileManagement:
+            let actionBody = MenuNaviActionBodyItem(menu_name:String.kidsTitle.registKidManagement)
+            return actionBody
+        case .editKid:
+            var actionBody = MenuNaviActionBodyItem()
+            if let _ = page.getParamValue(key: .data) as? Kid {
+                actionBody.menu_name = String.kidsTitle.editKid
+            } else {
+                actionBody.menu_name = String.kidsTitle.registKid
+            }
+            return actionBody
+       
         default : return nil
         }
     }

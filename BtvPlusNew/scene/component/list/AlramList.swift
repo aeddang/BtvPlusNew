@@ -128,7 +128,8 @@ struct AlramList: PageComponent{
         if !self.hasNew {return}
         
         self.appSceneObserver.alert = .confirm(String.alert.newAlramAllRead,  String.alert.newAlramAllReadText){ isOk in
-            self.sendLog(action: .clickNotificationPopUp, config: isOk ? "확인": "취소")
+
+            self.sendLog(action: .clickNotificationPopUp, config: isOk ?  "confirm" : "cancel")
             if !isOk {return}
             self.hasNew = false
             self.datas.filter{!$0.isRead}.forEach{$0.isRead = true}
@@ -187,6 +188,7 @@ struct AlramItem: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var data:AlramData
     @State var needExpand = false
     @State var isExpand = false
@@ -268,6 +270,7 @@ struct AlramItem: PageView {
         .background(Color.app.blueLight)
         .onTapGesture {
             if !self.isRead { self.read() }
+            self.naviLogManager.actionLog(.clickNotificationList, actionBody: self.data.actionLog)
             AlramData.move(
                 pagePresenter: self.pagePresenter,
                 dataProvider: self.dataProvider,

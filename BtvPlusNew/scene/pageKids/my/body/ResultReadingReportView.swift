@@ -72,7 +72,7 @@ extension ResultReadingReportView{
 }
 struct ResultReadingReportView: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var data:ResultReadingReportViewData
     
     var action: ((_ isRetry:Bool) -> Void)? = nil
@@ -122,6 +122,7 @@ struct ResultReadingReportView: PageComponent{
                             cornerRadius:  DimenKids.radius.medium
                         ) { _ in
                             
+                            self.sendLog(config: "진단다시하기")
                             self.action?(true)
                         }
                         RectButtonKids(
@@ -134,6 +135,7 @@ struct ResultReadingReportView: PageComponent{
                             cornerRadius:  DimenKids.radius.medium
                         ) { _ in
                             
+                            self.sendLog(config: "다른항목진단하기")
                             self.action?(false)
                         }
                     }
@@ -150,8 +152,9 @@ struct ResultReadingReportView: PageComponent{
                 CommentBox(
                     comment: self.data.comment,
                     comments: self.data.comments
-                )
-                
+                ){
+                    self.sendLog(config: "총평자세히보기")
+                }
                 .modifier(MatchVertical(width: SystemEnvironment.isTablet ? 436 : 269))
                 .background(Color.app.whiteExtra)
             }
@@ -163,7 +166,9 @@ struct ResultReadingReportView: PageComponent{
                 date:self.data.date,
                 type: .infantDevelopment,
                 retryCount:self.data.retryCountStr
-            )
+            ){
+                self.sendLog(config: "추천콘텐츠바로가기")
+            }
             .modifier(MatchHorizontal(height: DimenKids.button.regular))
         }
         
@@ -174,5 +179,13 @@ struct ResultReadingReportView: PageComponent{
           
         }
         .modifier(MatchParent())
+    }
+    
+    private func sendLog(config:String){
+        self.naviLogManager.actionLog(
+            .clickOptionMenu,
+            actionBody: .init(
+                menu_name:DiagnosticReportType.infantDevelopment.logName,
+                config:config))
     }
 }

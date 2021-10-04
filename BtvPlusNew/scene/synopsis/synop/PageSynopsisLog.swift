@@ -12,7 +12,7 @@ extension PageSynopsis {
     func onEventLog(btvUiEvent:BtvUiEvent){
         switch btvUiEvent {
         case .initate :
-            self.naviLog(pageID:self.pageLodId, action: .clickContentsPlay, config:self.synopsisPlayType.logConfig)
+            self.naviLog(pageID:self.pageLogId, action: .clickContentsPlay, config:self.synopsisPlayType.logConfig)
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             
         default: break
@@ -67,10 +67,10 @@ extension PageSynopsis {
     func onEventLog(prerollEvent:PrerollEvent){
         switch prerollEvent {
         case .moveAd :
-            self.naviLog(pageID: self.pageLodId, action: .clickAdButton, category: "광고정보더보기")
+            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고정보더보기")
             self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
         case .skipAd :
-            self.naviLog(pageID: self.pageLodId, action: .clickAdButton, category: "광고건너뛰기")
+            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고건너뛰기")
             self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
         default: break
         }
@@ -85,6 +85,7 @@ extension PageSynopsis {
         case .resume(let isUser) :
             if !isUser {return}
             self.naviLogManager.contentsWatch(isPlay: true)
+            self.naviLogKids(action: .clickContentsPlay)
             self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
         case .togglePlay(let isUser) :
             if !isUser {return}
@@ -95,6 +96,8 @@ extension PageSynopsis {
                 self.naviLogManager.contentsWatch(isPlay: true)
                 self.playNaviLog(action: .clickVodPlay, watchType: .watchStart)
             }
+        case .replay/*(let isReplay)*/ : 
+           self.naviLog(action: .clickVodReplay)
         default: break
         }
     }
@@ -114,39 +117,65 @@ extension PageSynopsis {
     func onEventLog(componentEvent:SynopsisViewModelEvent){
         switch componentEvent {
         case .watchBtv:
-            self.naviLog(
-                pageID: self.pageLodId,
-                action: .clickContentsWatchBtv)
-        case .purchase:
-            self.naviLog(
-                pageID: self.pageLodId,
-                action: .clickContentsOrder)
-        case .bookMark(let isOn):
-            self.naviLog(
-                pageID: self.pageLodId,
-                action: .clickContentsPick,
-                config: isOn ? "pick" : "un-pick")
+            if self.type == .kids {
+                self.naviLogKids(action: .clickContentsOption, target:"btv로보기")
+            } else {
+                self.naviLog(
+                    pageID: self.pageLogId,
+                    action: .clickContentsWatchBtv)
+            }
             
+        case .purchase:
+            if self.type == .kids {
+                self.naviLogKids(action: .clickPurchaseButton)
+            } else {
+                self.naviLog(
+                    pageID: self.pageLogId,
+                    action: .clickContentsOrder)
+            }
+        case .bookMark(let isOn):
+            if self.type == .kids {
+                self.naviLogKids(action: .clickContentsOption, target:"찜")
+            } else {
+                self.naviLog(
+                    pageID: self.pageLogId,
+                    action: .clickContentsPick,
+                    config: isOn ? "pick" : "un-pick")
+            }
+           
         case .like(let value):
             self.naviLog(
-                pageID: self.pageLodId,
+                pageID: self.pageLogId,
                 action: .clickContentsLike,
                 config: value)
         case .share(let isRecommand):
-            self.naviLog(
-                pageID: self.pageLodId,
-                action: .clickContentsShare,
-                config: isRecommand ? "Y" : "")
+            if self.type == .kids {
+                self.naviLogKids(action: .clickContentsOption, target:"더보기")
+            } else {
+                self.naviLog(
+                    pageID: self.pageLogId,
+                    action: .clickContentsShare,
+                    config: isRecommand ? "Y" : "")
+            }
+            
         case .summaryMore:
-            self.naviLog(
-                pageID: self.pageLodId,
-                action: .clickViewMore)
+            if self.type == .kids {
+                self.naviLogKids(action: .clickContentsOption, target:"")
+            } else {
+                self.naviLog(
+                    pageID: self.pageLogId,
+                    action: .clickViewMore)
+            }
+           
         case .selectPerson(let data):
             self.naviLog(
-                pageID: self.pageLodId,
+                pageID: self.pageLogId,
                 action: .clickContentsProductionActor,
                 target: (data.name ?? "") + "|" + (data.descriptionRole ?? "")
             )
+        case .changeOption(let option):
+            self.naviLogKids(action: .clickCaptionOption, target:option?.title)
+                
         default: break
         }
     }
@@ -183,11 +212,11 @@ extension PageSynopsis {
         if self.relationContentsModel.relationTabs.count <= idx {return}
         let tab = self.relationContentsModel.relationTabs[idx]
         if tab == String.pageText.synopsisSiris {
-            self.naviLog(pageID: self.pageLodId, action: .clickTabSeries, config:"sequence")
+            self.naviLog(pageID: self.pageLogId, action: .clickTabSeries, config:"sequence")
         } else if tab.contains("비슷한") {
-            self.naviLog(pageID: self.pageLodId, action: .clickTabSeries, config:"similar_contents")
+            self.naviLog(pageID: self.pageLogId, action: .clickTabSeries, config:"similar_contents")
         } else {
-            self.naviLog(pageID: self.pageLodId, action: .clickTabSeries, config:"relevance_contents")
+            self.naviLog(pageID: self.pageLogId, action: .clickTabSeries, config:"relevance_contents")
         }
     }
     //player watch log
@@ -200,13 +229,17 @@ extension PageSynopsis {
     func playStartLog(){
         guard let synopsisModel = self.synopsisModel else {return}
         self.checkInsideViewLog(synopsisModel)
-        self.pageLodId = self.type == .kids ? .kidsSynopsis : .synopsis
+        self.pageLogId = self.type == .kids ? .kidsSynopsis : .synopsis
         self.setupContent()
-        self.naviLog(
-            pageID: self.pageLodId,
-            action: .pageShow,
-            config:self.pushId,
-            category: "ppv")
+        if self.type == .btv {
+            self.naviLog(
+                pageID: self.pageLogId,
+                action: .pageShow,
+                config:self.pushId,
+                category: "ppv")
+        } else {
+            self.naviLogKids(action: .pageShow)
+        }
         
         self.naviLog(
             action: .pageShow,
@@ -216,16 +249,6 @@ extension PageSynopsis {
         if self.isPlayAble && self.setup.autoPlay {
             self.naviLogManager.contentsWatch(isPlay: true)
         }
-        
-        /*
-        if self.isPlayViewActive{
-            self.naviLog(
-                action: .pageShow,
-                category: self.synopsisPlayType.logCategory,
-                result: self.synopsisData?.synopType.logResult)
-        } else {
-            self.naviLogManager.setupSysnopsis(synopsisModel)
-        }*/
     }
     
     func playNaviLog( action:NaviLog.Action, watchType:NaviLog.watchType){
@@ -252,7 +275,7 @@ extension PageSynopsis {
         if let t = target { actionBody.target = t }
         
         self.naviLogManager.contentsLog(
-            pageId: pageID ?? (self.type == .btv ? .play : .zemPlay),
+            pageId: pageID ?? (self.type == .btv ? .play : .kidsPlay),
             action: action,
             actionBody: actionBody,
             watchType : watchType
@@ -286,16 +309,52 @@ extension PageSynopsis {
                 contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description
             }
             
-            var actionBody = MenuNaviActionBodyItem()
-            actionBody.config = synopsisModel.title
-            actionBody.result = insideChangeViewId
-            actionBody.menu_name = synopsisModel.seasonTitle
-            actionBody.menu_id = synopsisModel.srisId
-            
-            self.naviLogManager.actionLog(
-                .clickInsidePlayButton, pageId: .playInside,
-                 actionBody: actionBody, contentBody: contentsItem)
+        
+            if self.type == .btv {  //동일한 케이스인데 키즈와  비티비가 다름 이런일 한두번도 아니고....
+                
+                var actionBody = MenuNaviActionBodyItem()
+                actionBody.config = synopsisModel.title
+                actionBody.result = insideChangeViewId
+                actionBody.menu_name = synopsisModel.seasonTitle
+                actionBody.menu_id = synopsisModel.srisId
+                self.naviLogManager.actionLog(
+                    .clickInsidePlayButton, pageId: .playInside,
+                     actionBody: actionBody, contentBody: contentsItem)
+                
+            } else {
+                
+                var actionBody = MenuNaviActionBodyItem()
+                actionBody.target = synopsisModel.title
+                actionBody.config = insideChangeViewId
+                actionBody.category = self.synopsisData?.synopType.logCategory
+                actionBody.result = self.synopsisData?.synopType.logResult
+                self.naviLogManager.actionLog(
+                    .clickVodNextEpisode, pageId: .kidsPlay, 
+                     actionBody: actionBody, contentBody: contentsItem)
+            }
         }
+    }
+    
+    //동일한 케이스인데 키즈와  비티비가 다름 이런일 한두번도 아니고....
+    func naviLogKids(action:NaviLog.Action,
+                target:String? = nil
+                 ){
+        if self.type != .kids { return }
+        if naviLogManager.currentSysnopsisContentsItem?.episode_id != self.epsdId {
+            self.setupContent()
+        }
+        
+        var actionBody = MenuNaviActionBodyItem()
+        actionBody.category = self.synopsisData?.synopType.logCategory
+        actionBody.result = self.synopsisData?.synopType.logResult
+        actionBody.config = self.pushId
+        if let t = target { actionBody.target = t }
+        
+        self.naviLogManager.contentsLog(
+            pageId: .kidsSynopsis,
+            action: action,
+            actionBody: actionBody
+        )
     }
 
 }

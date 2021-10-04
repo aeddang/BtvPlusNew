@@ -70,11 +70,13 @@ struct PageCategory: PageView {
             guard let datas = self.tabDatas else { return }
             if idx < 0 || idx >= datas.count { return }
             let data = datas[idx]
+            /*삭제됨
             self.naviLogManager.actionLog(.clickCategoryMenu,
                                           actionBody: .init(
                                             menu_id: data.menuId,
                                             menu_name: data.title,
                                             result:  "N"))
+            */
             self.openPopup(data: data)
             
         }

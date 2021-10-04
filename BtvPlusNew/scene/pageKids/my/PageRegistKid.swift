@@ -17,6 +17,7 @@ struct PageRegistKid: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var setup:Setup
@@ -129,6 +130,9 @@ struct PageRegistKid: PageView {
                                 text: String.app.cancel,
                                 isSelected: false
                             ){idx in
+                                self.naviLogManager.actionLog(
+                                    .clickConfirmButton,
+                                    actionBody: .init(menu_name:"자녀프로필등록", config:"취소"))
                                 self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                             RectButtonKids(
@@ -136,6 +140,10 @@ struct PageRegistKid: PageView {
                                 isSelected: true,
                                 size: DimenKids.button.heavyRect
                             ){idx in
+                                
+                                self.naviLogManager.actionLog(
+                                    .clickConfirmButton,
+                                    actionBody: .init(menu_name:"자녀프로필등록", config:"자녀프로필만들기"))
                                 self.registKid()
                             }
                             .opacity(self.isInputCompleted() ? 1.0 : 0.3)

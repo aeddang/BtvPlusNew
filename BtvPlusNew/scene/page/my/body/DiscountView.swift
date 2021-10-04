@@ -10,6 +10,7 @@ import SwiftUI
 struct DiscountView: PageComponent{
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var cardModel:CardBlockModel = CardBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -36,9 +37,15 @@ struct DiscountView: PageComponent{
         .onReceive(self.viewModel.$index) { idx in
             var willType:CardBlock.ListType? = nil
             switch idx {
-            case 0 : willType = .member
-            case 1 : willType = .okCash
-            case 2 : willType = .tvPoint
+            case 0 :
+                self.sendLog(action: .clickCouponPointTabMenu, category: "다른할인수단-T맴버십")
+                willType = .member
+            case 1 :
+                self.sendLog(action: .clickCouponPointTabMenu, category: "다른할인수단-OK캐쉬백")
+                willType = .okCash
+            case 2 :
+                self.sendLog(action: .clickCouponPointTabMenu, category: "다른할인수단-TV포인트")
+                willType = .tvPoint
             default : break
             }
             if willType != self.currentType {
@@ -48,7 +55,6 @@ struct DiscountView: PageComponent{
                     self.updateButtons(idx: idx)
                 }
             }
-            
         }
         .onReceive(self.infinityScrollModel.$scrollPosition) { pos in
             self.viewPagerModel.request = .reset
@@ -72,6 +78,13 @@ struct DiscountView: PageComponent{
             )
             .getNavigationButtons(texts:titles,  bgColor:Color.app.blueLight)
         
+    }
+    
+    private func sendLog(action:NaviLog.Action,
+                         category:String?) {
+        
+        let actionBody = MenuNaviActionBodyItem(category: category)
+        self.naviLogManager.actionLog(action, actionBody: actionBody)
     }
 }
 

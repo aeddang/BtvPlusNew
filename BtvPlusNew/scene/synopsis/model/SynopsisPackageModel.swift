@@ -53,8 +53,17 @@ class SynopsisPackageModel : PageProtocol {
             let poster = PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "",
                                                     isPosson: isPosson, anotherStb : anotherStb,
                                                     idx: idx)
+            if self.type == .kids {
+                var actionBody = MenuNaviActionBodyItem()
+                actionBody.category = poster.synopsisType.logCategory
+                actionBody.result = poster.synopsisType.logResult
+                actionBody.config = ""
+                actionBody.menu_name = poster.title
+                actionBody.menu_name = poster.epsdId
+                poster.setNaviLogKids(action: actionBody)
+            }
             poster.logPage = self.type == .btv ? .synopsis : .kidsSynopsis
-            poster.logAction = .clickContentsPreviewWatching
+            poster.logAction = self.type == .btv ? .clickContentsPreviewWatching : .clickRelatedContentsOption
             return poster
         }
         return self

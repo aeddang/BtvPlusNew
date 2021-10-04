@@ -18,6 +18,7 @@ struct PageKidsMyDiagnostic: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -44,7 +45,7 @@ struct PageKidsMyDiagnostic: PageView {
                             Spacer().modifier(MatchHorizontal(height: 0))
                             MenuTab(
                                 viewModel: self.tabNavigationModel,
-                                buttons: DiagnosticReportType.allCases.filter{$0.nameTab != nil}.map{$0.nameTab!},
+                                buttons:self.tabs,
                                 selectedIdx: DiagnosticReportType.allCases.firstIndex(of: self.type) ?? 0,
                                 isDivision: true)
                                 .frame(width: Self.tabWidth * CGFloat(DiagnosticReportType.allCases.count))
@@ -134,7 +135,13 @@ struct PageKidsMyDiagnostic: PageView {
             }
             .onReceive(self.tabNavigationModel.$index){ idx in
                 if !self.isInitPage {return}
-                self.loadResult(DiagnosticReportType.allCases[idx])
+                if self.tabs.isEmpty {return}
+                let report = DiagnosticReportType.allCases[idx]
+                self.naviLogManager.actionLog(
+                    .clickTabMenu,
+                    actionBody: .init(menu_name:report.logName))
+                
+                self.loadResult(report)
             }
             .onReceive(self.pairing.$kid){ kid in
                 self.kid = kid
@@ -224,6 +231,7 @@ struct PageKidsMyDiagnostic: PageView {
                 }
             }
             .onAppear{
+                self.tabs = DiagnosticReportType.allCases.filter{$0.nameTab != nil}.map{$0.nameTab!}
                 guard let obj = self.pageObject  else { return }
                 if let type = obj.getParamValue(key: .type) as? DiagnosticReportType {
                     self.type = type
@@ -249,6 +257,7 @@ struct PageKidsMyDiagnostic: PageView {
     @State var isError:Bool = false
     @State var isEmpty:Bool = true
     @State var isEmptyResult:Bool = false
+    @State var tabs:[String] = []
     
     @State var isInitReadingResult:Bool = true
     @State var isReadingSelect:Bool = false

@@ -22,6 +22,8 @@ class KidsBannerData: KidsHomeBlockListData {
 
 
 struct KidsBanner:PageView  {
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var dataProvider:DataProvider
     var data:KidsBannerData
     @State var banner:BannerData? = nil
@@ -29,7 +31,18 @@ struct KidsBanner:PageView  {
     var body :some View {
         ZStack(alignment: .top){
             if let banner = self.banner {
-                BannerItem(data: banner)
+                BannerItem(data: banner){
+                    self.naviLogManager.actionLog(
+                        .clickPromotionBanner,
+                        actionBody:.init(
+                            menu_id: banner.menuId,
+                            config: banner.logConfig,
+                            result: self.appSceneObserver.kidsGnbMenuTitle),
+                        contentBody:.init(
+                            title: banner.title
+                        )
+                    )
+                }
             }
         }
         .onReceive(dataProvider.$result) { res in

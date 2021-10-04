@@ -319,6 +319,8 @@ class InfinityScrollModel:ComponentObservable{
     }
 }
 
+
+
 open class InfinityData:Identifiable, Equatable{
     public var id:String = UUID().uuidString
     public var hashId:Int = UUID().hashValue

@@ -175,7 +175,7 @@ struct CouponHeader: PageComponent{
                     PageProvider.getPageObject(.confirmNumber)
                         .addParam(key: .type, value: type)
                 )
-                self.naviLogManager.actionLog(.clickCouponPointAdd, actionBody: .init(config: "",  category: self.type.text))
+                self.naviLogManager.actionLog(.clickCouponPointAdd, actionBody: .init(config: "",  category: self.type.category))
                 
             }) {
                 HStack(alignment:.center, spacing: Dimen.margin.micro){

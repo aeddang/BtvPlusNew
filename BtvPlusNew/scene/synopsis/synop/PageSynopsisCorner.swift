@@ -28,7 +28,7 @@ extension PageSynopsis {
                         self.appSceneObserver.alert = .alert(nil, String.pageText.synopsisCornerPlayOnlyPurchasedBtv)
                     } else {
                         guard  let model = self.purchaseWebviewModel else { return }
-                        self.appSceneObserver.alert = .confirm( String.alert.purchase, String.pageText.synopsisCornerPlayNeedPurchased, confirmText: String.button.purchas){ isOk in
+                        self.appSceneObserver.alert = .confirm( String.alert.purchase, String.pageText.synopsisCornerPlayNeedPurchased){ isOk in
                             if isOk {
                                 let ani:PageAnimationType = SystemEnvironment.currentPageType == .btv ? .horizontal : .opacity
                                 self.pagePresenter.openPopup(

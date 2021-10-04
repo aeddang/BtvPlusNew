@@ -92,7 +92,7 @@ struct ShareRecommand: PageComponent {
                     size: Dimen.button.regular,
                     bgColor:Color.brand.secondary
                 ){_ in
-                    self.sendLog(category: String.app.close)
+                    self.sendLog(action: .clickPopupButton, category: "닫기")
                     self.close()
                 }
                 FillButton(
@@ -109,7 +109,7 @@ struct ShareRecommand: PageComponent {
                     bgColor:Color.brand.primary
                 ){_ in
                     
-                    self.sendLog(category: String.share.synopsisRecommandButton)
+                    self.sendLog(action: .clickPopupButton, category: "추천하고 혜택 받기")
                     self.getRecommandCode()
                 }
             }
@@ -159,6 +159,7 @@ struct ShareRecommand: PageComponent {
             } else {
                 self.dataProvider.requestData(q: .init(type: .getRecommendBenefit))
             }
+            sendLog(action: .pageShow, category: "")
         }
     }//body
     
@@ -202,11 +203,12 @@ struct ShareRecommand: PageComponent {
         return dateFormat.string(from: Date())
     }
     
-    private func sendLog(category:String){
-       
+    private func sendLog(action:NaviLog.Action,  category:String){
         var actionBody = MenuNaviActionBodyItem()
+        actionBody.menu_id = ""
+        actionBody.menu_name = "추천하기"
         actionBody.category = category
-        self.naviLogManager.actionLog( .clickPopupButton, pageId: .popup, actionBody: actionBody)
+        self.naviLogManager.actionLog( action, pageId: .popup, actionBody: actionBody)
     }
 }
 

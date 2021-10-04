@@ -437,6 +437,7 @@
 "alertOkCashMasterInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
 
 "alertCouponRegistSuccess" = "%s 등록이 완료되었습니다.";
+"alertCouponRegistIncorrectFail" = "%s 번호가 일치하지 않습니다.\n확인 후 다시 입력해주세요.";
 "alertCouponRegistFail" = "알 수 없는 오류로 쿠폰 등록에 실패하였습니다.\n106 고객센터로 문의해주세요.";
 
 
@@ -581,6 +582,7 @@
 "titleCashChargeGuide" = "B포인트 충전소 이용 안내";
 
 "titleMyRegistCardMember" = "T멤버십 카드 등록";
+"titleMyChangeCardMember" = "T멤버십 카드 변경";
 "titleMyRegistCardOk" = "OK캐쉬백 카드 등록";
 "titleKids" = "ZEM 키즈";
 "titleMobileBtv" = "모바일 B tv";
@@ -802,6 +804,7 @@
 
 "myBenefitsRegistOk" = "OK캐쉬백 카드가 등록되었어요.";
 "myBenefitsRegistT"  = "T멤버십 카드가 등록되었어요.";
+"myBenefitsChangedT"  = "T멤버십 카드가 변경되었어요.";
 
 "myBenefitsCardEmpty" = "등록된 카드가 없습니다.";
 "myBenefitsDiscountTvEmpty" = "TV포인트 등록 정보가 없습니다.";

@@ -41,6 +41,7 @@ extension String{
         public static let cashChargeGuide = "titleCashChargeGuide".loaalized()
         
         public static let myRegistCardMember = "titleMyRegistCardMember".loaalized()
+        public static let myChangeCardMember = "titleMyChangeCardMember".loaalized()
         public static let myRegistCardOk = "titleMyRegistCardOk".loaalized()
         public static let mobileBtv = "titleMobileBtv".loaalized()
         public static let btv = "titleBtv".loaalized()
@@ -281,7 +282,7 @@ extension String{
         
         public static let myBenefitsRegistOk = "myBenefitsRegistOk".loaalized()
         public static let myBenefitsRegistT = "myBenefitsRegistT".loaalized()
-        
+        public static let myBenefitsChangedT = "myBenefitsChangedT".loaalized()
         public static var myBenefitsDiscountOkDeleteConfirm = "myBenefitsDiscountOkDeleteConfirm".loaalized()
         public static var myBenefitsDiscountOkDeleteConfirmText = "myBenefitsDiscountOkDeleteConfirmText".loaalized()
         public static var myBenefitsDiscountTDeleteConfirm = "myBenefitsDiscountTDeleteConfirm".loaalized()

@@ -110,6 +110,7 @@ struct BannerItem: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     var data:BannerData
+    var action: (() -> Void)? = nil
     var body: some View {
         ZStack{
             switch self.data.type {
@@ -142,6 +143,7 @@ struct BannerItem: PageView {
         .background(self.data.bgColor ?? Color.app.blueLight)
         .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius)) 
         .onTapGesture {
+            action?()
             BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data: self.data)
         }
     }

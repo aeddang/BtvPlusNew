@@ -180,6 +180,19 @@ enum KidsPlayType:Equatable{
         }
     }
     
+    var logCategory:String {
+        get{
+            switch self {
+            case .play: return "놀이활동"
+            case .english: return "영어"
+            case .tale: return "동화"
+            case .create: return "창의누리"
+            case .subject: return "교과지식"
+            default : return  ""
+            }
+        }
+    }
+    
     var diagnosticReportType:DiagnosticReportType? {
         get{
             switch self {

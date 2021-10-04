@@ -131,7 +131,8 @@ class PlayData:InfinityData,ObservableObject{
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
-            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id ,kidZone:data.kids_yn)
+            epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: data.prd_prc_id,
+            kidZone:data.kids_yn, synopType: synopsisType)
         return self
     }
     

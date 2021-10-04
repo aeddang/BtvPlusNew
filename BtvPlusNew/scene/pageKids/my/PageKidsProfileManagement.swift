@@ -15,6 +15,7 @@ struct PageKidsProfileManagement: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     
@@ -40,6 +41,10 @@ struct PageKidsProfileManagement: PageView {
                                     if self.currentKid?.id == kid.id {
                                         return
                                     }
+                                    
+                                    self.naviLogManager.actionLog(
+                                        .clickProfileEdit,
+                                        actionBody: .init(menu_name:String.kidsTitle.registKidManagement, category:"캐릭터선택"))
                                     
                                     self.appSceneObserver.alert = .confirm(
                                         nil ,

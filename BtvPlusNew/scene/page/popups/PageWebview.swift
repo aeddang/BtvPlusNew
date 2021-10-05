@@ -24,8 +24,7 @@ struct PageWebview: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var webViewModel = WebViewModel()
     
-    @State var webViewHeight:CGFloat = 0
-   
+    
     @State var title:String? = nil
     @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
@@ -43,45 +42,11 @@ struct PageWebview: PageView {
                         )
                         .padding(.top, self.sceneObserver.safeAreaTop)
                     }
-                    ZStack(alignment: .topLeading){
-                        DragDownArrow(
-                            infinityScrollModel: self.infinityScrollModel)
-                        /*
-                        BtvWebView( viewModel: self.webViewModel )
-                            .modifier(MatchHorizontal(height: self.webViewHeight))
-                            .modifier(MatchParent())
-                            .padding(.bottom, self.marginBottom)
-                        */
-                        
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            scrollType : .web(isDragEnd: true),
-                            isRecycle:false,
-                            useTracking:true ){
-                            BtvWebView( viewModel: self.webViewModel , useNativeScroll:false)
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.setWebviewSize(geometry: geometry)
-                                }
-                        }
-                        .padding(.bottom, self.marginBottom)
+                    BtvWebView( viewModel: self.webViewModel)
                         .modifier(MatchParent())
                         
-                        .onReceive(self.infinityScrollModel.$event){evt in
-                            guard let evt = evt else {return}
-                            switch evt {
-                            case .pullCompleted :
-                                self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                            case .pullCancel :
-                                self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                            default : break
-                            }
-                        }
-                        .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                        }
-                    }
                 }
+                .padding(.bottom, self.marginBottom)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
@@ -100,15 +65,7 @@ struct PageWebview: PageView {
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation{ self.marginBottom = bottom }
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
-            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
-                if isUpdated {
-                    self.setWebviewSize(geometry: geometry)
-                }
+                self.marginBottom = bottom 
             }
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
@@ -130,13 +87,6 @@ struct PageWebview: PageView {
         }//geo
     }//body
     
-    private func setWebviewSize(geometry:GeometryProxy){
-        self.webViewHeight = geometry.size.height
-            - Dimen.app.top
-            - (self.appSceneObserver.useBottom ? Dimen.app.bottom : 0)
-            - self.sceneObserver.safeAreaTop
-            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-    }
 }
 
 #if DEBUG

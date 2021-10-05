@@ -183,7 +183,6 @@ class Metv: Rest{
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-033"
-        
         params["stb_id"] = stbId
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? "999"
@@ -191,8 +190,6 @@ class Metv: Rest{
         params["svc_code"] = MetvNetwork.SVC_CODE
         return params
     }
-    
-    
     
     /**
     * 월정액 메뉴 리스트 (IF-ME-036)
@@ -259,12 +256,18 @@ class Metv: Rest{
         params["IF"] = "IF-ME-021" //"IF-ME-121"
         
         params["stb_id"] = stbId
-       // params["mobile_id"] = SystemEnvironment.getGuestDeviceId()
+        //params["mobile_id"] = SystemEnvironment.deviceId
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? "9999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_SENIOR
         params["yn_ppm"] = isPpm ? "Y" : "N"
+            
+        params["profile_id"] = nil
+        params["profile_typ_cd"] = nil
+        params["dvc_typ_cd"] = nil
+        params["watch_share_view_typ"] = "Y"
+            
         fetch(route: MetvWatch(query: params), completion: completion, error:error)
     }
     
@@ -282,19 +285,24 @@ class Metv: Rest{
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-022" //"IF-ME-122"
         params["stb_id"] = stbId
-        // params["mobile_id"] = SystemEnvironment.getGuestDeviceId()
+        //params["mobile_id"] = SystemEnvironment.deviceId
         params["isAll"] = isAll ? "Y" : "N"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
         params["deleteList"] = deleteList ?? []
-        
+        /*
+        params["profile_id"] = nil
+        params["profile_typ_cd"] = nil
+        params["dvc_typ_cd"] = nil
+        params["watch_share_view_typ"] = "N"
+         */
         var headers = [String : String]()
         headers["method"] = "delete"
         fetch(route: MetvDelWatch(headers:headers, body: params), completion: completion, error:error)
     }
     
     /**
-    * 모바일 최근시청 VOD 조회 (IF-ME-121)
+    * 모바일 최근시청 VOD 조회 (IF-ME-021)
     * @param pageNo 요청할 페이지의 번호 (Default: 1)
     * @param entryNo 요청한 페이지에 보여질 개수 (Default: 5)
     * @param isPPM 최근시청VOD조회시 MyBtv/월정액 구분 필수 Y : 월정액 N : My Btv
@@ -307,16 +315,28 @@ class Metv: Rest{
         params["response_format"] = MetvNetwork.RESPONSE_FORMET
         params["ver"] = MetvNetwork.VERSION
         params["IF"] = "IF-ME-021"
-        params["profile_id"] = NpsNetwork.pairingId
-        params["profile_typ_cd"] = "01"
-        params["dvc_typ_cd"] = "02"
+        params["poc_code"] = "NXNEWUI"
         params["stb_id"] = stbId
-        params["mobile_id"] = SystemEnvironment.deviceId
+        //params["mobile_id"] = SystemEnvironment.deviceId
         params["page_no"] = page?.description ?? "1"
         params["entry_no"] = pageCnt?.description ?? "9999"
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_SENIOR
         params["yn_ppm"] = isPpm ? "Y" : "N"
+            
+        params["profile_id"] = NpsNetwork.pairingId
+        params["profile_typ_cd"] = "01"
+        params["dvc_typ_cd"] = "02"
+        //params["watch_share_view_typ"] = "Y"
+            
+            
+        /*
+        var prfList = [String:Any]()
+            prfList["profRgstDvcTypCd"] = "02" //모름
+            prfList["profTypCd"] = "01"  //모름
+            prfList["psnlProfId"] = NpsNetwork.pairingId
+        params["prfList"] = prfList
+          */
         fetch(route: MetvWatch(query: params), completion: completion, error:error)
     }
     
@@ -338,6 +358,10 @@ class Metv: Rest{
         params["hash_id"] = ApiUtil.getHashId(stbId)
         params["svc_code"] = MetvNetwork.SVC_CODE
         params["deleteList"] = deleteList ?? []
+            
+        params["profile_id"] = NpsNetwork.pairingId
+        params["profile_typ_cd"] = "01"
+        params["dvc_typ_cd"] = "02"
         
         var headers = [String : String]()
         headers["method"] = "delete"

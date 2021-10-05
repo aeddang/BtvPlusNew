@@ -39,6 +39,10 @@ class NpsMessage{
     func setMessage(type:NpsCtrlType, value:NpsCtrlValue) -> NpsMessage {
         return setMessage(type: type, value: value.rawValue, query: nil)
     }
+    func setContent(value:NpsCtrlValue) -> NpsMessage {
+        self.content = value.rawValue
+        return self
+    }
     func setMessage(type:NpsCtrlType, value:String? = nil, query:NpsQuery? = nil) -> NpsMessage {
         self.ctrlType = type
         var ctrlValue =  value ?? "" 

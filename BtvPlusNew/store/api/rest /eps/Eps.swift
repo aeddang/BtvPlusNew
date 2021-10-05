@@ -113,7 +113,7 @@ class Eps: Rest{
         params["IF"] = "IF-EPS-410"
         params["stb_id"] = stbId
         params["mac"] = macAdress
-        fetch(route: EpsPostCoupon( couponId: couponNum ?? "", body: params), completion: completion, error:error)
+        fetch(route: EpsPostCoupon( couponId: couponNum?.replace("-", with: "") ?? "", body: params), completion: completion, error:error)
     }
     
     /**
@@ -158,7 +158,7 @@ class Eps: Rest{
         params["IF"] = "IF-EPS-760"
         params["stb_id"] = stbId
         params["mac"] = macAdress
-        fetch(route: EpsPostBPoint( pointId: pointId ?? "", body: params), completion: completion, error:error)
+        fetch(route: EpsPostBPoint( pointId: pointId?.replace("-", with: "") ?? "", body: params), completion: completion, error:error)
     }
     
     /**
@@ -202,7 +202,7 @@ class Eps: Rest{
         params["IF"] = "IF-EPS-710"
         params["stb_id"] = stbId
         params["mac"] = macAdress
-        fetch(route: EpsPostBCash( cashId: cashId ?? "", body: params), completion: completion, error:error)
+        fetch(route: EpsPostBCash( cashId: cashId?.replace("-", with: "") ?? "", body: params), completion: completion, error:error)
     }
     
     /**

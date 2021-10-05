@@ -232,6 +232,7 @@ class Pairing:ObservableObject, PageProtocol {
     
     func syncHostDevice(_ hostDevice:HostDevice){
         self.hostDevice = hostDevice
+        self.pairingStbType = hostDevice.isAppleTv ? .apple : .btv
         self.checkComple()
     }
     

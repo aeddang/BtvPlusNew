@@ -436,7 +436,7 @@
 "alertOkCashMaster" = "OK캐쉬백 대표카드등록";
 "alertOkCashMasterInput" = "OK캐쉬백 비밀번호를 입력해주세요.";
 
-"alertCouponRegistSuccess" = "%s 등록이 완료되었습니다.";
+"alertCouponRegistSuccess" = "%s이 완료되었습니다.";
 "alertCouponRegistIncorrectFail" = "%s 번호가 일치하지 않습니다.\n확인 후 다시 입력해주세요.";
 "alertCouponRegistFail" = "알 수 없는 오류로 쿠폰 등록에 실패하였습니다.\n106 고객센터로 문의해주세요.";
 
@@ -733,6 +733,7 @@
 "myRegistCardEmptyCardNo" = "카드번호 16자리를 입력해주세요.";
 "myRegistCardEmptyPassword" = "비밀번호 4자리를 입력해주세요.";
 "myRegistCardEmptyBirth" = "생년월일을 입력해주세요.";
+"myRegistCardBirthPlaceHolder" = "예) 19901111";
 "myRegistCardPasswordTip" = "비밀번호 확인 및 설정은 OK캐쉬백에서 가능합니다.";
 "myRegistCardPasswordPlaceHolder" = "4자리 숫자";
 
@@ -1044,7 +1045,8 @@
 "remoteInputSearchHolder" = "검색어 입력";
 "remoteInputSearchTip" = "검색어 입력 후 확인 선택 시,\nB tv에서 검색결과를 확인하실 수 있습니다.";
 
-
+"remoteNetworkDisconnect" = "B tv와의 통신이 원활하지 않습니다.\n기기전원 또는 네트워크 상태를 확인해주세요.";
+"remoteNetworkUnstable" = "원활한 서비스 이용을 위해\n잠시 후 시도해 주세요.";
 
 "remoteTitleMusicBroadcast" = "24시간 음악방송";
 "remoteTitleMirroring" = "B tv 이어폰 모드 이용 중입니다.";
@@ -1080,7 +1082,7 @@
 "monthlyOceanPurchaseTrailing" = "에 가입해 보세요!";
 "monthlyOceanAuthLeading" = "이용중!";
 "monthlyOceanAuth" = " 아래의 콘텐츠를 즐겨보세요";
-"monthlyOceanPeriodAuth" = "OCEAN 주말패스 이용중!  아래의 콘텐츠를 즐겨보세요";
+"monthlyOceanPeriodAuth" = "%s 이용중!  아래의 콘텐츠를 즐겨보세요";
 "monthlyOceanFirstFreeLeading" = "첫 달 무료! 지금";
 "monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요";
 "monthlyDDay" = "만료 %s일 전";

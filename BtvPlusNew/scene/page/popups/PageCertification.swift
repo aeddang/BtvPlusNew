@@ -22,7 +22,7 @@ struct PageCertification: PageView {
   
     @State var movePage:PageObject? = nil
     @State var isCompleted:Bool = false
-    @State var marginBottom:CGFloat = Dimen.app.bottom
+    @State var marginBottom:CGFloat = 0
     @State var title:String? = nil
     var body: some View {
         GeometryReader { geometry in
@@ -37,42 +37,15 @@ struct PageCertification: PageView {
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    
-                    ZStack(alignment: .topLeading){
-                        DragDownArrow(
-                            infinityScrollModel: self.infinityScrollModel)
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            scrollType : .web(isDragEnd: true),
-                            isRecycle:false,
-                            useTracking:true
-                        ){
-                            BtvWebView( viewModel: self.webViewModel , useNativeScroll:false)
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .background(Color.app.white)
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.setWebviewSize(geometry: geometry)
-                                }
-                        }
-                        
+                    HStack(alignment: .top, spacing:0){
+                        BtvWebView( viewModel: self.webViewModel)
+                        Spacer().modifier(MatchVertical(width: 0))
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
-                    
-                    .onReceive(self.infinityScrollModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted :
-                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                        case .pullCancel :
-                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : break
-                        }
-                    }
-                    .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                    }
+                    .background(Color.app.white)
+    
                 }
+                .padding(.bottom, self.marginBottom)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
@@ -124,16 +97,9 @@ struct PageCertification: PageView {
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation{ self.marginBottom = bottom }
-                    self.setWebviewSize(geometry: geometry)
-                }
+                self.marginBottom = bottom
             }
-            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
-                if isUpdated {
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
+            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 if let data = obj.getParamValue(key: .data) as? PageObject {
@@ -153,13 +119,7 @@ struct PageCertification: PageView {
             
         }//geo
     }//body
-    private func setWebviewSize(geometry:GeometryProxy){
-        self.webViewHeight = geometry.size.height
-            - Dimen.app.top
     
-            - self.sceneObserver.safeAreaTop
-            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-    }
    
 }
 

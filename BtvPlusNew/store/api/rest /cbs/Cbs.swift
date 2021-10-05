@@ -67,22 +67,20 @@ class Cbs: Rest{
         headers["API-ID"] = "CBS-POC-011"
         headers["User-Agent"] = "BtvPlus/4.4.5 (iPhone; iOS 15.0; Scale/3.00)"
         
-        let encryptedCouponNum = ApiUtil.getCBSEncrypted(couponNum, uuid: uuid)
+        let encryptedCouponNum = ApiUtil.getCBSEncrypted(couponNum?.replace("-", with: ""), uuid: uuid)
         let encryptedFgCd = ApiUtil.getCBSEncrypted("10", uuid: uuid)
         let encryptedReqId = ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid)
-            
         let qurryString =
             "noConfirm=" + ApiUtil.string(byUrlEncoding:encryptedCouponNum) +
             "&fgCd=" + ApiUtil.string(byUrlEncoding:encryptedFgCd) +
             "&reqId=" + ApiUtil.string(byUrlEncoding:encryptedReqId)
         
-            
+        /*
         var params = [String:Any]()
         params["noConfirm"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted(couponNum, uuid: uuid))
         params["fgCd"] =  ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("10", uuid: uuid))
         params["reqId"] = ApiUtil.string(byUrlEncoding:ApiUtil.getCBSEncrypted("MobileBtv", uuid: uuid))
-    
-            
+         */
          //let postData = qurryString.formUrlencoded().data(using: String.Encoding.utf8, allowLossyConversion: false)
         fetch(route: CbsCertificationCoupon(overrideHeaders:headers, jsonString: qurryString ), completion: completion, error:error)
     }

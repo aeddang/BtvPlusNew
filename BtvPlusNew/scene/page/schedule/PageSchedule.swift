@@ -21,6 +21,7 @@ struct PageSchedule: PageView {
     
     @State var webViewHeight:CGFloat = 0
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
+    @State var marginBottom:CGFloat = Dimen.app.bottom
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -35,6 +36,16 @@ struct PageSchedule: PageView {
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
+                    BtvWebView( viewModel: self.webViewModel)
+                        .modifier(MatchParent())
+                        
+                    /*
+                    BtvWebView( viewModel: self.webViewModel, useNativeScroll:false )
+                        .modifier(MatchHorizontal(height: self.webViewHeight))
+                        .onReceive(self.webViewModel.$screenHeight){height in
+                            self.setWebviewSize(geometry: geometry)
+                        }
+                    
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
@@ -54,7 +65,7 @@ struct PageSchedule: PageView {
                     }
                     .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
-                    
+                     
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
@@ -67,8 +78,9 @@ struct PageSchedule: PageView {
                     }
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                    }
+                    }*/
                 }
+                //.padding(.bottom, self.marginBottom)
                 .modifier(PageFull(style: .dark))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
@@ -88,17 +100,10 @@ struct PageSchedule: PageView {
                 default : break
                 }
             }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                self.marginBottom = bottom 
+            }
             
-            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
-                if isUpdated {
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
-            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-                if ani {
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
             .onAppear{
                 var link = BtvWebView.schedule
                 if let obj = self.pageObject {
@@ -115,12 +120,7 @@ struct PageSchedule: PageView {
         }//geo
     }//body
     
-    private func setWebviewSize(geometry:GeometryProxy){
-        self.webViewHeight = geometry.size.height
-            - Dimen.app.top
-            - self.sceneObserver.safeAreaTop
-            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-    }
+    
 }
 
 #if DEBUG

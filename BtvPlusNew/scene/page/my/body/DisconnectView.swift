@@ -15,6 +15,7 @@ struct DisconnectView: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var vsManager:VSManager
     
     var pageObservable:PageObservable = PageObservable()
@@ -134,10 +135,49 @@ struct DisconnectView: PageComponent{
             self.isPossession = self.setup.possession.isEmpty == false
             self.isOksusu = self.setup.oksusu.isEmpty == false
         }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else { return }
+            switch res.type {
+            
+            case .connectTerminateStb(let type, _) :
+                guard let data = res.data as? ConnectTerminateStb  else {
+                   return
+                }
+                switch type {
+                case .info :
+                    if data.mbtv_key != SystemEnvironment.originDeviceId {
+                        self.setup.possession = ""
+                        self.isPossession = false
+                    } else {
+                        self.isPossession = self.setup.possession.isEmpty == false
+                    }
+                default : break
+                }
+            default: break
+            }
+        }
+        .onReceive(self.dataProvider.$error){ err in
+            guard let err = err else { return }
+            switch err.type {
+            case .connectTerminateStb(let type, _) :
+                if type == .delete {
+                    self.pagePresenter.closePopup(self.pageObject?.id)
+                }
+            default: break
+            }
+        }
         .onAppear{
             self.sceneOrientation  = self.sceneObserver.sceneOrientation
-            self.isPossession = self.setup.possession.isEmpty == false
+            
             self.isOksusu = self.setup.oksusu.isEmpty == false
+            
+            if self.setup.possession.isEmpty == false {
+                self.dataProvider.requestData(
+                    q:.init(id: self.tag,
+                            type: .connectTerminateStb(.info, self.setup.possession), isOptional: true))
+            } else {
+                
+            }
         }
         
     }//body

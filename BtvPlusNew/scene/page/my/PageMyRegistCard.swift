@@ -36,7 +36,6 @@ struct PageMyRegistCard: PageView {
     @State var cardNo:String? = nil
     @State var password:String = ""
     @State var gender:Gender = .mail
-    @State var birthDate:Date? = nil
     @State var birth:String = ""
     @State var isForeigner:Bool = false
     @State var isChange:Bool = false
@@ -75,8 +74,13 @@ struct PageMyRegistCard: PageView {
                                         isInit:true,
                                         focusIdx: self.$cardNoFocus,
                                         completed : {
+                                            
                                             withAnimation{
-                                                self.editType = .pw
+                                                if self.useEdit.firstIndex(of: .pw) != nil {
+                                                    self.editType = .pw
+                                                } else {
+                                                    self.editType = .birth
+                                                }
                                             }
                                         }
                                     ){ no in
@@ -173,17 +177,24 @@ struct PageMyRegistCard: PageView {
                                     VStack(alignment:.leading, spacing:Self.titleSpacing){
                                         Text(String.app.birthDay)
                                             .modifier(BoldTextStyle(size: Font.size.light))
-                                           
-                                        SortButton(
-                                            text: self.birth,
-                                            isFocus: self.editType == .birth,
-                                            isFill:true,
-                                            strokeColor: Color.app.blueLight
-                                            )
-                                        {
-                                            self.doBirthSelect()
+                                        InputNumberGroupItem(
+                                            idx: 0,
+                                            input: self.$birth,
+                                            focusIdx: (self.cardNoFocus == -1)
+                                                ? (self.editType == .birth ? 0  : -1)
+                                                : -1,
+                                            placeholder: String.pageText.myRegistCardBirthPlaceHolder,
+                                            maxLength:8,
+                                            prev: {
+                                                self.cardNoFocus = 3
+                                            })
+                                            .frame(height:Dimen.tab.regular)
+                                        .onTapGesture {
+                                            self.cardNoFocus = -1
+                                            withAnimation{
+                                                self.editType = .birth
+                                            }
                                         }
-                                        .opacity(self.birthDate == nil ? 0.5 : 1.0)
                                     }
                                 }
                             }
@@ -293,7 +304,7 @@ struct PageMyRegistCard: PageView {
                     }
                 }
                 
-                self.birth = Date().toDateFormatter(dateFormat: "yyyy-MM-dd")
+                self.birth = ""
                 self.updatekeyboardStatus(on:self.keyboardObserver.isOn)
 
             }
@@ -322,7 +333,7 @@ struct PageMyRegistCard: PageView {
                     return true
                 }
             case .birth :
-                if self.birthDate == nil{
+                if self.birth.count != 8{
                     return true
                 }
             default : break
@@ -345,7 +356,7 @@ struct PageMyRegistCard: PageView {
                     self.appSceneObserver.event = .toast(String.pageText.myRegistCardEmptyPassword)
                 }
             case .birth :
-                if self.birthDate == nil {
+                if self.birth.isEmpty {
                     self.appSceneObserver.event = .toast(String.pageText.myRegistCardEmptyBirth)
                 }
             default : break
@@ -397,23 +408,7 @@ struct PageMyRegistCard: PageView {
         AppUtil.hideKeyboard()
     }
     
-    private func doBirthSelect(){
-        
-        self.cardNoFocus = -1
-        withAnimation{
-            self.editType = .birth
-        }
-        self.appSceneObserver.select = .datePicker((self.tag, 100), self.birthDate ?? Date()){ date in
-            if let date = date {
-                self.birthDate = date
-                self.birth = self.birthDate?.toDateFormatter(dateFormat: "yyyy-MM-dd") ?? ""
-            }
-            withAnimation{
-                self.editType = .none
-            }
-        }
-        AppUtil.hideKeyboard()
-    }
+    
 }
 
 #if DEBUG

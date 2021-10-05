@@ -20,10 +20,9 @@ struct PagePurchase: PageView {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var webViewModel = WebViewModel()
     
-    @State var webViewHeight:CGFloat = 0
     @State var purchaseId:String? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
-   
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -41,19 +40,10 @@ struct PagePurchase: PageView {
                         self.pagePresenter.goBack()
                     }
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    /*
-                    BtvWebView( viewModel: self.webViewModel )
-                        .modifier(MatchHorizontal(height: self.webViewHeight))
+                    BtvWebView( viewModel: self.webViewModel)
                         .modifier(MatchParent())
-                        .padding(.bottom, self.marginBottom)
-                        .onReceive(self.webViewModel.$screenHeight){height in
-                            self.webViewHeight = geometry.size.height
-                                - Dimen.app.top
-                                - self.sceneObserver.safeAreaTop
-                                - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-                        }
-                    */
-                    
+                        
+                    /*
                     ZStack(alignment: .topLeading){
                         DragDownArrow(
                             infinityScrollModel: self.infinityScrollModel)
@@ -77,7 +67,7 @@ struct PagePurchase: PageView {
                     }
                     //.padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
                     .modifier(MatchParent())
-                    
+                   
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
                         switch evt {
@@ -91,7 +81,9 @@ struct PagePurchase: PageView {
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
                         self.pageDragingModel.uiEvent = .pull(geometry, pos)
                     }
+                     */
                 }
+                .padding(.bottom, self.marginBottom)
                 .modifier(PageFull(style:.white))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//dragin
@@ -141,14 +133,11 @@ struct PagePurchase: PageView {
                 if err?.id != self.tag { return }
                 
             }
-            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
-                if isUpdated {
-                    self.setWebviewSize(geometry: geometry)
-                }
+            .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
+                self.marginBottom = bottom
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    self.setWebviewSize(geometry: geometry)
                     guard let obj = self.pageObject  else { return }
                     if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
                         self.purchaseWebviewModel = data
@@ -184,7 +173,7 @@ struct PagePurchase: PageView {
                 }
             }
             .onAppear{
-                self.setWebviewSize(geometry: geometry)
+               
             }
             .onDisappear{
             }
@@ -192,12 +181,7 @@ struct PagePurchase: PageView {
         }//geo
     }//body
     
-    private func setWebviewSize(geometry:GeometryProxy){
-        self.webViewHeight = geometry.size.height
-            - Dimen.app.top
-            - self.sceneObserver.safeAreaTop
-            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-    }
+    
     
     private func sendLog(action:NaviLog.Action) {
         self.naviLogManager.contentsLog(

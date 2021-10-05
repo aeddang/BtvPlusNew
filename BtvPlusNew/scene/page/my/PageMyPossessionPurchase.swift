@@ -88,7 +88,7 @@ struct PageMyPossessionPurchase: PageView {
                         self.appSceneObserver.event = .toast( String.alert.possessionComplete )
                         self.collectionModel.update()
                     case .info :
-                        if data.stb_id != self.setup.possession {
+                        if data.mbtv_key != SystemEnvironment.originDeviceId {
                             self.appSceneObserver.alert = .alert(
                                 String.alert.possession,
                                 String.alert.possessionDiableAlreadyChange,

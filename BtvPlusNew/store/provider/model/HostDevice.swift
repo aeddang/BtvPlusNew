@@ -22,6 +22,16 @@ class HostDevice {
     private(set) var modelViewName:String? = nil
     var modelName:String? = nil // mdns
     
+    var isAppleTv:Bool {
+        if self.modelViewName == "BAP-AB100" {
+            return true
+        }
+        if self.patchVersion?.hasPrefix("22.") == true {
+            return true
+        }
+        return false
+    }
+    
     func setData(deviceData:HostDeviceData) -> HostDevice{
         self.macAdress = deviceData.stb_mac_address
         if let ma = self.macAdress {

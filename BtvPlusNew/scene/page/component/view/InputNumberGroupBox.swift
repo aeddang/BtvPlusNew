@@ -83,8 +83,12 @@ struct InputNumberGroupBox: PageComponent {
                     self.focusIdx = self.findFocus()
                     self.onChanged()
                     if self.focusIdx == -1 {
-                        AppUtil.hideKeyboard()
-                        self.completed?()
+                        if let com = self.completed {
+                            com()
+                        } else {
+                            AppUtil.hideKeyboard()
+                        }
+                    
                     }
                 })
             .onTapGesture {

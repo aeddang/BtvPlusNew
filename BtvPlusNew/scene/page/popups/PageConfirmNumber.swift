@@ -181,9 +181,12 @@ struct PageConfirmNumber: PageView {
             if err.id != self.tag { return }
             switch err.type {
             case .confirmPassword, .postCoupon, .updateUser,
-                 .postBPoint, .postBCash, .updateOkCashPoint, .certificationCoupon, .getStbInfo:
+                 .postBPoint, .postBCash, .updateOkCashPoint, .getStbInfo:
                 self.msg = String.alert.apiErrorClient
                 //self.input = ""
+            case .certificationCoupon:
+                self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
+                self.input = ""
             default: break
             }
         }
@@ -374,18 +377,23 @@ struct PageConfirmNumber: PageView {
             }
         } else if let  resData = res.data as? StbInfo {
             if resData.result == ApiCode.success {
-                self.dataProvider.requestData(q: .init(id:self.tag, type: .certificationCoupon(self.input, resData) ))
+                self.dataProvider.requestData(
+                    q: .init(id:self.tag, type: .certificationCoupon(self.input, resData), isOptional: true ))
+                    // 에러메시지가 빈값임..... 옵셔널로 보내고 에러처리는 수동
             } else{
                 self.input = ""
                 self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
             }
-        } else if let resData = res.data as? CertificationCoupon {
+        } else if let _ = res.data as? CertificationCoupon {
+            self.registCouponSuccess()
+            //성공이면 결과값이 들어옴 규격대로 안되있음 내시간..... 108108
+            /*
             if resData.result == ApiCode.success2 {
-                self.registCouponSuccess()
+                
             } else{
                 self.input = ""
                 self.msg = CbsNetwork.getCertificationErrorMeassage(resData.result , reason: resData.reason)
-            }
+            }*/
         }
     }
     

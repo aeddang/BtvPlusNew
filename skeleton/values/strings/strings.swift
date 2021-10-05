@@ -93,6 +93,9 @@ extension String {
         public static let inputChannelHolder = "remoteInputChannelHolder".loaalized()
         public static let inputTextHolder = "remoteInputTextHolder".loaalized()
         
+        public static let networkDisconnect = "remoteNetworkDisconnect".loaalized()
+        public static let networkUnstable = "remoteNetworkUnstable".loaalized()
+        
         public static let inputSearch = "remoteInputSearch".loaalized()
         public static let inputSearchHolder = "remoteInputSearchHolder".loaalized()
         public static let inputSearchTip = "remoteInputSearchTip".loaalized()

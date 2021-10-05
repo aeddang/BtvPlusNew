@@ -270,7 +270,7 @@ struct PairingView: PageComponent{
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else {return}
             switch res.type {
-            case .getWatch : self.onWatchedData(res: res)
+            case .getWatchMobile : self.onWatchedData(res: res)
             default : break
             }
         }
@@ -285,7 +285,7 @@ struct PairingView: PageComponent{
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else {return}
             switch err.type {
-            case .getWatch : withAnimation{ self.isCompleted = true }
+            case .getWatchMobile : withAnimation{ self.isCompleted = true }
             default : break
             }
         }
@@ -297,7 +297,7 @@ struct PairingView: PageComponent{
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
             if ani {
                 self.repository.alram.updateNew()
-                self.dataProvider.requestData(q: .init(type: .getWatch(isPpm:false, 1, 9999), isOptional: true))
+                self.dataProvider.requestData(q: .init(type: .getWatchMobile(isPpm:false, 1, 9999), isOptional: true))
             }
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in

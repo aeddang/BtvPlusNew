@@ -111,6 +111,16 @@ struct InputBox: PageComponent {
                                         self.prevText = text
                                         return
                                     }
+                                    if text.count == 16 && text.first(where: {String($0) == "-"}) == nil {
+                                        let modify = text.subString(start: 0, len: 4) + "-" +
+                                        text.subString(start: 4, len: 4) + "-" +
+                                        text.subString(start: 8, len: 4) + "-" +
+                                        text.subString(start: 12, len: 4)
+                                        self.prevText = modify
+                                        self.input = modify
+                                        return
+                                    }
+                                    
                                     let cinput = text.replace("-", with: "")
                                     if (cinput.count % self.inputDivisionSize) != 0 {
                                         self.prevText = text

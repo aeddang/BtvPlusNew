@@ -403,12 +403,11 @@ class AccountManager : PageProtocol{
             self.dataProvider.requestData(q: .init(type: .rePairing , isOptional: true))
             return false
         }
-        
         if resultCode == NpsNetwork.resultCode.existPairing.code {
-            //if self.isRequestDeviceUser{
-            self.dataProvider.requestData(q: .init(type: .getUserDevicePairingStatus , isOptional: true))
-            return true
-            //}
+            if self.isRequestDeviceUser{
+                self.dataProvider.requestData(q: .init(type: .getUserDevicePairingStatus , isOptional: true))
+                return true
+            }
             self.pairing.syncError(header: nil)
             return false
         }

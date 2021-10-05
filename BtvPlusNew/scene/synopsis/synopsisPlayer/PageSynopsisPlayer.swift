@@ -196,6 +196,7 @@ struct PageSynopsisPlayer: PageView {
     @State var imgContentMode:ContentMode = .fit
     @State var synopsisPlayType:SynopsisPlayType = .unknown
     
+    @State var initEpsdId:String? = nil
     @State var epsdId:String? = nil
     @State var epsdRsluId:String = ""
     @State var isPlayAble:Bool = false
@@ -339,6 +340,7 @@ struct PageSynopsisPlayer: PageView {
             self.synopsisData?.epsdRsluId = self.epsdRsluId
             self.title = self.episodeViewerData?.episodeSubTitle
             self.epsdId = self.synopsisModel?.epsdId
+            if self.initEpsdId == nil {self.initEpsdId = self.epsdId}
             self.imgBg = self.synopsisModel?.imgBg
             self.imgContentMode = self.synopsisModel?.imgContentMode ?? .fit
             DataLog.d("PageSynopsis epsdRsluId  : " + self.epsdRsluId, tag: self.tag)
@@ -406,6 +408,7 @@ struct PageSynopsisPlayer: PageView {
     
     func onContinuousPlay(){
         if !self.isContinuousPlay {return}
+        if self.initEpsdId != self.epsdId {return}
         self.pagePresenter.onPageEvent(self.pageObject,
                                        event: .init(id:self.tag,  type: .timeChange, data: self.playerModel.time))
     }
@@ -477,12 +480,13 @@ struct PageSynopsisPlayer: PageView {
             self.nextVod(auto: isAuto)
         case .fullVod (let synopsisData):
             self.onContinuousPlay()
-            self.pagePresenter.closePopup(self.pageObject?.id)
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.synopsis)
                     .addParam(key: .data, value: synopsisData)
                     .addParam(key: .watchLv, value: self.synopsisModel?.watchLevel)
             )
+            self.pagePresenter.closePopup(self.pageObject?.id)
+            
         case .close :
             self.onContinuousPlay()
             self.pagePresenter.closePopup(self.pageObject?.id)

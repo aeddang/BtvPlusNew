@@ -198,8 +198,10 @@ struct PagePairingFamilyInvite: PageView {
             guard let obj = self.pageObject  else { return }
             self.inviteNick = obj.getParamValue(key: .title) as? String ?? ""
             self.pairingToken = obj.getParamValue(key: .id) as? String ?? ""
-            self.sendLog(action: .pageShow, category: !self.inviteNick.isEmpty ? "mobile_invitation" : "etc" )
-            
+            if self.inviteNick ==  "106상담원"{
+                self.is106 = true
+            }
+            self.sendLog(action: .pageShow, category: self.is106 ? "etc" : "mobile_invitation" )
             /*
             1. mobile_invitation → 모바일초대
             2. etc → [STB초대, 106 상담사화면초대 등]
@@ -207,7 +209,7 @@ struct PagePairingFamilyInvite: PageView {
         }
         
     }//body
-    
+    @State var is106:Bool = false
     @State var inviteNick:String = ""
     @State var pairingToken:String = ""
     @State var inviteHostDeviceid:String? = nil

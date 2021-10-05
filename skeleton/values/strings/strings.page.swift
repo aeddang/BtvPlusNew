@@ -220,6 +220,7 @@ extension String{
         public static let myRegistCardEmptyCardNo = "myRegistCardEmptyCardNo".loaalized()
         public static let myRegistCardEmptyPassword = "myRegistCardEmptyPassword".loaalized()
         public static let myRegistCardEmptyBirth = "myRegistCardEmptyBirth".loaalized()
+        public static let myRegistCardBirthPlaceHolder = "myRegistCardBirthPlaceHolder".loaalized()
         public static let myRegistCardPasswordTip = "myRegistCardPasswordTip".loaalized()
         public static let myRegistCardPasswordPlaceHolder = "myRegistCardPasswordPlaceHolder".loaalized()
         

@@ -35,31 +35,19 @@ struct PageAdultCertification: PageView {
                 viewModel:self.pageDragingModel,
                 axis:.vertical
             ) {
-                
                 VStack(spacing:0){
-                    
                     PageTab(
                         title: isfail ? String.alert.adultCertificationFail : String.alert.adultCertification,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    
-                    ZStack(alignment: .topLeading){
-                        DragDownArrow(
-                            infinityScrollModel: self.infinityScrollModel)
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            scrollType : .web(isDragEnd: true),
-                            isRecycle:false,
-                            useTracking:true
-                        ){
-                            BtvWebView( viewModel: self.webViewModel , useNativeScroll:false)
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-                                .background(Color.app.white)
-                                .onReceive(self.webViewModel.$screenHeight){height in
-                                    self.setWebviewSize(geometry: geometry)
-                                }
+                    ZStack{
+                        HStack(alignment: .top, spacing:0){
+                            BtvWebView( viewModel: self.webViewModel)
+                            Spacer().modifier(MatchVertical(width: 0))
                         }
+                        .modifier(MatchParent())
+                       //.background(Color.app.white)
                         if isInfo {
                             VStack(alignment:.leading , spacing:0) {
                                 VStack(alignment:.leading , spacing:Dimen.margin.regular) {
@@ -104,28 +92,9 @@ struct PageAdultCertification: PageView {
                             .background(Color.brand.bg)
                         
                         }
-            
-                    
                     }
-                    .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
-                    .modifier(MatchParent())
-                    
-                    .onReceive(self.infinityScrollModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted :
-                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                        case .pullCancel :
-                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
-                        }
-                    }
-                    .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                    }
-                    
-                   
                 }//vstack
+                .padding(.bottom, self.marginBottom)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 .opacity(self.isAlert ? 0.01 : 1)
@@ -176,16 +145,9 @@ struct PageAdultCertification: PageView {
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation{ self.marginBottom = bottom }
-                    self.setWebviewSize(geometry: geometry)
-                }
+                self.marginBottom = bottom
             }
-            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
-                if isUpdated {
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
+            
             .onAppear{
                 guard let obj = self.pageObject  else { return }
                 if let eventId = obj.getParamValue(key: .id) as? String {
@@ -224,13 +186,7 @@ struct PageAdultCertification: PageView {
         self.webViewModel.request = .link(linkUrl)
     }
     
-    
-    private func setWebviewSize(geometry:GeometryProxy){
-        self.webViewHeight = geometry.size.height
-            - Dimen.app.top
-            - self.sceneObserver.safeAreaTop
-            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-    }
+   
 }
 
 #if DEBUG

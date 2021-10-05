@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 import MediaPlayer
 extension PageRemotecon {
-    static let delayLock:Double = 0.2
+    static let delayLock:Double = 0.5
     static let delayUpdate:Double = 0.3
 }
 
@@ -232,6 +232,13 @@ struct PageRemotecon: PageView {
                 }
                 
             }
+            .onReceive(self.networkObserver.$status) { status in
+                switch status {
+                case .none :
+                    self.appSceneObserver.event = .toast(String.remote.networkDisconnect)
+                default : break
+                }
+            }
             .onAppear{
                 self.pairing.requestPairing(.check)
                 self.dataProvider.broadcasting.reset()
@@ -319,17 +326,25 @@ struct PageRemotecon: PageView {
     }
     
     @State var isActionLock:Bool = false
+    @State var unstableInputNum:Int = 0
     private func action(evt:RemoteConEvent) {
         if isActionLock || !isHostReady {
-            self.appSceneObserver.event = .toast(String.remote.searchLock)
-            return
+            self.unstableInputNum += 1
+            PageLog.d("unstableInputNum " + unstableInputNum.description, tag: self.tag)
+            if self.unstableInputNum >= 2 {
+                self.appSceneObserver.event = .toast(String.remote.networkUnstable)
+                //self.appSceneObserver.event = .toast(String.remote.searchLock)
+                return
+            }
         }
         guard let host = self.pairing.hostDevice else {
             self.appSceneObserver.alert =
                 .alert(String.alert.notPairing, String.alert.notPairingText)
             return
         }
+       
         self.isActionLock = true
+       
         var needUpdate:Bool = false
         switch evt { 
         case .close:
@@ -434,6 +449,8 @@ struct PageRemotecon: PageView {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayLock) {
             self.isActionLock = false
+            self.unstableInputNum = 0
+            PageLog.d("unstableInputNum release " + unstableInputNum.description, tag: self.tag)
         }
         if needUpdate {
             DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayUpdate) {
@@ -489,13 +506,15 @@ struct PageRemotecon: PageView {
     
     private func sendAction(npsMessage:NpsMessage) {
         self.isHostReady = false
+        PageLog.d("self.isActionLock = false", tag: self.tag)
         self.dataProvider.requestData(
-            q: .init(id: self.tag, type: .sendMessage(npsMessage))
+            q: .init(id: self.tag, type: .sendMessage(npsMessage), isOptional: false)
         )
     }
     private func actionResult(npsMessage:NpsMessage?, res:ApiResultResponds) {
         guard let npsMessage = npsMessage else { return }
         self.isHostReady = true
+        PageLog.d("self.isActionLock = true", tag: self.tag)
         switch npsMessage.ctrlType {
         case .Refresh:
             self.checkBroadcast(res: res)
@@ -507,6 +526,8 @@ struct PageRemotecon: PageView {
     private func actionError(npsMessage:NpsMessage?, err:ApiResultError) {
         guard let npsMessage = npsMessage else { return }
         self.isHostReady = true
+        PageLog.d("self.isActionLock = true", tag: self.tag)
+       
         switch npsMessage.ctrlType {
         case .Refresh:
             self.remotePlayData =  RemotePlayData(isError: true)

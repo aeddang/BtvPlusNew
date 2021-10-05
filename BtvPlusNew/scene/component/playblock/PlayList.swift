@@ -291,7 +291,6 @@ struct PlayItem: PageView {
                         isPlay : self.isPlay,
                         isLoading: self.isLoading,
                         action:{
-                            //self.isForcePlay = true
                             self.onPlay(self.data)
                         })
                     .modifier(
@@ -361,6 +360,8 @@ struct PlayItem: PageView {
                 }
                 PageLog.d("currentPlayData autoLoad " + self.isPlay.description, tag: self.tag)
                 PageLog.d("currentPlayData autoLoad " + (selectData.title ?? ""), tag: self.tag)
+                
+                self.isLoading = true
                 self.autoLoad()
             } else {
                 PageLog.d("currentPlayData cancelAutoLoad " + (selectData.title ?? ""), tag: self.tag)
@@ -377,6 +378,7 @@ struct PlayItem: PageView {
             }
         }
         .onReceive(self.playerModel.$error){err in
+            guard let err = err else {return}
             if !self.isSelected {return}
             switch err {
             case .illegalState :
@@ -483,27 +485,34 @@ struct PlayItem: PageView {
         
         
     }
-    
+    private func onPlayError(){
+        withAnimation{ self.isLoading = false }
+        self.playerModel.error = .connect("api error")
+    }
     
     private func setupPreview(res:ApiResultResponds){
         guard let epsdRsluId = data.epsdRsluId else {
             PageLog.d("error epsdRsluId", tag: self.tag)
             self.isPlay = false
+            self.onPlayError()
             return
         }
         guard let data = res.data as? Preview else {
             PageLog.d("error Preview", tag: self.tag)
             self.isPlay = false
+            self.onPlayError()
             return
         }
         if data.result != ApiCode.success {
             PageLog.d("fail PreviewInfo", tag: self.tag)
             self.isPlay = false
+            self.onPlayError()
             return
         }
         guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PreviewInfo", tag: self.tag)
             self.isPlay = false
+            self.onPlayError()
             return
         }
         
@@ -593,24 +602,29 @@ struct PlayItem: PageView {
         if data.result != ApiCode.success {
             PageLog.d("fail Play", tag: self.tag)
             self.isPlay = false
+            self.onPlayError()
             return
         }
         guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PlayInfo", tag: self.tag)
             self.isPlay = false
+            self.onPlayError()
             return
         }
         if let synopsis = self.data.synopsisModel {
             guard let epsdId = synopsis.epsdId else {
                 PageLog.d("error epsdId", tag: self.tag)
                 self.isPlay = false
+                self.onPlayError()
                 return
             }
             guard let epsdRsluId = synopsis.epsdRsluId else {
                 PageLog.d("error epsdRsluId", tag: self.tag)
                 self.isPlay = false
+                self.onPlayError()
                 return
             }
+            self.data.playData = data
             var synopsisPlayType:SynopsisPlayType = .unknown
             if synopsis.originEpsdId?.isEmpty == false, let fullVod = synopsis.originEpsdId {
                 synopsisPlayType = .clip(nil, SynopsisData(
@@ -624,7 +638,7 @@ struct PlayItem: PageView {
             }
            
             var playerData:SynopsisPlayerData? = nil
-            self.data.playData = data
+            
             if let infoList = synopsis.seriesInfoList {
                 let playList = zip(infoList, 0...infoList.count).map{ data, idx in
                     PlayerListData().setData(data: data, isClip: true, idx: idx)}
@@ -681,7 +695,6 @@ struct PlayItem: PageView {
     
     @State private var autoPlayer:AnyCancellable?
     private func autoLoad(){
-        
         self.autoPlayer?.cancel()
         self.autoPlayer = Timer.publish(
             every: 0.5, on: .current, in: .common)

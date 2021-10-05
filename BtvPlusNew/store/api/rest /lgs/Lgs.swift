@@ -75,16 +75,19 @@ class Lgs: Rest{
         params["end_rate"] = playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
-        
-        params["profile_id"] = NpsNetwork.pairingId //모름 기존 키즈 프로필아이디로 사용하던건데....
-        params["dvc_typ_cd"] = "" //모름
-        params["profile_typ_cd"] = ""  //모름
-        params["app_typ_cd"] = "1"
-            
+        params["profile_id"] = pairing.kid?.id //모름 기존 키즈 프로필아이디로 사용하던건데....
         params["pcid"] = pcId;
         params["meta_typ_cd"] = synopData.metaTypCd
-       
         
+        params["app_typ_cd"] = "1";
+        var prfList = [[String:String]]()
+        var dic = [String:String]()
+            dic["profTypCd"] = "01" //모름
+            dic["profRgstDvcTypCd"] = "02" //모름
+            dic["psnlProfId"] =  NpsNetwork.pairingId //모름
+        prfList.append(dic)
+           
+        params["prfList"] = prfList
         fetch(route: LgsPostWatchLog(body: params), completion: completion, error:error)
     }
     

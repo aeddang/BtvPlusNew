@@ -14,6 +14,8 @@ class PlayBlockModel: PageDataProviderModel {
     private(set) var key:String? = nil
     private(set) var menuId:String? = nil
     private(set) var isClip:Bool = false
+    private(set) var initFocus:Int? = nil
+    private(set) var initFocusID:String? = nil
     fileprivate(set) var continuousTime:Double? = nil
     fileprivate(set) var btvPlayType:BtvPlayType? = nil
     fileprivate(set) var finalPlayData:PlayData? = nil
@@ -30,18 +32,26 @@ class PlayBlockModel: PageDataProviderModel {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
     
-    
-    func update(menuId:String?, key:String? = nil) {
+    func resetInitFocus() {
+        self.initFocus = nil
+        self.initFocusID = nil
+    }
+    func update(menuId:String?, initFocus:Int? = nil, initFocusID:String? = nil, key:String? = nil) {
         self.menuId = menuId
         self.key = key
+        self.initFocus = initFocus
+        self.initFocusID = initFocusID
         self.isUpdate = true
     }
     
-    func update(data:BlockData, key:String? = nil) {
+    func update(data:BlockData, initFocus:Int? = nil, initFocusID:String? = nil,  key:String? = nil) {
         self.isClip = true
         self.menuId = data.menuId
+        
         self.data = data
         self.key = key
+        self.initFocus = initFocus
+        self.initFocusID = initFocusID
         self.isUpdate = true
     }
     
@@ -350,7 +360,7 @@ struct PlayBlock: PageComponent{
     @State var finalIndex:Int? = nil
     @State var isFullScreen:Bool = false
     @State var isHold:Bool = false
-    
+    @State var initFocus:Int? = nil
 
     private func openFullScreen(){
         if self.focusIndex == -1 {return}
@@ -523,7 +533,18 @@ struct PlayBlock: PageComponent{
         
         //PageLog.d("onUpdate origin " + cPos.description, tag: self.tag)
         if cPos >= 0 && self.focusIndex != 0{
-            self.onResetFocusChange(willFocus: 0)
+            if let focus  = self.initFocus{
+                if focus == 0 || focus == 1 {
+                    self.onResetFocusChange(willFocus: focus)
+                } else {
+                    self.infinityScrollModel.uiEvent = .scrollMove(self.datas[focus].hashId)
+                }
+                self.initFocus = nil
+               
+            } else {
+                self.onResetFocusChange(willFocus: 0)
+            }
+            
             return
         }
         if cPos < -100 && self.maxCount == 2 {

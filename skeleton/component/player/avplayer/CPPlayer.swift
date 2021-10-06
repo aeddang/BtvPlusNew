@@ -81,7 +81,16 @@ struct CPPlayer: PageComponent {
             default : break
             }
         }
-        
+        .onReceive(self.viewModel.$time) { t in
+            if (Int(round(t)) % 20) == 0 {
+                if UIScreen.screens.count > 1 { return }
+                if UIScreen.main.isCaptured {
+                    self.viewModel.event = .pause(isUser: false)
+                    self.appSceneObserver.alert = .alert(
+                        String.player.recordDisable, String.player.recordDisableText)
+                }
+            }
+        }
         .onReceive(self.viewModel.$status) { stat in
             if #available(iOS 14.0, *) { return }
             // self.bindUpdate.toggle()

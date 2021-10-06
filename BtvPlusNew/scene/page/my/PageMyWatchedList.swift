@@ -106,6 +106,7 @@ struct PageMyWatchedList: PageView {
                             infinityScrollModel:self.mobileScrollModel,
                             viewModel:self.mobileWatchedBlockModel,
                             pageObservable:self.pageObservable,
+                            deleteAble: true,
                             useTracking:true,
                             marginBottom: self.marginBottom
                         ),
@@ -113,6 +114,7 @@ struct PageMyWatchedList: PageView {
                             infinityScrollModel:self.btvScrollModel,
                             viewModel:self.btvWatchedBlockModel,
                             pageObservable:self.pageObservable,
+                            deleteAble: false,
                             useTracking:true,
                             marginBottom: self.marginBottom
                         ),
@@ -120,7 +122,8 @@ struct PageMyWatchedList: PageView {
                             infinityScrollModel:self.kidsScrollModel,
                             viewModel:self.kidsWatchedBlockModel,
                             pageObservable:self.pageObservable,
-                            useTracking:true,
+                            deleteAble: false,
+                            useTracking:true, 
                             marginBottom: self.marginBottom
                         )
                     ]

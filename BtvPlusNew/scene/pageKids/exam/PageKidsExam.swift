@@ -69,7 +69,7 @@ struct PageKidsExam: PageView {
                             String.kidsText.kidsExamCloseConfirmTip
                             ){ isOk in
                             if isOk {
-                                self.naviLogManager.actionLog(.clickExitButton)
+                                
                                 self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                         }
@@ -113,7 +113,21 @@ struct PageKidsExam: PageView {
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
               
             }//draging
-            
+            .onReceive(self.viewModel.$event){evt in
+                guard let evt = evt else {return}
+                self.onEvent(examEvent: evt)
+                
+            }
+            .onReceive(self.viewModel.$request){evt in
+                guard let evt = evt else {return}
+                self.onEvent(examRequest: evt)
+                
+            }
+            .onReceive(self.viewModel.$logEvent){evt in
+                guard let evt = evt else {return}
+                self.onEvent(examLogEvent: evt) 
+                
+            }
             .onReceive(self.pairing.$status){status in
                 self.isPairing = ( status == .pairing )
                 

@@ -41,6 +41,13 @@ extension CouponBlock{
             }
         }
         
+        var name: String {
+            switch self {
+            case .coupon: return String.pageText.myBenefitsCoupon
+            case .point: return String.pageText.myBenefitsPoint
+            case .cash: return String.pageText.myBenefitsCash
+            }
+        }
         var text: String {
             switch self {
             case .coupon: return String.pageText.myBenefitsCouponText

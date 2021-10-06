@@ -100,6 +100,7 @@ struct CategoryClipItem : Decodable {
     private(set) var title_sris: String? = nil
     private(set) var thumb: String? = nil
     private(set) var title: String? = nil
+    private(set) var keywrd_val: String? = nil
 }
 
 struct CategoryPeopleItem : Decodable {

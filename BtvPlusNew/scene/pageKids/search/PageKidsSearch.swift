@@ -55,7 +55,13 @@ struct PageKidsSearch: PageView {
                             )
                             .modifier(MatchParent())
                         } else {
-                            if let searchDatas = self.searchDatas {
+                            if self.isSearching {
+                                
+                                AnimateSpinner(isAnimating:.constant(true)).frame(
+                                    width: DimenKids.loading.large.width,
+                                    height: DimenKids.loading.large.height)
+                                
+                            } else if let searchDatas = self.searchDatas {
                                 if !searchDatas.isEmpty {
                                     SearchResultKids(
                                         infinityScrollModel: self.resultScrollModel,
@@ -192,7 +198,13 @@ struct PageKidsSearch: PageView {
                 }
             }
             .onReceive(dataProvider.$error) { err in
-                if err?.id != self.tag { return }
+                guard let err = err else { return }
+                if err.id != self.tag { return }
+                switch err.type {
+                case .getSeachVod : withAnimation{ self.isSearching = false }
+                default : break
+                }
+                
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
@@ -224,7 +236,7 @@ struct PageKidsSearch: PageView {
     @State var keyword:String = ""
     @State var datas:[SearchData] = []
     @State var searchDatas:[BlockData]? = nil
-    
+    @State var isSearching:Bool = false
     func resetSearchData() {
         self.searchDatas = nil
         self.updatedLogPage()
@@ -248,10 +260,13 @@ struct PageKidsSearch: PageView {
         self.searchDatas = []
         if keyword.isEmpty { return }
         self.keyword = keyword
+        
+        self.isSearching = true
         self.dataProvider.requestData(q: .init(id: self.tag, type: .getSeachVod(keyword, .kids), isOptional: false))
     }
     
     func searchRespond(res:ApiResultResponds, geometry:GeometryProxy){
+        withAnimation{ self.isSearching = false }
         let searchDatas = self.viewModel.updateSearchCategory(res.data as? SearchCategory, keyword: self.keyword)
         self.searchDatas = searchDatas
         self.updatedLogPage()

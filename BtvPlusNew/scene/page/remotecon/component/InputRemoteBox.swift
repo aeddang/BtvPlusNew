@@ -96,6 +96,12 @@ struct InputRemoteBox: PageComponent {
                         UIDevice.vibrate()
                     }
                     if !self.isInputCompleted() {
+                        if self.type == .search {
+                            AppUtil.hideKeyboard()
+                            self.action(nil, self.type)
+                            return
+                        }
+                        
                         self.appSceneObserver.event = .toast(
                             String.alert.incorrectNumberOfCharacter
                             .replace( (self.selectedInputSize ?? self.inputSize).description))
@@ -109,8 +115,11 @@ struct InputRemoteBox: PageComponent {
                 
                 if let tip = self.tip {
                     Text(tip)
+                        .multilineTextAlignment(.center)
                         .modifier(MediumTextStyle(
-                            size: SystemEnvironment.isTablet ? Font.size.thin : Font.size.lightExtra))
+                            size: SystemEnvironment.isTablet ? Font.size.thin : Font.size.lightExtra,
+                            color:Color.app.grey
+                        ))
                         .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tinyUltra : Dimen.margin.thin)
                 }
             }

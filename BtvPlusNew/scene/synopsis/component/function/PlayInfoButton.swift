@@ -16,6 +16,7 @@ struct PlayInfoButton: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    var episodeViewerData:EpisodeViewerData? = nil
     var componentViewModel:SynopsisViewModel? = nil
     var data:SummaryViewerData
     var body: some View {
@@ -25,8 +26,8 @@ struct PlayInfoButton: PageView {
                 PageKidsProvider.getPageObject(.detailInfo)
                     .addParam(key: .data, value:
                                 DetailInfoData(
-                                    subTitle: data.seasonTitle,
-                                    title: data.episodeTitle,
+                                    subTitle: episodeViewerData?.seasonTitle,
+                                    title: episodeViewerData?.episodeTitleKids ?? "",
                                     text: data.summry ?? ""))
                     
             )

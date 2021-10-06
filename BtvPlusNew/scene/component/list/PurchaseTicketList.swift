@@ -33,7 +33,7 @@ class PurchaseTicketData:InfinityData{
         price = data.selling_price
         prodId = data.prod_id
         joinDate = data.reg_date?.subString(start: 2, len: 8)
-        period = data.period
+        period = String.monthly.kids //data.period
         payment = data.method_pay_nm
         
         if data.ncms_prod_code == "38" {
@@ -95,8 +95,12 @@ class PurchaseTicketData:InfinityData{
         if let dDay = getDDay(date: data.dd_end_perd) {
             periodLeading = dDay > 2 ? String.monthly.dDay.replace(dDay.description) : String.monthly.expiry
             if let endDate = data.dd_end_perd {
-                let convertDate = endDate.count == 10 ? endDate.subString(2) : endDate
-                periodTrailing = "(" + convertDate + String.app.untill + ")"
+                let endDates = endDate.split(separator: " ")
+                if let yyyymmdd = endDates.first {
+                    let origin = String(yyyymmdd)
+                    let convertDate = origin.count >= 10 ? origin.subString(2) : origin
+                    periodTrailing = "(" + convertDate + String.app.untill + ")"
+                }
             }
         }
         payment = data.method_pay_nm

@@ -15,6 +15,7 @@ struct PageKidsMyMonthly: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var viewModel:MonthlyReportModel = MonthlyReportModel()
@@ -54,6 +55,7 @@ struct PageKidsMyMonthly: PageView {
                         .background(Color.app.white)
                         HStack(spacing:DimenKids.margin.lightExtra){
                             Button(action: {
+
                                 self.loadResult(move: -1)
                             }) {
                                 Image( AssetKids.icon.arrowL)
@@ -273,6 +275,13 @@ struct PageKidsMyMonthly: PageView {
         self.setupDate()
         self.resetPage()
         self.isLoading = true
+        if move != 0 {
+            self.naviLogManager.actionLog(
+                .clickAnotherMonthButton,
+                actionBody: .init(
+                    config:self.currentDate.toDateFormatter(dateFormat: "YY년mm월"),
+                    category:self.currentReport?.type.logCategory))
+        }
         self.dataProvider.requestData(q: .init(type: .getMonthlyReport(kid, self.currentDate), isOptional: false))
     }
     private func setupResult(){
@@ -300,11 +309,17 @@ struct PageKidsMyMonthly: PageView {
     }
     private func selectResult(idx:Int){
         if idx >= self.tabs.count {return}
-        self.tabIdx = idx
+        
         let select = self.viewModel.datas[idx]
         withAnimation{
             self.currentReport = select
         }
+        if self.tabIdx != idx {
+            self.naviLogManager.actionLog(
+                .clickTabMenuButton, actionBody: .init(category:select.type.logCategory))
+        }
+        self.tabIdx = idx
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
             withAnimation{
                 self.guideTimePct = select.averageTimePct

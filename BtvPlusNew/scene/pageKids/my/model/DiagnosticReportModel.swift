@@ -125,6 +125,15 @@ enum DiagnosticReportType:String, CaseIterable{
         default : return nil
         }
     }
+    
+    var logExamPage: NaviLog.PageId {
+        switch self {
+        case .english: return .kidsLvTest
+        case .infantDevelopment: return .empty
+        case .creativeObservation: return .empty
+        default : return .empty
+        }
+    }
    
     
 }

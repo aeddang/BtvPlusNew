@@ -40,6 +40,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
             datas: self.datas,
+            parentData: self.data,
             useTracking:self.useTracking)
         DispatchQueue.main.async {
             self.listId = key
@@ -78,7 +79,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                                     PageProvider.getPageObject(
                                         self.isMyWatch
                                         ? .myWatchedList
-                                        : data.dataType == .watched ? .watchedList : .categoryList)
+                                        : data.dataType == .watched ? .myWatchedList : .categoryList)
                                         .addParam(key: .data, value: data)
                                         .addParam(key: .type, value: CateBlock.ListType.video)
                                         .addParam(key: .subType, value:data.cardType)

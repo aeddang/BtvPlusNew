@@ -48,6 +48,8 @@ class SceneDelegate: PageSceneDelegate {
             pagePresenter: self.pagePresenter,
             repository: res
         )
+        
+        self.repository?.naviLogManager = naviLogManager
         pairing.naviLogManager = naviLogManager
         
         let keyboardObserver = KeyboardObserver()

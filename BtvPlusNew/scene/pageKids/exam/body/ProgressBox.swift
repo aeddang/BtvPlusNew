@@ -35,6 +35,7 @@ struct ProgressBox: PageComponent{
                 if self.viewModel.type != .solve , let move = self.move {
                     Button(action: {
                         if !self.prevActive {return}
+                        self.viewModel.logEvent = .prev
                         move(-1)
                         
                     }) {
@@ -67,6 +68,7 @@ struct ProgressBox: PageComponent{
                 if self.viewModel.type != .solve , let move = self.move {
                     Button(action: {
                         if !self.nextActive {return}
+                        self.viewModel.logEvent = .next
                         move(1)
                     }) {
                         Image(self.progress == self.max ?  AssetKids.exam.exit : AssetKids.exam.next)

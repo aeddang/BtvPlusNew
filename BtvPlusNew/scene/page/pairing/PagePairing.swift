@@ -263,6 +263,7 @@ struct PagePairing: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -331,6 +332,9 @@ struct PagePairing: PageView {
     private func requestPairing(type:PairingRequest){
         switch type {
         case .wifi:
+            self.naviLogManager.actionLog(
+                .clickConnectSelection, actionBody: .init(config:PairingType.wifi.logPageConfig))
+            
             if self.networkObserver.status != .wifi {
                 self.appSceneObserver.alert = .connectWifi
                 return
@@ -341,12 +345,16 @@ struct PagePairing: PageView {
                     .addParam(key: PageParam.subType, value: self.pairingInType)
             )
         case .btv:
+            self.naviLogManager.actionLog(
+                .clickConnectSelection, actionBody: .init(config:PairingType.btv.logPageConfig))
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.btv)
                     .addParam(key: PageParam.subType, value: self.pairingInType)
             )
         case .user:
+            self.naviLogManager.actionLog(
+                .clickConnectSelection, actionBody: .init(config:PairingType.user.logPageConfig))
            self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))

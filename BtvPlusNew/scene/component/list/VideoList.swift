@@ -16,6 +16,7 @@ class VideoData:InfinityData, Copying{
     private(set) var isAdult:Bool = false
     private(set) var isContinueWatch:Bool = false
     private(set) var subTitle: String? = nil
+    private(set) var clipTitle: String? = nil
     private(set) var count: String? = nil
     private(set) var type:VideoType = .nomal
     private(set) var progress:Float? = nil
@@ -35,7 +36,7 @@ class VideoData:InfinityData, Copying{
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
       
-    var logPage:NaviLog.PageId? = nil
+    var logPage:NaviLog.PageId = .empty
     var logAction:NaviLog.Action? = nil
     
     required init(original: VideoData) {
@@ -149,6 +150,9 @@ class VideoData:InfinityData, Copying{
             isClip = typeCd == "38"
         } else {
             isClip = cardType == .clip
+        }
+        if isClip {
+            clipTitle = data.keywrd_val
         }
         count = data.brcast_tseq_nm
         if pageType == .kids { //같은타입인데 키즈랑 비티비 내려오는 데이타가 다름 그럴수도 있다.. 흔한일이다
@@ -282,6 +286,7 @@ class VideoData:InfinityData, Copying{
         count = data.no_epsd
         playTime = data.running_time?.toHMS()
         title = data.title
+        clipTitle = data.keywrd_val
         index = idx
         epsdId = data.epsd_id
         watchLv = data.level?.toInt() ?? 0
@@ -341,9 +346,12 @@ class VideoData:InfinityData, Copying{
             if self.pageType == .kids {
                 return 0
             }
-            if (self.title != nil && self.subTitle != nil) || self.isClip {
+            if (self.title != nil && self.subTitle != nil) {
                 return ListItem.video.type02
-            } else {
+            } else if self.isClip {
+                return self.clipTitle?.isEmpty == false ? ListItem.video.type03 : ListItem.video.type02
+            }
+            else {
                 return ListItem.video.type01
             }
         }
@@ -372,9 +380,10 @@ class VideoData:InfinityData, Copying{
         get {
             if self.pageType == .btv {
                 return PageProvider.getPageObject(
-                    self.synopsisType == .package
-                        ? .synopsisPackage
-                        : self.isClip ? .synopsisPlayer : .synopsis)
+                        self.synopsisType == .package
+                            ? .synopsisPackage
+                            : self.isClip ? .synopsisPlayer : .synopsis)
+                
             } else {
                 return PageKidsProvider.getPageObject(
                     self.synopsisType == .package
@@ -450,6 +459,7 @@ struct VideoList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
     var datas:[VideoData]
+    var parentData: BlockData? = nil
     var contentID:String? = nil
     var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
     var spacing:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.tiny : DimenKids.margin.thinUltra
@@ -494,6 +504,15 @@ struct VideoList: PageComponent{
             action(data)
         }else{
             guard let synopsisData = data.synopsisData else { return }
+            if data.isClip , let parent = self.parentData {
+                
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.previewList)
+                        .addParam(key: .data, value: parent)
+                        .addParam(key: .id, value: data.epsdId)
+                )
+                return 
+            }
             self.pagePresenter.openPopup(
                 data.moveSynopsis
                     .addParam(key: .data, value: synopsisData)
@@ -692,6 +711,15 @@ struct VideoItemBody: PageView {
                         .lineLimit(1)
                         .padding(.top, Dimen.margin.tiny)
                 }
+                
+                if let clipTitle = self.data.clipTitle {
+                    Text(clipTitle)
+                        .kerning(Font.kern.thin)
+                        .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.app.white))
+                        .lineLimit(1)
+                        .padding(.top, Dimen.margin.tiny)
+                       
+                }
             }
             .padding(.horizontal, Dimen.margin.thin)
             .frame(
@@ -762,6 +790,7 @@ struct VideoItemBodyKids: PageView {
                             .padding(.top, DimenKids.margin.tiny)
                            
                     }
+                    
                 }
                 .padding(.horizontal, DimenKids.margin.thin)
                 .modifier(MatchParent())

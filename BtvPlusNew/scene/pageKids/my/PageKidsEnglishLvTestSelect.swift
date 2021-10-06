@@ -12,9 +12,10 @@ struct PageKidsEnglishLvTestSelect: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var dataProvider:DataProvider
-    @EnvironmentObject var naviLogManager:NaviLogManager
+   
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
    

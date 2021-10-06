@@ -69,6 +69,7 @@ class Repository:ObservableObject, PageProtocol{
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
     private(set) var isFirstLaunch = false
     
+    weak var naviLogManager:NaviLogManager? = nil
     init(
         vsManager:VSManager? = nil,
         dataProvider:DataProvider? = nil,
@@ -456,6 +457,17 @@ class Repository:ObservableObject, PageProtocol{
         }
     }
     
+    func recivePush(_ messageId:String?, data:AlramData?) {
+        guard let messageId = messageId else { return }
+        self.pushManager.recivePush(messageId)
+        self.naviLogManager?.actionLog(.pageShow, actionBody: data?.actionLog)
+    }
+    
+    func confirmPush(_ messageId:String?, data:AlramData?) {
+        guard let messageId = messageId else { return }
+        self.pushManager.confirmPush(messageId)
+        self.naviLogManager?.actionLog(.clickAppPushMessage, actionBody: data?.actionLog)
+    }
     
     func updateWatchLv(_ lv:Setup.WatchLv?){
         SystemEnvironment.watchLv = lv?.rawValue ?? 0

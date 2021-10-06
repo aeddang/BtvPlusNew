@@ -49,11 +49,6 @@ struct PageHome: PageView {
                     marginTop:self.headerHeight,
                     marginBottom: self.marginBottom,
                     topDatas: self.topDatas,
-                    /*
-                    monthlyViewModel : self.monthlyViewModel,
-                    monthlyDatas: self.sortedMonthlyDatas ,
-                    monthlyAllData: self.monthlyAllData,
-                    */
                     tipBlock: self.tipBlockData,
                     header: self.monthlyheader,
                     headerSize: MonthlyBlock.height + MultiBlock.spacing,
@@ -116,8 +111,8 @@ struct PageHome: PageView {
             }
             
             .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
-                //guard let list = list else { return }
-                //self.updatedMonthly(purchases: list, lowLevelPpm: true)
+                guard let list = list else { return }
+                self.updatedMonthly(purchases: list, lowLevelPpm: true)
             }
             .onReceive(self.pairing.authority.$purchaseTicketList){ list in
                 guard let list = list else { return }
@@ -223,6 +218,7 @@ struct PageHome: PageView {
     @State var useQuickMenu:Bool = false
     @State var isFree:Bool = false
     @State var monthlyheader:MonthlyBlock? = nil
+    
     private func pageInit(){
         if !self.isUiReady {return}
         if self.isInit {return}
@@ -254,7 +250,7 @@ struct PageHome: PageView {
     }
     
     private func reload(selectedMonthlyId:String? = nil){
-        self.isPurchaseCheck = false
+        self.isPeriodPurchaseCheck = false
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.monthlyDatas?.forEach{ data in
             data.reset()
@@ -324,6 +320,19 @@ struct PageHome: PageView {
         default: self.setupBlocks()
         }
     }
+    
+    private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
+        let filteredPurchases = purchases.filter({($0.yn_perd == "Y" && $0.flag_perd == "N") || $0.yn_perd == "N"})
+        
+        if let band = self.currentBand {
+            if band.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {
+                self.updatedMonthlyPurchaseInfo(filteredPurchases, lowLevelPpm:lowLevelPpm)
+                return
+            }
+        }
+        self.updatedMonthlyTopInfo(purchases: filteredPurchases, lowLevelPpm: lowLevelPpm)
+    }
+    
     //Ocean
     private func setupOcean(){
         if let oceanBlock = self.dataProvider.bands.getMonthlyBlockData(name: self.currentBand?.name) {
@@ -338,24 +347,28 @@ struct PageHome: PageView {
         }
     }
     
-    @State var isPurchaseCheck:Bool = false
-    private func updatedMonthlyPurchaseInfo( _ purchases:[MonthlyInfoItem]){
-        if self.isPurchaseCheck {return}
+    @State var isPeriodPurchaseCheck:Bool = false
+    private func updatedMonthlyPurchaseInfo( _ purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
+        if !lowLevelPpm {return}
+        if self.isPeriodPurchaseCheck {return}
         guard let band = self.currentBand  else { return }
         if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
         if let purchas = purchases.first(where: {$0.prod_id == self.selectedMonthlyId}){
             if let period = purchases.first(where: {$0.subs_id == purchas.subs_id && $0.prod_id != purchas.prod_id}), let title = period.title {
                 self.tipBlockData = TipBlockData()
                     .setupTip(leading: String.monthly.oceanPeriodAuth.replace(title))
+                self.isPeriodPurchaseCheck = true
             } else {
+                if self.isPeriodPurchaseCheck {return}
                 self.tipBlockData = TipBlockData()
                     .setupTip(
                         icon: Asset.icon.logoOcean,
                         strongTrailing: String.monthly.oceanAuthLeading,
                         trailing: String.monthly.oceanAuth)
             }
-            self.isPurchaseCheck = true
+           
         } else {
+            if self.isPeriodPurchaseCheck {return}
             self.viewModel.request = .init(type: .getMonthlyData(self.selectedMonthlyId, isDetail: false), isOptional:true)
         }
     }
@@ -393,9 +406,6 @@ struct PageHome: PageView {
                     data: phaseData)
         }
     }
-    
-    
-    
     
     //Monthly
     private func setupOriginMonthly(){
@@ -456,24 +466,17 @@ struct PageHome: PageView {
         }
     }
     
-    private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
-        let filteredPurchases = purchases.filter({($0.yn_perd == "Y" && $0.flag_perd == "N") || $0.yn_perd == "N"})
+    private func updatedMonthlyTopInfo( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
         
-        if let band = self.currentBand {
-            if band.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {
-                self.updatedMonthlyPurchaseInfo(filteredPurchases)
-                return
-            }
-        }
-        PageLog.d("updatedMonthly " + purchases.count.description + " lowLevelPpm : " + lowLevelPpm.description, tag: self.tag)
+        PageLog.d("updatedMonthlyTopInfo " + purchases.count.description + " lowLevelPpm : " + lowLevelPpm.description, tag: self.tag)
         if self.originMonthlyDatas == nil { return }
-        filteredPurchases.forEach{ purchas in
+        purchases.forEach{ purchas in
             guard let id = purchas.prod_id else {return}
             guard let monthlyData = self.originMonthlyDatas?[id] else {return}
-            if let period = filteredPurchases.first(where: {$0.subs_id == purchas.subs_id && $0.prod_id != id}){
-                monthlyData.setData(data:period, isLow:true)
+            if let sub = purchases.first(where: {$0.subs_id == purchas.subs_id && $0.prod_id != id}){
+                monthlyData.setData(data:sub, isLow:true, isPeriod: sub.yn_perd?.toBool() ?? false)
             } else {
-                monthlyData.setData(data:purchas, isLow:false)
+                monthlyData.setData(data:purchas, isLow:false, isPeriod: purchas.yn_perd?.toBool() ?? false)
             }
            
             if !lowLevelPpm {
@@ -482,26 +485,36 @@ struct PageHome: PageView {
                 }
             }
         }
-        
         self.syncronizeMonthly()
     }
 
     private func syncronizeMonthly(){
-        //self.requestMonthlyCompletedCount += 1
+        self.requestMonthlyCompletedCount += 1
         PageLog.d("syncronizeMonthly " + self.requestMonthlyCompletedCount.description, tag: self.tag)
-        //if self.requestMonthlyCompletedCount != 2 && self.pairing.status == .pairing {return}
+        if self.requestMonthlyCompletedCount != 2 && self.pairing.status == .pairing {return}
         guard let monthlyDatas = self.monthlyDatas else {return}
         let joins = monthlyDatas.filter{$0.isJoin}
         let subJoins = monthlyDatas.filter{$0.isSubJoin}
-        //let dupleJoins:[MonthlyData] = []
+        var subSet:[String:String?] = [:]
+        subJoins.forEach({
+            if let subJoinId = $0.subJoinId {
+                if subSet[subJoinId] != nil {
+                    $0.resetJoin()
+                } else {
+                    subSet[subJoinId] = $0.title
+                }
+            }
+        })
+       
         PageLog.d("syncronizeMonthly joins " + joins.count.description, tag: self.tag)
         PageLog.d("syncronizeMonthly subJoins " + subJoins.count.description, tag: self.tag)
         let dupleJoins = subJoins.filter{ sub in
-            joins.first(where: {sub.subJoinId == $0.subJoinId}) != nil
+            joins.first(where: {sub.subJoinId == $0.subJoinId && $0.prdPrcId != sub.prdPrcId}) != nil
         }
         dupleJoins.forEach{
             $0.resetJoin()
         }
+        
         PageLog.d("syncronizeMonthly dupleJoins " + dupleJoins.count.description, tag: self.tag)
         self.monthlyDatas?.sort(by: {$0.sortIdx > $1.sortIdx})
         var idx = 0

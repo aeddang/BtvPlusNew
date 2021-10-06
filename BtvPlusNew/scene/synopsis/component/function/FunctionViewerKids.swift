@@ -13,6 +13,7 @@ struct FunctionViewerKids: PageComponent{
     var componentViewModel:SynopsisViewModel
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
+    var episodeViewerData:EpisodeViewerData?
     var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     @Binding var isBookmark:Bool?
@@ -25,6 +26,7 @@ struct FunctionViewerKids: PageComponent{
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
                         synopsisModel: self.synopsisModel,
+                        episodeViewerData: self.episodeViewerData,
                         purchaseViewerData:self.purchaseViewerData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
@@ -37,6 +39,7 @@ struct FunctionViewerKids: PageComponent{
                         componentViewModel: self.componentViewModel,
                         synopsisData: self.synopsisData,
                         synopsisModel: self.synopsisModel,
+                        episodeViewerData: self.episodeViewerData,
                         purchaseViewerData:self.purchaseViewerData,
                         summaryViewerData:self.summaryViewerData,
                         isBookmark: self.$isBookmark,
@@ -56,6 +59,7 @@ struct FunctionViewerKidsBody: PageComponent{
     var componentViewModel:SynopsisViewModel
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
+    var episodeViewerData:EpisodeViewerData? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
     
@@ -65,6 +69,7 @@ struct FunctionViewerKidsBody: PageComponent{
     var body: some View {
         if let data = summaryViewerData {
             PlayInfoButton(
+                episodeViewerData: self.episodeViewerData,
                 componentViewModel: self.componentViewModel, 
                 data: data)
             .buttonStyle(BorderlessButtonStyle())

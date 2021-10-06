@@ -62,7 +62,7 @@ class PosterData:InfinityData, Copying{
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
 
-    var logPage:NaviLog.PageId? = nil
+    var logPage:NaviLog.PageId = .empty
     var logAction:NaviLog.Action? = nil
 
     

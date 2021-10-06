@@ -78,6 +78,7 @@ struct WatchedList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[WatchedData]
     var watchedType:WatchedBlockType = .btv
+    var deleteAble:Bool = true
     var useTracking:Bool = false
     var marginBottom:CGFloat = Dimen.margin.regular
     
@@ -107,7 +108,7 @@ struct WatchedList: PageComponent{
                 ){
                     
                     ForEach(self.datas) { data in
-                        WatchedItem( data:data , delete:self.delete)
+                        WatchedItem( data:data , delete:self.deleteAble ? self.delete : nil)
                             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                             .onTapGesture {
                                 guard let synopsisData = data.synopsisData else { return }

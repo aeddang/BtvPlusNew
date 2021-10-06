@@ -14,7 +14,6 @@ class HostDevice {
     private(set) var restrictedAge:Int = -1
     private(set) var patchVersion:String? = nil
     private(set) var adultSafetyMode = false
-    
     private(set) var agentVersion:String? = nil
     private(set) var major:Int = 0
     private(set) var minor:Int = 0
@@ -30,6 +29,13 @@ class HostDevice {
             return true
         }
         return false
+    }
+    
+    var isRemoteSearchAble :Bool {
+        if self.modelViewName == "HD/SMART1" {
+            return false
+        }
+        return true
     }
     
     func setData(deviceData:HostDeviceData) -> HostDevice{

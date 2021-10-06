@@ -215,7 +215,7 @@ struct MonthlyBlock: PageComponent {
                 self.tipIcon = Asset.icon.logoZem
                 self.tipTrailing = String.monthly.textKidsTrailing
             } else {
-                if currentData.isSubJoin {
+                if currentData.isPeriod {
                     if let titlePeriod = currentData.titlePeriod {
                         self.tipStrong = titlePeriod
                         self.tipTrailing = String.monthly.textEnjoyPeriod
@@ -226,8 +226,7 @@ struct MonthlyBlock: PageComponent {
                     self.tipLeading = currentData.prodTypeCd == .omnipack
                         ? String.monthly.textEnjoyOmnipack
                         : String.monthly.textEnjoy
-                    
-                    
+
                     if currentData.isFirstFree == nil && self.pairing.status == .pairing {
                         self.dataProvider.requestData(q: .init(type: .getMonthlyData(currentData.prdPrcId, isDetail: false), isOptional:true))
                     }

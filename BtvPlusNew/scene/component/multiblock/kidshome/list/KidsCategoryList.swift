@@ -124,7 +124,7 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
     
     private(set) var actionLog:MenuNaviActionBodyItem? = nil
     private(set) var contentsLog:MenuNaviContentsBodyItem? = nil
-    var logPage:NaviLog.PageId? = nil
+    var logPage:NaviLog.PageId = .empty
     var logAction:NaviLog.Action? = nil
     var hasLog:Bool { get{ return logAction != nil || actionLog != nil || contentsLog != nil} }
    
@@ -163,7 +163,7 @@ class KidsCategoryListItemData:Identifiable, ObservableObject{
         return self
     }
     func setData(data: MonthlyInfoItem,  lowLevelPpm:Bool) {
-        monthlyData?.setData(data: data, isLow: lowLevelPpm)
+        monthlyData?.setData(data: data, isLow: lowLevelPpm, isPeriod: data.yn_perd?.toBool() ?? false)
         if self.isActive {return}
         self.image = self.activeImage
         self.isActive = true

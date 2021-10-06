@@ -55,6 +55,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         uiView.uiDelegate = context.coordinator
         uiView.allowsLinkPreview = false
         uiView.scrollView.bounces = false
+        uiView.scrollView.alwaysBounceVertical = false
         uiView.keyboardDisplayRequiresUserAction = false
         uiView.isOpaque = false
         uiView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -300,7 +301,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             //let disabledScroll = "document.querySelectorAll('*[style]').forEach(el => el.style.overflow = 'scroll');"
             // 자동 완성 제거
             
-            /*
+            
             let disableAutocompleteScript: String = """
                 var textFields = document.getElementsByTagName('textarea');
                 if (textFields) {
@@ -316,8 +317,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                     }
                 }
             """
-            */
-            [disabledSelect, disabledOptionBubble, disabledHightlight ].forEach { option in
+            
+            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript ].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
             

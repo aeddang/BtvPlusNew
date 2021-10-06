@@ -53,25 +53,30 @@ struct PurchaseViewer: PageComponent{
                     }
                     if self.data.infoLeading != nil && self.data.infoTrailing != nil{
                         Text(self.data.infoLeading!)
+                            .kerning(Font.kern.thin)
                             .font(.custom(Font.family.bold, size: Font.size.light))
                             .foregroundColor(Color.brand.primary)
                         + Text(self.data.infoTrailing!)
+                            .kerning(Font.kern.thin)
                             .font(.custom(Font.family.bold, size: Font.size.light))
                             .foregroundColor(Color.app.white)
                     }
                     else if self.data.infoLeading != nil {
                         Text(self.data.infoLeading!)
+                            .kerning(Font.kern.thin)
                             .modifier(BoldTextStyle( size: Font.size.light, color:Color.brand.primary ))
                             .lineLimit(1)
                             
                     }
                     else if let infoTrailing = self.data.infoTrailing {
                         Text(infoTrailing)
+                            .kerning(Font.kern.thin)
                             .modifier(BoldTextStyle( size: Font.size.light ))
                             .lineLimit(1)
                     }
                     if let sub = self.data.infoTrailingSub {
                         Text(sub)
+                            .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle( size: Font.size.thin, color:Color.app.greyLight))
                             .lineLimit(1)
                         
@@ -89,6 +94,10 @@ struct PurchaseViewer: PageComponent{
                                         .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
+                                .onAppear(){
+                                    withAnimation { self.showInfo = true }
+                                    self.delayAutoTooltipHidden()
+                                }
                                 Tooltip(
                                     title: self.data.infoLeading,
                                     text: self.data.infoTip
@@ -106,7 +115,7 @@ struct PurchaseViewer: PageComponent{
                                 //.padding(.leading, -(Tooltip.size.width - Dimen.icon.tiny)/2)
                                 Button(action: {
                                     withAnimation { self.showInfo.toggle() }
-                                    self.delayAutoTooltipHidden()
+                                   
                                 }){
                                     Image( Asset.icon.info )
                                         .renderingMode(.original).resizable()
@@ -114,6 +123,10 @@ struct PurchaseViewer: PageComponent{
                                         .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
+                                .onAppear(){
+                                    withAnimation { self.showInfo = true }
+                                    self.delayAutoTooltipHidden()
+                                }
                             }
                             .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                         }

@@ -113,6 +113,15 @@ struct PageSearch: PageView {
                                     viewModel:self.searchScrollModel,
                                     datas:self.datas,
                                     delete: { data in
+                                        
+                                        self.sendLog(action: .clickSearchRecentKeyword,
+                                                     actionBody: .init(
+                                                        menu_id: "",
+                                                        menu_name: data.isDeleteAble ? "최근검색어"  : "인기검색어",
+                                                        config: data.isSection ? "all" : "",
+                                                        search_keyword: data.isSection ? "" : data.keyword
+                                                     ))
+                                        
                                         if data.isSection {
                                             self.appSceneObserver.alert =
                                                 .confirm(String.button.remove, String.pageText.searchDeleteAllConfirm, confirmText: String.button.remove) { isOk in
@@ -126,6 +135,12 @@ struct PageSearch: PageView {
                                         }
                                     },
                                     action: { data in
+                                        self.sendLog(action: .clickSearchRecentKeyword,
+                                                     actionBody: .init(
+                                                        menu_id: "",
+                                                        menu_name: data.isDeleteAble ? "최근검색어"  : "인기검색어",
+                                                        search_keyword: data.keyword
+                                                     ))
                                         self.search(keyword: data.keyword)
                                     }
                                 )

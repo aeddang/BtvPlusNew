@@ -177,7 +177,7 @@ struct AppLayout: PageComponent{
         }
         .onReceive (self.appObserver.$alram) { alram in
             guard let alram = alram else {return}
-            self.repository.pushManager.recivePush(alram.messageId)
+            self.repository.recivePush(alram.messageId, data:alram)
             if !self.isInit { return }
             if alram.isMove {
                 self.moveAlram(alram)
@@ -389,7 +389,7 @@ struct AppLayout: PageComponent{
     func moveAlram(_ alram:AlramData){
 
         NotificationCoreData().readNotice(title: alram.title , body: alram.text, messageId:alram.messageId)
-        self.repository.pushManager.confirmPush(alram.messageId)
+        self.repository.confirmPush(alram.messageId, data: alram)
         self.repository.alram.changedNotification()
         self.repository.alram.updatedNotification()
         self.appObserver.resetApns()

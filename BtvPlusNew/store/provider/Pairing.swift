@@ -41,6 +41,15 @@ enum PairingType{
         case .token: return "token"
         }
     }
+    
+    var logPageConfig:String { 
+        switch self {
+        case .wifi: return "WI-FI로 연결하기"
+        case .btv: return "B tv인증번호로 연결하기 페이지"
+        case .user: return "가입자 확인 후 연결하기"
+        case .token: return ""
+        }
+    }
 }
 
 enum PairingStatus{
@@ -68,8 +77,8 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var event:PairingEvent? = nil {didSet{ if event != nil { event = nil} }}
     @Published private(set) var status:PairingStatus = .initate
     @Published var user:User? = nil
-    private(set) var pairingDeviceType:PairingDeviceType = .btv
-    private(set) var pairingStbType:PairingDeviceType = .btv
+    private(set) var pairingDeviceType:PairingDeviceType = .btv // 애플TV 프로바이더와 연결인지 일반연결인지
+    private(set) var pairingStbType:PairingDeviceType = .btv // 연결된 세탑 애플티비인지 일반 세탑인지
     private(set) var pairingType:PairingType? = nil
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false
@@ -90,7 +99,7 @@ class Pairing:ObservableObject, PageProtocol {
     
     let authority:Authority = Authority()
     var storage:Setup? = nil
-    var naviLogManager:NaviLogManager? = nil
+    weak var naviLogManager:NaviLogManager? = nil
     
     
     

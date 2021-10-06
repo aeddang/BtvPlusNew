@@ -11,6 +11,7 @@ struct PagePairingManagement: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var vsManager:VSManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -85,17 +86,28 @@ struct PagePairingManagement: PageView {
                             }
                             HStack(spacing:Dimen.margin.thin){
                                 FillButton(text: String.button.modifyNick, strokeWidth: 1){ _ in
+                                    
+                                    self.naviLogManager.actionLog(
+                                        .clickReleaseButton,actionBody: .init( config: "B tv 닉네임 변경"))
+                                    
                                     self.pagePresenter.openPopup(
                                         PageProvider.getPageObject(.confirmNumber)
                                             .addParam(key: .type, value: PageConfirmNumber.InputType.nickname)
                                     ) 
                                 }
                                 FillButton(text: String.button.disConnectBtv, strokeWidth: 1){ _ in
+                                    self.naviLogManager.actionLog(
+                                        .clickReleaseButton,actionBody: .init( config: "B tv 연결해제"))
+                                    
                                     if self.pairing.user?.pairingDeviceType == .apple {
                                         self.vsManager.accountUnPairingAlert()
                                         return
                                     }
                                     self.appSceneObserver.alert = .confirm(String.alert.disConnect, String.alert.disConnectText){ isOk in
+                                        
+                                        self.naviLogManager.actionLog(
+                                            .clickReleasePopupButton,actionBody: .init( config: isOk ? "해제하기" : "취소"))
+                                        
                                         if isOk {
                                             self.pairing.requestPairing(.unPairing)
                                         }
@@ -112,6 +124,8 @@ struct PagePairingManagement: PageView {
                         FillButton(
                             text: String.pageText.myinviteFammly
                         ){_ in
+                            
+                            self.naviLogManager.actionLog(.clickInviteButton)
                             self.pagePresenter.openPopup(
                                 PageProvider.getPageObject(.snsShare)
                                     .addParam(key: .type, value: PageSnsShare.ShareType.familyInvite(type: "mob-invite"))

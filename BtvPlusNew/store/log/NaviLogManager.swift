@@ -160,17 +160,21 @@ class NaviLogManager : ObservableObject, PageProtocol {
     func contentsLog(pageId:NaviLog.PageId? = nil, action:NaviLog.Action,
                    actionBody:MenuNaviActionBodyItem? = nil,
                    watchType:NaviLog.watchType? = nil){
+        
+        let fixedPageId:String? = pageId?.rawValue.isEmpty == true
+            ? nil
+            : pageId?.rawValue
     
         let data = NaviLogData()
         data.actionBody = actionBody
         data.contentsBody = self.currentSysnopsisContentsItem
         data.member = self.currentMemberItem
     
-        if let pageId = pageId {
-            if let realNameData = self.getRealNameData(pageID: pageId.rawValue, action: action,  watchType: watchType, naviLogData: data) {
+        if let findPageId = fixedPageId {
+            if let realNameData = self.getRealNameData(pageID:findPageId, action: action,  watchType: watchType, naviLogData: data) {
                 self.send(realNameData, isAnonymous: false)
             }
-            if let anonymousData = self.getAnonymousData(pageID: pageId.rawValue, action: action,  watchType: watchType, naviLogData: data) {
+            if let anonymousData = self.getAnonymousData(pageID:findPageId, action: action,  watchType: watchType, naviLogData: data) {
                 self.send(anonymousData, isAnonymous: true)
             }
         } else {
@@ -198,18 +202,21 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     
     func actionLog(_ action:NaviLog.Action = .pageShow,
-                   pageId:NaviLog.PageId? = nil,
+                   pageId:NaviLog.PageId = .empty,
                    pagePageID:PageID? = nil,
                    actionBody:MenuNaviActionBodyItem? = nil,
                    contentBody:MenuNaviContentsBodyItem? = nil,
                    memberBody:MenuNaviMemberItem? = nil
                    ){
         
+        
         let data = NaviLogData()
         data.actionBody = actionBody
         data.contentsBody = contentBody
         data.member = memberBody ?? self.currentMemberItem
-        let fixedPageId:String? = pageId?.rawValue ?? NaviLog.getPageID(pageID: pagePageID, repository: repository)
+        let fixedPageId:String? = pageId.rawValue.isEmpty == true
+            ? NaviLog.getPageID(pageID: pagePageID, repository: repository)
+            : pageId.rawValue
         
         if let findPageId = fixedPageId {
             if let realNameData = self.getRealNameData(pageID: findPageId, action: action, naviLogData: data) {

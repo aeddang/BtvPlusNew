@@ -38,6 +38,7 @@ extension String {
         public static var connect = "alertConnect".loaalized()
         public static var connectWifi = "alertConnectWifi".loaalized()
         public static var connectWifiSub = "alertConnectWifiSub".loaalized()
+       
         
         public static var playError = "alertPlayError".loaalized()
         public static var playErrorPlayback = "alertPlayErrorPlayback".loaalized()

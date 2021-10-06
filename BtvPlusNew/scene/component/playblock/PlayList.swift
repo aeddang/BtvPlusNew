@@ -120,7 +120,7 @@ class PlayData:InfinityData,ObservableObject{
         count = data.brcast_tseq_nm
     
         title = data.title
-        subTitle = data.title
+        subTitle = data.keywrd_val
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
@@ -140,7 +140,7 @@ class PlayData:InfinityData,ObservableObject{
         isClip = true
         count = data.count
         title = data.title
-        subTitle = data.title
+        subTitle = data.clipTitle
         index = idx
         epsdId = data.epsdId
         watchLv = data.watchLv

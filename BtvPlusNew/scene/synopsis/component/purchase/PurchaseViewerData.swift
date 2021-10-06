@@ -87,6 +87,12 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         }  else {
             switch synopsisModel.holdbackType {
             case .holdOut :
+                self.setupBtvWatchInfo(synopsisModel: synopsisModel,
+                                       isPairing: isPairing, isPosson: isPosson, purchas: purchas)
+                self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                self.hasAuthority = true
+                isPlayAble = true
+                /*
                 if purchas?.isDirectview == true{
                     self.setupBtvWatchInfo(synopsisModel: synopsisModel,
                                            isPairing: isPairing, isPosson: isPosson, purchas: purchas)
@@ -97,7 +103,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                     serviceInfo = String.pageText.synopsisOnlyBtvFree
                     isPlayAble = false
                 }
-                
+                */
 
             default :
                 self.setupBtvWatchInfo(synopsisModel: synopsisModel,

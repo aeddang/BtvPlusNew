@@ -295,7 +295,7 @@ struct AlramItem: PageView {
         self.data.isRead = true
         if !self.data.isCoreData { return }
         NotificationCoreData().readNotice(title: data.title, body: data.text, messageId: data.messageId)
-        self.repository.pushManager.confirmPush(data.messageId) 
+        self.repository.confirmPush(data.messageId, data:self.data) 
         self.repository.alram.updatedNotification()
         
     }

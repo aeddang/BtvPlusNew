@@ -13,6 +13,7 @@ struct PageMyPossessionPurchase: PageView {
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -39,7 +40,10 @@ struct PageMyPossessionPurchase: PageView {
                         title: String.pageTitle.myTerminatePurchase,
                         isBack: true,
                         style: .dark
-                    )
+                    ){
+                        self.naviLogManager.actionLog(.clickContentsListBack)
+                        self.pagePresenter.goBack()
+                    }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     PurchaseBlock(
                         infinityScrollModel:self.collectionScrollModel,

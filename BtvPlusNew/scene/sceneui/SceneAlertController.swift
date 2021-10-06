@@ -214,7 +214,7 @@ struct SceneAlertController: PageComponent{
                 dataProvider: self.dataProvider,
                 data: alram)
             NotificationCoreData().readNotice(title: data.title , body: data.text, messageId:data.messageId)
-            self.repository.pushManager.confirmPush(data.messageId)
+            self.repository.confirmPush(data.messageId, data:alram)
         }
         self.repository.alram.changedNotification()
         self.repository.alram.updatedNotification()
@@ -310,8 +310,8 @@ struct SceneAlertController: PageComponent{
                 self.referenceText = String.alert.limitedDeviceReference
             }
         } else {
-            self.title = String.alert.connect
-            self.text = String.alert.limitedConnect
+            self.text = String.alert.limitedDevice.replace("4")
+            self.subText = String.alert.limitedDeviceSub.replace("4")
         }
         self.buttons = [
             AlertBtnData(title: String.app.confirm, index: 0)

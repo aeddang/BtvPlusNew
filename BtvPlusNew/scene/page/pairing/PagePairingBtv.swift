@@ -207,9 +207,9 @@ struct PagePairingBtv: PageView {
                 switch evt {
                 case .connected : 
                     self.pagePresenter.closePopup(self.pageObject?.id)
-                case .connectError(let header, let failStbId) :
-                    if header?.result == NpsNetwork.resultCode.pairingLimited.code ,let failStbId = failStbId {
-                        self.pairing.requestPairing(.hostInfo(auth: nil, device:failStbId, prevResult: header))
+                case .connectError(let header, _) :
+                    if header?.result == NpsNetwork.resultCode.pairingLimited.code {
+                        self.appSceneObserver.alert = .limitedDevice(nil)
                     } else {
                         self.appSceneObserver.alert = .pairingError(header)
                     }

@@ -15,7 +15,6 @@ struct NaviLog {
         case playInside = "/play/inside"                    // 재생 | 인사이드
         case popup = "/popup"                               // GNB팝업
         case prohibitionSimultaneous = "/limit_multiple_screen"
-        
         case pairingLimited = "/my/connect_stb/detail/subscriber_auth/stb_selection" // 세탑 여러개
         case pairingCompleted = "/my/connect_stb/btv_auth_number/completed"
         case pairingDeviceNotfound = "/my/connect_stb/detail/subscriber_auth/there_is_no_stb"
@@ -23,19 +22,17 @@ struct NaviLog {
         case searchResult = "/search/result"                      // 검색결과
         case zemSearchResult = "/category/zemkids/search" // ZEM 키즈|검색결과
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
-        
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
         case event = "/event"
-        
+        case kidsLvTest = "/category/zemkids/mypage/level_test"
         case networkError = "/network_error"
         case appPush = "/app_push"
-        
         case clipViewAll = "/category/clip_view_all"
         case scheduled = "/scheduled"
         case recentContents = "/my/recent_contents"
         case synopsis = "/synopsis"
         case kidsSynopsis = "/category/zemkids/synopsis"
-        
+        case empty = ""
     }
     static func getPageID(pageID:PageID? = nil, repository:Repository?)-> String?{
         guard let pageID = pageID else {return nil}
@@ -84,12 +81,14 @@ struct NaviLog {
         case .setup: return "/setup"
         case .terminateStb: return nil
         case .myOksusuPurchase : return "/my/oksusu_contents"
-            
-        case .pairing: return "/my/connect_stb/detail"
+    
         case .pairingSetupUser: return "/my/profile/registration"
-        case .pairingDevice: return "/my/connect_stb/detail/wifi"
-        case .pairingBtv: return "/my/connect_stb/btv_auth_number"
-        case .pairingUser: return "/my/connect_stb/detail/subscriber_auth"
+        
+        case .pairing: return "/my/connect_stb/detail"
+        case .pairingDevice: return "/my/connect_stb/detail"
+        case .pairingBtv: return "/my/connect_stb/detail"
+        case .pairingUser: return "/my/connect_stb/detail"
+            
         case .pairingManagement: return "/my/connect_stb/mgmt"
         case .pairingEmptyDevice: return nil
         case .pairingGuide: return nil
@@ -105,7 +104,7 @@ struct NaviLog {
         
         case .webview: return nil
         case .person: return nil
-        case .search: return "/search"
+        case .search: return "/search/input"
         case .schedule: return "/epg"
         case .adultCertification: return "/adult_certification"
         case .userCertification: return nil
@@ -132,16 +131,8 @@ struct NaviLog {
         case .kidsMy: return "/category/zemkids/mypage"
         case .kidsMyDiagnostic: return "/category/zemkids/mypage/level_test_report"
         case .kidsProfileManagement: return "/category/zemkids/mypage/profile"
-        case .kidsEnglishLvTestSelect: return "/category/zemkids/mypage/level_test"
-        case .kidsExam:
-            /*
-            if let type = page.getParamValue(key: .type) as? DiagnosticReportType {
-                switch  type {
-                case .english, .creativeObservation, .infantDevelopment : return "/category/zemkids/mypage/level_test"
-                default: return nil
-                }
-            }*/
-            return nil
+        case .kidsEnglishLvTestSelect: return NaviLog.PageId.kidsLvTest.rawValue
+        case .kidsExam: return nil
         case .kidsExamViewer: return nil
         case .kidsMyMonthly: return "/category/zemkids/mypage/monthly_report"
         case .selectKidCharacter: return nil
@@ -216,7 +207,17 @@ struct NaviLog {
                 actionBody.menu_name = String.kidsTitle.registKid
             }
             return actionBody
-       
+            
+        case .kidsMyMonthly:
+            var actionBody = MenuNaviActionBodyItem()
+            if let type = page.getParamValue(key: .type) as? KidsPlayType {
+                actionBody.category = type.logCategory
+            }
+            return actionBody
+        case .pairing: return .init(config:"연결세부 페이지")
+        case .pairingDevice: return .init(config:PairingType.wifi.logPageConfig)
+        case .pairingBtv: return .init(config:PairingType.btv.logPageConfig)
+        case .pairingUser: return .init(config:PairingType.user.logPageConfig)
         default : return nil
         }
     }
@@ -453,7 +454,8 @@ struct NaviLog {
         case deleteRecentContentsList = "delete.recent_contents.list"
         
         case clickMyOksusuPurchaseList = "click.my_oksusu_purchase.list"
-       
+        case clickSearchRecentKeyword = "click.search.recent_keyword"
+        case clickSearchDeleteKeyword = "click.search.delete_keyword"
     }
     
     enum watchType: String {

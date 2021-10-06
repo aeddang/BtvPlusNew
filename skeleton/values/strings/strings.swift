@@ -82,6 +82,8 @@ extension String {
         public static let adCancel = "playerAdCancel".loaalized()
         public static let replay = "playerReplay".loaalized()
         public static let disable =  "playerDisable".loaalized()
+        public static let recordDisable =  "playerRecordDisable".loaalized()
+        public static let recordDisableText =  "playerRecordDisableText".loaalized()
     }
     
     struct remote {
@@ -139,6 +141,7 @@ extension String {
         
         public static let dDay = "monthlyDDay".loaalized()
         public static let expiry = "monthlyExpiry".loaalized()
+        public static let kids = "monthlyKids".loaalized() 
     }
     struct quickMenu {
         public static let menu1 = "quickMenu1".loaalized()

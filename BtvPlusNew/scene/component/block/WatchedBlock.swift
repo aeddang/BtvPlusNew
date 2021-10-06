@@ -70,7 +70,7 @@ struct WatchedBlock: PageComponent, Identifiable{
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var viewModel:WatchedBlockModel = WatchedBlockModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-     
+    var deleteAble:Bool = true
     var useTracking:Bool = false
     var marginBottom : CGFloat = 0
     @State var reloadDegree:Double = 0
@@ -90,6 +90,7 @@ struct WatchedBlock: PageComponent, Identifiable{
                         viewModel: self.infinityScrollModel,
                         datas: self.datas,
                         watchedType:self.watchedType,
+                        deleteAble:self.deleteAble,
                         useTracking:self.useTracking,
                         marginBottom:self.marginBottom,
                         delete: { data in

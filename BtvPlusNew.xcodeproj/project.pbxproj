@@ -54,6 +54,7 @@
 		312D2D8026D60B8F002EE783 /* SceneLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D7F26D60B8F002EE783 /* SceneLoading.swift */; };
 		312D2D8226D645DA002EE783 /* PucrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D8126D645DA002EE783 /* PucrResult.swift */; };
 		312D2D8526D64AB5002EE783 /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312D2D8426D64AB5002EE783 /* PushManager.swift */; };
+		31315A93270D499D00BD53F9 /* PageKidsExamLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31315A92270D499D00BD53F9 /* PageKidsExamLog.swift */; };
 		31373F6025C7E726004353DA /* CustomYTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5A25C7E726004353DA /* CustomYTPlayer.swift */; };
 		31373F6125C7E726004353DA /* CPYTPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5B25C7E726004353DA /* CPYTPlayer.swift */; };
 		31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */; };
@@ -825,6 +826,7 @@
 		312D2D7F26D60B8F002EE783 /* SceneLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneLoading.swift; sourceTree = "<group>"; };
 		312D2D8126D645DA002EE783 /* PucrResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PucrResult.swift; sourceTree = "<group>"; };
 		312D2D8426D64AB5002EE783 /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
+		31315A92270D499D00BD53F9 /* PageKidsExamLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageKidsExamLog.swift; sourceTree = "<group>"; };
 		31373F5A25C7E726004353DA /* CustomYTPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomYTPlayer.swift; sourceTree = "<group>"; };
 		31373F5B25C7E726004353DA /* CPYTPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPYTPlayer.swift; sourceTree = "<group>"; };
 		31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-player.html"; sourceTree = "<group>"; };
@@ -2271,7 +2273,6 @@
 				316A7071266F28C200A93B83 /* InputNumberBox.swift */,
 				310755DF26F76B9E000228D2 /* InputNumberField.swift */,
 				316A709A2670708400A93B83 /* ThumbImageViewerKids.swift */,
-				31F2803B2673305A00F40B09 /* PlayInfoButton.swift */,
 				3192CA6826818FAB007B3C29 /* ToolTipKids.swift */,
 				31C4D2A82693040A000C7E83 /* NeedPairingInfo.swift */,
 				319CF6622695D0B700159575 /* AlertsKids.swift */,
@@ -3044,6 +3045,7 @@
 				319CF67A2697156500159575 /* component */,
 				319CF6792697155F00159575 /* body */,
 				319CF67726970DE900159575 /* PageKidsExam.swift */,
+				31315A92270D499D00BD53F9 /* PageKidsExamLog.swift */,
 				3112DA3926980EE7004D0E09 /* PageKidsExamViewer.swift */,
 			);
 			path = exam;
@@ -3306,6 +3308,7 @@
 		31F2803626732D0800F40B09 /* function */ = {
 			isa = PBXGroup;
 			children = (
+				31F2803B2673305A00F40B09 /* PlayInfoButton.swift */,
 				31626EEA25B8FB3000F4031D /* FunctionViewer.swift */,
 				31F2803726732D3000F40B09 /* FunctionViewerKids.swift */,
 			);
@@ -4779,6 +4782,7 @@
 				3158232925A704F800E4E9C8 /* LocationObserver.swift in Sources */,
 				318FC00625E4CA5800ABC241 /* CateBlock.swift in Sources */,
 				314E756D26DB6C2B00A8C924 /* CertificationCoupon.swift in Sources */,
+				31315A93270D499D00BD53F9 /* PageKidsExamLog.swift in Sources */,
 				31E50C71261ACA7400D0762C /* NpsMessage.swift in Sources */,
 				D56C6A61257DA0C700CF9AB8 /* FocusableTextView.swift in Sources */,
 				316A707D2670360500A93B83 /* KidsPlayerUI.swift in Sources */,
@@ -5166,7 +5170,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7515;
+				CURRENT_PROJECT_VERSION = 7517;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5191,7 +5195,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7515;
+				CURRENT_PROJECT_VERSION = 7517;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5381,7 +5385,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7515;
+				CURRENT_PROJECT_VERSION = 7517;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5465,7 +5469,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7515;
+				CURRENT_PROJECT_VERSION = 7517;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

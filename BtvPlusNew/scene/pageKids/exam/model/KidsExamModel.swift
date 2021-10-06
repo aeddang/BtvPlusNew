@@ -23,9 +23,14 @@ enum ExamType:String{
     case view, solve, evaluation
 }
 
+enum ExamLogEvent{
+    case next, prev
+}
+
 class KidsExamModel:ObservableObject, PageProtocol{
     @Published private(set) var request:ExamRequest? = nil {didSet{ if request != nil { request = nil} }}
     @Published private(set) var event:ExamEvent? = nil {didSet{ if event != nil { event = nil} }}
+    @Published var logEvent:ExamLogEvent? = nil {didSet{ if logEvent != nil { logEvent = nil} }}
     @Published private(set) var status:ExamStatus = .initate
     
     private var holdSubscription:AnyCancellable?

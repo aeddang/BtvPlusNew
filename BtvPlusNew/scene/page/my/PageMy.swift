@@ -38,7 +38,7 @@ struct PageMy: PageView {
                             viewModel: self.infinityScrollModel,
                             marginBottom:self.marginBottom,
                             isRecycle:false,
-                            useTracking: false
+                            useTracking: true
                             ){
                             PairingView(
                                 pageObservable:self.pageObservable,

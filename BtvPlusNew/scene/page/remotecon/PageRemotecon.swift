@@ -124,6 +124,7 @@ struct PageRemotecon: PageView {
                                 title: String.remote.inputSearch,
                                 type: .search,
                                 placeHolder:String.remote.inputSearchHolder,
+                                tip:String.remote.inputSearchTip,
                                 inputSize: 99,
                                 inputSizeMin: 1
                             ){ input, type in
@@ -546,6 +547,7 @@ struct PageRemotecon: PageView {
         
         if self.networkObserver.status != .wifi {
             self.appSceneObserver.alert = .connectWifi
+            //self.sendStatusLog(action: .pageShow, result: false, category: String.alert.connectWifi)
             return
         }
         let status = self.locationObserver.status
@@ -580,8 +582,9 @@ struct PageRemotecon: PageView {
     
     private func sendStatusLog(action:NaviLog.Action, result: Bool, category:String? = nil) {
         var actionBody = MenuNaviActionBodyItem()
-        actionBody.config = result ? "true" : "false"
-        actionBody.category = category
+        actionBody.config = result ? "성공" : "실패"
+        actionBody.category = category?.replace("\n", with:"")
+        
         self.naviLogManager.actionLog(action, pageId: .remoteconStatus , actionBody: actionBody)
         
     }

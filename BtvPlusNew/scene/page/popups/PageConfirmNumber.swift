@@ -185,7 +185,7 @@ struct PageConfirmNumber: PageView {
                 self.msg = String.alert.apiErrorClient
                 //self.input = ""
             case .certificationCoupon:
-                self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
+                self.msg = String.alert.couponRegistIncorrectFail.replace(self.couponType.name)
                 self.input = ""
             default: break
             }
@@ -373,7 +373,7 @@ struct PageConfirmNumber: PageView {
                 self.registCouponSuccess()
             } else{
                 self.input = ""
-                self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
+                self.msg = String.alert.couponRegistIncorrectFail.replace(self.couponType.name)
             }
         } else if let  resData = res.data as? StbInfo {
             if resData.result == ApiCode.success {
@@ -382,7 +382,7 @@ struct PageConfirmNumber: PageView {
                     // 에러메시지가 빈값임..... 옵셔널로 보내고 에러처리는 수동
             } else{
                 self.input = ""
-                self.msg = String.alert.couponRegistIncorrectFail.replace(self.title)
+                self.msg = String.alert.couponRegistIncorrectFail.replace(self.couponType.name)
             }
         } else if let _ = res.data as? CertificationCoupon {
             self.registCouponSuccess()

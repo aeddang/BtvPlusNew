@@ -219,14 +219,16 @@ struct RemoteCon: PageComponent {
                         self.action(.inputChannel)
                     }
                     .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
-                    Spacer()
-                    EffectButton(
-                        defaultImage: Asset.remote.search,
-                        effectImage: Asset.remote.searchOn)
-                    { _ in
-                        self.action(.inputSearch)
+                    if self.pairing.hostDevice?.isRemoteSearchAble == true {
+                        Spacer()
+                        EffectButton(
+                            defaultImage: Asset.remote.search,
+                            effectImage: Asset.remote.searchOn)
+                        { _ in
+                            self.action(.inputSearch)
+                        }
+                        .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                     }
-                    .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                 }
                 
             }

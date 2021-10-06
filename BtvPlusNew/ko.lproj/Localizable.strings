@@ -289,11 +289,12 @@
 "alertGuideNotSupportedVibrate" = "태블릿 기기에서는 진동모드가 지원되지 않습니다.";
 "alertDataAlram" = "무선 네트워크 연결을 이용하시겠습니까?\n무선 네트워크 이용 시 가입하신\n요금제에 따라 많은 양의\n데이터 통화료가 발생할 수 있습니다.";
 
-"alertConnect" = "B tv 연결알림";
+"alertConnect" = "B tv 연결 알림";
 "alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";
 "alertConnectWifiSub" = "기기의 [설정 > Wi-Fi] 메뉴에서\nWi-Fi활성화 후 다시 시도해 주세요.";
 "alertConnectNotFound" = "연결가능한\nB tv가 없습니다.";
 "alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
+
 "alertNeedConnect" = "B tv와 연결이 필요합니다.\n연결하시겠습니까?";
 "alertNeedConnectSubPossession" = "※ B tv를 연결하시면 이전 B tv의 소장 VOD 확인 및 시청이 불가합니다.";
 "alertNeedConnectForView" = "전체 영상은 B tv와 연결 후\n시청 가능합니다. 연결하시겠습니까?";
@@ -609,6 +610,8 @@
 "pairingBtnUserCertificationSub" = "B tv 가입자의 휴대폰 인증이 필요합니다.";
 
 
+
+
 "pairingTitle1Tablet" = "집 안에서 쉽게\nB tv 연결하기";
 "pairingTitle2Tablet" = "집 밖에서 TV 없이\n간편하게 연결하기";
 "pairingBtnWifiSubTablet" = "B tv와 동일한\n네트워크 연결이 필요합니다.";
@@ -709,7 +712,7 @@
 "myTicketInfo" = "할인내역 및 구매 상품의 상세정보 확인, 변경은 B tv내 구매내역에서 확인하실 수 있습니다.";
 "myTicketMore" = "둘러보기";
 "myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
-"myWatchedEmpty" = "시청 중인 콘텐츠가 없습니다.";
+"myWatchedEmpty" = "최근 시청 내역이 없습니다.";
 "myWatchedKids" = "키즈 콘텐츠 시청 목록은\nZEM 키즈 메뉴에서 확인하실 수 있습니다.";
 "myWatchedKidsButton" = "ZEM 키즈 시청 목록 보러 가기";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
@@ -932,7 +935,7 @@
 "authTitle" = "모바일 B tv 서비스 이용을 위해\n아래 접근 권한이 필요합니다.";
 "authText" = "선택 항목은 허용하지 않아도 이용이 가능하나,\n일부 서비스 이용이 제한될 수 있습니다.\n권한 설정은 서비스 이용 중 권한이 필요한 정보에\n접근하거나 기기 내 설정 > 모바일 B tv에서 변경 가능합니다.";
 "authTextMic" = "음성으로 검색어 입력";
-"authTextLocation" = "B tv 이어폰 모드 사용";
+"authTextLocation" = "TV 연결을 위한 네트워크 확인 및 B tv 이어폰 모드";
 
 /*
  PageIntro
@@ -1030,6 +1033,10 @@
 "playerMoveSec" = "초 이동";
 "playerReplay" = "지금 보는 영상이 반복 재생됩니다";
 "playerDisable" = "구매 후 시청 가능";
+
+"playerRecordDisable" = "화면 기록 불가";
+"playerRecordDisableText" = "재생 중에는 화면 기록을 사용 할\n수 없습니다.";
+
 /*
  Remote
 */
@@ -1087,6 +1094,8 @@
 "monthlyOceanFirstFreeTrailing" = "에 가입하고 마음껏 즐기세요";
 "monthlyDDay" = "만료 %s일 전";
 "monthlyExpiry" = "만료임박";
+
+"monthlyKids" = "B tv 해지 전 무제한";
 
 /*
  QuickMenu

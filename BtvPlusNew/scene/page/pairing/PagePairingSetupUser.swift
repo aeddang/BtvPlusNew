@@ -18,6 +18,7 @@ struct PagePairingSetupUser: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -313,6 +314,18 @@ struct PagePairingSetupUser: PageView {
             isAgree1: self.isAgree1, isAgree2: self.isAgree2, isAgree3: self.isAgree3
         )
         //self.pagePresenter.goBack()
+        
+        self.naviLogManager.actionLog(.clickProfileConfirm,
+                                      actionBody: .init(
+                                        menu_id: self.characterIdx.description,
+                                        menu_name: Asset.characterList[self.characterIdx]),
+                                       memberBody: .init(
+                                        gender: self.gender.logValue(),
+                                        birthyear: self.birth,
+                                        nickname: self.nickName))
+        
+        
+        
         self.pagePresenter.closePopup(self.pageObject?.id)
         switch self.pairingType {
         case .btv :

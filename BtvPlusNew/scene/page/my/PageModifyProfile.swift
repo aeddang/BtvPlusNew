@@ -178,7 +178,7 @@ struct PageModifyProfile: PageView {
         self.naviLogManager.actionLog(.clickProfileConfirm,
                                       actionBody: .init(
                                         menu_id: self.characterIdx.description,
-                                        menu_name: self.characterIdx.description),
+                                        menu_name: Asset.characterList[self.characterIdx]),
                                       memberBody: .init( nickname: self.nickName)
         )
             

@@ -16,6 +16,7 @@ struct DisconnectView: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var vsManager:VSManager
     
     var pageObservable:PageObservable = PageObservable()
@@ -50,6 +51,8 @@ struct DisconnectView: PageComponent{
                 FillButton(
                     text: String.button.connectBtv
                 ){_ in
+                    self.naviLogManager.actionLog(.clickConnectionButton)
+                    
                     if self.vsManager.isGranted {
                         self.vsManager.accountPairingAlert()
                         return
@@ -64,6 +67,8 @@ struct DisconnectView: PageComponent{
                         image: Asset.icon.alarm,
                         isNew: false
                     ){_ in
+                        
+                        self.naviLogManager.actionLog(.clickNotificationButton , actionBody: .init(config:"알림"))
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.myAlram)
                         )
@@ -75,6 +80,7 @@ struct DisconnectView: PageComponent{
                         image: Asset.icon.notice,
                         isNew: false
                     ){_ in
+                        self.naviLogManager.actionLog(.clickNotificationButton , actionBody: .init(config:"모비소식 "))
                         self.pagePresenter.openPopup(
                             PageProvider
                                 .getPageObject(.webview)
@@ -90,6 +96,7 @@ struct DisconnectView: PageComponent{
                         isMore: true
                     ){_ in
                         
+                        self.naviLogManager.actionLog(.clickBasketContentsButton)
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.myPossessionPurchase)
                         )
@@ -181,6 +188,8 @@ struct DisconnectView: PageComponent{
         }
         
     }//body
+    
+    
 }
 
 

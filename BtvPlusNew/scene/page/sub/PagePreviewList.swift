@@ -158,12 +158,24 @@ struct PagePreviewList: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if self.isInit {return}
+                    var initFocus:Int?  = nil
+                    var initFocusId:String?  = nil
+                    if  let obj = self.pageObject  {
+                        if let index = obj.getParamValue(key: .index) as? Int {
+                            initFocus = index
+                        }
+                        if let id = obj.getParamValue(key: .id) as? String {
+                            initFocusId = id
+                        }
+                    }
                     DispatchQueue.main.async {
                         self.isInit = true
                         if let block = self.block {
-                            self.viewModel.update(data: block, key: nil)
+                            self.viewModel.update(
+                                data: block, initFocus:initFocus, initFocusID:initFocusId, key: nil)
                         } else {
-                            self.viewModel.update(menuId:self.menuId, key:nil)
+                            self.viewModel.update(
+                                menuId:self.menuId, initFocus:initFocus, initFocusID:initFocusId, key:nil)
                         }
                     }
                 }
@@ -194,6 +206,7 @@ struct PagePreviewList: PageView {
                     
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
+                
             }
             .onDisappear{
                
@@ -206,7 +219,7 @@ struct PagePreviewList: PageView {
     @State var epsdId:String? = nil
     @State var isClip:Bool = false
     @State var isInitLog:Bool = true
-    @State var logPageId:NaviLog.PageId? = nil
+    @State var logPageId:NaviLog.PageId = .empty
     @State var lastShow:String? = nil
     
     

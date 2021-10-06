@@ -166,6 +166,7 @@ struct PurchaseList: PageComponent{
         case .collection:
             self.sendLogData( data )
         case .possession:
+            self.sendLogData( data )
             break
         case .oksusu:
             self.sendLogDataOksusu( data )

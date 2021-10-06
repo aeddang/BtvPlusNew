@@ -25,6 +25,7 @@ class MonthlyData:InfinityData,ObservableObject{
     private(set) var prodTypeCd: PrdTypCd = .none
     private(set) var isJoin: Bool = false
     private(set) var subJoinId:String? = nil
+    private(set) var isPeriod: Bool = false
     private(set) var isSubJoin: Bool = false
     private(set) var isSelected: Bool = false
     private(set) var isKidszone: Bool = false
@@ -79,25 +80,28 @@ class MonthlyData:InfinityData,ObservableObject{
     }
     
     @discardableResult
-    func setData(data:MonthlyInfoItem, isLow:Bool) -> MonthlyData {
+    func setData(data:MonthlyInfoItem, isLow:Bool, isPeriod: Bool) -> MonthlyData {
         isKidszone = data.kzone_yn?.toBool() ?? false
         
-        if isLow {
-            if !self.isJoin {
-                self.titlePeriod = data.title_perd
-                self.isSubJoin = true
-                self.subJoinId = data.subs_id
-                self.sortIdx += 100
-            }
+        if isPeriod {
+            if self.isPeriod && isLow {return self}
+            self.isPeriod = true
+            self.titlePeriod = data.title_perd
         }else{
-            self.isJoin = true
-            self.sortIdx += 1000
-            self.subJoinId = data.subs_id
-            if self.isSubJoin {
-                self.isSubJoin = false
-                self.sortIdx -= 100
-            }
+            if self.isPeriod {return self}
+            self.isPeriod = false
         }
+        
+        if isLow {
+            self.isSubJoin = true
+            self.isJoin = false
+            self.sortIdx = 100
+        } else {
+            self.isJoin = true
+            self.isSubJoin = false
+            self.sortIdx = 1000
+        }
+        self.subJoinId = data.subs_id
         self.isUpdated = true
         return self
     }

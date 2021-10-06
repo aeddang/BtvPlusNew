@@ -12,7 +12,7 @@ import struct Kingfisher.KFImage
 
 struct ExamBody: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    @EnvironmentObject var naviLogManager:NaviLogManager
+   
     @ObservedObject var viewModel:KidsExamModel = KidsExamModel()
     @ObservedObject var soundBoxModel:SoundBoxModel = SoundBoxModel()
     
@@ -29,10 +29,7 @@ struct ExamBody: PageComponent{
                         .modifier(MatchParent())
                         .padding(.bottom, SystemEnvironment.isTablet ? 106 : 48)
                     ProgressBox(viewModel: self.viewModel){ move in
-                        self.naviLogManager.actionLog(
-                            .clickNextButton,
-                            actionBody:
-                                .init(config:move == -1 ? "이전문제" : "다음문제" ))
+                        
                         self.viewModel.move(move)
                     }
                 }

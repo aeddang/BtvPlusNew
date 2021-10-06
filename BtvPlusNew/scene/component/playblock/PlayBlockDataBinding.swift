@@ -154,6 +154,7 @@ extension PlayBlock{
                 )
             }
             self.maxCount = self.datas.count
+            self.setupInitFocus()
             self.delayUpdate()
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
@@ -172,6 +173,7 @@ extension PlayBlock{
             }
             self.datas.append(contentsOf: loadedDatas)
             self.maxCount = self.datas.count
+            self.setupInitFocus()
             self.delayUpdate()
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
@@ -190,9 +192,23 @@ extension PlayBlock{
             }
             self.datas.append(contentsOf: loadedDatas)
             self.maxCount = self.datas.count
+            self.setupInitFocus()
             self.delayUpdate()
         }
         self.infinityScrollModel.onComplete(itemCount: datas.count)
+    }
+    
+    private func setupInitFocus(){
+        if let initIdx = self.viewModel.initFocus{
+            self.initFocus = initIdx
+            self.viewModel.resetInitFocus()
+            
+        }else if let initID = self.viewModel.initFocusID {
+            if let find = self.datas.firstIndex(where: { $0.epsdId == initID }) {
+                self.initFocus = find
+            }
+            self.viewModel.resetInitFocus()
+        }
     }
     
     private func setupSortAble(clip:BlockData?) -> [VideoData]?{

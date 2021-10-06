@@ -32,7 +32,7 @@ class SerisData:InfinityData{
             return actionLog != nil || contentLog != nil
         }
     }
-    var logPage:NaviLog.PageId? = nil
+    var logPage:NaviLog.PageId = .empty
     var logAction:NaviLog.Action? = nil
     
     init(pageType:PageType = .btv) {

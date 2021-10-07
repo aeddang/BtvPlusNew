@@ -28,16 +28,26 @@ struct TopViewer: PageComponent{
         GeometryReader { geometry in
             ZStack(alignment:.top) {
                 if SystemEnvironment.isTablet {
-                    KFImage(URL(string: self.data.bg))
-                        .resizable()
-                        .placeholder {
-                            Image(Asset.noImg9_16)
-                                .resizable()
+                    ZStack{
+                        KFImage(URL(string: self.data.bg))
+                            .resizable()
+                            .placeholder {
+                                Image(Asset.noImg9_16)
+                                    .resizable()
+                            }
+                            .cancelOnDisappear(true)
+                            .aspectRatio(contentMode: .fill)
+                            .modifier(MatchParent())
+                            .clipped()
+                        VStack(spacing:0){
+                            Spacer()
+                            LinearGradient(
+                                gradient:Gradient(colors: [Color.app.blueDeep.opacity(0), Color.app.blueDeep]),
+                                startPoint: .top, endPoint: .bottom)
+                                .modifier(MatchHorizontal(height: 100))
                         }
-                        .cancelOnDisappear(true)
-                        .aspectRatio(contentMode: .fill)
-                        .modifier(MatchParent())
-                        .clipped()
+                        .allowsHitTesting(false)
+                    }
                 }
                 KFImage(URL(string: self.data.image))
                     .resizable()

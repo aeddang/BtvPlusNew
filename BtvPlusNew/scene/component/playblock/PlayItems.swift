@@ -108,7 +108,9 @@ struct PlayItemInfo: PageView {
                     Image( self.data.restrictAgeIcon! )
                         .renderingMode(.original).resizable()
                         .scaledToFit()
-                        .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
+                        .frame(width: Dimen.icon.thinExtra, height: Dimen.icon.thinExtra)
+                        .padding(.top, -Dimen.margin.microExtra)
+                        .padding(.leading, -Dimen.margin.microUltra)
                 }
                 
             }
@@ -154,7 +156,7 @@ struct PlayItemFunction: PageView {
         if self.data.srisId != nil && self.isInit {
             LikeButton(
                 playBlockModel:self.viewModel,
-                srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true){ value in
+                srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true, isPreview: true){ value in
                 self.data.isLike = value
             }
             .buttonStyle(BorderlessButtonStyle())

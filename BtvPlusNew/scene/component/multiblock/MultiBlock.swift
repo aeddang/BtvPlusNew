@@ -157,14 +157,7 @@ struct MultiBlock:PageComponent {
                                 }
                             }
                     }
-                    if self.useFooter {
-                        Footer(){
-                            self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
-                        }
-                        .modifier(ListRowInset(spacing: Dimen.margin.medium))
-                        Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
-                            .id(Self.footerIdx)
-                    }
+                    
                     
                 } else {
                     if let headerBlock = self.getHeaderBlock() {
@@ -184,15 +177,18 @@ struct MultiBlock:PageComponent {
                                     }
                             }
                         }
-                        if self.useFooter {
-                            Footer(){
-                                self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx)
-                            }
-                            .modifier(ListRowInset(spacing: Dimen.margin.medium))
-                            Spacer().modifier(MatchHorizontal(height:Dimen.margin.heavy))
-                                .id(Self.footerIdx)
+                        
+                    }
+                }
+                if self.useFooter {
+                    Footer(){
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
+                            self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx, .bottom)
                         }
                     }
+                    .modifier(ListRowInset(spacing: 0))
+                    Spacer().modifier(MatchHorizontal(height:Dimen.margin.thin))
+                        .id(Self.footerIdx)
                 }
                 
             }

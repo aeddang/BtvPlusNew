@@ -72,6 +72,8 @@ extension String {
         public static var location = "alertLocation".loaalized()
         public static var locationSub = "alertLocationSub".loaalized()
         public static var locationBtn = "alertLocationBtn".loaalized()
+        public static var locationTipTitle = "alertLocationTipTitle".loaalized()
+        public static var locationTipText = "alertLocationTipText".loaalized()
         
         public static var findDevice = "alertFindDevice".loaalized()
         public static var findDeviceSub = "alertFindDeviceSub".loaalized()

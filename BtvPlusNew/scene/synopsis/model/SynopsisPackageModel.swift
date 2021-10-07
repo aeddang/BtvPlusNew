@@ -35,7 +35,8 @@ class SynopsisPackageModel : PageProtocol {
         self.packages = contents.contents ?? []
         if self.type == .btv {
             self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height)) ?? image
-            self.bg = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height/2 ), convType: .blur) ?? bg
+            self.bg = ImagePath.thumbImagePath(filePath:
+                                                contents.mbtv_bg_img_path, size: CGSize(width: 0, height: TopViewer.height/2 ), convType: .blur) ?? bg
         } else {
             self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path_h, size: CGSize(width: 0, height: TopViewerKids.height)) ?? image
         }

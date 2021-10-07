@@ -90,7 +90,11 @@ struct PageSceneModel: PageModel {
         if pageObject?.pageGroupID == PageType.kids.rawValue {
             return .darkContent
         } else {
-            return .lightContent
+            guard let page = pageObject else {return .lightContent}
+            switch page.pageID {
+            case .purchase : return .darkContent
+            default : return .lightContent
+            }
         }
     }
     
@@ -110,17 +114,25 @@ struct PageSceneModel: PageModel {
     static func needPairing(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {
         case .kidsExam: return true
-        case .cashCharge, .synopsisPlayer, .snsShare, .pairingManagement: return true
+        case .cashCharge, .synopsisPlayer, .snsShare, .pairingManagement, .clipPreviewList: return true
         default : return false
         }
     }
     
+    static func maintainBottomTab(_ pageObject:PageObject, sceneOrientation:SceneOrientation) -> Bool{
+        switch pageObject.pageID {
+        case .snsShare :
+            return true
+        default :
+            return false
+        }
+    }
     static func needBottomTab(_ pageObject:PageObject, sceneOrientation:SceneOrientation) -> Bool{
         switch pageObject.pageID {
         case .synopsis :
             return SystemEnvironment.isTablet ? sceneOrientation == .portrait : true
         case .home, .category, .multiBlock, .search, .my, .webviewList, .watchedList,
-             .categoryList, .previewList, .setup, .synopsisPackage:
+                .categoryList, .previewList,.clipPreviewList, .setup, .synopsisPackage:
             return true
         default :
             return false

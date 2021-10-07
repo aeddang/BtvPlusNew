@@ -56,14 +56,16 @@ struct AppLayout: PageComponent{
                 if let loadingInfo = self.loadingInfo  {
                     SceneLoading(loadingInfo:loadingInfo)
                 }
+                CircularSpinner(resorce: Asset.ani.loading)
+                /*
                 if SystemEnvironment.currentPageType == .btv {
-                    CircularSpinner(resorce: Asset.ani.loading)
+                    
                     //ActivityIndicator(isAnimating: self.$isLoading, style: .large)
                 } else {
                     AnimateSpinner(isAnimating: self.$isLoading).frame(
                         width: DimenKids.loading.large.width,
                         height: DimenKids.loading.large.height)
-                }
+                }*/
             }
             
         }
@@ -133,8 +135,12 @@ struct AppLayout: PageComponent{
             if self.appSceneObserver.useTopFix != false {
                 self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
             }
-            let useBottom = PageSceneModel.needBottomTab( cPage, sceneOrientation: self.sceneObserver.sceneOrientation)
-            self.appSceneObserver.useBottom = useBottom
+            
+            if !PageSceneModel.maintainBottomTab(cPage, sceneOrientation: self.sceneObserver.sceneOrientation) {
+                let useBottom = PageSceneModel.needBottomTab( cPage, sceneOrientation: self.sceneObserver.sceneOrientation)
+                self.appSceneObserver.useBottom = useBottom
+            }
+            
                 
             AppUtil.hideKeyboard()
             if PageSceneModel.needKeyboard(cPage) {

@@ -27,7 +27,6 @@ struct PagePairingSetupUser: PageView {
     @State var pairingType:PairingRequest = .wifi()
    
     @State var editType:EditType = .none
-    
     @State var nickName:String = ""
     @State var characterIdx:Int = 0
     @State var gender:Gender = .mail

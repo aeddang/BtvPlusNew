@@ -189,10 +189,9 @@ struct WatchedBlock: PageComponent, Identifiable{
             withAnimation{ self.isError = true}
             return
         }
-        withAnimation{
-            self.isError = nil
-            self.datas = []
-        }
+        self.isError = nil
+        self.datas = []
+        
         self.infinityScrollModel.reload()
         self.load()
     }
@@ -226,7 +225,7 @@ struct WatchedBlock: PageComponent, Identifiable{
     func delete(data:WatchedData){
         
         guard  let sridId = data.srisId else { return }
-        self.appSceneObserver.alert = .confirm(nil,  String.alert.deleteWatch){ isOk in
+        self.appSceneObserver.alert = .confirm(String.alert.apns,  String.alert.deleteWatch){ isOk in
             if !isOk {return}
             self.currentDeleteId = sridId
             switch self.watchedType {

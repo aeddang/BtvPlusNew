@@ -120,13 +120,13 @@ struct PagePairingDevice: PageView {
                     self.textAvailableWifi = String.alert.connectWifi
                 }
             }
+            /*
             .onReceive(self.pageObservable.$status){ status in
                 switch status {
-                case .enterForeground :
-                    if self.isLocationRequest { self.updateSSID() }
+                case .enterForeground : self.updateSSID()
                 default : break
                 }
-            }
+            }*/
             .onReceive(self.locationObserver.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
@@ -187,25 +187,26 @@ struct PagePairingDevice: PageView {
         self.isReady = true
     }
     
-    @State var isLocationRequest:Bool = false
+  
     @State var selectedDevice:StbData? = nil
     func findSSID() {
+        
+        
         let status = self.locationObserver.status
         if status == .authorizedWhenInUse || status == .authorizedAlways {
             self.updateSSID()
         } else if status == .denied {
-            self.isLocationRequest = true
-            self.appSceneObserver.alert = .requestLocation{ retry in
-                if retry { AppUtil.goLocationSettings() }
-                else { self.findDevice() }
-            }
+            self.findDevice()
+            
         } else {
-            self.locationObserver.requestWhenInUseAuthorization()
+            self.appSceneObserver.alert = .requestLocation{ retry in
+                self.locationObserver.requestWhenInUseAuthorization()
+            }
         }
     }
     
     func updateSSID() {
-        self.isLocationRequest = false
+       
         AppUtil.getNetworkInfo(compleationHandler: { info in
             if let ssid = info["SSID"] as? String {
                 self.textAvailableWifi = String.pageText.pairingDeviceText2 + ssid

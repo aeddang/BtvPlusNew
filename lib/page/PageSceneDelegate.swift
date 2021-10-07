@@ -513,6 +513,10 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
         pagePresenter.currentTopPage = willChangePage
         pageModel.topPageObject = willChangePage
+        if let style = self.getPageModel().getUIStatusBarStyle(willChangePage) {
+            self.updateUserInterfaceStyle(style: style)
+        }
+        
        
         self.syncOrientation(willChangePage)
     }

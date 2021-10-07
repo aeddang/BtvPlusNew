@@ -176,7 +176,7 @@ struct FillButton: View, SelecterbleProtocol{
                         Spacer().frame(width: Dimen.margin.thin)
                     }
                     if let ani = self.imageAni  {
-                        ImageAnimation(images: ani, isRunning: .constant(true))
+                        ImageAnimation(images: ani, isLoof:false, isRunning: .constant(true) )
                             .frame(width: self.imageSize*1.2, height: self.imageSize*1.2)
                     }
                     else if let image = self.image  {
@@ -214,11 +214,13 @@ struct FillButton: View, SelecterbleProtocol{
                     if self.isNew {
                         if let count = self.count {
                             Text(count.description)
+                                .kerning(Font.kern.thin)
                                 .modifier(BoldTextStyle(
                                     size: Font.size.micro,
                                     color: Color.app.white
                                 ))
-                                .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                                
+                                .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                                 .background(Color.brand.primary)
                                 .clipShape(Circle())
                             

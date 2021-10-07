@@ -71,7 +71,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                             self.sendLog(self.naviLogManager)
                             if data.cardType == .clip || data.videos?.first?.isClip == true{
                                 self.pagePresenter.openPopup(
-                                    PageProvider.getPageObject(.previewList)
+                                    PageProvider.getPageObject(.clipPreviewList)
                                         .addParam(key: .data, value: data)
                                 )
                             } else {

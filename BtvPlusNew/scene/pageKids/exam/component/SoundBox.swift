@@ -156,7 +156,7 @@ struct SoundBox: PageComponent{
                     let audioPlayer = try AVAudioPlayer(data: asset.data)
                     self.audioPlayer = audioPlayer
                     audioPlayer.prepareToPlay()
-                    audioPlayer.volume = 1.5
+                    audioPlayer.volume = 1.0
                     audioPlayer.play()
                     audioPlayer.delegate = self.audioDelegate
                     ableSound()
@@ -173,9 +173,11 @@ struct SoundBox: PageComponent{
         }
     }
     private func setAudioSession(isActive:Bool){
+        
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+            try audioSession.setCategory(AVAudioSession.Category.playAndRecord,
+                                         options: .defaultToSpeaker)
             try audioSession.setActive(isActive)
             
         } catch let error as NSError {
@@ -205,6 +207,7 @@ struct SoundBox: PageComponent{
         self.audioDelegate?.sndBox = nil
         self.audioDelegate = nil
         self.audioPlayer?.delegate = nil
+        self.audioPlayer?.pause()
         self.audioPlayer?.stop()
         self.audioPlayer = nil
         self.isPlay = false

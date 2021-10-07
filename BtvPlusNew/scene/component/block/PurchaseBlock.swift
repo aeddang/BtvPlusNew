@@ -68,7 +68,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         ){
             VStack(spacing:0){
                 if self.isError == false {
-                    if self.type == .normal {
+                    if self.type == .normal && !self.datas.isEmpty  {
                         HStack(spacing: 0){
                             Spacer()
                             EditButton(

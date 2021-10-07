@@ -49,6 +49,7 @@ extension PageID{
     static let multiBlock:PageID = "multiBlock"
     static let categoryList:PageID = "categoryList"
     static let previewList:PageID = "previewList"
+    static let clipPreviewList:PageID = "clipPreviewList"
     static let watchedList:PageID = "watchedList"
     static let fullPlayer:PageID = "fullPlayer"
     
@@ -217,6 +218,7 @@ struct PageFactory{
         case .categoryList : return PageCategoryList()
         case .watchedList : return PageWatchedList()
         case .previewList : return PagePreviewList()
+        case .clipPreviewList : return PagePreviewList()
         case .fullPlayer : return PageFullPlayer()
         case .webview : return PageWebview()
         case .webviewList : return PageWebview()

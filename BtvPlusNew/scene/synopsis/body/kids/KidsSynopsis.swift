@@ -154,7 +154,7 @@ struct KidsSynopsis: PageComponent{
                                             geometry: self.isFullScreen ? geometry : nil,
                                             width:self.playerWidth,
                                             isFullScreen: self.isFullScreen))
-                                .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy))
+                                .clipShape(RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy+3))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: self.isFullScreen ? 0 : DimenKids.radius.heavy)
                                         .strokeBorder(Color.app.ivoryDeep,

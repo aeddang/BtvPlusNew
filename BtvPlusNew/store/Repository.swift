@@ -239,7 +239,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
                 if self.pairing.pairingType == .wifi {
                     self.dataProvider.requestData(
-                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setContent(value: .MeTV)))
+                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setMessage(type: .MeTV))) 
                     )
                 }
                 

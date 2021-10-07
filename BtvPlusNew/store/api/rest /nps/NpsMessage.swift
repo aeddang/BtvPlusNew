@@ -17,11 +17,11 @@ enum NpsCtrlType:String{
          Mute, PIP, Guide,
          CHNumInput, StrInput, NumInput,
          PlayVod, TakeoutTV,
-         MobileSearch
+         MobileSearch,  MeTV
 }
 
 enum NpsCtrlValue:String{
-    case REW, Stop, Play, FF, Prev, Next, MeTV
+    case REW, Stop, Play, FF, Prev, Next
 }
 
 enum NpsQuery:String{
@@ -31,7 +31,6 @@ enum NpsQuery:String{
 class NpsMessage{
     private(set) var ctrlType:NpsCtrlType = .SendMsg
     private(set) var ctrlValue:String = ""
-    private(set) var content:String? = nil
     private(set) var RCStatusQuery:NpsQuery = .StatusQuery
     private(set) var count:Int = 0
     
@@ -39,10 +38,7 @@ class NpsMessage{
     func setMessage(type:NpsCtrlType, value:NpsCtrlValue) -> NpsMessage {
         return setMessage(type: type, value: value.rawValue, query: nil)
     }
-    func setContent(value:NpsCtrlValue) -> NpsMessage {
-        self.content = value.rawValue
-        return self
-    }
+    
     func setMessage(type:NpsCtrlType, value:String? = nil, query:NpsQuery? = nil) -> NpsMessage {
         self.ctrlType = type
         var ctrlValue =  value ?? "" 

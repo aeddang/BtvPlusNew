@@ -57,9 +57,7 @@ struct PageKidsSearch: PageView {
                         } else {
                             if self.isSearching {
                                 
-                                AnimateSpinner(isAnimating:.constant(true)).frame(
-                                    width: DimenKids.loading.large.width,
-                                    height: DimenKids.loading.large.height)
+                                CircularSpinner(resorce: Asset.ani.loading)
                                 
                             } else if let searchDatas = self.searchDatas {
                                 if !searchDatas.isEmpty {

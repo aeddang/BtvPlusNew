@@ -235,7 +235,8 @@ class BlockData:InfinityData, ObservableObject{
         self.setCountName(count: datas.count)
         let type = self.videos?.first?.pageType ?? .btv
         if let video = self.videos?.first{
-            listHeight = video.type.size.height + video.bottomHeight
+            let bottom = video.bottomHeight
+            listHeight = video.type.size.height + bottom
                 + ( type == .btv ? MultiBlockBody.tabHeight : MultiBlockBody.tabHeightKids  )
         } else {
             listHeight = MultiBlockBody.tabHeight

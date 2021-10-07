@@ -57,9 +57,16 @@ class EpisodeViewerData {
             self.subTitle = data.epsd_snss_cts
             self.seasonTitle = data.sson_choic_nm
         } else {
-            self.title = data.sub_title ?? ""
-            self.subTitle = data.epsd_snss_cts
-            self.seasonTitle = data.title
+            if data.sub_title?.isEmpty == false {
+                self.title = data.sub_title ?? ""
+                self.subTitle = data.epsd_snss_cts
+                self.seasonTitle = data.title
+            } else {
+                self.title = data.title ?? ""
+                self.subTitle = data.epsd_snss_cts
+                self.seasonTitle = ""
+            }
+           
         }
         self.srisId = data.sris_id
         self.date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil

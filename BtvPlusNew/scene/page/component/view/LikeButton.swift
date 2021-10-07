@@ -35,6 +35,7 @@ struct LikeButton: PageView {
     var useText:Bool = true
     var isThin:Bool = false
     var isActive:Bool = true
+    var isPreview:Bool = false
     var action: ((_ ac:LikeStatus?) -> Void)? = nil
     var body: some View {
         Button(action: {
@@ -44,7 +45,7 @@ struct LikeButton: PageView {
                 self.appSceneObserver.alert = .needPairing()
             }
             else{
-                self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType)
+                self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType, isPreview:self.isPreview)
                 self.playBlockModel?.logEvent = .like(nil)
                 self.componentViewModel?.uiEvent = .like("")
             }

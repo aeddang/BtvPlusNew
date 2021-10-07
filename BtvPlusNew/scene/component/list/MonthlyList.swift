@@ -86,13 +86,13 @@ class MonthlyData:InfinityData,ObservableObject{
         if isPeriod {
             if self.isPeriod && isLow {return self}
             self.isPeriod = true
-            self.titlePeriod = data.title_perd
+            self.titlePeriod = data.title
         }else{
             if self.isPeriod {return self}
             self.isPeriod = false
         }
         
-        if isLow {
+        if isLow && !self.isJoin {
             self.isSubJoin = true
             self.isJoin = false
             self.sortIdx = 100

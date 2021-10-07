@@ -23,6 +23,7 @@ extension String {
         public static let heart = "btnHeart".loaalized()
         public static let like = "btnLike".loaalized()
         public static let likeOn = "btnLikeOn".loaalized()
+        public static let likeOnPreview = "btnLikeOnPreview".loaalized()
         public static let likeOff = "btnLikeOff".loaalized()
         public static let watchBtv = "btnWatchBtv".loaalized()
         public static let connectBtv = "btnConnectBtv".loaalized()

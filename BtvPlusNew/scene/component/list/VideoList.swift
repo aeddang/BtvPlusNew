@@ -286,7 +286,7 @@ class VideoData:InfinityData, Copying{
         count = data.no_epsd
         playTime = data.running_time?.toHMS()
         title = data.title
-        clipTitle = data.keywrd_val
+        clipTitle = data.title_sris
         index = idx
         epsdId = data.epsd_id
         watchLv = data.level?.toInt() ?? 0
@@ -346,10 +346,12 @@ class VideoData:InfinityData, Copying{
             if self.pageType == .kids {
                 return 0
             }
+            if self.isClip {
+                return self.clipTitle?.isEmpty == false ? ListItem.video.type03 : ListItem.video.type02
+            }
+            
             if (self.title != nil && self.subTitle != nil) {
                 return ListItem.video.type02
-            } else if self.isClip {
-                return self.clipTitle?.isEmpty == false ? ListItem.video.type03 : ListItem.video.type02
             }
             else {
                 return ListItem.video.type01
@@ -507,7 +509,7 @@ struct VideoList: PageComponent{
             if data.isClip , let parent = self.parentData {
                 
                 self.pagePresenter.openPopup(
-                    PageProvider.getPageObject(.previewList)
+                    PageProvider.getPageObject(.clipPreviewList)
                         .addParam(key: .data, value: parent)
                         .addParam(key: .id, value: data.epsdId)
                 )

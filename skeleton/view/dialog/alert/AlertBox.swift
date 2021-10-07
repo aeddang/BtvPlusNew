@@ -17,6 +17,7 @@ struct AlertBox: PageComponent {
     var image: UIImage?
     var text: String?
     var subText: String?
+    var tipTitle: String?
     var tipText: String?
     var referenceText: String?
     var imgButtons: [AlertBtnData]?
@@ -28,13 +29,15 @@ struct AlertBox: PageComponent {
             VStack (alignment: .center, spacing:0){
                 if (self.text?.count ?? 0) > self.maxTextCount {
                     ScrollView{
-                        AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
+                        AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText,
+                                  tipTitle:self.tipTitle , tipText: self.tipText, referenceText: self.referenceText)
                     }
                     .padding(.top, Dimen.margin.regular)
                     .padding(.bottom, Dimen.margin.medium)
                     .padding(.horizontal, Dimen.margin.regular)
                 } else {
-                    AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText, tipText: self.tipText, referenceText: self.referenceText)
+                    AlertBody(title: self.title, image: self.image, text: self.text, subText: self.subText,
+                              tipTitle:self.tipTitle , tipText: self.tipText, referenceText: self.referenceText)
                         .padding(.top, Dimen.margin.regular)
                         .padding(.bottom, Dimen.margin.medium)
                         .padding(.horizontal, Dimen.margin.light)
@@ -109,6 +112,7 @@ struct AlertBody: PageComponent{
     var image: UIImage?
     var text: String?
     var subText: String?
+    var tipTitle: String?
     var tipText: String?
     var referenceText: String?
     var body: some View {
@@ -146,15 +150,50 @@ struct AlertBody: PageComponent{
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.top, Dimen.margin.tiny)
             }
-            if self.tipText != nil{
-                Text(self.tipText!)
+            if let title = self.tipTitle {
+                Spacer().modifier(LineHorizontal())
+                    .padding(.top, Dimen.margin.regularExtra)
+                VStack(alignment:.leading, spacing:0){
+                    Text(title)
+                        .kerning(Font.kern.thin)
+                        .multilineTextAlignment(.leading)
+                        .modifier(BoldTextStyle(size: Font.size.thinExtra, color: Color.app.white))
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, Dimen.margin.regularExtra)
+                    if let text = self.tipText {
+                        Text(text)
+                            .kerning(Font.kern.thin)
+                            .multilineTextAlignment(.leading)
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLightExtra))
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top,  Dimen.margin.tiny)
+            
+                    }
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                }
+            } else {
+                if self.tipText != nil{
+                    Text(self.tipText!)
+                        .kerning(Font.kern.thin)
+                        .multilineTextAlignment(.center)
+                        .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, Dimen.margin.regular)
+                }
+            }
+            if self.referenceText != nil{
+                Text(self.referenceText!)
                     .kerning(Font.kern.thin)
                     .multilineTextAlignment(.center)
-                    .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
+                    .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.greyLight))
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.top, Dimen.margin.regular)
+                    .padding(.top, Dimen.margin.tiny)
             }
+            
             if self.referenceText != nil{
                 Text(self.referenceText!)
                     .kerning(Font.kern.thin)

@@ -169,7 +169,7 @@ struct SerisItem: PageView {
             ZStack(alignment:.bottomTrailing){
                 ImageView(url: self.data.image, contentMode: .fill, noImg: Asset.noImg16_9)
                     .modifier(MatchParent())
-                
+            
                 if self.isOn  {
                     Image(Asset.icon.thumbPlay)
                         .renderingMode(.original).resizable()
@@ -238,6 +238,10 @@ struct SerisItemKids: PageView {
                         .modifier(MatchParent())
                 } else {
                     ImageView(url: self.data.image, contentMode: .fill, noImg: AssetKids.noImg16_9)
+                        .modifier(MatchParent())
+                    Image(Asset.shape.listGradientH)
+                        .resizable()
+                        .scaledToFill()
                         .modifier(MatchParent())
                 }
                 if self.isOn  {

@@ -158,6 +158,7 @@
 "btnHeart" = "찜하기";
 "btnLike" = "평가하기";
 "btnLikeOn" = "좋아요";
+"btnLikeOnPreview" = "기대돼요";
 "btnLikeOff" = "별로예요";
 "btnRetry" = "다시시도";
 "btnWatchBtv" = "B tv로 보기";
@@ -270,7 +271,7 @@
 
 
 "alertNetworkError" = "네트워크 연결이 원활하지 않습니다.";
-"alertDataError" = "데이타가 없습니다.";
+"alertDataError" = "데이터가 없습니다.";
 
 "alertPlayError" = "재생오류";
 "alertPlayErrorPlayback" = "재생중 문제가 발생하였습니다.\n다시 시도해 주세요.";
@@ -311,9 +312,14 @@
 "alertUserCertificationPairing" = "B tv 연결을 위해 휴대폰 인증을 진행합니다. B tv를 이용 중인 가입자 본인의 휴대폰으로 본인확인을 해주세요.";
 "alertUserCertificationNeedPairing" ="B tv 가입자 명의의 휴대폰으로\n본인확인이 필요합니다.\n확인 후 다시 시도해주세요.";
 
-"alertLocation" = "위치 접근 권한을 허용해 주세요";
-"alertLocationSub" = "애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.";
-"alertLocationBtn" = "권한 허용 하러 가기";
+//"alertLocation" = "위치 접근 권한을 허용해 주세요";
+"alertLocation" = "접근 권한 동의 안내";
+"alertLocationSub" = "모바일 B tv 서비스 이용을 위해 아래 접근 권한이 추가로 필요합니다.\n허용하지 않아도 이용이 가능하나 일부 서비스 이용이 제한될 수 있습니다.";
+
+"alertLocationTipTitle" = "위치(선택)";
+"alertLocationTipText" = "TV 연결을 위한 네트워크 확인 및\nB tv 이어폰 모드 사용";
+//"alertLocationSub" = "애플의 정책에 따라 공유기 이름 정보를 확인하기 위해서 위치 접근 권한을 허용하셔야 이용이 가능합니다.";
+//"alertLocationBtn" = "권한 허용 하러 가기";
 
 "alertFindDevice" = "B tv 연결을 위해";
 "alertFindDeviceSub" = "잠시만 기다려주세요.";
@@ -376,8 +382,8 @@
 "alertPurchaseDisable" = "구매 불가";
 "alertPurchaseDisableService" = "일시적으로 서비스가 중단되어\n구매하실 수 없는 상품입니다.";
 
-"alertDataAlramOn" = "데이타 연결 알림이 설정되었습니다.";
-"alertDataAlramOff" = "데이타 연결 알림이 해제되었습니다.";
+"alertDataAlramOn" = "데이터 연결 알림이 설정되었습니다.";
+"alertDataAlramOff" = "데이터 연결 알림이 해제되었습니다.";
 "alertAutoRemoconOn" = "리모컨 자동 전환이 설정되었습니다.";
 "alertAutoRemoconOff" = "리모컨 자동 전환이 해제되었습니다.";
 "alertRemoconVibrationOn" = "리모컨 진동 효과가 설정되었습니다.";

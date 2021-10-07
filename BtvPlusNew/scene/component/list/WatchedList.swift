@@ -132,9 +132,16 @@ struct WatchedList: PageComponent{
                     EmptyMyKidsData()
                        
                 } else {
-                    EmptyMyData(
-                        text:String.pageText.myWatchedEmpty)
+                    VStack{
+                        InfoAlert(
+                            text: String.pageText.myWatchedInfo,
+                            horizontalMargin: self.horizontalMargin)
                         
+                        EmptyMyData(
+                            text:String.pageText.myWatchedEmpty)
+                            .modifier(MatchParent())
+                    }
+                    .padding(.top, Dimen.margin.regular)
                 }
             }
            

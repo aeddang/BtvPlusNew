@@ -328,42 +328,46 @@ struct PurchaseTicketItem: PageView {
             Spacer().modifier(LineHorizontal(color:Color.app.black))
                 .padding(.horizontal,
                          SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
-            HStack(alignment:.top ,
-                   spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.thin){
-                VStack(alignment: .leading ,
-                       spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
-                    if let value = self.data.originPrice {
-                        PurchaseTicketValue(title: String.app.ticketPrice, value: value)
+            VStack(alignment:.leading, spacing:0){
+                Spacer().modifier(MatchHorizontal(height: 0))
+                HStack(alignment:.top ,
+                       spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.thin){
+
+                    VStack(alignment: .leading ,
+                           spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
+                        if let value = self.data.originPrice {
+                            PurchaseTicketValue(title: String.app.ticketPrice, value: value)
+                        }
+                        if let value = self.data.payment {
+                            PurchaseTicketValue(title: String.app.paymentMethod, value: value)
+                        }
+                        if let value = self.data.joinDate {
+                            PurchaseTicketValue(title: String.app.joinDate, value: value)
+                        }
                     }
-                    if let value = self.data.payment {
-                        PurchaseTicketValue(title: String.app.paymentMethod, value: value)
-                    }
-                    if let value = self.data.joinDate {
-                        PurchaseTicketValue(title: String.app.joinDate, value: value)
+                    .frame(width: 130)
+                    VStack(alignment: .leading ,
+                           spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
+                        if let leading = self.data.periodLeading , let trailing = self.data.periodTrailing {
+                            PurchaseTicketValue(title: String.app.purchasePeriod, value: leading + "\n" + trailing , lineLimit:2)
+                        }else if let value = self.data.period {
+                            PurchaseTicketValue(title: String.app.purchasePeriod, value: value)
+                        }
+                        if let value = self.data.statusInfo {
+                            PurchaseTicketValue(title: String.app.ticketStatus, value: value)
+                        }
+                        if let value = self.data.contractInfo {
+                            PurchaseTicketValue(title: String.app.contractInfo, value: value)
+                        }
+                        if let value = self.data.contractPeriod {
+                            PurchaseTicketValue(title: String.app.contractPeriod, value: value)
+                        }
                     }
                 }
-                .frame(width: 130)
-                VStack(alignment: .leading ,
-                       spacing: SystemEnvironment.isTablet ? Dimen.margin.tinyExtra : Dimen.margin.tiny){
-                    if let leading = self.data.periodLeading , let trailing = self.data.periodTrailing {
-                        PurchaseTicketValue(title: String.app.purchasePeriod, value: leading + "\n" + trailing , lineLimit:2)
-                    }else if let value = self.data.period {
-                        PurchaseTicketValue(title: String.app.purchasePeriod, value: value)
-                    }
-                    if let value = self.data.statusInfo {
-                        PurchaseTicketValue(title: String.app.ticketStatus, value: value)
-                    }
-                    if let value = self.data.contractInfo {
-                        PurchaseTicketValue(title: String.app.contractInfo, value: value)
-                    }
-                    if let value = self.data.contractPeriod {
-                        PurchaseTicketValue(title: String.app.contractPeriod, value: value)
-                    }
-                }
-               
+                
             }
             .padding(.horizontal,
-                      SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
+                      (SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)/2 )
         }
         .padding(.vertical, SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)
         .background(Color.app.white)

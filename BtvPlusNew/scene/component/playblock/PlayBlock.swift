@@ -103,7 +103,7 @@ struct PlayBlock: PageComponent{
                                     marginTop: self.marginTop, 
                                     action: self.sortAction)
                                 : nil,
-                            headerSize: self.headerSize + self.spacing,
+                            headerSize: self.headerSize + Dimen.margin.thin,
                             marginTop:self.marginTop,
                             marginBottom :self.marginBottom,
                             spacing: 0,

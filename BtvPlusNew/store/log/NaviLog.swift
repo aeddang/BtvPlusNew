@@ -99,6 +99,7 @@ struct NaviLog {
         case .multiBlock: return "/category"
         case .categoryList: return nil
         case .previewList: return nil //페이지에서 직접처리
+        case .clipPreviewList: return nil //페이지에서 직접처리
         case .watchedList: return nil //페이지에서 직접처리
         case .fullPlayer: return nil
         

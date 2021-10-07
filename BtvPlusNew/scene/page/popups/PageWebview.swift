@@ -27,6 +27,7 @@ struct PageWebview: PageView {
     
     @State var title:String? = nil
     @State var marginBottom:CGFloat = Dimen.app.bottom
+    @State var marginOffSet:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -46,7 +47,7 @@ struct PageWebview: PageView {
                         .modifier(MatchParent())
                         
                 }
-                .padding(.bottom, self.marginBottom)
+                .padding(.bottom, self.marginBottom - self.marginOffSet)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
@@ -65,7 +66,8 @@ struct PageWebview: PageView {
                 }
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                self.marginBottom = bottom 
+                self.marginBottom = bottom
+                
             }
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
@@ -75,10 +77,15 @@ struct PageWebview: PageView {
                 if let link = obj.getParamValue(key: .data) as? String{
                     if link.contains(BtvWebView.event) == true {
                         self.naviLogManager.actionLog(.pageShow, pageId: .event, actionBody: .init(category:pushId))
+                        self.marginOffSet = Dimen.margin.regular
+                    }
+                    if link.contains(BtvWebView.tip) == true {
+                        self.marginOffSet = Dimen.margin.regular
                     }
                     if link.hasPrefix("http") { self.webViewModel.request = .link(link) }
                     else {self.webViewModel.request = .link(ApiPath.getRestApiPath(.WEB) + link)}
                 }
+                PageLog.d("self.marginOffSet " + self.marginOffSet.description, tag: self.tag)
                 
             }
             .onDisappear{

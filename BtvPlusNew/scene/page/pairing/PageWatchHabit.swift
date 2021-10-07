@@ -17,7 +17,7 @@ struct PageWatchHabit: PageView {
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var webViewModel = WebViewModel()
-    @State var webViewHeight:CGFloat = 0
+    @State var marginBottom:CGFloat = 0
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -28,39 +28,16 @@ struct PageWatchHabit: PageView {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.watchHabit,
-                        isBack: true
+                        isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    ZStack(alignment: .topLeading){
-                        DragDownArrow(
-                            infinityScrollModel: self.infinityScrollModel)
-                        InfinityScrollView(
-                            viewModel: self.infinityScrollModel,
-                            scrollType : .web(isDragEnd: true),
-                            isRecycle:false,
-                            useTracking:true ){
-                            BtvWebView( viewModel: self.webViewModel )
-                                .modifier(MatchHorizontal(height: self.webViewHeight))
-            
-                        }
+                    BtvWebView( viewModel: self.webViewModel )
                         .modifier(MatchParent())
-    
-                        .onReceive(self.infinityScrollModel.$event){evt in
-                            guard let evt = evt else {return}
-                            switch evt {
-                            case .pullCompleted :
-                                self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                            case .pullCancel :
-                                self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                            default : do{}
-                            }
-                        }
-                        .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                            self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                        }
-                    }
+                    
+                    
                    
                 }
+                .padding(.bottom, self.marginBottom)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
@@ -121,14 +98,10 @@ struct PageWatchHabit: PageView {
                 let js = BtvWebView.callJsPrefix + WebviewRespond.responseSTBViewInfo.rawValue
                 self.webViewModel.request = .evaluateJavaScriptMethod(js, dic)
             }
-            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
-                if isUpdated {
-                    self.setWebviewSize(geometry: geometry)
-                }
-            }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
-                self.setWebviewSize(geometry: geometry)
+                self.marginBottom = bottom
             }
+           
             .onAppear{
                 
                 
@@ -139,13 +112,7 @@ struct PageWatchHabit: PageView {
         }//geo
     }//body
     
-    private func setWebviewSize(geometry:GeometryProxy){
-        self.webViewHeight = geometry.size.height
-            - Dimen.app.top
-            - self.sceneObserver.safeAreaTop
-            - self.sceneObserver.safeAreaIgnoreKeyboardBottom
-    }
-    
+
     @State var message:ResultMessage? = nil
     func checkHostDeviceStatus(){
         self.message = nil

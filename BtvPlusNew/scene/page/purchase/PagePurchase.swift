@@ -43,45 +43,6 @@ struct PagePurchase: PageView {
                     BtvWebView( viewModel: self.webViewModel)
                         .modifier(MatchParent())
                         
-                    /*
-                    ZStack(alignment: .topLeading){
-                        DragDownArrow(
-                            infinityScrollModel: self.infinityScrollModel)
-                        if self.webViewHeight > 0{
-                            InfinityScrollView(
-                                viewModel: self.infinityScrollModel,
-                                scrollType : .web(isDragEnd: true),
-                                isRecycle:false,
-                                useTracking:true
-                            ){
-                                BtvWebView(
-                                    viewModel: self.webViewModel,
-                                    pageObservable:self.pageObservable,
-                                    useNativeScroll:false )
-                                        .modifier(MatchHorizontal(height: self.webViewHeight))
-                                        .onReceive(self.webViewModel.$screenHeight){height in
-                                            self.setWebviewSize(geometry: geometry)
-                                        }
-                            }
-                        }
-                    }
-                    //.padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)
-                    .modifier(MatchParent())
-                   
-                    .onReceive(self.infinityScrollModel.$event){evt in
-                        guard let evt = evt else {return}
-                        switch evt {
-                        case .pullCompleted :
-                            self.pageDragingModel.uiEvent = .pullCompleted(geometry)
-                        case .pullCancel :
-                            self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                        default : do{}
-                        }
-                    }
-                    .onReceive(self.infinityScrollModel.$pullPosition){ pos in
-                        self.pageDragingModel.uiEvent = .pull(geometry, pos)
-                    }
-                     */
                 }
                 .padding(.bottom, self.marginBottom)
                 .modifier(PageFull(style:.white))

@@ -591,10 +591,7 @@ class Nps: Rest{
         if !msg.isEmpty {
             params["sc"] = ApiUtil.getEncrypedSCValue(msg, nValue: n, npsPw: NpsNetwork.AES_PW)
         }
-        if let content = data?.content {
-            params["content"] = content
-        }
-        
+       
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params

@@ -79,9 +79,9 @@ class NotificationCoreData:PageProtocol {
         do {
             let fetchRequest:NSFetchRequest<NotificationEntity> = NotificationEntity.fetchRequest()
             let predicateTitle = NSPredicate(format: "title == '" + (title ?? "") + "'")
-            let predicateBody = NSPredicate(format: "body == '" + (body ?? "") + "'")
-            let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateTitle,predicateBody])
-            fetchRequest.predicate = predicateCompound
+            //let predicateBody = NSPredicate(format: "body == '" + (body ?? "") + "'")
+            //let predicateCompound = NSCompoundPredicate.init(type: .and, subpredicates: [predicateTitle])
+            fetchRequest.predicate = predicateTitle
             let objects = try container.viewContext.fetch(fetchRequest)
             for obj in objects {
                 if let userData = obj.userInfo as? [String: Any] {

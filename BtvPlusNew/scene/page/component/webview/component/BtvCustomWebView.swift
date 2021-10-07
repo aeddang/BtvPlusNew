@@ -282,6 +282,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         
        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            /*
             webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
                 DispatchQueue.main.async {
                     self.parent.viewModel.screenHeight = height as! CGFloat
@@ -290,7 +291,17 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                     }
                     ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
                 }
-            })
+            })*/
+            for subview in webView.scrollView.subviews {
+                for recognizer in subview.gestureRecognizers ?? [] {
+                    if recognizer.isKind(of: UITapGestureRecognizer.self) {
+                        let tapRecognizer = recognizer as? UITapGestureRecognizer
+                        if tapRecognizer?.numberOfTapsRequired == 2 && tapRecognizer?.numberOfTouchesRequired == 1 {
+                            subview.removeGestureRecognizer(recognizer)
+                        }
+                    }
+                }
+            }
             //선택 제거
             let disabledSelect = "document.documentElement.style.webkitUserSelect='none';"
             //복사 붙여넣기 같은 팝업 제거
@@ -321,7 +332,9 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript ].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
-            
+            webView.scrollView.bounces = false
+            webView.scrollView.alwaysBounceVertical = false
+            webView.keyboardDisplayRequiresUserAction = false
             WKWebsiteDataStore.default().httpCookieStore.getAllCookies { (cookies) in
                 for cookie in cookies {
                     if cookie.name.contains("BtvplusWebVer") {

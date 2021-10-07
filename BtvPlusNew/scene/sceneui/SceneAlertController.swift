@@ -23,7 +23,7 @@ enum SceneAlert:Equatable {
          needPurchase( PurchaseWebviewModel , String? = nil),
          needCertification( String?, String?, String? = nil, pageTitle:String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
-         like(String, Bool?), updateAlram(String, Bool),
+         like(String, Bool?, isPreview:Bool = false), updateAlram(String, Bool),
          
          
          cancel
@@ -63,6 +63,7 @@ struct SceneAlertController: PageComponent{
     @State var text:String? = nil
     @State var subText:String? = nil
     @State var referenceText:String? = nil
+    @State var tipTitle:String? = nil
     @State var tipText:String? = nil
     @State var imgButtons:[AlertBtnData]? = nil
     @State var buttons:[AlertBtnData] = []
@@ -78,6 +79,7 @@ struct SceneAlertController: PageComponent{
             image: self.image,
             text: self.text,
             subText: self.subText,
+            tipTitle: self.tipTitle,
             tipText: self.tipText,
             referenceText: self.referenceText,
             imgButtons: self.imgButtons,
@@ -104,7 +106,7 @@ struct SceneAlertController: PageComponent{
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
-            case .like(let id, let isLike) : self.selectedLike(idx, id: id, isLike:isLike)
+            case .like(let id, let isLike, _) : self.selectedLike(idx, id: id, isLike:isLike)
             case .updateAlram(let id, let isAlram) : self.selectedUpdateAlram(idx, id: id, isAlram:isAlram)
             default: return 
             }
@@ -145,7 +147,7 @@ struct SceneAlertController: PageComponent{
             case .serviceUnavailable(let path): self.setupServiceUnavailable(path: path)
             case .serviceSelect(let text, _ , _) : self.setupServiceSelect(text: text)
             case .pairingCheckFail : self.setupPairingCheckFail()
-            case .like(_, let isLike) : self.setupLike( isLike: isLike)
+            case .like(_, let isLike, let isPreview) : self.setupLike( isLike: isLike, isPreview:isPreview)
             case .updateAlram(_, let isAlram) : self.setupUpdateAlram( isAlram: isAlram)
             case .recivedApns(let data):
                 let enable = self.setupRecivedApns(alram:data)
@@ -165,6 +167,7 @@ struct SceneAlertController: PageComponent{
         self.text = nil
         self.subText = nil
         self.tipText = nil
+        self.tipTitle = nil
         self.referenceText = nil
         self.buttons = []
         self.imgButtons = nil
@@ -288,12 +291,18 @@ struct SceneAlertController: PageComponent{
     }
     
     func setupRequestLocation() {
-        self.title = String.alert.connect
-        self.text = String.alert.location
-        self.subText = String.alert.locationSub
+        self.title = String.alert.location
+        self.text = String.alert.locationSub
+        self.tipTitle = String.alert.locationTipTitle
+        self.tipText = String.alert.locationTipText
+        /*
         self.buttons = [
             AlertBtnData(title: String.alert.locationBtn, index: 0),
             AlertBtnData(title: String.app.cancel, index: 1)
+        ]
+         */
+        self.buttons = [
+            AlertBtnData(title: String.app.confirm, index: 0)
         ]
     }
     func selectedRequestLocation(_ idx:Int, completionHandler: @escaping (Bool) -> Void) {
@@ -486,10 +495,10 @@ struct SceneAlertController: PageComponent{
         }
     }
     
-    func setupLike( isLike:Bool? ) {
+    func setupLike( isLike:Bool? , isPreview:Bool) {
         self.title = String.alert.like
         self.imgButtons = [
-            AlertBtnData(title: String.button.likeOn,
+            AlertBtnData(title: isPreview ? String.button.likeOnPreview : String.button.likeOn,
                          img: isLike == true ? Asset.icon.goodOn : Asset.icon.goodOff,
                          index: 1),
             AlertBtnData(title: String.button.likeOff,

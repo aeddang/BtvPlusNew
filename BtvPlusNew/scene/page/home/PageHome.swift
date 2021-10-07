@@ -139,6 +139,7 @@ struct PageHome: PageView {
                             self.requestBand()
                         }
                     case .getMonthlyData(let prcPrdid, _ ) :
+                    
                         if self.selectedMonthlyId != prcPrdid {return}
                         guard let data = res.data as? MonthlyInfoData else { return }
                         self.updatedMonthlyInfoData(data)
@@ -250,7 +251,7 @@ struct PageHome: PageView {
     }
     
     private func reload(selectedMonthlyId:String? = nil){
-        self.isPeriodPurchaseCheck = false
+        
         self.selectedMonthlyId = selectedMonthlyId ?? self.selectedMonthlyId
         self.monthlyDatas?.forEach{ data in
             data.reset()
@@ -321,9 +322,10 @@ struct PageHome: PageView {
         }
     }
     
+    @State var requestMonthlyCompletedCount:Int = 0
     private func updatedMonthly( purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
+        self.requestMonthlyCompletedCount += 1
         let filteredPurchases = purchases.filter({($0.yn_perd == "Y" && $0.flag_perd == "N") || $0.yn_perd == "N"})
-        
         if let band = self.currentBand {
             if band.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {
                 self.updatedMonthlyPurchaseInfo(filteredPurchases, lowLevelPpm:lowLevelPpm)
@@ -341,6 +343,8 @@ struct PageHome: PageView {
             self.selectedMonthlyId = EuxpNetwork.PrdPrcIdCode.OCEAN.rawValue
         }
         if self.pairing.status == .pairing {
+            self.requestMonthlyCompletedCount = 0
+            self.isPeriodPurchaseCheck = false
             self.pairing.authority.requestAuth(.updateTicket)
         } else {
             self.setupPurchaseTip()
@@ -349,27 +353,30 @@ struct PageHome: PageView {
     
     @State var isPeriodPurchaseCheck:Bool = false
     private func updatedMonthlyPurchaseInfo( _ purchases:[MonthlyInfoItem], lowLevelPpm:Bool){
-        if !lowLevelPpm {return}
-        if self.isPeriodPurchaseCheck {return}
+        //if !lowLevelPpm {return}
+       
+        if self.isPeriodPurchaseCheck && lowLevelPpm {return} //상위가입우선
         guard let band = self.currentBand  else { return }
         if band.gnbTypCd != EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue {return}
-        if let purchas = purchases.first(where: {$0.prod_id == self.selectedMonthlyId}){
+        if let purchas = purchases.first(where: {$0.prod_id == self.selectedMonthlyId || $0.prod_id == "6487151"}){ // 복합권 연결할 방법이없음...하드코딩
             if let period = purchases.first(where: {$0.subs_id == purchas.subs_id && $0.prod_id != purchas.prod_id}), let title = period.title {
                 self.tipBlockData = TipBlockData()
                     .setupTip(leading: String.monthly.oceanPeriodAuth.replace(title))
                 self.isPeriodPurchaseCheck = true
             } else {
-                if self.isPeriodPurchaseCheck {return}
+                //if self.isPeriodPurchaseCheck {return}
                 self.tipBlockData = TipBlockData()
                     .setupTip(
                         icon: Asset.icon.logoOcean,
                         strongTrailing: String.monthly.oceanAuthLeading,
                         trailing: String.monthly.oceanAuth)
+                self.isPeriodPurchaseCheck = true
             }
            
         } else {
-            if self.isPeriodPurchaseCheck {return}
-            self.viewModel.request = .init(type: .getMonthlyData(self.selectedMonthlyId, isDetail: false), isOptional:true)
+            if self.requestMonthlyCompletedCount == 2 { //미 가입이면 가입정보로
+                self.viewModel.request = .init(type: .getMonthlyData(self.selectedMonthlyId, isDetail: false), isOptional:true)
+            }
         }
     }
     private func updatedMonthlyInfoData( _ data:MonthlyInfoData){
@@ -448,7 +455,7 @@ struct PageHome: PageView {
         self.requestMonthly()
     }
 
-    @State var requestMonthlyCompletedCount:Int = 0
+   
     private func requestMonthly(){
         PageLog.d("requestMonthly", tag: self.tag)
         if self.monthlyheader == nil {
@@ -474,9 +481,9 @@ struct PageHome: PageView {
             guard let id = purchas.prod_id else {return}
             guard let monthlyData = self.originMonthlyDatas?[id] else {return}
             if let sub = purchases.first(where: {$0.subs_id == purchas.subs_id && $0.prod_id != id}){
-                monthlyData.setData(data:sub, isLow:true, isPeriod: sub.yn_perd?.toBool() ?? false)
+                monthlyData.setData(data:sub, isLow:lowLevelPpm, isPeriod: sub.yn_perd?.toBool() ?? false)
             } else {
-                monthlyData.setData(data:purchas, isLow:false, isPeriod: purchas.yn_perd?.toBool() ?? false)
+                monthlyData.setData(data:purchas, isLow:lowLevelPpm, isPeriod: purchas.yn_perd?.toBool() ?? false)
             }
            
             if !lowLevelPpm {
@@ -489,12 +496,13 @@ struct PageHome: PageView {
     }
 
     private func syncronizeMonthly(){
-        self.requestMonthlyCompletedCount += 1
+        
         PageLog.d("syncronizeMonthly " + self.requestMonthlyCompletedCount.description, tag: self.tag)
         if self.requestMonthlyCompletedCount != 2 && self.pairing.status == .pairing {return}
         guard let monthlyDatas = self.monthlyDatas else {return}
         let joins = monthlyDatas.filter{$0.isJoin}
         let subJoins = monthlyDatas.filter{$0.isSubJoin}
+        
         var subSet:[String:String?] = [:]
         subJoins.forEach({
             if let subJoinId = $0.subJoinId {

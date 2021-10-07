@@ -16,6 +16,7 @@ extension View {
                image: UIImage? = nil,
                text: String? = nil,
                subText: String? = nil,
+               tipTitle: String? = nil,
                tipText: String? = nil,
                referenceText: String? = nil,
                imgButtons:[AlertBtnData]? = nil,
@@ -39,6 +40,7 @@ extension View {
             image:image,
             text:text,
             subText:subText,
+            tipTitle: tipTitle,
             tipText:tipText,
             referenceText: referenceText,
             imgButtons : imgButtons,
@@ -64,6 +66,7 @@ struct Alert<Presenting>: View where Presenting: View {
     var image: UIImage?
     var text: String?
     var subText: String?
+    var tipTitle: String?
     var tipText: String?
     var referenceText: String?
     var imgButtons: [AlertBtnData]?
@@ -80,6 +83,7 @@ struct Alert<Presenting>: View where Presenting: View {
                     image: self.image,
                     text: self.text,
                     subText: self.subText,
+                    tipTitle: self.tipTitle,
                     tipText: self.tipText,
                     referenceText: self.referenceText,
                     imgButtons: self.imgButtons,

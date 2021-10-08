@@ -64,19 +64,6 @@ extern NSString *const kIMASubtitleTTML;
 @interface IMAAVPlayerVideoDisplay : NSObject <IMAVideoDisplay>
 
 /**
- * The content player used for both content and ad video playback.
- */
-@property(nonatomic, strong, readonly) AVPlayer *player DEPRECATED_MSG_ATTRIBUTE(
-    "Use the player passed into initWithAVPlayer: instead.");
-
-/**
- * The player item that will be played by the player. Access to the player item is provided
- * so the item can be seeked, to select subtitles, and to inspect media attributes.
- */
-@property(nonatomic, strong, readonly) AVPlayerItem *playerItem DEPRECATED_MSG_ATTRIBUTE(
-    "Use playerVideoDisplay:didLoadPlayerItem: instead.");
-
-/**
  * Allows the publisher to receive IMAAVPlayerVideoDisplay specific events.
  */
 @property(nonatomic, weak) id<IMAAVPlayerVideoDisplayDelegate> playerVideoDisplayDelegate;
@@ -84,7 +71,13 @@ extern NSString *const kIMASubtitleTTML;
 /**
  * The subtitles for the current stream. Will be nil until the stream starts playing.
  */
-@property(nonatomic, strong, readonly) NSArray *subtitles;
+@property(nonatomic, readonly) NSArray *subtitles;
+
+/**
+ * A dictionary that contains options used to customize the initialization of an @c AVURLAsset for
+ * stream playback. Has no effect on client-side ads.
+ */
+@property(nonatomic, copy) NSDictionary<NSString *, id> *streamAssetOptions;
 
 /**
  * Creates an IMAAVPlayerVideoDisplay that will play ads in the passed in
@@ -96,9 +89,19 @@ extern NSString *const kIMASubtitleTTML;
  */
 - (instancetype)initWithAVPlayer:(AVPlayer *)player;
 
+#if TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 140000
 /**
- * :nodoc:
+ * Creates an IMAAVPlayerVideoDisplay that will play ads in the passed in
+ * content player. Use this initializer for tvOS 14+.
+ *
+ * @param player the AVPlayer instance used for playing content
+ * @param nowPlayingSession the session used to listen for remote control events and to update
+ *     playback info.
+ *
+ * @return an IMAAVPlayerVideoDisplay instance
  */
-- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithAVPlayer:(AVPlayer *)player
+               nowPlayingSession:(MPNowPlayingSession *)nowPlayingSession API_AVAILABLE(tvos(14.0));
+#endif
 
 @end

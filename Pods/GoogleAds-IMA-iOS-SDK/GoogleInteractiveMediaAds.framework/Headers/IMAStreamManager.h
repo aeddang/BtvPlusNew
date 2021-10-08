@@ -70,13 +70,16 @@
  * @param adPosition       the ad position of the current ad in the current ad break
  * @param totalAds         the total number of ads in the current ad break
  * @param adBreakDuration  the total duration of the current ad break in seconds
+ * @param adPeriodDuration the total duration of the current ad period in seconds. This includes ads
+ * duration plus slate.
  */
 - (void)streamManager:(IMAStreamManager *)streamManager
-  adDidProgressToTime:(NSTimeInterval)time
-           adDuration:(NSTimeInterval)adDuration
-           adPosition:(NSInteger)adPosition
-             totalAds:(NSInteger)totalAds
-      adBreakDuration:(NSTimeInterval)adBreakDuration;
+    adDidProgressToTime:(NSTimeInterval)time
+             adDuration:(NSTimeInterval)adDuration
+             adPosition:(NSInteger)adPosition
+               totalAds:(NSInteger)totalAds
+        adBreakDuration:(NSTimeInterval)adBreakDuration
+       adPeriodDuration:(NSTimeInterval)adPeriodDuration;
 
 @end
 

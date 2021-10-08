@@ -16,6 +16,7 @@ struct SocialMediaShareable {
     let id = UUID.init().uuidString
     var image:UIImage?
     var url:URL?
+    var title:String?
     var text:String?
     var linkText:String?
 }
@@ -53,14 +54,21 @@ struct SocialMediaSharingManage{
     static func share(_ object: SocialMediaShareable, from presentingVC: UIViewController, completion: ((Bool) -> Void)? = nil ) {
         var sharedObjects: [AnyObject] = []
         if let img = object.image { sharedObjects.append(img) }
-        if let url = object.url, let txt = object.text {
+        if let txt = object.title , let url = object.url{
             sharedObjects.append(
-                ShareActivityItemSource(url: url , icon: object.image, title: txt, isUrl: false, linkText: url.absoluteString)
+                ShareActivityItemSource(url: url, icon: object.image, title: txt, isUrl:false)
+            )
+        }
+        if let txt = object.text , let url = object.url{
+            sharedObjects.append(
+                ShareActivityItemSource(url: url, title: txt, isUrl:false)
             )
         }
         if let url = object.url {
             sharedObjects.append(
-                ShareActivityItemSource(url: url, icon: nil, title: object.text, isUrl: true, linkText: object.linkText ?? object.text)
+                ShareActivityItemSource(url: url, icon: nil,
+                                        isUrl: true ,
+                                        linkText: object.linkText)
             )
         }
         let activityViewController = UIActivityViewController(activityItems: sharedObjects, applicationActivities: nil)
@@ -89,15 +97,13 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
     private let icon: UIImage?
     private let title: String
     private let isUrl: Bool
-    private let isEmpty: Bool
     private let linkText: String?
     
-    init(url: URL, icon: UIImage? = nil, title: String? = nil, isUrl: Bool = true, isEmpty: Bool = false, linkText: String? = nil) {
+    init(url: URL, icon: UIImage? = nil, title: String? = nil, isUrl: Bool = true,  linkText: String? = nil) {
         self.url = url
         self.icon = icon
         self.title = title ?? ""
         self.isUrl = isUrl
-        self.isEmpty = isEmpty
         self.linkText = linkText
         super.init()
     }
@@ -108,15 +114,14 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
         if linkText != nil { return linkText }
-        if isEmpty { return nil }
         if activityType == .message {
             if isUrl {
                 return self.title + "\n" + self.url.absoluteString
             } else {
-                return nil
+                return self.title
             }
         }
-        return isUrl ? url : title
+        return isUrl ? self.url : self.title
     }
     
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {

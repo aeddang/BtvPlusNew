@@ -130,7 +130,7 @@ struct KidsPlayer: PageComponent{
                 PlayerWaitingKids(
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel, imgBg: self.thumbImage, contentMode: self.thumbContentMode)
-                    .opacity(self.isWaiting == true ? 1.0 : 0)
+                    .opacity(self.isWaiting == true || self.isPlayerComplete ? 1.0 : 0)
                 
             }
             .modifier(MatchParent())
@@ -139,6 +139,8 @@ struct KidsPlayer: PageComponent{
                 guard let evt = evt else { return }
                 switch evt {
                 case .seeked : self.viewModel.seeking = 0
+                case .completed :  withAnimation{ self.isPlayerComplete = true }
+                case .resumed : if self.isPlayerComplete  { withAnimation{ self.isPlayerComplete = false }}
                 default : break
                 }
             }
@@ -336,6 +338,7 @@ struct KidsPlayer: PageComponent{
         
     }
     
+    @State var isPlayerComplete:Bool = false
     @State var isWaiting:Bool? = nil
     @State var isPrerollPause:Bool = false
     @State var recoveryTime:Double = 0

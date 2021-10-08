@@ -261,6 +261,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
+        /*
         #if DEBUG
         if !isAnonymous {
             DataLog.d("***********", tag: self.tag )
@@ -289,7 +290,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 DataLog.d("  running_time : " + (content.running_time ?? ""), tag: self.tag )
             }
         }
-        #endif
+        #endif*/
         self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: data), isAnonymous: isAnonymous))
     }
 

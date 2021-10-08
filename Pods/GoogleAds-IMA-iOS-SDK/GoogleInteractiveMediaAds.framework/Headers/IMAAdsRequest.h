@@ -23,7 +23,7 @@
  * Specifies the full URL to use for ads loading from an ad server. Required
  * for any <code>adsRequest</code>. For details on constructing the ad tag url,
  * see <a href="https://support.google.com/dfp_premium/answer/1068325">
- * Create a master video tag manually</a>.
+ * Create a main ad video tag manually</a>.
  */
 @property(nonatomic, copy, readonly) NSString *adTagUrl;
 
@@ -37,12 +37,12 @@
 /**
  * The ad display container.
  */
-@property(nonatomic, strong, readonly) IMAAdDisplayContainer *adDisplayContainer;
+@property(nonatomic, readonly) IMAAdDisplayContainer *adDisplayContainer;
 
 /**
  * The user context.
  */
-@property(nonatomic, strong, readonly) id userContext;
+@property(nonatomic, readonly) id userContext;
 
 /**
  * Specifies whether the player intends to start the content and ad in
@@ -122,7 +122,7 @@
                  adDisplayContainer:(IMAAdDisplayContainer *)adDisplayContainer
                avPlayerVideoDisplay:(IMAAVPlayerVideoDisplay *)avPlayerVideoDisplay
               pictureInPictureProxy:(IMAPictureInPictureProxy *)pictureInPictureProxy
-                        userContext:(id)userContext __TVOS_UNAVAILABLE;
+                        userContext:(id)userContext API_AVAILABLE(ios(9.0), tvos(14.0));
 
 /**
  * Initializes an ads request instance with the given canned ads response and ad display
@@ -160,7 +160,7 @@
               adDisplayContainer:(IMAAdDisplayContainer *)adDisplayContainer
             avPlayerVideoDisplay:(IMAAVPlayerVideoDisplay *)avPlayerVideoDisplay
            pictureInPictureProxy:(IMAPictureInPictureProxy *)pictureInPictureProxy
-                     userContext:(id)userContext __TVOS_UNAVAILABLE;
+                     userContext:(id)userContext API_AVAILABLE(ios(9.0), tvos(14.0));
 
 /**
  * Initializes an ads request instance with the given ad tag URL and ad display

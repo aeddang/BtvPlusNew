@@ -304,9 +304,11 @@ struct PageConfirmNumber: PageView {
     
     func closePage(){
         self.isFocus = true
+        self.closePageImmediately()
+        /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.closePageImmediately()
-        }
+        }*/
     }
     func closePageImmediately(){
         //self.isFocus = false

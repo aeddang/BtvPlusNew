@@ -26,7 +26,7 @@ struct FocusableTextField: UIViewRepresentable {
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputClear: (() -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
-    
+    @State var isFinalFocus:Bool? = nil
     func makeUIView(context: Context) -> UITextField {
         let textField = UITextField(frame: .zero)
         let font =  UIFont(name: self.textModifier.family, size: self.textModifier.size)
@@ -55,6 +55,9 @@ struct FocusableTextField: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UITextField, context: Context) {
+        if uiView.text != self.text { uiView.text = self.text }
+        
+        if self.isfocus == self.isFinalFocus {return}
         if self.isfocus {
             if !uiView.isFocused {
                 uiView.becomeFirstResponder()
@@ -64,7 +67,10 @@ struct FocusableTextField: UIViewRepresentable {
                 uiView.resignFirstResponder()
             }
         }
-        if uiView.text != self.text { uiView.text = self.text }
+        DispatchQueue.main.async {
+            self.isFinalFocus = self.isfocus
+        }
+        
     }
 
     func makeCoordinator() -> Coordinator {

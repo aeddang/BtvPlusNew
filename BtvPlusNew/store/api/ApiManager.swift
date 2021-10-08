@@ -439,7 +439,7 @@ class ApiManager :PageProtocol, ObservableObject{
             seriesId: seriesId, hostDevice: device, isTotal: isTotal,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .registLike(let isLike, let seriesId, let device) : self.smd.postLike(
+        case .registLike(let isLike, let seriesId, let device, _, _) : self.smd.postLike(
             isLike: isLike, seriesId: seriesId, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)

@@ -43,8 +43,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         let deviceType = AppUtil.isPad() ? "BtvTablet" : "BtvPhone"
         config.applicationNameForUserAgent = "BtvPlusApp/1.54/\(deviceType)"
         config.mediaTypesRequiringUserActionForPlayback = []
-        //config.requiresUserActionForMediaPlayback = false
-        //config.mediaPlaybackRequiresUserAction = false
         config.allowsInlineMediaPlayback = true
         config.processPool = WKProcessPool()
         #if DEBUG
@@ -55,7 +53,10 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         uiView.uiDelegate = context.coordinator
         uiView.allowsLinkPreview = false
         uiView.scrollView.bounces = false
+        uiView.autoresizesSubviews = true
         uiView.scrollView.alwaysBounceVertical = false
+        
+        uiView.contentMode = .scaleAspectFit
         uiView.keyboardDisplayRequiresUserAction = false
         uiView.isOpaque = false
         uiView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -282,7 +283,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         
        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            /*
+            
             webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
                 DispatchQueue.main.async {
                     self.parent.viewModel.screenHeight = height as! CGFloat
@@ -291,7 +292,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                     }
                     ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
                 }
-            })*/
+            })
             for subview in webView.scrollView.subviews {
                 for recognizer in subview.gestureRecognizers ?? [] {
                     if recognizer.isKind(of: UITapGestureRecognizer.self) {
@@ -311,8 +312,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             //let disabledScroll = "document.body.style.overflow = 'hidden';"
             //let disabledScroll = "document.querySelectorAll('*[style]').forEach(el => el.style.overflow = 'scroll');"
             // 자동 완성 제거
-            
-            
             let disableAutocompleteScript: String = """
                 var textFields = document.getElementsByTagName('textarea');
                 if (textFields) {
@@ -329,7 +328,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 }
             """
             
-            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript ].forEach { option in
+            [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
             webView.scrollView.bounces = false
@@ -351,7 +350,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             guard let failingUrl = URL(string: failingUrlStr) else { return }
             guard let scheme = failingUrl.scheme?.lowercased() else { return }
             ComponentLog.d("scheme: " + scheme , tag: self.tag )
-            
+                    
             if scheme == "tel" || scheme == "mailto"
                 || scheme == "itmss" || scheme == "itms-appss" || scheme == "btvmobile" {
                 

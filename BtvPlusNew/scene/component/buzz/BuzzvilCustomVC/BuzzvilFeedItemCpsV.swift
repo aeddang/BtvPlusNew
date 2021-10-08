@@ -114,6 +114,7 @@ class BuzzvilFeedItemCpsV: BABAdViewHolder, BABNativeAdViewDelegate {
     func babNativeAdView(_ adView: BABNativeAdView, didParticipateAd ad: BABAd) {
         self.ctaButton.isEnabled = false
         self.ctaLabel.text = "참여 완료"
+        //self.ctaButton.bounds = .init(x: 0, y: 0, width: 76, height: 50)
         self.rewardIcon.image = UIImage(named: "icCategoryBtnCheck")
     }
     

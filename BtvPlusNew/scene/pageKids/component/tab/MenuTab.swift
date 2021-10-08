@@ -17,6 +17,7 @@ extension MenuTab{
 
 struct MenuTab : PageComponent {
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
+    var scrollReader:ScrollViewProxy? = nil
     let buttons:[String]
     var selectedIdx:Int = 0
     var height:CGFloat = Self.height
@@ -27,8 +28,17 @@ struct MenuTab : PageComponent {
     var body: some View {
         HStack(spacing:0){
             ForEach(self.menus) { menu in
+                let uuid = UUID().hashValue
                 Button(
-                    action: { self.performAction(menu)}
+                    action: {
+                        if let scrollReader = self.scrollReader {
+                            if menu.idx < self.menus.count-2 {
+                                withAnimation{scrollReader.scrollTo(uuid, anchor: .center)}
+                            }
+                        }
+                        self.performAction(menu)
+                        
+                    }
                 ){
                     if self.isDivision {
                         self.createButton(menu)
@@ -38,6 +48,7 @@ struct MenuTab : PageComponent {
                             .frame(height: self.height)
                     }
                 }
+                .id(uuid)
                 .background( menu.idx == self.selectedIdx
                                 ? Color.kids.primaryLight
                                 :Color.transparent.clearUi)

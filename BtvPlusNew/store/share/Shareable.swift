@@ -14,6 +14,7 @@ class Shareable {
     let isPopup:Bool
     let link:String?
     let linkText:String?
+    let title:String?
     let text:String?
     var imagePath:String?
     var image:UIImage?
@@ -24,6 +25,7 @@ class Shareable {
         params:[PageParam:Any]? = nil,
         isPopup:Bool = true,
         link:String? = nil,
+        title:String? = nil,
         text:String? = nil,
         linkText:String? = nil,
         imagePath:String? = nil,
@@ -35,6 +37,7 @@ class Shareable {
         self.params = params
         self.link = link
         self.text = text
+        self.title = title
         self.linkText = linkText
         self.image = image
         self.imagePath = imagePath

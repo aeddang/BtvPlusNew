@@ -1,0 +1,6 @@
+framework module BuzzAd {
+  umbrella header "BuzzAd.h"
+
+  export *
+  module * { export * }
+}

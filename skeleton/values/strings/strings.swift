@@ -185,6 +185,7 @@ extension String {
         public static let synopsis = "shareSynopsis".loaalized()
         public static let complete = "shareComplete".loaalized()
         public static let fail = "shareFail".loaalized()
+        public static let shareFamilyInviteTitle = "shareFamilyInviteTitle".loaalized()
         public static let shareFamilyInvite = "shareFamilyInvite".loaalized()
         public static let shareFamilyInviteComplete = "shareFamilyInviteComplete".loaalized()
         public static let shareFamilyInviteFail = "shareFamilyInviteFail".loaalized()

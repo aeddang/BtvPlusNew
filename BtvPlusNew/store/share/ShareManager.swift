@@ -21,6 +21,7 @@ class ShareManager :PageProtocol {
                   params:shareable.params,
                   isPopup:shareable.isPopup,
                   link: shareable.link,
+                  title: shareable.title,
                   text:shareable.text,
                   linkText: shareable.linkText,
                   image:imagePath,
@@ -32,6 +33,7 @@ class ShareManager :PageProtocol {
                   params:shareable.params,
                   isPopup:shareable.isPopup,
                   link: shareable.link,
+                  title: shareable.title,
                   text:shareable.text,
                   linkText: shareable.linkText,
                   image:shareable.image,
@@ -42,7 +44,7 @@ class ShareManager :PageProtocol {
     }
     
     func share(pageID:PageID?, params:[PageParam:Any]? = nil, isPopup:Bool = true,
-               link:String? = nil, text:String? = nil, linkText:String? = nil,  image:String,
+               link:String? = nil,title:String? = nil, text:String? = nil, linkText:String? = nil,  image:String,
                useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         self.pagePresenter?.isLoading = true
         var shareImg:UIImage? = nil
@@ -56,14 +58,14 @@ class ShareManager :PageProtocol {
             DispatchQueue.main.async {
                 self.pagePresenter?.isLoading = false
                 self.share(pageID:pageID, params:params, isPopup:isPopup,
-                           link:link, text:text, image:shareImg, useDynamiclink: useDynamiclink)
+                           link:link, title:title, text:text, linkText:linkText, image:shareImg, useDynamiclink: useDynamiclink)
             }
             
         }
     }
     
     func share( pageID:PageID?, params:[PageParam:Any]? = nil, isPopup:Bool = true,
-                link:String? = nil, text:String? = nil, linkText:String? = nil, image:UIImage? = nil,
+                link:String? = nil, title:String? = nil,  text:String? = nil, linkText:String? = nil, image:UIImage? = nil,
                 useDynamiclink:Bool = true,  completion: ((Bool) -> Void)? = nil){
         if let page = pageID {
             guard let qurry = WhereverYouCanGo.qurryIwillGo(
@@ -83,7 +85,9 @@ class ShareManager :PageProtocol {
                             SocialMediaShareable(
                                 image: image ,
                                 url:url,
-                                text: text
+                                title: title,
+                                text: text,
+                                linkText: linkText?.replace(url.absoluteString)
                             )
                         SocialMediaSharingManage.share(shareable, completion: completion)
                     }
@@ -94,6 +98,7 @@ class ShareManager :PageProtocol {
                 let shareable =
                     SocialMediaShareable(
                         image: image ,
+                        title: title,
                         text: text
                     )
                     SocialMediaSharingManage.share(shareable, completion: completion)
@@ -116,8 +121,9 @@ class ShareManager :PageProtocol {
                                                 SocialMediaShareable(
                                                     image: image ,
                                                     url:replaced.toUrl(),
+                                                    title: title,
                                                     text: text,
-                                                    linkText: linkText
+                                                    linkText: linkText?.replace(replaced)
                                                 )
                                             SocialMediaSharingManage.share(shareable, completion: completion)
                                             return
@@ -144,8 +150,9 @@ class ShareManager :PageProtocol {
                 SocialMediaShareable(
                     image: image ,
                     url: originLink.toUrl(),
+                    title: title,
                     text: text,
-                    linkText: linkText
+                    linkText: linkText?.replace(originLink)
                 )
             SocialMediaSharingManage.share(shareable, completion: completion)
         }

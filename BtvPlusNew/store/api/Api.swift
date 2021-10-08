@@ -120,7 +120,7 @@ enum ApiType{
          getTerminateStbInfo(String?)
     //SMD
     case getLike(String?, HostDevice?, isTotal:Bool = false),
-         registLike(Bool?, String?, HostDevice?)
+         registLike(Bool?, String?, HostDevice?, changeNumLike:Int = 0, changeNumDislike:Int = 0)
     
     
     //PSS

@@ -12,16 +12,25 @@ import Combine
 
 final class PagePresenter:ObservableObject{
     func changePage(_ pageObject:PageObject , isCloseAllPopup:Bool = true){
-        if isBusy { return }
+        if isBusy {
+            PageLog.d("changePage isBusy " + pageObject.pageID , tag: "PageSceneDelegate")
+            return
+        }
         PageSceneDelegate.instance?.changePage( pageObject, isCloseAllPopup:isCloseAllPopup )
     }
     func changePage(_ pageID:PageID, idx:Int = 0, params:[String:Any]? = nil, isCloseAllPopup:Bool = true){
-        if isBusy { return }
+        if isBusy {
+            PageLog.d("changePage isBusy " + pageID , tag: "PageSceneDelegate")
+            return
+        }
         let page = PageObject(pageID: pageID, pageIDX: idx, params: params, isPopup: false)
         PageSceneDelegate.instance?.changePage( page , isCloseAllPopup:isCloseAllPopup)
     }
     func changePage(_ pageID:PageID, params:[String:Any]? = nil, idx:Int = 0, isCloseAllPopup:Bool = true){
-        if isBusy { return }
+        if isBusy {
+            PageLog.d("changePage isBusy " + pageID , tag: "PageSceneDelegate")
+            return
+        }
         let page = PageObject(pageID: pageID, pageIDX: idx, params: params, isPopup: false)
         PageSceneDelegate.instance?.changePage( page , isCloseAllPopup:isCloseAllPopup)
     }
@@ -166,7 +175,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     private var changeSubscription:AnyCancellable?
     private var popupSubscriptions:[String:AnyCancellable] = [String:AnyCancellable]()
-    private var isRock:Bool = false
     deinit {
         changeSubscription?.cancel()
         changeSubscription = nil
@@ -218,7 +226,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         }
     }
     
-    private let preventDelay =  0.5
+    private let preventDelay =  0.2
     private var preventDuplicate = false
     private var preventDuplicateSubscription:AnyCancellable?
     final func preventDuplicateStart(){
@@ -236,10 +244,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     }
 
     final func changePage(_ newPage:PageObject, isBack:Bool = false, isCloseAllPopup:Bool = true){
-        if isRock {
-            PageLog.d("changePage rock " + newPage.pageID + " " + isBack.description, tag: self.tag)
-            return
-        }
         PageLog.d("changePage " + newPage.pageID + " " + isBack.description, tag: self.tag)
         if pageModel.currentPageObject?.pageID == newPage.pageID {
             if( pageModel.currentPageObject?.params?.keys == newPage.params?.keys){
@@ -287,7 +291,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         if pageModel.isChangedCategory(prevPage: prevPage, nextPage: newPage) { nextContent.categoryChanged(prevPage) }
         
         let delay = newPage.isAnimation ? self.changeAniDelay : self.changeDelay
-        self.isRock = true
         changeSubscription = Timer.publish(
             every: delay, on: .main, in: .common)
             .autoconnect()
@@ -298,7 +301,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
                 self.changeSubscription = nil
                 PageLog.d("initAnimationComplete", tag: self.tag)
                 nextContent.initAnimationComplete()
-                self.isRock = false
+            
                
         }
         pageModel.currentPageObject = newPage

@@ -21,24 +21,28 @@ struct ScrollMenuTab: PageComponent {
     var body: some View {
         if self.tabs.count > self.scrollTabSize || !self.isDivision {
             ZStack{
-                ScrollView(.horizontal, showsIndicators: false){
-                    if self.isDivision {
-                    MenuTab(
-                        viewModel: self.viewModel,
-                        buttons: self.tabs,
-                        selectedIdx: self.tabIdx,
-                        bgColor: self.tabColor,
-                        isDivision: true)
-                        .frame(width: self.tabWidth * CGFloat(self.tabs.count))
-                        .padding(.horizontal, self.marginHorizontal)
-                    } else {
-                        MenuTab(
-                            viewModel: self.viewModel,
-                            buttons: self.tabs,
-                            selectedIdx: self.tabIdx,
-                            bgColor: self.tabColor,
-                            isDivision: false)
-                            .padding(.horizontal, self.marginHorizontal)
+                ScrollViewReader{ reader in
+                    ScrollView(.horizontal, showsIndicators: false){
+                        if self.isDivision {
+                            MenuTab(
+                                viewModel: self.viewModel,
+                                scrollReader:reader,
+                                buttons: self.tabs,
+                                selectedIdx: self.tabIdx,
+                                bgColor: self.tabColor,
+                                isDivision: true)
+                                .frame(width: self.tabWidth * CGFloat(self.tabs.count))
+                                .padding(.horizontal, self.marginHorizontal)
+                        } else {
+                            MenuTab(
+                                viewModel: self.viewModel,
+                                scrollReader:reader,
+                                buttons: self.tabs,
+                                selectedIdx: self.tabIdx,
+                                bgColor: self.tabColor,
+                                isDivision: false)
+                                .padding(.horizontal, self.marginHorizontal)
+                        }
                     }
                 }
                 HStack(spacing:0){

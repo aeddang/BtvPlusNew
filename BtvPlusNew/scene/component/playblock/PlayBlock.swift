@@ -526,25 +526,33 @@ struct PlayBlock: PageComponent{
     }
    
     @State var prevHalf:Int = 0
+    @State var prevPos:CGFloat = 0
     private func onUpdate(){
         if self.isHold { return }
         if self.maxCount < 1 {return}
         let cPos = self.infinityScrollModel.scrollPosition
-        
+        let diff = cPos - prevPos
+        prevPos = cPos
         //PageLog.d("onUpdate origin " + cPos.description, tag: self.tag)
         if cPos >= 0 && self.focusIndex != 0{
             if let focus  = self.initFocus{
-                if focus == 0 || focus == 1 {
+                if focus == 0  {
                     self.onResetFocusChange(willFocus: focus)
+                    return
+                }
+                self.isHold = true
+                if focus == 1{
+                    self.infinityScrollModel.uiEvent = .scrollMove(self.datas[focus].hashId, .center)
                 } else {
-                    self.infinityScrollModel.uiEvent = .scrollMove(self.datas[focus].hashId)
+                    self.infinityScrollModel.uiEvent = .scrollMove(self.datas[focus].hashId, .center)
                 }
                 self.initFocus = nil
-               
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    self.onFocusChange(willFocus:focus)
+                }
             } else {
                 self.onResetFocusChange(willFocus: 0)
             }
-            
             return
         }
         if cPos < -100 && self.maxCount == 2 {
@@ -555,18 +563,28 @@ struct PlayBlock: PageComponent{
         
         let full = viewIdx.reduce(0, {$0+$1})
         PageLog.d("onUpdate " + viewIdx.debugDescription, tag: self.tag)
-        let half = Int(floor(Float(full)/Float(viewIdx.count)))
-        PageLog.d("onUpdate half " + half.description, tag: self.tag)
+        PageLog.d("onUpdate " + full.description, tag: self.tag)
+        var half = 0
+        if diff < 0 {
+            half = Int(round(Float(full)/Float(viewIdx.count)))
+            PageLog.d("onUpdate half up " + half.description, tag: self.tag)
+            
+        } else {
+            half = Int(floor(Float(full)/Float(viewIdx.count)))
+            PageLog.d("onUpdate half down" + half.description, tag: self.tag)
+        }
+       
         var willPos = self.focusIndex
         if half != self.focusIndex && half != self.prevHalf {
             willPos = half
             self.prevHalf = half
             
         } else if half == self.focusIndex {
-            let diff = self.focusPos - cPos
-            let range = self.getRange()
-            if abs(diff) > range {
-                if diff < 0 {
+            let focusDiff = self.focusPos - cPos
+            let fullRange = self.getRange()
+            let range = self.focusIndex == 0 ? fullRange*0.66 : fullRange
+            if abs(focusDiff) >= range{
+                if focusDiff < 0 {
                     PageLog.d("onUpdate half move up " + half.description, tag: self.tag)
                     willPos = half - 1
                 } else {

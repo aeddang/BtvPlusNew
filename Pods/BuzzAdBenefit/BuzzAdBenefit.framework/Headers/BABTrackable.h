@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isVideoStoppedByUserAction;
 - (void)setVideoAsStoppedByUserAction:(BOOL)byUserAction;
 
+- (NSArray<NSString *> *)vastClickTrackingUrls;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -222,10 +222,7 @@ struct PageKidsSearch: PageView {
                 
             }
             .onDisappear{
-                self.isFocus = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    AppUtil.hideKeyboard()
-                }
+                
             }
             
         }//geo

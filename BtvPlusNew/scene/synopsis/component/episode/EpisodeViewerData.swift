@@ -29,6 +29,8 @@ class EpisodeViewerData {
     private(set) var award: String? = nil
     private(set) var awardDetail: String? = nil
     private(set) var onAir: String? = nil
+    var likeCountTotal:Double? = nil
+    var disLikeCountTotal:Double? = nil
     init(type:PageType = .btv) {
         self.type = type
     }
@@ -68,8 +70,13 @@ class EpisodeViewerData {
             }
            
         }
+       
+        
         self.srisId = data.sris_id
-        self.date = data.brcast_exps_dy?.isEmpty == false ? data.brcast_exps_dy : nil
+        if let time = data.brcast_dy, !time.isEmpty {
+            self.date = time.toDate(dateFormat: "yyyyMMddHHmmss")?.toDateFormatter(dateFormat: "yy.MM.dd")
+        }
+        
         self.serviceYear = data.svc_fr_dt?.isEmpty == false ? data.svc_fr_dt?.subString(start: 0, len: 4) : nil
         self.provider = data.brcast_chnl_nm?.isEmpty == false ? data.brcast_chnl_nm : nil
         if data.sris_typ_cd == SrisTypCd.season.rawValue {
@@ -95,6 +102,11 @@ class EpisodeViewerData {
                 self.ratingPoint = site.avg_pnt ?? 0
                 self.ratingMax = site.bas_pnt ?? 5
             }
+            if let info = review.btv_pnt_info?.first{
+                self.likeCountTotal = info.btv_like_ncnt
+                self.disLikeCountTotal = info.btv_ngood_ncnt
+            }
+            
             if let prizeHistory = review.prize_history {
                 let count = prizeHistory.count
                 if count > 0 {

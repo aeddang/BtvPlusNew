@@ -8,12 +8,13 @@
 
 import SwiftUI
 import Combine
-
+import UIKit
 enum KeyboardObserverEvent {
     case cancel
 }
 class KeyboardObserver: ObservableObject {
     private var cancellable: AnyCancellable?
+    
     @Published var event: KeyboardObserverEvent? = nil
     {
         didSet{
@@ -32,6 +33,7 @@ class KeyboardObserver: ObservableObject {
             
             //ComponentLog.d("isOn  " + isOn .description, tag: "SceneObserver")
             ComponentLog.d("keyboardHeight " + keyboardHeight.description, tag: "SceneObserver")
+           
         }
     }
 

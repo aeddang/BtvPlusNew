@@ -133,7 +133,6 @@ struct CPPlayer: PageComponent {
                     confirmText: String.button.btnRetry){retry in
                     if retry {
                         if self.viewModel.useRecovery {
-                            self.viewModel.updateType = .recovery(self.viewModel.initTime ?? 0)
                             self.viewModel.event = .resume()
                         } else {
                             self.viewModel.event = .recovery(isUser: true)

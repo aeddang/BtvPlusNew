@@ -247,22 +247,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D67C0DF4-F489-461A-913D-9213EC274984"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "skeleton/component/player/avplayer/CustomAVPlayerController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
-            landmarkName = "recovery(_:evt:recoveryTime:retryCount:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "EE0E8A08-A96A-48B7-8D69-FB768AF01BC1"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -305,6 +289,22 @@
             startingLineNumber = "37"
             endingLineNumber = "37"
             landmarkName = "onEvent(examLogEvent:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F5DD1540-E5E8-400F-B5C1-6F5DB278D534"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/scene/component/multiblock/MultiBlockBody.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "497"
+            endingLineNumber = "497"
+            landmarkName = "openPage(opneBlock:openId:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

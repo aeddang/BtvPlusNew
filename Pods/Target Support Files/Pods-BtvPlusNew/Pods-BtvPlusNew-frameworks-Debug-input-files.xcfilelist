@@ -1,10 +1,16 @@
 ${PODS_ROOT}/Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework
+${PODS_ROOT}/BuzzAd/BuzzAd.framework
 ${PODS_ROOT}/BuzzAdBenefit/BuzzAdBenefit.framework
-${PODS_ROOT}/BuzzAdBenefit/BuzzAdBenefitNative.framework
-${PODS_ROOT}/BuzzAdBenefit/BuzzAdBenefitInterstitial.framework
-${PODS_ROOT}/BuzzAdBenefit/BuzzAdBenefitFeed.framework
-${PODS_ROOT}/BuzzAdBenefit/BuzzAdBenefitWebInterface.framework
+${PODS_ROOT}/BuzzAdBenefitFeed/BuzzAdBenefitFeed.framework
+${PODS_ROOT}/BuzzAdBenefitInterstitial/BuzzAdBenefitInterstitial.framework
+${PODS_ROOT}/BuzzAdBenefitNative/BuzzAdBenefitNative.framework
+${PODS_ROOT}/BuzzBaseReward/BuzzBaseReward.framework
+${PODS_ROOT}/BuzzConfig/BuzzConfig.framework
+${PODS_ROOT}/BuzzInsight/BuzzInsight.framework
+${PODS_ROOT}/BuzzResource/BuzzResource.framework
+${PODS_ROOT}/BuzzServiceApi/BuzzServiceApi.framework
+${PODS_ROOT}/BuzzUnit/BuzzUnit.framework
 ${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework
 ${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework

@@ -72,7 +72,7 @@ struct PairingHitch: PageComponent {
                             .frame(height: SystemEnvironment.isTablet ? 95 : 80)
                         if SystemEnvironment.isTablet {
                             ZStack(alignment: .topTrailing){
-                                if let stbs = self.stbs {
+                                if self.stbs?.isEmpty == false, let stbs = self.stbs {
                                     SelectStbBox(
                                         datas: stbs){ select , isAgree in
                                         self.isAgreeOption = isAgree

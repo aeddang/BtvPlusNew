@@ -1,0 +1,6 @@
+framework module BuzzInsight {
+  umbrella header "BuzzInsight.h"
+
+  export *
+  module * { export * }
+}

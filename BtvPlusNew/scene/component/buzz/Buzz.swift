@@ -10,9 +10,9 @@ import BuzzAdBenefit
 
 class Buzz{
     static let BAB_SDK_KR_iOS_DEV_APP_ID: String = "126955102496938"
-    static let BAB_SDK_KR_iOS_DEV_UNIT_ID: String = "266121639746153"
+    static let BAB_SDK_KR_iOS_DEV_UNIT_ID: String = "536965388173462"
     static let BAB_SDK_KR_iOS_PRD_APP_ID: String = "42532489130817"
-    static let BAB_SDK_KR_iOS_PRD_UNIT_ID: String = "374217246352253"
+    static let BAB_SDK_KR_iOS_PRD_UNIT_ID: String = "559982176087372"
     private static var isInit = false
     var completed: (() -> Void)? = nil
     static func initate(){

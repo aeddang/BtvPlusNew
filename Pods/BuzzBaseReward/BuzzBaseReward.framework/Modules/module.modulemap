@@ -1,0 +1,6 @@
+framework module BuzzBaseReward {
+  umbrella header "BuzzBaseReward.h"
+
+  export *
+  module * { export * }
+}

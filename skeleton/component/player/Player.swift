@@ -44,7 +44,7 @@ open class PlayerModel: ComponentObservable {
     @Published fileprivate(set) var time:Double = 0.0
     @Published var isRunning = false
     @Published var isReplay = false
-    @Published var updateType:PlayerUpdateType = .update
+    
     @Published var event:PlayerUIEvent? = nil{
         willSet{
             self.status = .update
@@ -238,6 +238,7 @@ enum PlayerUpdateType{
 
 protocol PlayBack:PageProtocol {
     var viewModel:PlayerModel {get set}
+    func onStandby()
     func onTimeChange(_ t:Double)
     func onDurationChange(_ t:Double)
     func onLoad()
@@ -257,6 +258,10 @@ protocol PlayBack:PageProtocol {
 }
 
 extension PlayBack {
+    func onStandby(){
+        self.viewModel.streamStatus = .buffering(0)
+    }
+    
     func onTimeChange(_ t:Double){
         viewModel.time = t
         if let checkTime = viewModel.seekTime {
@@ -273,13 +278,11 @@ extension PlayBack {
         }else{
             viewModel.duration = t
         }
-        viewModel.updateType = .update
     }
     func onLoad(){
         ComponentLog.d("onLoad", tag: self.tag)
         self.checkSeeked()
         viewModel.playerStatus = .load
-        viewModel.updateType = .initate
         
     }
     func onLoaded(){

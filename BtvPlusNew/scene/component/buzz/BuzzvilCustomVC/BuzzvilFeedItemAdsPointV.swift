@@ -82,9 +82,9 @@ class BuzzvilFeedItemAdsPointV: BABAdViewHolder, BABNativeAdViewDelegate {
                 self.ctaButton.isEnabled = false
                 self.ctaLabel.text = "참여 완료"
                 self.rewardIcon.image = UIImage(named: "icCategoryBtnCheck")
+            
             } else {
                 self.ctaButton.isEnabled = true
-                
                 self.ctaLabel.text = "+\(self.numberToDecimalString(number: Int(ad.reward)))P \(ad.creative.callToAction!)"
                 self.rewardIcon.image = UIImage(named: "021IconIcCategoryBtnBcash")
             }
@@ -117,6 +117,7 @@ class BuzzvilFeedItemAdsPointV: BABAdViewHolder, BABNativeAdViewDelegate {
         self.ctaButton.isEnabled = false
         self.ctaLabel.text = "참여 완료"
         self.rewardIcon.image = UIImage(named: "icCategoryBtnCheck")
+        //self.ctaButton.bounds = .init(x: 0, y: 0, width: 76, height: 50)
     }
     
     // MARK: - Sub Function

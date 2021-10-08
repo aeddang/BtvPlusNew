@@ -93,23 +93,18 @@ struct EpisodeViewer: PageComponent{
             guard let res = res else { return }
             if !res.id.hasPrefix(srisId) { return }
             switch res.type {
-            case .registLike:
-                self.dataProvider.requestData(
-                    q: .init(
-                        id: srisId,
-                        type: .getLike(srisId, self.pairing.hostDevice, isTotal: true),
-                    isOptional: true)
-                )
             case .getLike:
                 guard let data = res.data as? Like else { return }
                 guard let like = data.like_total?.toDouble() else { return }
                 guard let dislike = data.dislike_total?.toDouble() else { return }
-                let total = like+dislike
-                if total == 0 {
-                    self.ratingPct = nil
-                    return
-                }
-                self.ratingPct = min(like / total * 100, 99)
+                self.data.likeCountTotal = like
+                self.data.disLikeCountTotal = dislike
+                self.updateRate(changeLike: 0, changeDislike: 0)
+
+            case .registLike(_, _ , _, let changeLike, let changeDislike):
+                self.updateRate(changeLike: changeLike, changeDislike: changeDislike)
+        
+               
             default: break
             }
             
@@ -119,6 +114,19 @@ struct EpisodeViewer: PageComponent{
         }
     }//body
     
+    private func updateRate(changeLike:Int, changeDislike:Int){
+        guard let like = self.data.likeCountTotal else { return }
+        guard let dislike = self.data.disLikeCountTotal else { return }
+        let total = like + dislike + Double(changeLike + changeDislike)
+        if total == 0 {
+            self.ratingPct = nil
+            return
+        }
+        self.data.likeCountTotal! += Double(changeLike)
+        self.data.disLikeCountTotal! += Double(changeDislike)
+        let clike = like + Double(changeLike)
+        self.ratingPct = clike / total * 100
+    }
     
 }
 

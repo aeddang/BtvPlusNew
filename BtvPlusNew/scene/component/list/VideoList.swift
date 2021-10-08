@@ -44,6 +44,7 @@ class VideoData:InfinityData, Copying{
         originImage = original.originImage
         title = original.title
         subTitle = original.subTitle
+        clipTitle = original.clipTitle
         count = original.count
         type = original.type
         progress = original.progress

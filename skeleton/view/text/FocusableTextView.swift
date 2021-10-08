@@ -26,7 +26,7 @@ struct FocusableTextView: UIViewRepresentable {
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     
     @State var attrs:[NSAttributedString.Key : Any]? = nil
-    
+    @State var isFinalFocus:Bool? = nil
     func makeUIView(context: Context) -> UITextView {
         /*
         let paragraphStyle = NSMutableParagraphStyle()
@@ -39,6 +39,8 @@ struct FocusableTextView: UIViewRepresentable {
                 = [.kern: kern, .font: UIFont(name: textModifier.family, size: textModifier.size) as Any]
         }
         let textView = UITextView(frame: .zero)
+        textView.bounds = .init(x: 0, y: 0, width: 100, height: 50)
+       
         textView.textColor = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
         //
         textView.keyboardType = self.keyboardType
@@ -48,11 +50,14 @@ struct FocusableTextView: UIViewRepresentable {
         textView.textAlignment = self.textAlignment
         textView.sizeToFit()
         
+        
         textView.textContentType = .oneTimeCode
         textView.isSecureTextEntry = self.isSecureTextEntry
         textView.backgroundColor = UIColor.clear
         if limitedLine != -1 {
             textView.textContainer.maximumNumberOfLines = self.limitedLine
+            textView.textContainer.lineBreakMode = .byTruncatingTail
+            //textView.isScrollEnabled = true
         }
         
         if let attrs = self.attrs {
@@ -65,8 +70,16 @@ struct FocusableTextView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
-        if uiView.text != self.text { uiView.text = self.text }
+        if uiView.text != self.text {
+            if let attrs = self.attrs {
+                uiView.attributedText = NSAttributedString(string: self.text, attributes: attrs)
+            } else {
+                uiView.text = self.text
+            }
+        }
+        
         if !self.usefocusAble {return}
+        if self.isfocus == self.isFinalFocus {return}
         if self.isfocus {
             if !uiView.isFocused {
                 uiView.becomeFirstResponder()
@@ -77,13 +90,10 @@ struct FocusableTextView: UIViewRepresentable {
                 uiView.resignFirstResponder()
             }
         }
-        if uiView.text != self.text {
-            if let attrs = self.attrs {
-                uiView.attributedText = NSAttributedString(string: self.text, attributes: attrs)
-            } else {
-                uiView.text = self.text
-            }
+        DispatchQueue.main.async {
+            self.isFinalFocus = self.isfocus
         }
+        
     }
 
     func makeCoordinator() -> Coordinator {
@@ -96,6 +106,8 @@ struct FocusableTextView: UIViewRepresentable {
             self.parent = parent
         }
        
+        
+        
         
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
             if self.parent.limitedLine == 1 && text == "\n" {
@@ -111,6 +123,7 @@ struct FocusableTextView: UIViewRepresentable {
                 }
                 self.parent.inputChange?(updatedText, textView.contentSize)
             }
+            
             return true
         }
         

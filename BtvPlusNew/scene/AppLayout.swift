@@ -383,7 +383,7 @@ struct AppLayout: PageComponent{
             */
         }
          
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+1.0) {
             self.deepLinkMove(self.appObserver.deepLinkUrl)
             if let alram = self.appObserver.alram  {
                 self.moveAlram(alram)

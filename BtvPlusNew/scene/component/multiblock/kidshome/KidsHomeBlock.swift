@@ -158,13 +158,24 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
             if let blocks = data.blocks {
                 return blocks
                     .filter({$0.menu_id != nil})
-                    .first(where: {
-                        let search = openId.contains($0.menu_id!)
-                        if search { find = $0 }
+                    .first(where: { depth1 in
+                        DataLog.d(( depth1.menu_nm ?? "") + " - " + depth1.menu_id!, tag:"openPageID")
+                        var search = openId.contains( depth1.menu_id!)
+                        if search { find =  depth1 }
+                        else {
+                            search = depth1.blocks?.filter({$0.menu_id != nil})
+                                .first(where: { depth2 in
+                                    DataLog.d(( depth2.menu_nm ?? "") + " - " + depth2.menu_id!, tag:"openPageID")
+                                    let search2 = openId.contains( depth2.menu_id!)
+                                    if search2 { find = depth1}
+                                    return search2
+                                }) != nil
+                        }
                         return search
                 }) != nil
             } else {
                 let search = openId.contains(data.menu_id ?? "")
+                DataLog.d("search menu_id " + (data.menu_id ?? ""), tag:"openPageID")
                 if search { find = data }
                 return search
             }

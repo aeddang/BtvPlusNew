@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)impressed:(id<BABTrackable>)trackable;
 - (void)clicked:(id<BABTrackable>)trackable;
 - (void)videoPlayedForSeconds:(NSTimeInterval)seconds onTrackable:(id<BABTrackable>)trackable;
+- (void)vastClicked:(id<BABTrackable>)trackable;
 
 @end
 

@@ -23,7 +23,7 @@ class SummaryViewerData {
     
     func setData(data:SynopsisContentsItem) -> SummaryViewerData {
         self.title = data.title ?? ""
-        self.summry = data.epsd_snss_cts?.replace("\r", with:"").replace("\n", with:"")
+        self.summry = data.epsd_snss_cts?.replace("\r", with:"\n")
         if data.sris_typ_cd == SrisTypCd.season.rawValue {
             self.seasonTitle = data.sson_choic_nm ?? ""
             self.count = data.brcast_tseq_nm

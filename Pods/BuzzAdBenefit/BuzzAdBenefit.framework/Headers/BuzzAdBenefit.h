@@ -23,6 +23,7 @@
 #import <BuzzAdBenefit/BABBridgePointConfig.h>
 #import <BuzzAdBenefit/BABUnitSetting.h>
 #import <BuzzAdBenefit/BABUnitManager.h>
+#import <BuzzAdBenefit/BABWebInterface.h>
 #import <BuzzAdBenefit/BuzzAdBrowser.h>
 #import <BuzzAdBenefit/BuzzAdBrowserViewController.h>
 #import <BuzzAdBenefit/BuzzAdBrowserEventDelegate.h>
@@ -54,6 +55,8 @@ extern NSString *const BABSessionRegisteredNotification;
 + (void)setUserPreference:(nullable BABUserPreference *)userPreference;
 + (void)setLauncher:(nullable id<BABLauncher>)launcher;
 + (void)showInquiryPageOnViewController:(UIViewController *)viewController;
++ (void)showInquiryPageOnViewController:(UIViewController *)viewController unitId:(nullable NSString *)unitId;
++ (void)getAvailableFeedBaseRewardForUnitId:(NSString *)unitId onComplete:(void (^)(NSInteger baseReward))onComplete;
 - (void)getCurrentPointOnSuccess:(void (^)(int))onSuccess onFailure:(void (^)(NSError *))onFailure;
 - (void)getPointConfigOnSuccess:(void (^)(BABPointConfig *))onSuccess onFailure:(void (^)(NSError *))onFailure;
 - (void)showCurrentPointDialogOnViewController:(UIViewController *)viewController;

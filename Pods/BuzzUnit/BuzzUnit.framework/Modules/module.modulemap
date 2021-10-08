@@ -1,0 +1,6 @@
+framework module BuzzUnit {
+  umbrella header "BuzzUnit.h"
+
+  export *
+  module * { export * }
+}

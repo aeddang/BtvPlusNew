@@ -21,14 +21,12 @@
  * Picture-in-Picture delegate as an argument, and then simply set the
  * Picture-in-Picture controller's delegate to the proxy. See
  * <a href="https://developers.google.com/interactive-media-ads/docs/sdks/ios/picture_in_picture">
- * Picture in Picture</a> for more details. This class cannot be instantiated on
- * tvOS, where Picture-in-Picture is not available.
+ * Picture in Picture</a> for more details.
  */
-#if TARGET_OS_IOS
+#if TARGET_OS_IOS || (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 140000)
 @interface IMAPictureInPictureProxy : NSProxy <AVPictureInPictureControllerDelegate,
                                                AVPlayerViewControllerDelegate>
-#endif
-#if TARGET_OS_TV
+#else
 @interface IMAPictureInPictureProxy : NSObject
 #endif
 /**
@@ -51,7 +49,7 @@
  * @return an IMAPictureInPictureProxy instance
  */
 - (instancetype)initWithAVPictureInPictureControllerDelegate:
-    (id<AVPictureInPictureControllerDelegate>)delegate __TVOS_UNAVAILABLE;
+    (id<AVPictureInPictureControllerDelegate>)delegate API_AVAILABLE(ios(9.0), tvos(14.0));
 
 /**
  * Instantiates an IMAPictureInPictureProxy that will proxy delegate
@@ -62,7 +60,7 @@
  *
  * @return an IMAPictureInPictureProxy instance
  */
-- (instancetype)initWithAVPlayerViewControllerDelegate:
-    (id<AVPlayerViewControllerDelegate>)delegate __TVOS_UNAVAILABLE;
+- (instancetype)initWithAVPlayerViewControllerDelegate:(id<AVPlayerViewControllerDelegate>)delegate
+    API_AVAILABLE(ios(9.0), tvos(14.0));
 
 @end

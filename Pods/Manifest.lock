@@ -14,12 +14,50 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - BuzzAdBenefit (2.1.14):
+  - BuzzAd (0.0.2):
+    - BuzzServiceApi (~> 0.0.6)
+    - ReactiveObjC (~> 3.1.1)
+  - BuzzAdBenefit (2.2.6):
     - AFNetworking (~> 4.0)
-    - GoogleAds-IMA-iOS-SDK (~> 3.12.1)
+    - BuzzAd (~> 0.0.2)
+    - BuzzBaseReward (~> 0.0.1)
+    - BuzzConfig (~> 0.0.3)
+    - BuzzInsight (~> 0.0.1)
+    - BuzzResource (~> 0.0.1)
+    - BuzzServiceApi (~> 0.0.6)
+    - BuzzUnit (~> 0.0.2)
+    - ReactiveObjC (~> 3.1.1)
+  - BuzzAdBenefitFeed (2.2.3):
+    - BuzzAdBenefit (~> 2.2.3)
+    - BuzzAdBenefitNative (~> 2.2.3)
+    - BuzzResource (~> 0.0.1)
     - ReactiveObjC (~> 3.1.1)
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder
+  - BuzzAdBenefitInterstitial (2.2.3):
+    - BuzzAdBenefit (~> 2.2.3)
+    - BuzzAdBenefitNative (~> 2.2.3)
+  - BuzzAdBenefitNative (2.2.3):
+    - BuzzAdBenefit (~> 2.2.3)
+    - BuzzResource (~> 0.0.1)
+    - GoogleAds-IMA-iOS-SDK (~> 3.12)
+    - ReactiveObjC (~> 3.1.1)
+    - SDWebImage (~> 5.0)
+    - SDWebImageWebPCoder
+  - BuzzBaseReward (0.0.1):
+    - BuzzServiceApi (~> 0.0.6)
+    - ReactiveObjC (~> 3.1.1)
+  - BuzzConfig (0.0.3):
+    - BuzzServiceApi (~> 0.0.6)
+    - ReactiveObjC (~> 3.1.1)
+  - BuzzInsight (0.0.2):
+    - ReactiveObjC (~> 3.1.1)
+  - BuzzResource (0.0.1)
+  - BuzzServiceApi (0.0.6):
+    - ReactiveObjC (~> 3.1.1)
+  - BuzzUnit (0.0.2):
+    - BuzzServiceApi (~> 0.0.6)
+    - ReactiveObjC (~> 3.1.1)
   - CryptoSwift (1.4.1)
   - Firebase/Analytics (8.7.0):
     - Firebase/Core
@@ -87,7 +125,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.4)
     - GoogleUtilities/UserDefaults (~> 7.4)
     - nanopb (~> 2.30908.0)
-  - GoogleAds-IMA-iOS-SDK (3.12.1)
+  - GoogleAds-IMA-iOS-SDK (3.14.4)
   - GoogleAppMeasurement (8.7.0):
     - GoogleAppMeasurement/AdIdSupport (= 8.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
@@ -126,15 +164,15 @@ PODS:
     - GoogleUtilities/Logger
   - Introspect (0.1.3)
   - Kingfisher (7.0.0)
-  - libwebp (1.2.0):
-    - libwebp/demux (= 1.2.0)
-    - libwebp/mux (= 1.2.0)
-    - libwebp/webp (= 1.2.0)
-  - libwebp/demux (1.2.0):
+  - libwebp (1.2.1):
+    - libwebp/demux (= 1.2.1)
+    - libwebp/mux (= 1.2.1)
+    - libwebp/webp (= 1.2.1)
+  - libwebp/demux (1.2.1):
     - libwebp/webp
-  - libwebp/mux (1.2.0):
+  - libwebp/mux (1.2.1):
     - libwebp/demux
-  - libwebp/webp (1.2.0)
+  - libwebp/webp (1.2.1)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -143,16 +181,18 @@ PODS:
   - PromisesObjC (2.0.0)
   - ReachabilitySwift (5.0.0)
   - ReactiveObjC (3.1.1)
-  - SDWebImage (5.11.1):
-    - SDWebImage/Core (= 5.11.1)
-  - SDWebImage/Core (5.11.1)
+  - SDWebImage (5.12.0):
+    - SDWebImage/Core (= 5.12.0)
+  - SDWebImage/Core (5.12.0)
   - SDWebImageWebPCoder (0.8.4):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - TrueTime (5.0.3)
 
 DEPENDENCIES:
-  - BuzzAdBenefit (= 2.1.14)
+  - BuzzAdBenefitFeed (= 2.2.3)
+  - BuzzAdBenefitInterstitial (= 2.2.3)
+  - BuzzAdBenefitNative (= 2.2.3)
   - CryptoSwift (~> 1.0)
   - Firebase/Analytics
   - Firebase/Crashlytics
@@ -166,7 +206,17 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AFNetworking
+    - BuzzAd
     - BuzzAdBenefit
+    - BuzzAdBenefitFeed
+    - BuzzAdBenefitInterstitial
+    - BuzzAdBenefitNative
+    - BuzzBaseReward
+    - BuzzConfig
+    - BuzzInsight
+    - BuzzResource
+    - BuzzServiceApi
+    - BuzzUnit
     - CryptoSwift
     - Firebase
     - FirebaseAnalytics
@@ -193,7 +243,17 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
-  BuzzAdBenefit: bd59f71e6a315da56b9bd0b8a658967d9ef1dfcf
+  BuzzAd: c0bc564a4f0083d623a2e10055192c00368c05f5
+  BuzzAdBenefit: 9d4ebb783b4ba088f4ec3b6b4462afca5a61fc79
+  BuzzAdBenefitFeed: 091922cb647dc80fa78afa8a59dbd468261eb8da
+  BuzzAdBenefitInterstitial: 67f42ac7bbb730ebc4daa7dbc8279a98f0c2f6a9
+  BuzzAdBenefitNative: 9b552e03cf92b532fbb3352e1c8ed07de86a79f0
+  BuzzBaseReward: 64832b728da9912065f7b822d734945825e1a5eb
+  BuzzConfig: ee57d636a0ac135f391f4251c714538ab059d9d5
+  BuzzInsight: 53ab87b29bb40cf69e024a91598089240dbb59cf
+  BuzzResource: 445770ba084ea7bcffbf9b1e24b7bcf0f4864f6a
+  BuzzServiceApi: 4812e1dfc9e836e6666497c902fa9f2963a0dece
+  BuzzUnit: 08c932a16a70ab9e71364e27b3afc697fb5f4715
   CryptoSwift: 0bc800a7e6a24c4fc9ebeab97d44b0d5f73a78bd
   Firebase: bc9325d5ee2041524bac78a5213d0e530c651309
   FirebaseAnalytics: 52768800c2add1d84b751420cb4caaf8195f2c41
@@ -203,21 +263,21 @@ SPEC CHECKSUMS:
   FirebaseDynamicLinks: e3fd315f43196811df8eac95803f10ff47c3b026
   FirebaseInstallations: ede6fb72bb6337914e5888b399271259d0c4910c
   FirebaseMessaging: 93227dd71d7888e200baef65043f81acb2b6596e
-  GoogleAds-IMA-iOS-SDK: 3c01b8db7d01de6b4a3b1d58744d4bc426a2d821
+  GoogleAds-IMA-iOS-SDK: c190284044e9a28b3e7422ba9886db015c71a84f
   GoogleAppMeasurement: 2be61ce546ad074dbe4dd545f222ac6033bb1d9e
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleUtilities: 8de2a97a17e15b6b98e38e8770e2d129a57c0040
   Introspect: 2be020f30f084ada52bb4387fff83fa52c5c400e
   Kingfisher: 5efc54fec3980f92354898532e562cc17f31efb4
-  libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
+  libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
-  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImage: 4ea20cca2986adc5aacde07aa686742fd4c67a37
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   TrueTime: b49551ffafb28a9dee04e51b226f42a416010842
 
-PODFILE CHECKSUM: eae75aa8c3ae4d785c39e4b67afd892647214441
+PODFILE CHECKSUM: a3ef7722c392445f7ff6a2f02db63c1746b6771a
 
 COCOAPODS: 1.10.1

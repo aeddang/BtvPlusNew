@@ -14,8 +14,12 @@ target 'BtvPlusNew' do
   pod 'Kingfisher'
   pod 'TrueTime'
   pod 'CryptoSwift', '~> 1.0'
-  pod 'BuzzAdBenefit', '= 2.1.14'
   pod 'Introspect'
+  
+  #pod 'BuzzAdBenefit', '= 2.2.3'
+  pod 'BuzzAdBenefitFeed', '= 2.2.3'
+  pod 'BuzzAdBenefitNative', '= 2.2.3'
+  pod 'BuzzAdBenefitInterstitial', '= 2.2.3'
   
   target 'BtvPlusNewTests' do
     inherit! :search_paths

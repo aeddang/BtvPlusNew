@@ -45,6 +45,7 @@ struct LikeButton: PageView {
                 self.appSceneObserver.alert = .needPairing()
             }
             else{
+                
                 self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType, isPreview:self.isPreview)
                 self.playBlockModel?.logEvent = .like(nil)
                 self.componentViewModel?.uiEvent = .like("")
@@ -111,7 +112,7 @@ struct LikeButton: PageView {
         self.dataProvider.requestData(
             q: .init(
                 id: self.srisId,
-                type: .getLike(self.srisId, self.pairing.hostDevice),
+                type: .getLike(self.srisId, self.pairing.hostDevice, isTotal: true),
             isOptional: true)
         )
     }

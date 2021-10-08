@@ -35,6 +35,20 @@ struct SearchTab: PageView {
                            height: Dimen.icon.regular)
             }
             HStack(spacing:Dimen.margin.tiny){
+                
+                FocusableTextField(
+                    text:self.$keyword,
+                    textAlignment:.left,
+                    textModifier:BoldTextStyle(size: Font.size.lightExtra).textModifier,
+                    isfocus: self.isFocus,
+                    inputChanged:{ text in
+                        self.inputChanged?(text)
+                    },
+                    inputCopmpleted: { text in
+                        self.inputCopmpleted?(text)
+                    })
+                    .padding(.horizontal, Dimen.margin.tiny)
+                /*
                 FocusableTextView(
                     text: self.$keyword,
                     isfocus: self.isFocus,
@@ -45,9 +59,10 @@ struct SearchTab: PageView {
                     inputCopmpleted : { text in
                         self.inputCopmpleted?(text)
                     }
-                )
+                )*/
                 .modifier(MatchParent())
                 .clipped()
+               
                 .padding(.top, 1)
                 
                 if self.keyword.isEmpty == false {

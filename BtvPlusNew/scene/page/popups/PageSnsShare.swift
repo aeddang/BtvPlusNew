@@ -71,11 +71,13 @@ struct PageSnsShare: PageView {
             + SocialMediaSharingManage.familyInvite
             + "&pairing_token=" + token
             + "&nickname=" + (self.pairing.user?.nickName ?? "")
-           
+        
+            
         self.repository.shareManager.share(
             Shareable(
                 link:link,
-                text: String.share.shareFamilyInvite,
+                title: String.share.shareFamilyInviteTitle,
+                linkText:String.share.shareFamilyInvite,
                 useDynamiclink:true
             )
         ){ isComplete in

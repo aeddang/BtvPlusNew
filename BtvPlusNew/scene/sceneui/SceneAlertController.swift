@@ -106,7 +106,8 @@ struct SceneAlertController: PageComponent{
             case .serviceUnavailable(let path): self.selectedServiceUnavailable(idx, path: path)
             case .serviceSelect(_ , let value, let completionHandler) : self.selectedServiceSelect(idx, value:value, completionHandler:completionHandler)
             case .pairingCheckFail : self.selectedPairingCheckFail(idx)
-            case .like(let id, let isLike, _) : self.selectedLike(idx, id: id, isLike:isLike)
+            case .like(let id, let isLike, _) :
+                self.selectedLike(idx, id: id, isLike:isLike)
             case .updateAlram(let id, let isAlram) : self.selectedUpdateAlram(idx, id: id, isAlram:isAlram)
             default: return 
             }
@@ -510,19 +511,43 @@ struct SceneAlertController: PageComponent{
         ]
     }
     func selectedLike(_ idx:Int, id:String, isLike:Bool?) {
+       
         if idx == 1 {
             if isLike == true {
-                self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice)))
+               self.dataProvider.requestData(
+                    q: .init(id:id,
+                             type: .registLike(nil, id, self.pairing.hostDevice,
+                                               changeNumLike:-1, changeNumDislike:0)))
+            }
+            else if isLike == false {
+                self.dataProvider.requestData(
+                    q: .init(id:id,
+                             type: .registLike(true, id, self.pairing.hostDevice,
+                                                changeNumLike:1, changeNumDislike:-1)))
             }
             else {
-                self.dataProvider.requestData(q: .init(id:id, type: .registLike(true, id, self.pairing.hostDevice)))
+                self.dataProvider.requestData(
+                    q: .init(id:id,
+                             type: .registLike(true, id, self.pairing.hostDevice,
+                                               changeNumLike:1, changeNumDislike:0)))
             }
         }else if idx == 2 {
             if isLike == false {
-                self.dataProvider.requestData(q: .init(id:id, type: .registLike(nil, id, self.pairing.hostDevice)))
+                self.dataProvider.requestData(
+                    q: .init(id:id,
+                             type: .registLike(nil, id, self.pairing.hostDevice,
+                                               changeNumLike:0, changeNumDislike:-1)))
+            }else if isLike == true {
+                self.dataProvider.requestData(
+                    q: .init(id:id,
+                             type: .registLike(false, id, self.pairing.hostDevice,
+                                               changeNumLike:-1, changeNumDislike:1)))
             }
             else {
-                self.dataProvider.requestData(q: .init(id:id, type: .registLike(false, id, self.pairing.hostDevice)))
+                self.dataProvider.requestData(
+                    q: .init(id:id,
+                             type: .registLike(false, id, self.pairing.hostDevice,
+                                               changeNumLike:0, changeNumDislike:1)))
             }
         }
     }

@@ -99,7 +99,7 @@ struct PurchaseViewer: PageComponent{
                                     self.delayAutoTooltipHidden()
                                 }
                                 Tooltip(
-                                    title: self.data.infoLeading,
+                                    title: self.data.infoLeading ??  self.data.infoTipTitle,
                                     text: self.data.infoTip
                                 )
                                 .opacity( self.showInfo ? 1.0 : 0)
@@ -107,7 +107,7 @@ struct PurchaseViewer: PageComponent{
                         } else {
                             VStack(spacing:0){
                                 Tooltip(
-                                    title: self.data.infoLeading,
+                                    title: self.data.infoLeading ??  self.data.infoTipTitle,
                                     text: self.data.infoTip
                                 )
                                 .opacity( self.showInfo ? 1.0 : 0)

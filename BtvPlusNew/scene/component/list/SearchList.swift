@@ -63,7 +63,7 @@ struct SearchList: PageComponent{
             axes: .vertical,
             marginTop: Dimen.margin.regular,
             marginBottom: Dimen.app.bottom,
-            marginHorizontal: 0,
+            marginHorizontal: Dimen.margin.thin,
             spacing: 0,
             isRecycle:true,
             useTracking: true
@@ -86,7 +86,6 @@ struct SearchList: PageComponent{
                     .modifier(ListRowInset(spacing: 0))
             }
         }
-        .modifier(ContentHorizontalEdges())
         .background(Color.brand.bg)
         .padding(.top, Dimen.margin.thin)
     }//body

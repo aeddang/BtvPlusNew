@@ -91,10 +91,6 @@ class SceneDelegate: PageSceneDelegate {
             }
         }
         
-        if PageSceneModel.needPairing(willPage) && self.repository?.pairing.status != .pairing {
-            self.repository?.appSceneObserver?.alert = .needPairing(move:willPage)
-            return false
-        }
         
         switch willPage.pageID {
         case .cashCharge:
@@ -102,8 +98,16 @@ class SceneDelegate: PageSceneDelegate {
                 self.repository?.appSceneObserver?.alert = .alert(nil, String.alert.cashChargeDisable)
                 return false
             }
-            
-            if self.repository?.userSetup.isFirstCashCharge == true {
+        default: break
+        }
+        if PageSceneModel.needPairing(willPage) && self.repository?.pairing.status != .pairing {
+            self.repository?.appSceneObserver?.alert = .needPairing(move:willPage)
+            return false
+        }
+        
+        switch willPage.pageID {
+        case .cashCharge:
+           if self.repository?.userSetup.isFirstCashCharge == true {
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.cashChargeGuide)
                 )

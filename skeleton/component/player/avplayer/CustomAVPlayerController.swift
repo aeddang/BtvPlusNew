@@ -27,20 +27,24 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         playerScreenView.currentRatio = self.viewModel.screenRatio
         
         if self.viewModel.useAvPlayerController {
+            self.onStandby()
             let playerController = CustomAVPlayerViewController(viewModel: self.viewModel, playerScreenView: playerScreenView)
             playerScreenView.delegate = self
             playerScreenView.playerDelegate = playerController
             playerScreenView.playerController = playerController
             playerController.delegate = context.coordinator
             playerController.playerDelegate = self
+           
             return playerController
         }else{
+            self.onStandby()
             let playerController = CustomPlayerViewController(viewModel: self.viewModel, playerScreenView: playerScreenView)
             playerScreenView.delegate = self
             playerScreenView.playerDelegate = playerController
             playerScreenView.playerLayer = AVPlayerLayer()
             playerController.view = playerScreenView
             playerController.playerDelegate = self
+            
             return playerController
         }
     }
@@ -50,11 +54,15 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
         if viewModel.status != .update { return }
         guard let evt = viewModel.event else { return }
         guard let playerController = uiViewController as? CustomPlayerController else { return }
+        update(playerController, evt: evt)
+        /*
         let player = playerController.playerScreenView
-        
         if let e = player.player?.error {
             ComponentLog.d("updateUIView error " + e.localizedDescription , tag: self.tag)
         }
+        */
+        
+        /*
         switch viewModel.updateType {
         case .recovery(let t, let count):
             ComponentLog.d("recovery" , tag: self.tag)
@@ -64,11 +72,11 @@ extension CustomAVPlayerController: UIViewControllerRepresentable,
              //recovery(playerController, evt: evt, recoveryTime: 0)
         default:
             update(playerController, evt: evt)
-        }
+        }*/
     }
     
     private func recovery(_ player: CustomPlayerController, evt:PlayerUIEvent, recoveryTime:Double, retryCount:Int = -1){
-        viewModel.updateType = .update
+       
         var initTime = recoveryTime
         var isPlay = true
         switch evt {

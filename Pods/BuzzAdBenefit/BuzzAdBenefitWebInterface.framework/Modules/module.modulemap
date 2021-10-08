@@ -1,6 +1,0 @@
-framework module BuzzAdBenefitWebInterface {
-  umbrella header "BuzzAdBenefitWebInterface.h"
-
-  export *
-  module * { export * }
-}

@@ -1,8 +1,9 @@
 CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
 CONFIGURATION_BUILD_DIR = ${PODS_CONFIGURATION_BUILD_DIR}/BuzzAdBenefit
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking" "${PODS_CONFIGURATION_BUILD_DIR}/ReactiveObjC" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage" "${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageWebPCoder" "${PODS_CONFIGURATION_BUILD_DIR}/libwebp" "${PODS_ROOT}/BuzzAdBenefit" "${PODS_ROOT}/GoogleAds-IMA-iOS-SDK"
+EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking" "${PODS_CONFIGURATION_BUILD_DIR}/ReactiveObjC" "${PODS_ROOT}/BuzzAd" "${PODS_ROOT}/BuzzAdBenefit" "${PODS_ROOT}/BuzzBaseReward" "${PODS_ROOT}/BuzzConfig" "${PODS_ROOT}/BuzzInsight" "${PODS_ROOT}/BuzzResource" "${PODS_ROOT}/BuzzServiceApi" "${PODS_ROOT}/BuzzUnit"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-OTHER_LDFLAGS = $(inherited) -framework "AVFoundation" -framework "AdSupport" -framework "AudioToolbox" -framework "CoreFoundation" -framework "CoreGraphics" -framework "CoreMedia" -framework "GoogleInteractiveMediaAds" -framework "MessageUI" -framework "QuartzCore" -framework "SystemConfiguration" -framework "UIKit" -weak_framework "WebKit"
+OTHER_LDFLAGS = $(inherited) -framework "BuzzAd" -framework "BuzzBaseReward" -framework "BuzzConfig" -framework "BuzzInsight" -framework "BuzzResource" -framework "BuzzServiceApi" -framework "BuzzUnit"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_ROOT = ${SRCROOT}

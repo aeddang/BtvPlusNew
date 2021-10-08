@@ -12,6 +12,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     private(set) var infoLeading: String? = nil
     private(set) var infoTrailing: String? = nil
     private(set) var infoTrailingSub: String? = nil
+    private(set) var infoTipTitle: String? = nil
     private(set) var infoTip: String? = nil
     
     private(set) var playerInfo: String? = nil
@@ -171,7 +172,13 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             }
             isPlayAble = true
         }
-        if synopsisModel.isContainPPM {
+        if (synopsisModel.isContainPPM && !synopsisModel.isFree){
+            if purchas?.hasAuthority == true, let prdTypCd = purchas?.prdTypCd{
+                if !PrdTypCd.isPPM(typCd: prdTypCd, all: true) {
+                    self.isInfo = infoIcon != nil || infoLeading != nil || infoTrailing != nil
+                    return
+                }
+            }
             var enablePPMTooltip = false
             var toDday:Int  = 0
             if let purchasedPPMItem = synopsisModel.purchasedPPMItem {
@@ -180,6 +187,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                             + ", 종료일:" + (purchasedPPMItem.prdPrcToDt.debugDescription) , tag:self.tag)
                 
             } else if let salePPMitem = synopsisModel.salePPMItem {
+                self.infoTipTitle = salePPMitem.ppm_prd_nm
                 toDday = salePPMitem.prdPrcToDt.getDDay()
                 DataLog.d("salePPMitem 구매. 시작일:" + (salePPMitem.prdPrcFrDt.debugDescription)
                             + ", 종료일:" + (salePPMitem.prdPrcToDt.debugDescription) , tag:self.tag)
@@ -207,7 +215,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
     }
     private func setupOption(synopsisModel:SynopsisModel, purchasableItems: [PurchaseModel]?, purchas:PurchaseModel?){
         if synopsisModel.isFree {return}
-        if let omni = synopsisModel.purchaseOmnipack.first {
+        if purchas?.hasAuthority != true,  let omni = synopsisModel.purchaseOmnipack.first  {
             self.setupOmnipack(omniPack: omni)
         }
         guard let purchasableItems =  purchasableItems else { return }
@@ -239,7 +247,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         }
         let trailing:String = omniPack.restCount.description + String.pageText.synopsisOmnipackTrailing
         self.infoTrailingSub = "(" + leading + trailing + ")"
-        
+        self.infoTip = nil
     }
     
     func setDummy() -> PurchaseViewerData {

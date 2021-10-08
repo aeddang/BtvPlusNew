@@ -59,10 +59,11 @@ struct PageSearch: PageView {
                                 self.voiceSearch()
                             },
                             goBack: {
+                                AppUtil.hideKeyboard()
                                 self.sendLog(action: .clickSearchBack) 
                                 if !self.emptyDatas.isEmpty {
                                     self.emptyDatas = []
-                                    self.keyword = ""
+                                    //self.keyword = ""
                                     return
                                 }
                                 if !self.searchDatas.isEmpty {
@@ -76,7 +77,14 @@ struct PageSearch: PageView {
                         .modifier(ContentHorizontalEdges())
                         .padding(.top, Dimen.margin.thin)
                         .padding(.bottom, Dimen.margin.micro)
+                        
                         ZStack(){
+                            if self.isInputSearch {
+                                Spacer().modifier(MatchParent()).background(Color.transparent.clearUi)
+                                .onTapGesture {
+                                    AppUtil.hideKeyboard()
+                                }
+                            }
                             if !self.searchDatas.isEmpty {
                                 SearchResult(
                                     infinityScrollModel: self.resultScrollModel,
@@ -100,6 +108,9 @@ struct PageSearch: PageView {
                                         default: break
                                         }
                                     }
+                                    .onTapGesture {
+                                        AppUtil.hideKeyboard()
+                                    }
                                     
                             } else if !self.emptyDatas.isEmpty {
                                 EmptySearchResult(
@@ -107,13 +118,16 @@ struct PageSearch: PageView {
                                     keyword: self.keyword,
                                     datas: self.emptyDatas)
                                     .modifier(MatchParent())
+                                    .onTapGesture {
+                                        AppUtil.hideKeyboard()
+                                    }
             
                             } else {
                                 SearchList(
                                     viewModel:self.searchScrollModel,
                                     datas:self.datas,
                                     delete: { data in
-                                        
+                                        AppUtil.hideKeyboard()
                                         self.sendLog(action: .clickSearchRecentKeyword,
                                                      actionBody: .init(
                                                         menu_id: "",
@@ -135,6 +149,7 @@ struct PageSearch: PageView {
                                         }
                                     },
                                     action: { data in
+                                        AppUtil.hideKeyboard()
                                         self.sendLog(action: .clickSearchRecentKeyword,
                                                      actionBody: .init(
                                                         menu_id: "",
@@ -143,6 +158,7 @@ struct PageSearch: PageView {
                                                      ))
                                         self.search(keyword: data.keyword)
                                     }
+                                    
                                 )
                                 .modifier(MatchParent())
                                 .onReceive(self.searchScrollModel.$event){ evt in
@@ -152,6 +168,9 @@ struct PageSearch: PageView {
                                     default : break
                                     }
                                     
+                                }
+                                .onTapGesture {
+                                    AppUtil.hideKeyboard()
                                 }
                             }
                         }
@@ -202,7 +221,12 @@ struct PageSearch: PageView {
                 if self.pageObservable.layer != .top { return }
                 if self.isKeyboardOn == on { return }
                 self.isKeyboardOn = on
-                if self.isInputSearch != on { self.isInputSearch = on}
+                if !on {
+                    self.isInputSearch = false
+                }
+                if self.isInputSearch != on {
+                    self.isInputSearch = on
+                }
                 if on {
                     self.clearSearchData()
                 }
@@ -213,6 +237,7 @@ struct PageSearch: PageView {
                         self.appSceneObserver.useBottom = true
                     }
                 }
+                
             }
             .onReceive(self.viewModel.$searchDatas){ datas in
                 self.datas = datas
@@ -251,6 +276,9 @@ struct PageSearch: PageView {
             .onAppear{
                 
             }
+            .onDisappear{
+               
+            }
         }//geo
     }//body
     @State var isInit:Bool = false
@@ -260,6 +288,8 @@ struct PageSearch: PageView {
     @State var emptyDatas:[PosterDataSet] = []
     @State var searchDatas:[BlockData] = []
     @State var total:Int = 0
+    
+    
     
     func clearSearchData() {
         if !self.emptyDatas.isEmpty {
@@ -276,8 +306,8 @@ struct PageSearch: PageView {
     }
     
     func voiceSearch(){
-        withAnimation{ self.isVoiceSearch = true }
         AppUtil.hideKeyboard()
+        withAnimation{ self.isVoiceSearch = true }
         self.appSceneObserver.useBottom = false
     }
     func voiceSearchEnd(){
@@ -286,7 +316,6 @@ struct PageSearch: PageView {
     }
     
     func search(keyword:String){
-        
         AppUtil.hideKeyboard()
         self.voiceSearchEnd()
         if keyword.isEmpty { return }

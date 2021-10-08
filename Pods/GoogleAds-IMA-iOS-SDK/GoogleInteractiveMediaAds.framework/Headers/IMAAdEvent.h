@@ -49,7 +49,8 @@ typedef NS_ENUM(NSInteger, IMAAdEventType){
    */
   kIMAAdEvent_AD_PERIOD_STARTED,
   /**
-   * All ads managed by the ads manager have completed.
+   * All valid ads managed by the ads manager have completed or the ad response
+   * did not return any valid ads.
    */
   kIMAAdEvent_ALL_ADS_COMPLETED,
   /**
@@ -155,7 +156,7 @@ extern NSString *const kIMAAdBreakTime;
  * The current ad that is playing or just played. This will be nil except for
  * events where an ad is available (start, quartiles, midpoint, complete, and tap).
  */
-@property(nonatomic, strong, readonly) IMAAd *ad;
+@property(nonatomic, readonly) IMAAd *ad;
 
 /**
  * Extra data about the ad. Can be nil.

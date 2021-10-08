@@ -12,8 +12,6 @@ typedef enum {
 @property (nonatomic, assign, readonly) BABEnv environment;
 @property (nonatomic, assign, readonly) BOOL logging;
 @property (nonatomic, copy, readonly) NSString *appId;
-@property (nonatomic, assign) BOOL enableWidget;
-@property (nonatomic, copy) NSString *appGroupId;
 
 - (instancetype)initWithAppId:(NSString *)appId;
 - (instancetype)initWithAppId:(NSString *)appId environment:(BABEnv)environment logging:(BOOL)logging;

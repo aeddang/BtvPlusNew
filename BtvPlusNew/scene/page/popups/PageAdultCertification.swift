@@ -163,8 +163,11 @@ struct PageAdultCertification: PageView {
                         self.appSceneObserver.alert = .confirm(
                             String.pageTitle.certificationAdult, String.alert.identifyAdultConfirm){ isOk in
                                 if isOk {
-                                    withAnimation{self.isAlert = false}
-                                    self.moveAdultCertification()
+                                    self.isInfo = true
+                                    withAnimation{
+                                        self.isAlert = false
+                                    }
+                                    
                                 } else {
                                     self.pagePresenter.closePopup(self.pageObject?.id)
                                 }

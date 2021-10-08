@@ -1,0 +1,6 @@
+framework module BuzzResource {
+  umbrella header "BuzzResource.h"
+
+  export *
+  module * { export * }
+}

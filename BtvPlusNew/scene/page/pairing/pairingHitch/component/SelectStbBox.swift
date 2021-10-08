@@ -125,6 +125,9 @@ struct SelectStbBox: View {
                 .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaIgnoreKeyboardBottom))
             }
         }
+        .onAppear(){
+            self.selected = self.datas.first
+        }
         //.padding(.bottom, SystemEnvironment.isTablet ? Dimen.margin.thin : 0)
         
     }//body

@@ -34,7 +34,7 @@ struct EmptySearchResult: PageComponent{
                 axes: .vertical,
                 scrollType : .reload(isDragEnd:false),
                 marginTop : Dimen.margin.regular,
-                marginBottom : Dimen.margin.regular,
+                marginBottom : Dimen.app.bottom,
                 marginHorizontal : 0,
                 spacing:0,
                 isRecycle: true,

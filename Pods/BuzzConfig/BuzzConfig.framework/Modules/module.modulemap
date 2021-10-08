@@ -1,0 +1,6 @@
+framework module BuzzConfig {
+  umbrella header "BuzzConfig.h"
+
+  export *
+  module * { export * }
+}

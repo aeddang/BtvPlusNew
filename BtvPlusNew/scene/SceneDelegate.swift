@@ -220,6 +220,11 @@ class SceneDelegate: PageSceneDelegate {
     
     override func sceneDidBecomeActive(_ scene: UIScene) {
         //UIApplication.shared.applicationIconBadgeNumber = 0
+        
+        // ZeroConf 앱 시작시, 포그라운드 진입시 전송
+        let zeroconf = ZeroConf()
+        zeroconf.sendZeroConf(networkObserver: self.repository?.networkObserver)
+        
     }
     
 }

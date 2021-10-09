@@ -180,7 +180,7 @@ struct PairingView: PageComponent{
                                 .setData(title: String.pageTitle.bookmarkList, cardType:.bookmarkedPoster, dataType:.bookMark, uiType:.poster)
                             
                             self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.categoryList)
+                                PageProvider.getPageObject(.myBookMark)
                                     .addParam(key: .data, value: blockData)
                             )
                         }
@@ -320,7 +320,7 @@ struct PairingView: PageComponent{
             .map{ d in VideoData().setData(data: d) }
         
         var videos = blocks.map{ d in
-            VideoData().setData(data: d).setNaviLog(data: d)
+            VideoData().setData(data: d).setNaviLog(data: d, logAction: .clickMyRecentsContents)
         }
         .filter{$0.isContinueWatch}.filter{$0.progress != 1}
         self.isWatchedEmpty = videos.isEmpty

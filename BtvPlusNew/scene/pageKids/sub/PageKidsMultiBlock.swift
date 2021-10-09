@@ -25,7 +25,7 @@ struct PageKidsMultiBlock: PageView {
     @EnvironmentObject var naviLogManager:NaviLogManager
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var tabNavigationModel:NavigationModel = NavigationModel()
-    @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel()
+    @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel(logType: .list)
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(limitedScrollIndex: 1)
     @State var scrollTabSize:Int = 3

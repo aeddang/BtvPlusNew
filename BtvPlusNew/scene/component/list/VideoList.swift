@@ -88,10 +88,16 @@ class VideoData:InfinityData, Copying{
         self.usePrice = usePrice
         super.init()
     }
-    
     @discardableResult
     func setNaviLog(action:MenuNaviActionBodyItem?) -> VideoData  {
         logAction = .clickContentsList
+        self.actionLog = action
+        return self
+    }
+    
+    @discardableResult
+    func setNaviLogHome(action:MenuNaviActionBodyItem?) -> VideoData  {
+        logAction = .clickContentsView
         self.actionLog = action
         return self
     }
@@ -103,48 +109,6 @@ class VideoData:InfinityData, Copying{
         return self
     }
    
-    func setNaviLog(searchType:BlockData.SearchType, data:CategorySrisItem? = nil) -> VideoData  {
-        self.contentLog = MenuNaviContentsBodyItem(
-            type: searchType.logType,
-            title: self.title,
-            channel_name: nil,
-            genre_text: nil,
-            genre_code: data?.meta_typ_cd,
-            paid: self.tagData?.isFree,
-            purchase: nil,
-            episode_id: self.epsdId,
-            episode_resolution_id: self.synopsisData?.epsdRsluId,
-            product_id: nil,
-            purchase_type: nil,
-            monthly_pay: nil,
-            list_price: data?.price
-        )
-        return self
-    }
-    
-    func setNaviLog(data:WatchItem) -> VideoData  {
-        self.logAction = .clickMyRecentsContents
-        let content = MenuNaviContentsBodyItem(
-            type: "vod",
-            title: data.title,
-            genre_text: nil,
-            genre_code: nil,
-            paid: nil,
-            purchase: nil,
-            episode_id: data.epsd_id,
-            episode_resolution_id: data.epsd_rslu_id,
-        
-            product_id: data.prod_id,
-            purchase_type: nil,
-            monthly_pay: nil,
-            running_time: data.watch_time,
-            list_price: nil,
-            payment_price: nil)
-        self.contentLog = content
-        return self
-    }
-    
-    
     func setData(data:ContentItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
         setCardType(cardType)
         if let typeCd = data.svc_typ_cd {
@@ -203,8 +167,29 @@ class VideoData:InfinityData, Copying{
             kidZone:data.kids_yn, progress:self.progress,
             synopType: synopsisType, isDemand: data.svc_typ_cd == "12")
         
+        return self.setNaviLog(data: data)
+    }
+    
+    func setNaviLog(data:ContentItem) -> VideoData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: data.prd_prc_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data.prd_prc?.description ?? nil,
+            payment_price: nil
+        )
         return self
     }
+    
     
     func setData(data:PackageContentsItem, prdPrcId:String, cardType:BlockData.CardType = .video ,idx:Int = -1) -> VideoData {
         setCardType(cardType)
@@ -227,7 +212,26 @@ class VideoData:InfinityData, Copying{
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: "", prdPrcId: prdPrcId , kidZone:nil, synopType: synopsisType)
         
-        return self
+        return self.setNaviLog(data: data)
+    }
+    func setNaviLog(data:PackageContentsItem? = nil) -> VideoData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: nil,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: self.tagData?.price,
+            payment_price: nil
+        )
+        return self.setNaviLog(data: data)
     }
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {
@@ -246,6 +250,26 @@ class VideoData:InfinityData, Copying{
         synopsisData = .init(
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:data.yn_kzone, synopType: synopsisType)
+        return self.setNaviLog(data:data)
+    }
+    func setNaviLog(data:BookMarkItem) -> VideoData {
+        self.logAction = .clickPickContentsList
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: nil,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: nil,
+            payment_price: nil
+        )
         return self
     }
     
@@ -278,6 +302,28 @@ class VideoData:InfinityData, Copying{
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id,
             prdPrcId: "",  kidZone:nil, progress:self.progress, synopType: synopsisType)
+        return self
+    }
+    
+    func setNaviLog(data:WatchItem, logAction:NaviLog.Action) -> VideoData  {
+        self.logAction = logAction // .clickMyRecentsContents
+        let content = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: data.title,
+            genre_text: nil,
+            genre_code: nil,
+            paid: nil,
+            purchase: nil,
+            episode_id: data.epsd_id,
+            episode_resolution_id: data.epsd_rslu_id,
+        
+            product_id: data.prod_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            running_time: data.watch_time,
+            list_price: nil,
+            payment_price: nil)
+        self.contentLog = content
         return self
     }
 
@@ -341,6 +387,25 @@ class VideoData:InfinityData, Copying{
         
         return self.setNaviLog(searchType: searchType, data: nil)
     }
+    func setNaviLog(searchType:BlockData.SearchType, data:CategorySrisItem? = nil) -> VideoData  {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: searchType.logType,
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data?.meta_typ_cd,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data?.price
+        )
+        return self
+    }
+    
     
     var bottomHeight:CGFloat {
         get{

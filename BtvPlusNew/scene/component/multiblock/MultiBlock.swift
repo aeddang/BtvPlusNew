@@ -14,6 +14,7 @@ class BlockDataSet:Identifiable {
     var index:Int = -1
 }
 
+
 extension MultiBlock{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.medium
     static let headerSize:Int = SystemEnvironment.isTablet ? 6 : 5
@@ -24,7 +25,7 @@ struct MultiBlock:PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     
     
-    var viewModel:MultiBlockModel = MultiBlockModel()
+    var viewModel:MultiBlockModel = MultiBlockModel(logType: .list)
     var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
     var pageObservable:PageObservable = PageObservable()
@@ -47,8 +48,7 @@ struct MultiBlock:PageComponent {
     var useFooter:Bool = false
     var isHorizontal:Bool = false
     var isRecycle = true
-    var isLegacy:Bool = false
-    
+
     var action: ((_ data:MonthlyData) -> Void)? = nil
 
     @State var topBanner:TopBanner?

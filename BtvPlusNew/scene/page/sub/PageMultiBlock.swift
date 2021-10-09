@@ -18,7 +18,7 @@ struct PageMultiBlock: PageView {
     @EnvironmentObject var naviLogManager:NaviLogManager
     
     @ObservedObject var pageObservable:PageObservable = PageObservable()
-    @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel()
+    @ObservedObject var multiBlockViewModel:MultiBlockModel = MultiBlockModel(logType: .list)
     @ObservedObject var cateBlockViewModel:CateBlockModel = CateBlockModel()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()

@@ -79,6 +79,12 @@ class PosterData:InfinityData, Copying{
         return self
     }
     @discardableResult
+    func setNaviLogHome(action:MenuNaviActionBodyItem?) -> PosterData {
+        logAction = .clickContentsView
+        self.actionLog = action
+        return self
+    }
+    @discardableResult
     func setNaviLogKids(action:MenuNaviActionBodyItem?) -> PosterData {
         logAction = .clickContentsButton
         self.actionLog = action
@@ -103,7 +109,7 @@ class PosterData:InfinityData, Copying{
             kidZone:data.kids_yn, synopType: synopsisType, isPreview:self.isPreview,
             isDemand: data.svc_typ_cd == "12")
         
-        return self
+        return self.setNaviLog(data: data)
     }
     
     func setNaviLog(data:ContentItem) -> PosterData {
@@ -167,7 +173,7 @@ class PosterData:InfinityData, Copying{
             list_price: self.tagData?.price,
             payment_price: nil
         )
-        return self
+        return self.setNaviLog(data: data)
     }
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
@@ -186,6 +192,27 @@ class PosterData:InfinityData, Copying{
             srisId: data.sris_id, searchType: EuxpNetwork.SearchType.sris,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",
             kidZone:data.yn_kzone, synopType: synopsisType)
+        return self.setNaviLog(data: data)
+    }
+    
+    func setNaviLog(data:BookMarkItem) -> PosterData {
+        self.logAction = .clickPickContentsList
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "vod",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: nil,
+            paid: self.tagData?.isFree,
+            purchase: nil,
+            episode_id: self.epsdId,
+            episode_resolution_id: self.synopsisData?.epsdRsluId,
+            product_id: nil,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: nil,
+            payment_price: nil
+        )
         return self
     }
     

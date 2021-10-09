@@ -17,7 +17,7 @@ struct PageKidsHome: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     
-    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
+    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel(logType: .home)
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(limitedScrollIndex: 1)
       

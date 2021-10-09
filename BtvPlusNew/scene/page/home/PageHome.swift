@@ -21,7 +21,7 @@ struct PageHome: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     
-    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
+    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel(logType: .home)
     @ObservedObject var viewPagerModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -278,9 +278,14 @@ struct PageHome: PageView {
         guard let banners = resData.banners else { return }
         if banners.isEmpty { return }
        
-        let topDatas = banners.filter{$0.bbnr_exps_mthd_cd == "01"}.map{ d in
-            BannerData().setData(data: d, type: .page, isFloat: false)
+        var topDatas:[BannerData] = []
+        let topBanners = banners.filter{$0.bbnr_exps_mthd_cd == "01"}
+        let count = topBanners.count
+        topDatas = zip(0...count, topBanners).map{idx, d in
+            let position = (idx+1).description + "@" + count.description
+            return BannerData().setData(data: d, type: .page, isFloat: false, logPosition: position)
         }
+        
         let floating = banners.filter{$0.bbnr_exps_mthd_cd == "03"}.map{ d in
             BannerData().setData(data: d, type: .page, isFloat: true)
         }

@@ -237,11 +237,14 @@ class Repository:ObservableObject, PageProtocol{
                     )
                 }
                 self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
-                if self.pairing.pairingType == .wifi {
+                switch self.pairing.pairingType {
+                case .wifi :
                     self.dataProvider.requestData(
-                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setMessage(type: .MeTV))) 
+                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setMessage(type: .MeTV)))
                     )
+                default : break
                 }
+                
                 
                 
             case .syncError :

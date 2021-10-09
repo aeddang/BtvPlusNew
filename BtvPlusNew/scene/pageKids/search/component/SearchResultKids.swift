@@ -11,7 +11,7 @@ import SwiftUI
 struct SearchResultKids: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     
-    var viewModel: MultiBlockModel = MultiBlockModel(pageType:.kids)
+    var viewModel: MultiBlockModel = MultiBlockModel(pageType:.kids, logType:.list)
     var infinityScrollModel:InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable
     var pageDragingModel:PageDragingModel
@@ -28,8 +28,7 @@ struct SearchResultKids: PageComponent{
                 useTracking:self.useTracking,
                 marginTop:DimenKids.margin.regular,
                 marginBottom: sceneObserver.safeAreaIgnoreKeyboardBottom + DimenKids.margin.thin,
-                isRecycle:true,
-                isLegacy:false
+                isRecycle:true
                 )
         }
     }//body

@@ -17,10 +17,16 @@ struct NaviLog {
         case prohibitionSimultaneous = "/limit_multiple_screen"
         case pairingLimited = "/my/connect_stb/detail/subscriber_auth/stb_selection" // 세탑 여러개
         case pairingCompleted = "/my/connect_stb/btv_auth_number/completed"
+        //case pairingAuthNumberCompleted = "/my/connect_stb/btv_auth_number/completed"
+        case pairingDetailWifi = "/my/connect_stb/detail/wifi"
+        case pairingAuthNumber = "/my/connect_stb/btv_auth_number"
         case pairingDeviceNotfound = "/my/connect_stb/detail/subscriber_auth/there_is_no_stb"
+        case pairingDevicefound = "/my/connect_stb/detail/subscriber_auth/there_is_stb"
         case autoPairing = "/autopairing" // 자동연결페어링
         case searchResult = "/search/result"                      // 검색결과
+        case searchNoResult = "/search/no_result"
         case zemSearchResult = "/category/zemkids/search" // ZEM 키즈|검색결과
+        case zemSearchNoResult = "/category/zemkids/no_search" // ZEM 키즈|검색결과
         case remoteconStatus = "/remotecon/status"          // 리모컨 세부상태
         case purchaseOrderCompleted = "/purchase/order_completed"   // 상품구매완료
         case event = "/event"
@@ -164,10 +170,11 @@ struct NaviLog {
         case .kidsHome:
             var actionBody = MenuNaviActionBodyItem()
             let dataProvider = repository.dataProvider
+            let pushId = page.getParamValue(key: .pushId) as? String ?? ""
             let menuId = page.getParamValue(key: .id) as? String ?? dataProvider.bands.kidsGnbModel.home?.menuId ?? ""
             let blockData = dataProvider.bands.kidsGnbModel.getGnbData(menuId: menuId)
-            //actionBody.menu_id = blockData?.menuId
             actionBody.result = blockData?.title
+            actionBody.category = pushId
             return actionBody
         case .kidsMultiBlock:
             if let pageType = page.getParamValue(key: .type) as? BlockData.UiType{
@@ -288,6 +295,7 @@ struct NaviLog {
         case clickConnectionButton = "click.connection.button"      // 1. B tv 연결하기 선택
         case clickReleaseButton = "click.release.button"            // 2-2. B tv 연결 해제하기 선택
         case clickConnectSelection = "click.connect.selection"      // 1. B tv 연결하기 선택
+        case clickConnectConfirm = "click.connect.confirm"      // 1. B tv 연결하기 선택
         case clickReleasePopupButton = "click.release.popup_button" // 3. B tv 연결 해제 취소/해제 버튼 선택
         case clickConnectStbConfirm = "click.connect_stb.confirm"   // 4. B tv 인증번호로 연결하기 버튼 선택
         // 16. MY_프로필

@@ -31,7 +31,9 @@ extension TopBanner{
 struct TopBanner: PageComponent {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
-    @ObservedObject var pageObservable:PageObservable 
+    @EnvironmentObject var naviLogManager:NaviLogManager
+    @ObservedObject var pageObservable:PageObservable
+    
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var datas: [BannerData]
@@ -142,29 +144,33 @@ struct TopBanner: PageComponent {
         self.autoChangeSubscription = nil
     }
     
+    
 }
 
 struct TopBannerItem: PageComponent, Identifiable {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     let id = UUID().uuidString
     let data: BannerData
    
     var body: some View {
-        //ZStack(alignment: .top) {
-           Spacer()
-            .modifier(MatchParent())
-            .background(Color.transparent.clearUi)
-            .onTapGesture {
-                BannerData.move(
-                    pagePresenter: self.pagePresenter,
-                    dataProvider: self.dataProvider,
-                    data: self.data)
-            }
-        //}
-        //.modifier(MatchParent())
-        
+        Spacer()
+        .modifier(MatchParent())
+        .background(Color.transparent.clearUi)
+        .onTapGesture {
+            var actionBody = MenuNaviActionBodyItem()
+            actionBody.menu_id = data.menuId
+            actionBody.menu_name = data.menuNm
+            actionBody.position = data.logPosition
+            self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+          
+            BannerData.move(
+                pagePresenter: self.pagePresenter,
+                dataProvider: self.dataProvider,
+                data: self.data)
+        }
     }
 }
 

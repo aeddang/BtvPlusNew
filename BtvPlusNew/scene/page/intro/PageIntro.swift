@@ -72,6 +72,7 @@ struct IntroItem: PageComponent, Identifiable {
 struct PageIntro: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     let pages: [PageViewProtocol] = SystemEnvironment.isTablet ? [
@@ -101,6 +102,7 @@ struct PageIntro: PageView {
     @State var index: Int = 0
     @State var leading:CGFloat = 0
     @State var trailing:CGFloat = 0
+    @State var posStr:String = ""
     @State var sceneOrientation: SceneOrientation = .portrait
     var body: some View {
         VStack(alignment: self.sceneOrientation == .portrait ? .center : .leading, spacing: 0){
@@ -110,7 +112,7 @@ struct PageIntro: PageView {
                 )
             if self.pages.count > 1 {
                 HStack(spacing: 0) {
-                    Text((self.index+1).description.toFixLength(2))
+                    Text(self.posStr)
                         .modifier(NumberMediumTextStyle(size: Font.size.lightExtra, color: Color.brand.primary))
                         .fixedSize(horizontal: true, vertical: true)
                     HStack(spacing: 0) {
@@ -137,6 +139,7 @@ struct PageIntro: PageView {
                     text: String.button.skip,
                     isSelected: true
                 ){_ in
+                    self.naviLogManager.actionLog(.clickGuideSkip, actionBody:.init(config:self.posStr))
                     self.appSceneObserver.event = .initate
                 }
             } else {
@@ -146,6 +149,9 @@ struct PageIntro: PageView {
                         isSelected: true,
                         bgColor:Color.app.blueLightExtra
                     ){_ in
+                        
+                        self.naviLogManager.actionLog(
+                            .clickGuideSkip, actionBody:.init(config:self.posStr, category:"바로시작하기"))
                         self.appSceneObserver.event = .initate
                     }
                     
@@ -153,7 +159,15 @@ struct PageIntro: PageView {
                         text: String.button.appInit,
                         isSelected: true
                     ){_ in
+                        self.naviLogManager.actionLog(
+                            .clickGuideSkip, actionBody:.init(config:self.posStr, category:"B tv 연결하기"))
                         self.appSceneObserver.event = .initate
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.pairing)
+                                    .addParam(key: PageParam.subType, value: "mob-my")
+                            )
+                        }
                     }
                 }
             }
@@ -177,6 +191,7 @@ struct PageIntro: PageView {
         let size = SystemEnvironment.isTablet ? Dimen.bar.medium : Dimen.bar.regular
         self.index = idx
         let cidx = idx + 1
+        self.posStr = (self.index+1).description.toFixLength(2)
         withAnimation{
             self.leading = size * CGFloat(cidx)
             self.trailing = size * CGFloat(count - cidx)

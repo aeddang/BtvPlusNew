@@ -261,7 +261,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
-        /*
+        
         #if DEBUG
         if !isAnonymous {
             DataLog.d("***********", tag: self.tag )
@@ -270,27 +270,36 @@ class NaviLogManager : ObservableObject, PageProtocol {
             DataLog.d("NaviLog Start", tag: self.tag )
             DataLog.d("page_id : " + (data.page_id ?? "") , tag: self.tag )
             DataLog.d("action_id : " + (data.action_id ?? "") , tag: self.tag )
-            
             if let watchType = data.vod_watch_type { DataLog.d("vod_watch_type : " + watchType , tag: self.tag )}
             if let action = data.action_body {
                 DataLog.d("send action : ", tag: self.tag )
-                DataLog.d("  config : " +  (action.config ?? ""), tag: self.tag )
-                DataLog.d("  category : " +  (action.category ?? ""), tag: self.tag )
-                DataLog.d("  menu_id : " +  (action.menu_id ?? ""), tag: self.tag )
-                DataLog.d("  menu_name : " +  (action.menu_name ?? ""), tag: self.tag )
-                DataLog.d("  result : " +  (action.result ?? ""), tag: self.tag )
-                DataLog.d("  target : " +  (action.target ?? ""), tag: self.tag )
-                DataLog.d("  search_keyword : " +  (action.search_keyword ?? ""), tag: self.tag )
+                if let value = action.config{ DataLog.d("  config : " +  value, tag: self.tag )}
+                if let value = action.category{ DataLog.d("  category : " +  value, tag: self.tag )}
+                if let value = action.menu_name{ DataLog.d("  menu_name : " +  value, tag: self.tag )}
+                if let value = action.menu_id{ DataLog.d("  menu_id : " +  value, tag: self.tag )}
+                if let value = action.result{ DataLog.d("  result : " +  value, tag: self.tag )}
+                if let value = action.target{ DataLog.d("  target : " +  value, tag: self.tag )}
+                if let value = action.search_keyword{ DataLog.d("  search_keyword : " +  value, tag: self.tag )}
+                if let value = action.position{ DataLog.d("  position : " +  value, tag: self.tag )}
             }
             if let content = data.contents_body {
                 DataLog.d("send content : ", tag: self.tag )
-                DataLog.d("  title : " + (content.title ?? ""), tag: self.tag )
-                DataLog.d("  episode_id : " + (content.episode_id ?? ""), tag: self.tag )
-                DataLog.d("  paid : " + (content.paid?.description ?? ""), tag: self.tag )
-                DataLog.d("  running_time : " + (content.running_time ?? ""), tag: self.tag )
+                if let value = content.title{ DataLog.d("  title : " +  value, tag: self.tag )}
+                if let value = content.episode_id{ DataLog.d("  episode_id : " +  value, tag: self.tag )}
+                if let value = content.episode_resolution_id{
+                    DataLog.d("  episode_resolution_id : " +  value, tag: self.tag )
+                }
+                if let value = content.genre_code{ DataLog.d("  genre_code : " +  value, tag: self.tag )}
+                if let value = content.genre_text{ DataLog.d("  genre_text : " +  value, tag: self.tag )}
+                if let value = content.paid{ DataLog.d("  paid : " +  value.description, tag: self.tag )}
+                if let value = content.payment_price{ DataLog.d("  payment_price : " +  value, tag: self.tag )}
+                if let value = content.running_time{ DataLog.d("  running_time : " +  value, tag: self.tag )}
+                if let value = content.channel_name{ DataLog.d("  channel_name : " +  value, tag: self.tag )}
+                if let value = content.channel{ DataLog.d("  channel : " +  value, tag: self.tag )}
+                
             }
         }
-        #endif*/
+        #endif
         self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: data), isAnonymous: isAnonymous))
     }
 

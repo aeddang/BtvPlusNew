@@ -203,9 +203,11 @@ class Pairing:ObservableObject, PageProtocol {
     }
     
     func foundDevice(mdnsData:[MdnsDevice]){
+        self.naviLog(pageID: .pairingDevicefound)
         self.event = .findMdnsDevice(mdnsData)
     }
     func foundDevice(stbInfoDatas:[StbListInfoDataItem]){
+        self.naviLog(pageID: .pairingDevicefound)
         self.event = .findStbInfoDevice(stbInfoDatas)
     }
     func notFoundDevice(){

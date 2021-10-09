@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SearchResult: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
-    var viewModel: MultiBlockModel = MultiBlockModel()
+    var viewModel: MultiBlockModel = MultiBlockModel(logType: .list)
     var infinityScrollModel:InfinityScrollModel = InfinityScrollModel()
     var pageObservable:PageObservable
     var pageDragingModel:PageDragingModel
@@ -40,8 +40,7 @@ struct SearchResult: PageComponent{
                 useTracking:self.useTracking,
                 marginTop:Dimen.margin.regular,
                 marginBottom: Dimen.app.bottom,
-                isRecycle:true,
-                isLegacy:false)
+                isRecycle:true)
             .background(Color.brand.bg)
         }
     }//body

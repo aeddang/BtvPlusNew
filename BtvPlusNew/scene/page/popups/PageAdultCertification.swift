@@ -14,6 +14,7 @@ struct PageAdultCertification: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -39,7 +40,9 @@ struct PageAdultCertification: PageView {
                     PageTab(
                         title: isfail ? String.alert.adultCertificationFail : String.alert.adultCertification,
                         isClose: true
-                    )
+                    ){
+                        self.naviLogManager.actionLog(.clickCertificationExit)
+                    }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     ZStack{
                         HStack(alignment: .top, spacing:0){

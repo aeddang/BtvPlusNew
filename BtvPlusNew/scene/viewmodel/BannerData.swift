@@ -67,7 +67,7 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var menuNm:String? = nil
     
     private(set) var logConfig:String? = nil
-    
+    private(set) var logPosition:String? = nil
     
     
     init(pageType:PageType = .btv) {
@@ -97,9 +97,10 @@ class BannerData:InfinityData, PageProtocol{
         return self
     }
     
-    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, cardType:BlockData.CardType? = nil,  isFloat:Bool = false ,idx:Int = -1) -> BannerData {
+    func setData(data:EventBannerItem, type: EuxpNetwork.BannerType = .list, cardType:BlockData.CardType? = nil,  isFloat:Bool = false ,logPosition:String? = nil, idx:Int = -1) -> BannerData {
         self.menuId = data.menu_id
         self.menuNm = data.menu_nm
+        self.logPosition = logPosition
         switch type {
         case .list:
             if  cardType == .bigPoster {

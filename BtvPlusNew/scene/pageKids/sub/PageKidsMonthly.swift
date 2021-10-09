@@ -17,7 +17,7 @@ struct PageKidsMonthly: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel()
+    @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel(logType: .list)
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel(limitedScrollIndex: 1)
      

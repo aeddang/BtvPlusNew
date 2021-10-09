@@ -15,6 +15,7 @@ struct PagePairingDevice: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var locationObserver:LocationObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -222,6 +223,8 @@ struct PagePairingDevice: PageView {
             String.alert.findDevice,
             String.alert.findDeviceSub
         ]
+        self.naviLogManager.actionLog(.pageShow, pageId:.pairingDetailWifi,
+                                      actionBody: .init(config:PairingType.wifi.logPageConfig))
         switch  self.pairingType {
         case .wifi, .user:
             self.pairing.requestPairing(self.pairingType)

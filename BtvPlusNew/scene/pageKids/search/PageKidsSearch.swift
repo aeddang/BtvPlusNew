@@ -288,7 +288,7 @@ struct PageKidsSearch: PageView {
     }
     
     private func updatedLogPage() {
-        self.naviLogManager.setupPageId(self.searchDatas?.isEmpty == false ? .zemSearchResult : nil)
+        self.naviLogManager.setupPageId(self.searchDatas?.isEmpty == false ? .zemSearchResult : .zemSearchNoResult)
     }
     
     private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {

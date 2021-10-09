@@ -12,6 +12,7 @@ struct PagePairingBtv: PageView {
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -167,7 +168,8 @@ struct PagePairingBtv: PageView {
                         text: String.button.connect,
                         isSelected: self.isInputCompleted()
                     ){_ in
-                        
+                        self.naviLogManager.actionLog(.clickConnectConfirm, pageId:.pairingAuthNumber,
+                                                      actionBody: .init(config:PairingType.wifi.logPageConfig))
                         self.inputCompleted()
                     }
                     .padding(.bottom, self.safeAreaBottom)
@@ -199,6 +201,8 @@ struct PagePairingBtv: PageView {
                     DispatchQueue.main.async {
                         self.isFocus = true
                         self.updatekeyboardStatus(on:true)
+                        
+                        self.naviLogManager.actionLog(.pageShow, pageId:.pairingAuthNumber)
                     }
                 }
             }

@@ -8,6 +8,9 @@
 import Foundation
 import SwiftUI
 import Combine
+enum MultiBlockLogType{
+    case home, list
+}
 
 class MultiBlockModel: PageDataProviderModel {
     private(set) var type:PageType = .btv
@@ -18,13 +21,14 @@ class MultiBlockModel: PageDataProviderModel {
     private(set) var title:String? = nil
     private(set) var selectedTicketId:String? = nil
     private(set) var isFree:Bool = false
-    
+    private(set) var logType:MultiBlockLogType = .list
     @Published private(set) var isUpdate = false {
         didSet{ if self.isUpdate { self.isUpdate = false} }
     }
 
-    init(requestSize:Int? = nil, pageType:PageType = .btv) {
+    init(requestSize:Int? = nil, pageType:PageType = .btv, logType:MultiBlockLogType) {
         self.type = pageType
+        self.logType = logType
         self.requestSize = requestSize ?? 12
     }
     
@@ -44,8 +48,10 @@ class MultiBlockModel: PageDataProviderModel {
                 themaType:BlockData.ThemaType = .category, isAdult:Bool = false, title:String? = nil, isFree:Bool = false) {
         self.type = .btv
         self.isFree = isFree
-        self.datas = datas.map{ block in
-            BlockData().setData(block, themaType:themaType)
+        let total = datas.count
+        self.datas = zip(0...total, datas).map{idx,  block in
+            BlockData(logType: self.logType, idx: idx, totalBlockNum: total)
+                .setData(block, themaType:themaType)
                 .setupActionLog(pageTitle: self.pageTitle, tabTitle: self.tabTitle)
         }
         .filter{ block in
@@ -65,8 +71,10 @@ class MultiBlockModel: PageDataProviderModel {
     func updateKids(datas:[BlockItem], openId:String? = nil, title:String? = nil) {
         self.type = .kids
         self.title = title
-        self.datas = datas.map{ block in
-            BlockData(pageType: .kids).setDataKids(block)
+        let total = datas.count
+        self.datas = zip(0...total,datas).map{idx, block in
+            BlockData(pageType: .kids, logType: self.logType, idx: idx, totalBlockNum: total)
+                .setDataKids(block)
                 .setupActionLog(pageTitle: self.pageTitle, tabTitle: self.tabTitle)
         }
         .filter{ block in
@@ -83,7 +91,7 @@ class MultiBlockModel: PageDataProviderModel {
     
     func updateKids(data:KidsGnbItemData, openId:String? = nil, isTicket:Bool = false) {
         self.type = .kids
-        self.datas = [ BlockData(pageType: .kids).setDataKids(data: data, isTicket:isTicket) ]
+        self.datas = [ BlockData(pageType: .kids, logType: self.logType).setDataKids(data: data, isTicket:isTicket) ]
         self.openId = openId
         self.isUpdate = true
     }
@@ -105,7 +113,7 @@ struct MultiBlockBody: PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
     var pageObservable:PageObservable
-    var viewModel:MultiBlockModel = MultiBlockModel()
+    var viewModel:MultiBlockModel = MultiBlockModel(logType: .list)
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()
@@ -404,6 +412,7 @@ struct MultiBlockBody: PageComponent {
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count
         var addBlocks:[BlockData] = []
+        var index = self.blocks.count
         loadedBlocks.filter{$0.status == .active}.forEach{
             if $0.childrenBlock.isEmpty {
                 addBlocks.append($0)

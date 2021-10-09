@@ -360,7 +360,7 @@ struct PageSearch: PageView {
     }
     
     private func updatedLogPage() {
-        self.naviLogManager.setupPageId(self.searchDatas.isEmpty == false ? .searchResult : nil)
+        self.naviLogManager.setupPageId(self.searchDatas.isEmpty == false ? .searchResult : .searchNoResult)
     }
     
     private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {

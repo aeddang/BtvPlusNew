@@ -8,15 +8,15 @@
 import Foundation
 import Network
 
-class ZeroConf{
+class ZeroConf {
         
-    var connection: NWConnection?
+    static private var connection: NWConnection?
     
     func sendZeroConf(networkObserver:NetworkObserver?) {
         
-//        if networkObserver?.status == .wifi,
-//           AppUtil.idfa != ""
-//        {
+        if networkObserver?.status == .wifi,
+           AppUtil.idfa != ""
+        {
             let pVersion = 1        // 프로토콜 버전
             let idfa = AppUtil.idfa
             let osCode = "1"        // iOS : 1 , Android : 0, etc : 2
@@ -37,9 +37,9 @@ class ZeroConf{
                 let host: NWEndpoint.Host = .init(pathArray[0])
                 let port: NWEndpoint.Port = NWEndpoint.Port(rawValue: UInt16(pathArray[1])!) ?? 0000
                 
-                self.connection = NWConnection(host: host, port: port, using: .udp)
+                Self.connection = NWConnection(host: host, port: port, using: .udp)
 
-                self.connection?.stateUpdateHandler = { (newState) in
+                Self.connection?.stateUpdateHandler = { (newState) in
                     switch (newState) {
                     case .ready:
                         print("ready")
@@ -51,40 +51,22 @@ class ZeroConf{
                     case .preparing:
                         print("Preparing")
                     default:
-                        self.connection?.cancel()
+                        Self.connection?.cancel()
                         print("waiting or failed")
 
                     }
                 }
-                self.connection?.start(queue: .global())
+                Self.connection?.start(queue: .global())
             }
-//        }
-       
+        }
     }
     
     private func sendData(param : String) {
-        self.connection?.send(content: param.data(using: String.Encoding.utf8), completion: NWConnection.SendCompletion.contentProcessed(({ (error) in
-                self.connection?.cancel()
+        Self.connection?.send(content: param.data(using: String.Encoding.utf8), completion: NWConnection.SendCompletion.contentProcessed(({ (error) in
+                Self.connection?.cancel()
                 if error != nil {
                     print(error ?? "ZeroConf Unkow Error")
                 }
             })))
     }
-}
-
-
-extension String {
-
-    func fromBase64String() -> String? {
-        guard let data = Data(base64Encoded: self) else {
-            return nil
-        }
-
-        return String(data: data, encoding: .utf8)
-    }
-
-    func toBase64String() -> String {
-        return Data(self.utf8).base64EncodedString()
-    }
-
 }

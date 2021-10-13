@@ -187,10 +187,12 @@ class BtvPlayerModel:PlayerModel{
                 self.useInside = true
                 self.isFullVod = true
                 useDrm = true
-            case .vodNext(let t, let autoPlay):
+            case .vodNext(let t, let autoPlay, let isAutoNext):
                 self.openingTime = playData.openingTime ?? -1
                 self.endingTime = playData.endingTime ?? -1
-                self.continuousTime = t == 0 ? self.openingTime : t
+                if isAutoNext {
+                    self.continuousTime = t == 0 ? self.openingTime : t
+                }
                 self.isFullVod = true
                 self.initPlay = autoPlay
                 self.useInside = true

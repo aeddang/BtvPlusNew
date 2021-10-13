@@ -47,8 +47,8 @@ struct PageCashCharge: PageView {
                                  String.alert.cashChargeText,
                                  confirmText: String.alert.cashChargeButton){ isOk in
                         if !isOk {return}
-                        
-                            BuzzAdBenefit.showInquiryPage(on: v)
+                            BuzzAdBenefit.showInquiryPage(on: v, unitId: SystemEnvironment.isStage
+                                                          ? Buzz.BAB_SDK_KR_iOS_DEV_UNIT_ID : Buzz.BAB_SDK_KR_iOS_PRD_UNIT_ID )
                     }
                     
                 }

@@ -37,7 +37,7 @@ struct AppLayout: PageComponent{
                     }
                 }
             }
-            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv && !self.isVSGranted {
+            if self.isInit && self.isPairingHitchShowing && self.pageType == .btv {
                 PairingHitch()
             }
             if self.useLogCollector {
@@ -216,15 +216,11 @@ struct AppLayout: PageComponent{
             guard let evt = evt else { return }
             switch evt {
             case .reset :
-                self.onPageStart()
+                self.onPageRestart()
             default: break
             }
         }
-        .onReceive (self.vsManager.$isGranted) { granted in
-            withAnimation{
-                self.isVSGranted = granted
-            }
-        }
+        
         .onReceive(self.pageObservable.$isBackground){isBack in
             if !isBack && self.isInit{
                 self.vsManager.checkAccess()
@@ -248,7 +244,7 @@ struct AppLayout: PageComponent{
     @State var isLoading = false
     @State var isStoreInit = false
     @State var isInit = false
-    @State var isVSGranted = false
+    
     @State var isInitDataAlram = false
     @State var useLogCollector = false
     @State var toastMsg:String = ""
@@ -337,7 +333,6 @@ struct AppLayout: PageComponent{
             return
         }
         self.onPageStart()
-        self.checkAppleTv()
     }
     
     func onPageStart(){
@@ -405,6 +400,11 @@ struct AppLayout: PageComponent{
             data: alram)
     }
     
+    func onPageRestart(){
+        self.isInit = true
+        self.isLoading = false
+        self.pairing.ready()
+    }
     
     func onPageReset(){
         self.appSceneObserver.event = .toast("on PageReset " + (SystemEnvironment.isStage ? "stage" : "release"))
@@ -462,12 +462,6 @@ struct AppLayout: PageComponent{
         self.appObserver.resetDeeplink()
         return self.repository.webBridge.parseUrl(link.absoluteString) != nil
     }
-    
-    func checkAppleTv(){
-        if !self.isInit {return}
-        self.vsManager.checkAccessStatus()
-    }
-    
 }
 
 

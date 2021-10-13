@@ -22,9 +22,9 @@ struct AppUtil{
     }
     
     
-    static var build: Int {
+    static var build: String {
         guard let dictionary = Bundle.main.infoDictionary,
-            let b = dictionary["CFBundleVersion"] as? Int else {return 1}
+            let b = dictionary["CFBundleVersion"] as? String else {return "1"}
             return b
     }
     

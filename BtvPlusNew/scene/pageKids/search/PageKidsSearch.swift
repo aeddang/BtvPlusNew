@@ -116,7 +116,7 @@ struct PageKidsSearch: PageView {
                         },
                         inputCopmpleted : { text in
                             if self.keyword.isEmpty {
-                                self.appSceneObserver.alert = .alert(String.alert.apns, String.kidsText.kidsSearchInput)
+                                self.appSceneObserver.alert = .alert( String.kidsText.kidsSearchInput)
                                 return
                             }
                             self.search(keyword: text)
@@ -136,7 +136,11 @@ struct PageKidsSearch: PageView {
                                 self.voiceSearchEnd()
                                 return
                             }
-    
+                            if self.searchDatas?.isEmpty == true {
+                                self.searchDatas = nil
+                                self.keyword = ""
+                                return
+                            }
                             if self.searchDatas?.isEmpty == false {
                                 self.searchDatas = nil
                                 self.updatedLogPage()

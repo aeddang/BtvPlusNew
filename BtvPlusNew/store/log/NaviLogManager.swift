@@ -93,7 +93,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         contentsItem.episode_id = synop.epsdId ?? ""
         contentsItem.paid = !synop.isFree  // 유료 여부 ex)true (유료인 경우)
         contentsItem.purchase = synop.curSynopsisItem?.isDirectview ?? false          // 구매 여부 ex)true (구매한 경우)
-        contentsItem.episode_resolution_id = synop.epsdRsluId ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
+        contentsItem.episode_resolution_id = synop.epsdRsluId?.replace("{", with: "").replace("}", with: "") ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         //contentsItem.cid = contents.contrp_id?.replace("", with: "{").replace("", with: "}") ?? ""        // 4.0
 
         if let curSynopsisItem = synop.curSynopsisItem {
@@ -209,11 +209,19 @@ class NaviLogManager : ObservableObject, PageProtocol {
                    memberBody:MenuNaviMemberItem? = nil
                    ){
         
+        var modifyContentBody = contentBody
+        if contentBody?.episode_resolution_id?.isEmpty == false {
+            modifyContentBody?.episode_resolution_id = contentBody?
+                .episode_resolution_id?
+                .replace("{", with: "").replace("}", with: "")
+        }
         
-        let data = NaviLogData()
+        
+        let  data = NaviLogData()
         data.actionBody = actionBody
-        data.contentsBody = contentBody
+        data.contentsBody = modifyContentBody
         data.member = memberBody ?? self.currentMemberItem
+        
         let fixedPageId:String? = pageId.rawValue.isEmpty == true
             ? NaviLog.getPageID(pageID: pagePageID, repository: repository)
             : pageId.rawValue
@@ -300,6 +308,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
             }
         }
         #endif
+        
         self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: data), isAnonymous: isAnonymous))
     }
 
@@ -325,7 +334,8 @@ class NaviLogManager : ObservableObject, PageProtocol {
         menuNaviItem.service_name = "btv_plus_pi"
         menuNaviItem.device_base_time = naviLogData?.now.toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS")
         menuNaviItem.pcid = self.repository.namedStorage?.getPcid()
-        menuNaviItem.stb_id = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        menuNaviItem.stb_id = (NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId)
+                .replace("{", with: "").replace("}", with: "")
         menuNaviItem.stb_mac = self.repository.pairing.hostDevice?.convertMacAdress  ?? ""
         menuNaviItem.session_id = self.repository.namedStorage?.getSessionId()
         menuNaviItem.action_body = naviLogData?.actionBody// ?? MenuNaviActionBodyItem()

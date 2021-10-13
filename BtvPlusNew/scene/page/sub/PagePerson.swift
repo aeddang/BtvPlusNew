@@ -28,7 +28,7 @@ struct PagePerson: PageView {
                 VStack(spacing:0){
                     if self.title != nil {
                         PageTab(
-                            title: self.title,
+                            title: String.pageTitle.person,
                             isBack: true
                         )
                         .padding(.top, self.sceneObserver.safeAreaTop)

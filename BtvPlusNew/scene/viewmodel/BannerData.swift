@@ -65,9 +65,8 @@ class BannerData:InfinityData, PageProtocol{
     
     private(set) var menuId:String? = nil
     private(set) var menuNm:String? = nil
-    
     private(set) var logConfig:String? = nil
-    private(set) var logPosition:String? = nil
+    var logPosition:String? = nil
     
     
     init(pageType:PageType = .btv) {

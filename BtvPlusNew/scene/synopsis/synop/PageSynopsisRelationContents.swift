@@ -40,7 +40,6 @@ extension PageSynopsis {
         self.onAllProgressCompleted() 
     }
     
-    
     var relationRow:Int {
        get {
            return

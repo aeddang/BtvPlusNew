@@ -40,10 +40,7 @@ struct NeedPairingInfo: PageView {
                 text: String.button.connectBtv,  isFixSize: true
             ){ _ in
                 self.naviLogManager.actionLog(.clickConnectStbButton)
-                if self.vsManager.isGranted {
-                    self.vsManager.accountPairingAlert()
-                    return
-                }
+                
                 self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                     self.pagePresenter.openPopup(

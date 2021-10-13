@@ -12,6 +12,7 @@ import SwiftUI
 
 struct DisconnectView: PageComponent{
     @EnvironmentObject var setup:Setup
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -52,11 +53,7 @@ struct DisconnectView: PageComponent{
                     text: String.button.connectBtv
                 ){_ in
                     self.naviLogManager.actionLog(.clickConnectionButton)
-                    
-                    if self.vsManager.isGranted {
-                        self.vsManager.accountPairingAlert()
-                        return
-                    }
+                
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
                     )

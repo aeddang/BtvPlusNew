@@ -20,6 +20,7 @@ class TagData{
     private(set) var pageType:PageType = .btv
     
     private(set) var isQuiz:Bool = false
+    private(set) var useCaptionFlag:Bool = false
     private(set) var studyIcon:String? = nil
     private(set) var translation:String? = nil
     
@@ -27,11 +28,12 @@ class TagData{
         self.pageType = pageType
     }
     
-    func setData(data:ContentItem, isAdult:Bool) -> TagData {
+    func setData(data:ContentItem, isAdult:Bool, useCaptionFlag:Bool = true) -> TagData {
         if let prc = data.sale_prc_vat {
             if prc == 0 { isFree = true }
             self.price = prc.formatted(style: .decimal) + String.app.cash
         }
+        self.useCaptionFlag = useCaptionFlag
         self.isQuiz = data.quiz_yn?.toBool() ?? false
         self.setTranslation(code: data.epsd_lag_capt_typ_cd)
         self.studyIcon = AssetKids.study.getIcon(watchingProgress: data.kes?.watching_progress)
@@ -143,12 +145,13 @@ class TagData{
     }
     
     private func setTranslation(code:String?){
-        /*
+        if !self.useCaptionFlag {return}
+        
         switch code {
         case "01" : translation = String.sort.dubbingKor
         case "02" : translation = String.sort.subtitleKor
         default : break
-        }*/
+        }
     }
     
     fileprivate func updatedImage(){

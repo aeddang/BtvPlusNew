@@ -29,6 +29,7 @@ struct LikeButton: PageView {
    
     @EnvironmentObject var pairing:Pairing
     var playBlockModel:PlayBlockModel? = nil
+    var playData:PlayData? = nil
     var componentViewModel:SynopsisViewModel? = nil
     var srisId:String
     @Binding var isLike:LikeStatus?
@@ -47,7 +48,9 @@ struct LikeButton: PageView {
             else{
                 
                 self.appSceneObserver.alert = .like(self.srisId, self.isLike?.boolType, isPreview:self.isPreview)
-                self.playBlockModel?.logEvent = .like(nil)
+                if let playData = self.playData {
+                    self.playBlockModel?.logEvent = .like(playData, nil)
+                }
                 self.componentViewModel?.uiEvent = .like("")
             }
         }) {
@@ -139,18 +142,24 @@ struct LikeButton: PageView {
         if data.like_action == "1" {
             self.isLike = .like
             action?(self.isLike)
-            self.playBlockModel?.logEvent = .like(true)
+            if let playData = self.playData {
+                self.playBlockModel?.logEvent = .like(playData, true)
+            }
             self.componentViewModel?.uiEvent = .like("like")
         }
         else if data.like_action == "2" {
             self.isLike = .unlike
             action?(self.isLike)
-            self.playBlockModel?.logEvent = .like(false)
+            if let playData = self.playData {
+                self.playBlockModel?.logEvent = .like(playData, false)
+            }
             self.componentViewModel?.uiEvent = .like("dislike")
         }else{
             self.isLike = .unkowned
             action?(self.isLike)
-            self.playBlockModel?.logEvent = .like(nil)
+            if let playData = self.playData {
+                self.playBlockModel?.logEvent = .like(playData, nil)
+            }
             self.componentViewModel?.uiEvent = .like("-")
         }
     }

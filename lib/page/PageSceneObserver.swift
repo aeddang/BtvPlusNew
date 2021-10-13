@@ -17,6 +17,7 @@ open class PageSceneObserver: ObservableObject{
     @Published private(set) var screenSize:CGSize = CGSize()
     @Published var isUpdated:Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
+    
     func update(geometry:GeometryProxy) {
         var willUpdate = false
         if geometry.size != self.screenSize {
@@ -28,10 +29,24 @@ open class PageSceneObserver: ObservableObject{
             self.safeAreaBottom = ceil( geometry.safeAreaInsets.bottom )
             if self.safeAreaBottom < 100 {
                 self.safeAreaIgnoreKeyboardBottom = self.safeAreaBottom
-            }else if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
-                if #available(iOS 15.0, *) {
-                    if self.sceneOrientation == .landscape {
-                        self.safeAreaBottom = self.safeAreaBottom - 92
+            }
+            if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad && self.safeAreaBottom > 300 {
+                if #available(iOS 15.0, *) {//  apple....
+                    if self.sceneOrientation == .landscape { //12.9
+                        if self.safeAreaBottom >= 498 {
+                            self.safeAreaBottom = self.safeAreaBottom - 30
+                        } else if self.safeAreaBottom == 428 && self.screenSize.width == 1133 { //mini
+                            self.safeAreaBottom = self.safeAreaBottom - 138
+                        } else if self.safeAreaBottom == 428 && self.screenSize.width == 1194 { //11
+                            self.safeAreaBottom = self.safeAreaBottom - 54
+                        } else if self.safeAreaBottom >= 422{ // air
+                            self.safeAreaBottom = self.safeAreaBottom - 56
+                        } else if self.safeAreaBottom == 408 && self.screenSize.width == 1080{ //pad
+                            self.safeAreaBottom = self.safeAreaBottom - 50
+                        } else { //9.7
+                            self.safeAreaBottom = self.safeAreaBottom - 92
+                        }
+                        
                     }
                 }
             }
@@ -52,6 +67,7 @@ open class PageSceneObserver: ObservableObject{
         
         if willUpdate {
             self.isUpdated = true
+            ComponentLog.d("safeAreaBottom " + self.safeAreaBottom.description, tag: "SceneObserver")
             ComponentLog.d("resize " + self.screenSize.debugDescription, tag:"SceneObserver")
         }
     }

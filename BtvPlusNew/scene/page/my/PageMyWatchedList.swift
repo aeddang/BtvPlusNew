@@ -142,8 +142,12 @@ struct PageMyWatchedList: PageView {
         }//geo
     }//body
     
-    //@State var isInitLog:Bool = true
+    @State var isInitLog:Bool = true
     private func sendLogTabMenu(_ idx:Int){
+        if self.isInitLog {
+            self.isInitLog = false
+            return
+        }
         var action = MenuNaviActionBodyItem()
         switch idx {
         case 0 :
@@ -154,7 +158,7 @@ struct PageMyWatchedList: PageView {
             action.category = WatchedBlockType.kids.category
         default : break
         }
-        self.naviLogManager.actionLog(.pageShow, pageId: .recentContents ,actionBody: action)
+        self.naviLogManager.actionLog(.clickRecentContentsTab, pageId: .recentContents ,actionBody: action)
     }
    
 }

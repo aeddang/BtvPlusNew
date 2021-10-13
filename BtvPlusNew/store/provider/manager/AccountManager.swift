@@ -286,7 +286,12 @@ class AccountManager : PageProtocol{
                 self.pairing.foundDevice(stbInfoDatas: datas)
             
             case .getDevicePairingStatus :
-                self.pairing.checkCompleted(isSuccess: NpsNetwork.pairingStatus != "")
+                guard let resData = res.data as? DevicePairingStatus  else { return }
+                if resData.header?.result != NpsNetwork.resultCode.success.code {
+                    self.pairing.checkCompleted(isSuccess:false)
+                    return
+                }
+                self.pairing.checkCompleted(isSuccess: resData.body?.pairingid?.isEmpty == false)
         
             case .getPairingUserInfo :
                 guard let data = res.data as? PairingUserInfo  else { return }
@@ -352,7 +357,8 @@ class AccountManager : PageProtocol{
                 self.pairing.connectError()
             case .getDevicePairingInfo(_, _, let prevResult) : self.pairing.connectError(header: prevResult)
             case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
-            case .getDevicePairingStatus : self.pairing.checkCompleted(isSuccess: false)
+            case .getDevicePairingStatus :
+                self.pairing.checkCompleted(isSuccess: self.pairing.status == .pairing)
             case .getMonthly(let lowLevelPpm , _ , _) :  self.pairing.authority.updatedPurchaseTicket([], lowLevelPpm: lowLevelPpm)
             case .getTotalPointInfo, .getPurchaseMonthly, .getPeriodPurchaseMonthly : self.pairing.authority.errorMyInfo(err)
             case .getKidsProfiles : self.pairing.updatedKidsProfiles(nil)

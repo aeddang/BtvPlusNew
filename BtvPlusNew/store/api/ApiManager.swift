@@ -83,6 +83,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var mgmRps:MgmRps = MgmRps(network: MgmRpsNetwork())
     private lazy var vls:Vls = Vls(network: VlsNetwork())
     private lazy var cbs:Cbs = Cbs(network: CbsNetwork())
+    private lazy var uoRps:UoRps = UoRps(network: UoRpsNetwork())
     
     // 로그 서버 || 권한등  페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
@@ -113,6 +114,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.mgmRps.clear()
         self.vls.clear()
         self.cbs.clear()
+        self.uoRps.clear()
         self.apiQ.removeAll()
     }
     
@@ -704,6 +706,11 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .requestBPointIssuance(let pointPolicyNum, let pointAmount, _): self.cbs.requestBPointIssuance(
             pointPolicyNum: pointPolicyNum, pointAmount: pointAmount,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+            
+        //UORPS
+        case .checkNuguPairing(let macAddress): self.uoRps.checkNuguPairing(macAddress: macAddress, 
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         //NaviLog

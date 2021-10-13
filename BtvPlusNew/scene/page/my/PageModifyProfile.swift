@@ -97,6 +97,7 @@ struct PageModifyProfile: PageView {
                         self.inputCompleted()
                     }
                     .padding(.bottom, self.safeAreaBottom)
+                        
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -110,7 +111,7 @@ struct PageModifyProfile: PageView {
                         self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                     case .pullCancel :
                         self.pageDragingModel.uiEvent = .pullCancel(geometry)
-                    default : do{}
+                    default : break
                     }
                 }
                 .onReceive(self.infinityScrollModel.$pullPosition){ pos in
@@ -160,8 +161,6 @@ struct PageModifyProfile: PageView {
             self.editType = on
                 ? .nickName
                 : self.editType == .nickName ? .none : self.editType
-            self.safeAreaBottom = on
-                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
         }
     }
 

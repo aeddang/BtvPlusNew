@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 struct DiscountView: PageComponent{
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel:NavigationModel = NavigationModel()
     @EnvironmentObject var naviLogManager:NaviLogManager
     var viewPagerModel:ViewPagerModel = ViewPagerModel()
@@ -24,7 +25,8 @@ struct DiscountView: PageComponent{
                 viewModel: self.viewModel,
                 buttons: self.tabs
                 )
-                .frame(width: ListItem.card.size.width)
+                .frame(width: self.pairing.pairingStbType == .btv ? ListItem.card.size.width
+                       : ListItem.card.size.width*0.66)
                 .padding(.top, Dimen.margin.medium)
             CardBlock(
                 infinityScrollModel:self.infinityScrollModel,
@@ -63,10 +65,16 @@ struct DiscountView: PageComponent{
     }//body
     
     private func updateButtons(idx:Int){
-        let titles: [String] = [
+        
+        let titles: [String] = self.pairing.pairingStbType == .btv
+        ? [
             CardBlock.ListType.member.title,
             CardBlock.ListType.okCash.title,
             CardBlock.ListType.tvPoint.title
+        ]
+        : [
+            CardBlock.ListType.member.title,
+            CardBlock.ListType.okCash.title
         ]
         self.tabs = NavigationBuilder(
             index:idx,

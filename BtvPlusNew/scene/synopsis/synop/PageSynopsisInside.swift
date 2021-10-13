@@ -185,7 +185,7 @@ extension PageSynopsis {
     func changeVod(synopsisData:SynopsisData?, isRedirectPage:Bool = true,
                    isHistoryBack:Bool=false, isNext:Bool = false){
         guard let synopsisData = synopsisData else { return }
-        self.synopsisPlayType = isNext ? .vodNext() : .unknown
+        self.synopsisPlayType = isNext ? .vodNext( isNextAuto: self.setup.nextPlay) : .unknown
         self.setupHistory(synopsisData:synopsisData, isHistoryBack:isHistoryBack)
         self.resetPage(isAllReset: true, isRedirectPage:isRedirectPage)
     }
@@ -193,7 +193,7 @@ extension PageSynopsis {
     func changeVod(epsdId:String?, isHistoryBack:Bool=false, isNext:Bool = false){
         guard let epsdId = epsdId else { return }
         guard let cdata = self.synopsisData else { return }
-        self.synopsisPlayType = isNext ? .vodNext() : .unknown
+        self.synopsisPlayType = isNext ? .vodNext(isNextAuto: self.setup.nextPlay) : .unknown
         
         // 
         self.setupHistory(synopsisData:

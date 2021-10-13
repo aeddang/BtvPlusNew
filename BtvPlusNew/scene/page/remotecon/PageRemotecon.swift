@@ -355,7 +355,7 @@ struct PageRemotecon: PageView {
             self.sendLog(action: .clickWatchingInfoRefresh, actionBody: .init(category: self.remotePlayData?.title ?? ""))
             self.checkHostDeviceStatus()
         case .inputMessage:
-            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "chacter"))
+            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "character"))
             withAnimation{ self.isInputText = true }
         case .inputChannel:
             self.sendLog(action: .clickRemoteconFunction, actionBody: .init(category: "channel_number"))
@@ -479,6 +479,7 @@ struct PageRemotecon: PageView {
             DispatchQueue.main.asyncAfter(deadline: .now() + Self.delayUpdate) {
                 self.checkHostDeviceStatus()
             }
+            
             self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
                 config:"채널번호입력",
                 search_keyword: value,
@@ -494,7 +495,7 @@ struct PageRemotecon: PageView {
                 category: "character"))
         case .search:
             if host.isEnableStringInput() {
-                ctrl = .MobileSearch
+                ctrl = .Mobile_Search
             }
             self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
                 config:"검색어입력",

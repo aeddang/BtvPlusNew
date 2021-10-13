@@ -21,6 +21,10 @@ struct BtvButton: PageView {
     var body: some View {
         Button(action: {
             if !self.isActive {return}
+            if self.pairing.pairingStbType == .apple {
+                self.appSceneObserver.alert = .disableAppleTv
+                return
+            }
             action()
             
         }) {

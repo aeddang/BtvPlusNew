@@ -24,8 +24,7 @@ enum SceneAlert:Equatable {
          needCertification( String?, String?, String? = nil, pageTitle:String? = nil, () -> Void ),
          serviceUnavailable(String?), serviceSelect(String?, String? , (String?) -> Void),
          like(String, Bool?, isPreview:Bool = false), updateAlram(String, Bool),
-         
-         
+         disableAppleTv,
          cancel
     
     static func ==(lhs: SceneAlert, rhs: SceneAlert) -> Bool {
@@ -109,6 +108,7 @@ struct SceneAlertController: PageComponent{
             case .like(let id, let isLike, _) :
                 self.selectedLike(idx, id: id, isLike:isLike)
             case .updateAlram(let id, let isAlram) : self.selectedUpdateAlram(idx, id: id, isAlram:isAlram)
+            case .disableAppleTv : self.selectedDisableAppleTv(idx)
             default: return 
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -153,7 +153,8 @@ struct SceneAlertController: PageComponent{
             case .recivedApns(let data):
                 let enable = self.setupRecivedApns(alram:data)
                 if !enable { return }
-            default: do { return }
+            case .disableAppleTv : self.setupDisableAppleTv()
+            default: return
             }
             withAnimation{
                 self.isShow = true
@@ -405,9 +406,10 @@ struct SceneAlertController: PageComponent{
         
         self.title = String.pageTitle.pairingGuide
         self.text = msg ?? String.alert.needConnect
+        /*
         if self.vsManager.isGranted {
             self.tipText = String.vs.accountProviderPairingTip
-        }
+        }*/
         
         if self.setup.possession.isEmpty == false {
             self.subText = String.alert.needConnectSubPossession
@@ -420,10 +422,7 @@ struct SceneAlertController: PageComponent{
     
     func selectedNeedPairing(_ idx:Int, move:PageObject? = nil, cancelHandler: @escaping () -> Void) {
         if idx == 1 {
-            if self.vsManager.isGranted {
-                self.vsManager.checkSync(isInterruptionAllowed: true)
-                return
-            }
+            
             self.appSceneObserver.pairingCompletedMovePage = move
             let  pairingInType = "mob-com-popup"
             if SystemEnvironment.currentPageType == .kids {
@@ -610,6 +609,17 @@ struct SceneAlertController: PageComponent{
     }
     func selectedAlert(_ idx:Int, completionHandler: @escaping () -> Void) {
         completionHandler()
+    }
+    
+    func setupDisableAppleTv() {
+        self.title = String.alert.appleTvDisable
+        self.text = String.alert.appleTvDisableText
+        self.subText = String.alert.appleTvDisableSub
+        self.buttons = [
+            AlertBtnData(title: String.app.confirm, index: 0)
+        ]
+    }
+    func selectedDisableAppleTv(_ idx:Int) {
     }
     
     

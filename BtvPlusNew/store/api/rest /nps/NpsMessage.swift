@@ -17,7 +17,7 @@ enum NpsCtrlType:String{
          Mute, PIP, Guide,
          CHNumInput, StrInput, NumInput,
          PlayVod, TakeoutTV,
-         MobileSearch,  MeTV
+         Mobile_Search,  Me_TV
 }
 
 enum NpsCtrlValue:String{

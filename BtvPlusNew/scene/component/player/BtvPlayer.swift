@@ -250,6 +250,7 @@ struct BtvPlayer: PageComponent{
             .onReceive(self.viewModel.$selectQuality){ quality in
                 guard let quality = quality else {return}
                 self.setup.selectedQuality = quality.name
+                
                 self.viewModel.selectedQuality = quality.name
                 self.viewModel.continuousTime = self.viewModel.time
                 self.viewModel.currentQuality = quality
@@ -273,6 +274,7 @@ struct BtvPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
+                withAnimation{self.isPlayerComplete = false}
                 if self.isPreroll {
                     self.isPreroll = false
                     self.viewModel.isPrerollPlay = false
@@ -346,6 +348,7 @@ struct BtvPlayer: PageComponent{
                 guard let evt = evt else {return}
                 switch evt {
                 case .start :
+                    
                     self.viewModel.isPrerollPlay = true
                     self.viewModel.event = .mute(false, isUser: false)
                 case .finish, .skipAd : self.initPlay()

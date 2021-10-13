@@ -80,13 +80,7 @@ extension WebViewProtocol{
         }
         
         webView.uiDelegate = uiDelegate
-        if let hei = viewHeight {
-            webView.frame.size.height = hei
-            webView.frame.size.width = .zero
-        } else {
-            webView.frame.size = webView.sizeThatFits(.zero)
-        }
-        
+        webView.sizeToFit()
         
         let source = "function captureLog(msg) { window.webkit.messageHandlers.logHandler.postMessage(msg); } window.console.log = captureLog;"
         let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)

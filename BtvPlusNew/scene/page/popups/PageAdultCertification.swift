@@ -42,6 +42,7 @@ struct PageAdultCertification: PageView {
                         isClose: true
                     ){
                         self.naviLogManager.actionLog(.clickCertificationExit)
+                        self.pagePresenter.goBack()
                     }
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     ZStack{

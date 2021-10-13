@@ -17,16 +17,21 @@ class NotificationService: UNNotificationServiceExtension {
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
         if let content = bestAttemptContent {
-            
+            var isInform = false
+            if let userData = content.userInfo["user_data"] as? [String: Any] {
+                if let value = userData ["msgType"] as? String {
+                    isInform =  value == "inform"
+                }
+            }
             //content.title = "modify " + isPushOn().description
             //content.subtitle = "modify " + NotificationCoreData().getAllNotices().filter{!$0.isRead}.count.description
             //content.badge = NSNumber(value: 10 )
-            if isPushOn() {
+            if isPushOn() || isInform {
                 let num = NotificationCoreData().getAllNotices().filter{!$0.isRead}.count
                 content.badge = NSNumber(value: (num + 1))
                 NotificationCoreData().addNotice(content.userInfo)
             } else {
-                content.badge = NSNumber(value: 1)
+                content.badge = NSNumber(value: 0)
                 //content.sound = nil
             }
             contentHandler(content)

@@ -164,6 +164,7 @@ struct TopBannerItem: PageComponent, Identifiable {
             actionBody.menu_id = data.menuId
             actionBody.menu_name = data.menuNm
             actionBody.position = data.logPosition
+            actionBody.config = data.logConfig
             self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
           
             BannerData.move(

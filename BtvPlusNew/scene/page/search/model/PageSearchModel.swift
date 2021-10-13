@@ -191,8 +191,10 @@ class PageSearchModel :ObservableObject, PageProtocol {
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
         actionData.menu_name = String.app.clip + datas.count.description
         actionData.category = "클립"
+        
         let allPosters:[VideoData] = datas.map{
-            VideoData(usePrice:true).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
+            actionData.target = $0.title_sris
+            return VideoData(usePrice:true).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
         }
         let block = BlockData()
             .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword, usePrice: true)

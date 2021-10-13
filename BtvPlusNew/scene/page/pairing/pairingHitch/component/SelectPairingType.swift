@@ -15,6 +15,8 @@ struct SelectPairingType: View {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
+    @EnvironmentObject var vsManager:VSManager
+    @EnvironmentObject var pairing:Pairing
     var body: some View {
         VStack(spacing: 0){
             Image( Asset.image.pairingHitchText02 )
@@ -60,6 +62,12 @@ struct SelectPairingType: View {
                     ?  Dimen.margin.thin
                     : self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.margin.thin)
         
+        .onReceive(self.vsManager.$isGranted){ isGranted in
+            if isGranted == false {
+                self.onBtvPairing()
+            }
+        }
+        
     }//body
     
     
@@ -78,11 +86,11 @@ struct SelectPairingType: View {
             )
         case .btv:
             self.sendLog(menuName: "인증번호연결")
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.pairingSetupUser)
-                    .addParam(key: PageParam.type, value: PairingRequest.btv)
-                    .addParam(key: PageParam.subType, value: "mob-home-popup")
-            )
+            if self.vsManager.isGranted != false {
+                self.vsManager.checkAccessStatus(isInterruptionAllowed:true)
+                return
+            }
+            onBtvPairing()
         case .user:
             self.sendLog(menuName: "가입자인증")
            self.pagePresenter.openPopup(
@@ -93,6 +101,14 @@ struct SelectPairingType: View {
             
         }
         
+    }
+    
+    private func onBtvPairing(){
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.pairingSetupUser)
+                .addParam(key: PageParam.type, value: PairingRequest.btv)
+                .addParam(key: PageParam.subType, value: "mob-home-popup")
+        )
     }
     
     private func sendLog(menuName:String? = nil) {

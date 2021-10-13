@@ -12,14 +12,22 @@ import AVFoundation
 struct SearchTab: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     
-    var isFocus:Bool = false
-    
+    @Binding var isFocus:Bool
+    var scrollPos = UUID().hashValue
+    var textModifier = TextModifier(
+        family:Font.family.bold,
+        size:Font.size.lightExtra,
+        color: Color.app.white,
+        sizeScale: 1.15
+    )
     @Binding var keyword:String
     
     var inputChanged: ((_ text:String) -> Void)? = nil
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     var inputVoice: (() -> Void)? = nil
     var goBack: (() -> Void)? = nil
+    
+   
     
     var body: some View {
         HStack(spacing:Dimen.margin.thinExtra){
@@ -35,7 +43,41 @@ struct SearchTab: PageView {
                            height: Dimen.icon.regular)
             }
             HStack(spacing:Dimen.margin.tiny){
-                
+                /*
+                ScrollViewReader{ reader in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack(spacing:0){
+                            FocusableTextField(
+                                text:self.$keyword,
+                                textAlignment:.left,
+                                textModifier:self.textModifier,
+                                isfocus: self.isFocus,
+                                
+                                inputChanged:{ text in
+                                    self.inputChanged?(text)
+                                    DispatchQueue.main.async {
+                                        reader.scrollTo(self.scrollPos)
+                                    }
+                                },
+                                inputCopmpleted: { text in
+                                    self.inputCopmpleted?(text)
+                                    
+                                })
+                                .frame(width: textModifier.getTextWidth(self.keyword) + Dimen.margin.thin)
+                            Spacer().frame(width: 1, height: 1)
+                                .id(self.scrollPos)
+                        }
+                        .padding(.horizontal, Dimen.margin.tiny)
+                    }
+                    .modifier(MatchParent())
+                    .background(Color.transparent.clearUi)
+                    .onTapGesture {
+                        self.isFocus = true
+                    }
+                    //.clipped()
+                    .padding(.top, 1)
+                }
+                 */
                 FocusableTextField(
                     text:self.$keyword,
                     textAlignment:.left,
@@ -48,23 +90,10 @@ struct SearchTab: PageView {
                         self.inputCopmpleted?(text)
                     })
                     .padding(.horizontal, Dimen.margin.tiny)
-                /*
-                FocusableTextView(
-                    text: self.$keyword,
-                    isfocus: self.isFocus,
-                    textModifier:BoldTextStyle(size: Font.size.lightExtra).textModifier,
-                    inputChanged: {text, _ in
-                        self.inputChanged?(text)
-                    },
-                    inputCopmpleted : { text in
-                        self.inputCopmpleted?(text)
-                    }
-                )*/
-                .modifier(MatchParent())
-                .clipped()
-               
-                .padding(.top, 1)
-                
+                    .modifier(MatchParent())
+                    .clipped()
+                    .padding(.top, 1)
+                 
                 if self.keyword.isEmpty == false {
                     Button(action: {
                         self.keyword = ""

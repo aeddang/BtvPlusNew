@@ -81,6 +81,7 @@ extension BannerList{
 }
 struct BannerList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var datas:[BannerData]
     var useTracking:Bool = false
@@ -98,7 +99,14 @@ struct BannerList: PageComponent{
             useTracking: self.useTracking
             ){
             ForEach(self.datas) { data in
-                BannerItem( data:data )
+                BannerItem( data:data ){
+                        var actionBody = MenuNaviActionBodyItem()
+                        actionBody.menu_id = data.menuId
+                        actionBody.menu_name = data.menuNm
+                        actionBody.position = data.logPosition
+                        actionBody.config = data.logConfig
+                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                }
             }
         }
     }//body
@@ -109,6 +117,7 @@ struct BannerList: PageComponent{
 struct BannerItem: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
+   
     var data:BannerData
     var action: (() -> Void)? = nil
     var body: some View {

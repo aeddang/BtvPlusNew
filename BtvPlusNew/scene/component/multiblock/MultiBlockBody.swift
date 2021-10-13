@@ -101,7 +101,8 @@ extension MultiBlockBody {
     static let maxCellCount:Int = 100
     static let tabHeight:CGFloat = Dimen.tab.thin + Dimen.margin.thinExtra
     static let tabHeightKids:CGFloat = DimenKids.tab.thin + DimenKids.margin.thinExtra
-    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215    
+    static let kisHomeHeight:CGFloat = SystemEnvironment.isTablet ? 410 : 215
+   
 }
 
 struct MultiBlockBody: PageComponent {
@@ -141,6 +142,7 @@ struct MultiBlockBody: PageComponent {
     @State var needAdult:Bool = false
     @State var isHorizontal:Bool = false
    
+    let checkID = UUID().uuidString
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -333,6 +335,7 @@ struct MultiBlockBody: PageComponent {
     private func setupBlocks(){
         self.originBlocks.forEach{ block in
             block.$status.sink(receiveValue: { stat in
+                
                 self.onBlock(stat:stat, block:block)
             }).store(in: &anyCancellable)
         }
@@ -412,14 +415,14 @@ struct MultiBlockBody: PageComponent {
     private func addLoadedBlocks (_ loadedBlocks:[BlockData]){
         var idx = self.blocks.count
         var addBlocks:[BlockData] = []
-        var index = self.blocks.count
+       
         loadedBlocks.filter{$0.status == .active}.forEach{
             if $0.childrenBlock.isEmpty {
                 addBlocks.append($0)
             } else {
                 addBlocks.append(contentsOf:$0.childrenBlock)
             }
-            DataLog.d("addLoadedBlocks " + $0.name + " " + $0.status.rawValue, tag: self.tag)
+            DataLog.d("addLoadedBlocks " + $0.name + " " + $0.status.rawValue, tag: self.tag + self.checkID)
             $0.index = idx
             idx += 1
         }
@@ -427,15 +430,22 @@ struct MultiBlockBody: PageComponent {
         self.isLoading = false
         self.appSceneObserver.isApiLoading = false
         
+        if self.pageObservable.layer != .top {return}
         if let openId = self.currentOpenId {
             let findIds = openId.contains("/") == true ? openId.split(separator: "/") :  openId.split(separator: "|")
             if let find = addBlocks.first(where:  { block in
+                PageLog.d("addLoadedBlocks find block" + block.name, tag: self.tag + self.checkID)
                 guard let menuId = block.menuId else {return false}
                 return findIds.first(where: {$0 == menuId}) != nil
             }) {
-                if self.openPage(opneBlock: find, openId: openId) {
-                    self.currentOpenId = nil
+                PageLog.d("addLoadedBlocks open " + find.name, tag: self.tag + self.checkID)
+                PageLog.d("addLoadedBlocks open " + find.menuId!, tag: self.tag + self.checkID)
+                DispatchQueue.main.async {
+                    if self.openPage(opneBlock: find, openId: openId) {
+                        self.currentOpenId = nil
+                    }
                 }
+                
                 
             } else {
                 self.delayAddBlock()

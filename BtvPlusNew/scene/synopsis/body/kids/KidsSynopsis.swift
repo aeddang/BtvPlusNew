@@ -265,7 +265,7 @@ struct KidsSynopsis: PageComponent{
                             }
                         } else {
                             Spacer()
-                                .frame(width: Self.listWidth)
+                                .modifier(MatchVertical(width: Self.listWidth))
                                 .background(Color.app.white)
                         }
                         

@@ -18,8 +18,6 @@ enum VSFlag {
     
 }
 
-
-
 class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDelegate{
     private let pairing:Pairing
     private let dataProvider:DataProvider
@@ -27,7 +25,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     private var anyCancellable = Set<AnyCancellable>()
     private var redirectFlag:VSFlag? = nil
     
-    @Published var isGranted:Bool = false
+    @Published var isGranted:Bool? = nil
     private(set) var currentAccountId:String? = nil
     private(set) var currentAccountManagerPresent:UIViewController? = nil
     
@@ -66,11 +64,11 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         self.currentAccountManagerPresent = nil
     }
     
-    func checkAccessStatus(){
+    func checkAccessStatus(isInterruptionAllowed:Bool = true){
         let isPairing = self.pairing.status == .pairing
-        if isPairing && self.pairing.pairingDeviceType != .apple && self.isInit{
+        if isPairing && self.pairing.pairingDeviceType != .apple{
             DataLog.d("Btv pairing user", tag:self.tag)
-            self.accountPairingInfo()
+            //self.accountPairingInfo()
             self.isInit = false
             return
         }
@@ -81,8 +79,8 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                 DataLog.d( "status" + status.rawValue.description , tag:self.tag)
                 DispatchQueue.main.async {
                     self.isGranted = status == .granted
-                    if self.isGranted {
-                        self.checkSync(isInterruptionAllowed: !isPairing)
+                    if self.isGranted == true {
+                        self.checkSync(isInterruptionAllowed: isInterruptionAllowed)
                     } else {
                         if self.pairing.pairingDeviceType == .apple {
                             DataLog.d("denied apple tv pairing user", tag:self.tag)
@@ -94,21 +92,21 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         })
     }
     func checkAccess(){
-        if self.redirectFlag == .disconnectTvProviderAndUnpairing{
-            DataLog.d( "disconnectTvProviderAndUnpairing", tag:self.tag)
-            self.isGranted = false
-            self.accountPairingSynchronizationDenied()
-            return
+        self.isGranted = nil
+        if self.pairing.pairingDeviceType == .apple {
+            DataLog.d("checkAccess", tag:self.tag)
+            DispatchQueue.main.async {
+                self.pairing.requestPairing(.check)
+            }
         }
-        self.checkAccessStatus()
     }
     
     func accountUnPairingAlert(){
         self.redirectFlag = .disconnectTvProviderAndUnpairing
         self.appSceneObserver?.alert = .confirm(
-            String.vs.account,
-            String.vs.accountForbiddenUnpairing,
-            String.vs.accountTip
+            
+            String.vs.unpairing,
+            String.vs.accountForbiddenUnpairing
         ){ isOk in
             if isOk {
                 self.redirectFlag = .disconnectTvProviderAndUnpairing
@@ -117,6 +115,20 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         }
     }
     
+    private func checkUnpairingCompleted(isSuccess:Bool){
+        DataLog.d("checkAccess " + isSuccess.description, tag:self.tag)
+        if isSuccess {
+            DataLog.d("checkAccess pairing ", tag:self.tag)
+            self.redirectFlag = nil
+        } else {
+            DataLog.d("checkAccess unpairing ", tag:self.tag)
+            DataLog.d( "disconnectTvProviderAndUnpairing", tag:self.tag)
+            self.redirectFlag = nil
+            self.accountUnPairing()
+        }
+    }
+    
+
     func accountPairingAlert(){
         self.appSceneObserver?.alert = .alert(
         String.vs.account,
@@ -151,9 +163,12 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
             case .pairingCompleted :
                 DataLog.d("Btv pairingCompleted", tag:self.tag)
                 self.checkSync(isInterruptionAllowed:false)
-                //let pairingDeviceType:PairingDeviceType = SystemEnvironment.currentPairingDeviceType
-            
-                
+               
+            case .pairingCheckCompleted(let isSuccess) :
+                if self.pairing.pairingDeviceType == .apple {
+                    DataLog.d("Btv pairingCheckCompleted " + isSuccess.description, tag:self.tag)
+                    self.checkUnpairingCompleted(isSuccess: isSuccess)
+                }
             case .disConnected :
                 DataLog.d("Btv disConnected", tag:self.tag)
                 self.checkSync(isInterruptionAllowed:false)
@@ -184,7 +199,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                                            
     
     func checkSync(isInterruptionAllowed:Bool){
-        if !isGranted {return}
+        if isGranted == false {return}
         DataLog.d( "checkSync " + self.redirectFlag.debugDescription, tag:self.tag)
         let flag = self.redirectFlag
         self.redirectFlag = nil
@@ -226,7 +241,10 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                         }
                     }
                     guard let pair = self.checkMetaData(meta) else {
-
+                        if !isInterruptionAllowed {
+                            DataLog.d( "no MetaData ", tag:self.tag)
+                            return
+                        }
                         if isPairing {
                             self.accountPairingSynchronization()
                         } else {
@@ -245,6 +263,10 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                     }
                     
                 } else {
+                    if !isInterruptionAllowed {
+                        DataLog.d( "no MetaData ", tag:self.tag)
+                        return
+                    }
                     if isPairing {
                         if flag == .disconnectTvProviderAndUnpairing {
                             self.accountPairingSynchronizationDenied()

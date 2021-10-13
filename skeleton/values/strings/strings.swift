@@ -270,6 +270,8 @@ extension String {
         public static let accountSynchronizationFailDifferentStb = "vsAccountSynchronizationFailDifferentStb".loaalized()
         public static let accountSynchronizationFailExistPairing = "vsAccountSynchronizationFailExistPairing".loaalized()
         public static let accounttUnpairing = "vsAccountUnpairing".loaalized()
+        
+        public static let unpairing = "vsUnpairing".loaalized()
         public static let accountAutoPairingConfirm = "vsAccountAutoPairingConfirm".loaalized()
         public static let accountForbiddenUnpairing = "vsAccountForbiddenUnpairing".loaalized()
         public static let accountProviderPairing = "vsAccountProviderPairing".loaalized()

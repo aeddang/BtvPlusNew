@@ -187,7 +187,7 @@ struct KidsHomeBlock:PageComponent, BlockProtocol {
             PageKidsProvider.getPageObject(.kidsMultiBlock)
                 .addParam(key: .datas, value: data.blocks)
                 .addParam(key: .title, value: data.menu_nm)
-                .addParam(key: .subId, value: openId)
+                .addParam(key: .subId, value: openId.replace(data.menu_id!, with: ""))
         )
     }
     

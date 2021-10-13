@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PagePairingBody: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+
     let infinityScrollModel: InfinityScrollModel
     var requestPairing:(_ type:PairingRequest) -> Void
     var body: some View {
@@ -28,9 +29,11 @@ struct PagePairingBody: PageView {
                     Text(String.pageText.pairingText)
                         .modifier(MediumTextStyle( size: Font.size.bold ))
                         .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
                     Text(String.pageText.pairingText1)
                         .font(.custom(Font.family.medium, size: Font.size.lightExtra))
                         .lineSpacing(Font.spacing.regular)
+                        .multilineTextAlignment(.leading)
                         .foregroundColor(Color.app.greyLight)
                         .padding(.top, Dimen.margin.lightExtra)
                     
@@ -94,6 +97,7 @@ struct PagePairingBody: PageView {
         }
         .modifier(ContentHorizontalEdges())
         .modifier(MatchParent())
+        
     }//body
 }
 
@@ -217,7 +221,8 @@ struct PagePairingBodyTabletHorizontal: PageView {
                             ConnectButtonTablet(
                                 image: Asset.icon.pairingWifi,
                                 title: String.pageText.pairingBtnWifi,
-                                text: String.pageText.pairingBtnWifiSubTablet
+                                text: String.pageText.pairingBtnWifiSubTablet,
+                                tip: String.pageText.pairingBtnWifiSubTip
                             ){
                                 self.requestPairing( .wifi() )
                             }
@@ -264,8 +269,10 @@ struct PagePairing: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
-    @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var vsManager:VSManager
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var dataProvider:DataProvider
+   
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -316,6 +323,11 @@ struct PagePairing: PageView {
                 default : do{}
                 }
             }
+            .onReceive(self.vsManager.$isGranted){ isGranted in
+                if isGranted == false {
+                    self.onBtvPairing()
+                }
+            }
             .onReceive(self.sceneObserver.$isUpdated){ update in
                 if !update {return}
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
@@ -347,11 +359,12 @@ struct PagePairing: PageView {
         case .btv:
             self.naviLogManager.actionLog(
                 .clickConnectSelection, actionBody: .init(config:PairingType.btv.logPageConfig))
-            self.pagePresenter.openPopup(
-                PageProvider.getPageObject(.pairingSetupUser)
-                    .addParam(key: PageParam.type, value: PairingRequest.btv)
-                    .addParam(key: PageParam.subType, value: self.pairingInType)
-            )
+            if self.vsManager.isGranted != false {
+                self.vsManager.checkAccessStatus(isInterruptionAllowed:true)
+                return
+            }
+            self.onBtvPairing()
+           
         case .user:
             self.naviLogManager.actionLog(
                 .clickConnectSelection, actionBody: .init(config:PairingType.user.logPageConfig))
@@ -365,6 +378,14 @@ struct PagePairing: PageView {
         default: break
         }
         
+    }
+    
+    private func onBtvPairing(){
+        self.pagePresenter.openPopup(
+            PageProvider.getPageObject(.pairingSetupUser)
+                .addParam(key: PageParam.type, value: PairingRequest.btv)
+                .addParam(key: PageParam.subType, value: self.pairingInType)
+        )
     }
 
 }

@@ -592,10 +592,41 @@ class BlockData:InfinityData, ObservableObject{
                     
                     action.category = data.synopsisType.logCategory
                     action.result = data.synopsisType.logResult
+                    if data.isClip {
+                        action.target = data.clipTitle ?? ""
+                    }
                     switch self.logType {
                     case .home :  data.setNaviLogHome(action: action)
                     case .list :  data.setNaviLog(action: action)
                     }
+                }
+            }
+        }
+        
+        if let datas = self.banners {
+            let count = datas.count
+            zip(0...count, datas).forEach{idx, data in
+                if self.totalBlockNum > 0 {
+                    data.logPosition = (idx+1).description + "@"
+                    + (self.currentBlockIndex+1).description + "@"
+                    + self.totalBlockNum.description
+                } else {
+                    data.logPosition = (idx+1).description + "@"
+                    + count.description
+                }
+            }
+        }
+        
+        if let datas = self.themas {
+            let count = datas.count
+            zip(0...count, datas).forEach{idx, data in
+                if self.totalBlockNum > 0 {
+                    data.logPosition = (idx+1).description + "@"
+                    + (self.currentBlockIndex+1).description + "@"
+                    + self.totalBlockNum.description
+                } else {
+                    data.logPosition = (idx+1).description + "@"
+                    + count.description
                 }
             }
         }

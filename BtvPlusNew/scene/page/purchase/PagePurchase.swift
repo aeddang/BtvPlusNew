@@ -23,6 +23,8 @@ struct PagePurchase: PageView {
     @State var purchaseId:String? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     @State var marginBottom:CGFloat = 0
+    @State var purchaseLink:String = ""
+    @State var isRetryPurchase:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -42,7 +44,6 @@ struct PagePurchase: PageView {
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     BtvWebView( viewModel: self.webViewModel)
                         .modifier(MatchParent())
-                        
                 }
                 .padding(.bottom, self.marginBottom)
                 .modifier(PageFull(style:.white))
@@ -57,7 +58,10 @@ struct PagePurchase: PageView {
                         guard let json = json else { return }
                         guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
                         if let result = param["result"] as? Bool,let pid = param["pid"] as? String {
-                            if !result { return }
+                            if !result {
+                                self.isRetryPurchase = true
+                                return
+                            }
                             if pid.isEmpty { return }
                             let listPrice = param["listPrice"] as? String
                             let paymentPrice = param["paymentPrice"] as? String
@@ -67,6 +71,12 @@ struct PagePurchase: PageView {
                                 .update(.purchase(pid, listPrice:listPrice, paymentPrice:paymentPrice))
                         }
                         
+                        break
+                    case WebviewMethod.bpn_showTopBar.rawValue :
+                        if self.isRetryPurchase { //웹뷰스크롤안것도 네이티브서 고침...
+                            self.webViewModel.request = .link(self.purchaseLink)
+                            self.isRetryPurchase = false
+                        }
                         break
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.appSceneObserver.event = .update(.purchaseCompleted(purchaseId: self.purchaseId))
@@ -87,8 +97,8 @@ struct PagePurchase: PageView {
                 guard let model = self.purchaseWebviewModel else {return}
                 model.addEpsdId(epsdId: first.epsd_id)
                 model.srisId = first.sris_id ?? ""
-                let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (model.gurry)
-                self.webViewModel.request = .link(linkUrl)
+                self.purchaseLink = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (model.gurry)
+                self.webViewModel.request = .link(self.purchaseLink)
             }
             .onReceive(dataProvider.$error) { err in
                 if err?.id != self.tag { return }
@@ -102,8 +112,8 @@ struct PagePurchase: PageView {
                     guard let obj = self.pageObject  else { return }
                     if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
                         self.purchaseWebviewModel = data
-                        let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data.gurry)
-                        self.webViewModel.request = .link(linkUrl)
+                        self.purchaseLink = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data.gurry)
+                        self.webViewModel.request = .link(self.purchaseLink)
                     }
                     if let data = obj.getParamValue(key: .data) as? BlockItem {
                         self.purchaseWebviewModel = PurchaseWebviewModel().setParam(data:data)

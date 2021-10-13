@@ -49,4 +49,9 @@
 
 + (NSString *) getIPAddress:(BOOL)preferIPv4;
 + (NSString *)hexadecimalStringFromData:(NSData *)_deviceToken;
+
++ (NSData *)SHAx:(NSString *)text;
+
++ (NSString *)getEncyptedString:(NSString *)string key:(NSData *)key iv:(NSData *)iv;
++ (NSString *)getDecryptedString:(NSString *)string key:(NSData *)key iv:(NSData *)iv;
 @end

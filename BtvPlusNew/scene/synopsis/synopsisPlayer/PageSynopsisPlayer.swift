@@ -489,7 +489,13 @@ struct PageSynopsisPlayer: PageView {
             
         case .close :
             self.onContinuousPlay()
-            self.pagePresenter.closePopup(self.pageObject?.id)
+            self.playerModel.event = .stop(isUser: false)
+            self.pagePresenter.fullScreenExit(
+                isLock: false,
+                changeOrientation: SystemEnvironment.isTablet ? nil : .portrait)
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.05) {
+                self.pagePresenter.closePopup(self.pageObject?.id)
+            }
         default: break
         }
     }

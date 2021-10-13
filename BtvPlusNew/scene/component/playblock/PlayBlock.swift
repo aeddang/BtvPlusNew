@@ -56,7 +56,7 @@ class PlayBlockModel: PageDataProviderModel {
     }
     
     enum LogEvent{
-        case select, play, like(Bool?), alram(Bool)
+        case select(PlayData), play(PlayData), like(PlayData,Bool?), alram(PlayData, Bool)
     }
     
     fileprivate(set) var dataNum:Int = 0
@@ -121,7 +121,7 @@ struct PlayBlock: PageComponent{
                                         range: self.getRange()
                                         ){ data in
                                         
-                                            self.viewModel.logEvent = .play
+                                            self.viewModel.logEvent = .play(data)
                                             self.forcePlay(data: data)
                                     }
                                     .id(data.hashId)
@@ -142,7 +142,7 @@ struct PlayBlock: PageComponent{
                                         self.onDisappear(idx: data.index)
                                     }
                                     .onTapGesture {
-                                        self.viewModel.logEvent = .select
+                                        self.viewModel.logEvent = .select(data)
                                         if self.focusIndex != data.index {
                                             self.onFocusChange(willFocus: data.index)
                                         }

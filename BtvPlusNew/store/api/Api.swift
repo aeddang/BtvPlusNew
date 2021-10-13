@@ -211,6 +211,9 @@ enum ApiType{
     case certificationCoupon(String, StbInfo),
          requestBPointIssuance(pointPolicyNum:String, pointAmount:Int, callback:String? = nil)
     
+    //UORPS
+    case checkNuguPairing(String)
+    
     //OKSUSU TEST
     case getOksusuUser(String),
          getOksusuUserInfo(String),

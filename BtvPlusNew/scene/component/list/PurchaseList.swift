@@ -14,6 +14,7 @@ class PurchaseData:InfinityData,ObservableObject{
     private(set) var originTitle: String? = nil
     private(set) var title: String? = nil
     private(set) var price: String? = nil
+    private(set) var restrictAgeIcon: String? = nil
     private(set) var date:String? = nil
     private(set) var period:String? = nil
     private(set) var isImminent:Bool? = nil
@@ -39,6 +40,7 @@ class PurchaseData:InfinityData,ObservableObject{
         isAdult = data.adult?.toBool() ?? false
         isPosson = type == .possession
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
+        restrictAgeIcon = Asset.age.getListIcon(age: data.level)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: ListItem.purchase.size, isAdult:isAdult)
         originTitle = data.title
@@ -258,6 +260,19 @@ struct PurchaseItem: PageView {
                                 .frame(width:Dimen.icon.light, height: Dimen.icon.light)
                             Text(String.app.lockAdult)
                                 .modifier(MediumTextStyle(size: Font.size.tiny))
+                        }
+                    }
+                    if let icon = data.restrictAgeIcon {
+                        VStack{
+                            HStack(){
+                                Spacer()
+                                Image(icon)
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width:Dimen.icon.light, height: Dimen.icon.light)
+                            }
+                            Spacer()
                         }
                     }
                 }

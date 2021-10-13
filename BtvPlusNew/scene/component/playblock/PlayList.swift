@@ -336,6 +336,7 @@ struct PlayItem: PageView {
                     .frame(height:self.data.isClip ? Self.bottomSizeClip : Self.bottomSize)
                 }
             }
+            
         }
         .background((SystemEnvironment.isTablet || self.data.isClip) ? Color.app.blueLight : Color.transparent.clear)
         .opacity(self.isSelected ? 1.0 : 0.5)

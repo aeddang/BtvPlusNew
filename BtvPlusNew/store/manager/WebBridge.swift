@@ -57,7 +57,6 @@ struct DeepLinkItem{
     //webview action
     var isForceRetry:Bool = false
     var isCallFuncion:Bool = false
-    var isStopLoading:Bool = false
     var pushBackState:String? = nil
     var isPopBackState:Bool = false
 }
@@ -398,8 +397,6 @@ class WebBridge :PageProtocol{
                             }
                         }
                         
-                    case WebviewMethod.stopLoading.rawValue :
-                        deepLinkItem.isStopLoading = true
                     default :
                         deepLinkItem.isCallFuncion = true
                     }

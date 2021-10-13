@@ -15,6 +15,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var setup:Setup
     @State var showAlram:Bool = false
     @State var newCount:Int = 0
@@ -23,6 +24,7 @@ struct TopTab: PageComponent{
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
             Button(action: {
+                self.naviLogManager.actionLog(.clickTopGnbMy)
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.my)
                 )
@@ -61,6 +63,7 @@ struct TopTab: PageComponent{
             
             
             Button(action: {
+                self.naviLogManager.actionLog(.clickTopGnbZemkids)
                 self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsIntro))
                 
             }) {
@@ -72,6 +75,7 @@ struct TopTab: PageComponent{
                            height: Dimen.icon.mediumExtra)
             }
             Button(action: {
+                self.naviLogManager.actionLog(.clickTopGnbSearch)
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.search)
                 )
@@ -84,6 +88,7 @@ struct TopTab: PageComponent{
                            height: Dimen.icon.regular)
             }
             Button(action: {
+                self.naviLogManager.actionLog(.clickTopGnbEpg)
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.schedule)
                 )
@@ -97,7 +102,7 @@ struct TopTab: PageComponent{
             }
             if self.pairingStbType == .btv {
                 Button(action: {
-                    
+                    self.naviLogManager.actionLog(.clickTopGnbRemotecon)
                     if self.pairing.status != .pairing {
                         self.appSceneObserver.alert = .needPairing()
                     } else {

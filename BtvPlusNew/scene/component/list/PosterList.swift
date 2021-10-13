@@ -173,7 +173,7 @@ class PosterData:InfinityData, Copying{
             list_price: self.tagData?.price,
             payment_price: nil
         )
-        return self.setNaviLog(data: data)
+        return self
     }
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .smallPoster ,idx:Int = -1) -> PosterData {
@@ -516,7 +516,14 @@ struct PosterList: PageComponent{
             ){
             if banners?.isEmpty == false, let banners = self.banners {
                 ForEach(banners) { data in
-                    BannerItem(data: data)
+                    BannerItem(data: data){
+                        var actionBody = MenuNaviActionBodyItem()
+                        actionBody.menu_id = data.menuId
+                        actionBody.menu_name = data.menuNm
+                        actionBody.position = data.logPosition
+                        actionBody.config = data.logConfig
+                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                    }
                         //.modifier(HolizentalListRowInset(spacing: self.spacing))
                 }
                 if let subDataSets = self.subDataSets {

@@ -176,7 +176,8 @@ struct WatchedBlock: PageComponent, Identifiable{
             }
         }
         .onAppear(){
-           
+            self.naviLogManager.actionLog(.pageShow, pageId: .recentContents ,
+                                          actionBody: .init(category:self.watchedType.category))
         }
     }//body
     

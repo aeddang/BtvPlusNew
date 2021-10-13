@@ -270,10 +270,10 @@ struct PagePreviewList: PageView {
         }
     }
     
-    private func sendLogPlay(evt:PlayerUIEvent){
-        guard let playData = self.viewModel.naviLogPlayData  else {return}
+    private func sendLogPlay(evt:PlayerUIEvent, playData:PlayData? = nil){
+        guard let playData = playData ?? self.viewModel.naviLogPlayData  else {return}
         if !playData.isClip {return} // 클립만
-        //if self.viewModel.currentPlayData != playData {return}
+        if self.viewModel.currentPlayData != playData {return}
         var actionType:NaviLog.Action = .none
         switch evt {
         case .pause(let isUser) :
@@ -297,27 +297,26 @@ struct PagePreviewList: PageView {
         let action = MenuNaviActionBodyItem(
             menu_id: self.menuId,
             menu_name: self.title,
-            target: playData.subTitle)
+            target: playData.subTitle ?? "")
         
         self.naviLogManager.actionLog(actionType, pageId: self.logPageId, actionBody: action, contentBody: content)
     }
     
     private func sendLogEvent(evt:PlayBlockModel.LogEvent){
-        guard let playData = self.viewModel.naviLogPlayData  else {return}
-        if self.viewModel.currentPlayData != playData {return}
+       
         switch evt {
-        case .select : self.sendLogEventSelect ()
-        case .play :
+        case .select(let playData) : self.sendLogEventSelect (playData:playData)
+        case .play(let playData) :
             if playData.isClip { sendLogPlay(evt: .resume(isUser: true)) }
-            else { sendLogEventPlay()}
+            else { sendLogEventPlay(playData:playData)}
         case .like : self.sendLogEventOption(evt:evt)
         case .alram : self.sendLogEventOption(evt:evt)
         }
     
     }
     
-    private func sendLogEventSelect (){
-        guard let playData = self.viewModel.naviLogPlayData  else {return}
+    private func sendLogEventSelect (playData:PlayData? = nil){
+        guard let playData = playData ?? self.viewModel.naviLogPlayData  else {return}
         if playData.isClip {
             let content = MenuNaviContentsBodyItem(
                 type: "clip",
@@ -327,14 +326,14 @@ struct PagePreviewList: PageView {
             let action = MenuNaviActionBodyItem(
                 menu_id: self.menuId,
                 menu_name: self.title,
-                position: playData.index.description + "@" + self.infinityScrollModel.total.description,
+                position: (playData.index+1).description + "@" + self.infinityScrollModel.total.description,
                 target: playData.subTitle
             )
             
             self.naviLogManager.actionLog(.clickClipStoryButton, pageId: self.logPageId, actionBody: action, contentBody: content)
         } else {
             
-            let content = getPreviewLogContent ()
+            let content = getPreviewLogContent (playData:playData)
             self.naviLogManager.actionLog(.clickClipStoryButton, pageId: self.logPageId, contentBody: content)
         }
     }
@@ -344,8 +343,10 @@ struct PagePreviewList: PageView {
     private func sendLogEventOption (evt:PlayBlockModel.LogEvent){
         var category:String? = nil
         var actionType:NaviLog.Action = .none
+        var sendPlayData:PlayData? = nil
         switch evt {
-        case .like(let isLike) :
+        case .like(let playData, let isLike) :
+            sendPlayData = playData
             if let like = isLike {
                 category = like ? "like" : "dislike"
                 actionType = .clickLikeSelection
@@ -353,13 +354,14 @@ struct PagePreviewList: PageView {
                 actionType = .clickLikeSelectionCancel
             }
             
-        case .alram(let isAlram) :
+        case .alram(let playData, let isAlram) :
+            sendPlayData = playData
             category = isAlram ? "alram" : "un-alarm"
             actionType = .clickMovieOption
         default : break
         }
         
-        let content = getPreviewLogContent ()
+        let content = getPreviewLogContent (playData:sendPlayData)
         let action = category != nil
             ? MenuNaviActionBodyItem(category : category)
             : nil
@@ -368,13 +370,13 @@ struct PagePreviewList: PageView {
     
     
     
-    private func sendLogEventPlay (){
-        let content = getPreviewLogContent ()
+    private func sendLogEventPlay (playData:PlayData? = nil){
+        let content = getPreviewLogContent (playData:playData)
         self.naviLogManager.actionLog(.clickScheduledMoviePlay, pageId: self.logPageId, contentBody: content)
     }
     
-    private func getPreviewLogContent () -> MenuNaviContentsBodyItem? {
-        guard let playData = self.viewModel.naviLogPlayData  else {return nil}
+    private func getPreviewLogContent (playData:PlayData? = nil) -> MenuNaviContentsBodyItem? {
+        guard let playData = playData ?? self.viewModel.naviLogPlayData  else {return nil}
         let content = MenuNaviContentsBodyItem(
             type: "vod",
             title: playData.title,

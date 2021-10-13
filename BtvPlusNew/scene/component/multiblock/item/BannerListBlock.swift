@@ -15,6 +15,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var pageDragingModel:PageDragingModel = PageDragingModel()

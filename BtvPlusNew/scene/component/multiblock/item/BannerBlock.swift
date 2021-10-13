@@ -12,6 +12,7 @@ import Combine
 struct BannerBlock:BlockProtocol, PageComponent {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var pageObservable:PageObservable
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var data: BlockData
@@ -22,8 +23,15 @@ struct BannerBlock:BlockProtocol, PageComponent {
         ZStack() {
             if self.isUiActive {
                 if let banner = self.bannerData {
-                    BannerItem(data: banner)
-                        .modifier(MatchParent())
+                    BannerItem(data: banner){
+                        var actionBody = MenuNaviActionBodyItem()
+                        actionBody.menu_id = banner.menuId
+                        actionBody.menu_name = banner.menuNm
+                        actionBody.position = banner.logPosition
+                        actionBody.config = banner.logConfig
+                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                    }
+                    .modifier(MatchParent())
                 }
             }
         }

@@ -49,15 +49,14 @@ struct FocusableTextView: UIViewRepresentable {
         textView.autocorrectionType = .yes
         textView.textAlignment = self.textAlignment
         textView.sizeToFit()
-        
-        
+         
         textView.textContentType = .oneTimeCode
         textView.isSecureTextEntry = self.isSecureTextEntry
         textView.backgroundColor = UIColor.clear
         if limitedLine != -1 {
             textView.textContainer.maximumNumberOfLines = self.limitedLine
             textView.textContainer.lineBreakMode = .byTruncatingTail
-            //textView.isScrollEnabled = true
+            textView.isScrollEnabled = true
         }
         
         if let attrs = self.attrs {
@@ -106,9 +105,6 @@ struct FocusableTextView: UIViewRepresentable {
             self.parent = parent
         }
        
-        
-        
-        
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
             if self.parent.limitedLine == 1 && text == "\n" {
                 guard let  inputCopmpleted = self.parent.inputCopmpleted else { return true }

@@ -202,6 +202,7 @@ struct KidsPlayer: PageComponent{
                 }
             }
             .onReceive(self.viewModel.$currentQuality){ quality in
+                withAnimation{self.isPlayerComplete = false}
                 if self.isPreroll {
                     self.isPreroll = false
                     self.viewModel.isPrerollPlay = false

@@ -28,6 +28,8 @@ struct PageSearch: PageView {
     @State var isVoiceSearch:Bool = false
     @State var isInputSearch:Bool = false
     @State var marginBottom:CGFloat = 0
+    
+    let scrollPos = UUID().hashValue
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -38,7 +40,8 @@ struct PageSearch: PageView {
                 ZStack(){
                     VStack(spacing:0){
                         SearchTab(
-                            isFocus:self.isInputSearch,
+                            isFocus:self.$isInputSearch,
+                            scrollPos: scrollPos,
                             keyword: self.$keyword,
                             inputChanged: {text in
                                 if text == "" {
@@ -63,6 +66,9 @@ struct PageSearch: PageView {
                                 self.sendLog(action: .clickSearchBack) 
                                 if !self.emptyDatas.isEmpty {
                                     self.emptyDatas = []
+                                    if !self.keyword.isEmpty {
+                                        self.isInputSearch = true
+                                    }
                                     //self.keyword = ""
                                     return
                                 }
@@ -288,7 +294,6 @@ struct PageSearch: PageView {
     @State var emptyDatas:[PosterDataSet] = []
     @State var searchDatas:[BlockData] = []
     @State var total:Int = 0
-    
     
     
     func clearSearchData() {

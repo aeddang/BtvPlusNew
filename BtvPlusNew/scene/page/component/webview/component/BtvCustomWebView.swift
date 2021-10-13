@@ -49,14 +49,15 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             config.preferences.setValue(true, forKey: "developerExtrasEnabled")
         #endif
         let uiView = creatWebView(config: config, viewHeight: self.viewHeight)
+        uiView.setup()
         uiView.navigationDelegate = context.coordinator
         uiView.uiDelegate = context.coordinator
         uiView.allowsLinkPreview = false
         uiView.scrollView.bounces = false
         uiView.autoresizesSubviews = true
         uiView.scrollView.alwaysBounceVertical = false
-        
         uiView.contentMode = .scaleAspectFit
+        uiView.scrollView.contentInsetAdjustmentBehavior = .never
         uiView.keyboardDisplayRequiresUserAction = false
         uiView.isOpaque = false
         uiView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -74,7 +75,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 return
             }
         }
-        
         if let e = self.viewModel.request { update(uiView , evt:e) }
     }
     
@@ -281,15 +281,15 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             ComponentLog.e("didFail: " + error.localizedDescription , tag: self.tag )
         }
         
-       
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            webView.scrollView.bounces = false
+            webView.scrollView.alwaysBounceVertical = false
+            webView.keyboardDisplayRequiresUserAction = false
             
             webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
                 DispatchQueue.main.async {
                     self.parent.viewModel.screenHeight = height as! CGFloat
-                    if self.parent.useNativeScroll {
-                        webView.bounds.size.height = self.parent.viewModel.screenHeight
-                    }
+                    webView.bounds.size.height = self.parent.viewModel.screenHeight 
                     ComponentLog.d("document.documentElement.scrollHeight " + webView.bounds.size.height.description, tag: self.tag)
                 }
             })
@@ -305,13 +305,8 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             }
             //선택 제거
             let disabledSelect = "document.documentElement.style.webkitUserSelect='none';"
-            //복사 붙여넣기 같은 팝업 제거
             let disabledOptionBubble = "document.documentElement.style.webkitTouchCallout='none';"
-            //하이라이트 제거
             let disabledHightlight = "document.documentElement.style.webkitTapHighlightColor='rgba(0,0,0,0)';"
-            //let disabledScroll = "document.body.style.overflow = 'hidden';"
-            //let disabledScroll = "document.querySelectorAll('*[style]').forEach(el => el.style.overflow = 'scroll');"
-            // 자동 완성 제거
             let disableAutocompleteScript: String = """
                 var textFields = document.getElementsByTagName('textarea');
                 if (textFields) {
@@ -331,9 +326,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             [disabledSelect, disabledOptionBubble, disabledHightlight, disableAutocompleteScript].forEach { option in
                 self.parent.callJS(webView, jsStr: option)
             }
-            webView.scrollView.bounces = false
-            webView.scrollView.alwaysBounceVertical = false
-            webView.keyboardDisplayRequiresUserAction = false
+            
             WKWebsiteDataStore.default().httpCookieStore.getAllCookies { (cookies) in
                 for cookie in cookies {
                     if cookie.name.contains("BtvplusWebVer") {
@@ -342,7 +335,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 }
             }
         }
-        
         
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
             ComponentLog.e("error: " + error.localizedDescription , tag: self.tag )
@@ -369,7 +361,6 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
                 AppUtil.openURL(replacedUrl)
                 return
             }
-            
             if scheme == "http" || scheme == "https" {
                 let errorCode = (error as NSError).code
                 if errorCode == -1001 || errorCode == -1003 || errorCode == -1009 {
@@ -382,15 +373,12 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String,
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping () -> Void) {
-            
             self.parent.appSceneObserver.alert = .alert(nil,  message, nil ,completionHandler)
-           
         }
 
         func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String,
                      initiatedByFrame frame: WKFrameInfo,
                      completionHandler: @escaping (Bool) -> Void) {
-            
             self.parent.appSceneObserver.alert = .confirm(nil,  message, nil, completionHandler)
         }
 
@@ -418,5 +406,64 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             }
             decisionHandler(.allow)
         }
+    }
+}
+
+
+
+extension WKWebView {
+    func setup() {
+        self.isOpaque = false
+        self.subviews.forEach { subView in
+            for subScrollView in subView.subviews where subScrollView.className == "WKContentView" {
+                for gesture in subScrollView.gestureRecognizers ?? [UIGestureRecognizer]() {
+                    if gesture.className == "UILongPressGestureRecognizer" {
+                        gesture.isEnabled = false
+                    }
+                }
+            }
+        }
+    }
+}
+
+extension WKWebView: WKScriptMessageHandler {
+    public func enableConsoleLog() {
+        disableConsoleLog()
+        configuration.userContentController.add(self, name: "logging")
+        let userScript = WKUserScript(
+            source: """
+            var proxyConsolelog = window.console.log;
+            console.log=function(msg){
+                try {
+                    window.webkit.messageHandlers.logging.postMessage(msg);
+                } catch(e){
+                    proxyConsolelog('ERROR-->>'+e.message);
+                }
+            };
+            """,
+            injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(userScript)
+    }
+    public func disableConsoleLog() {
+        configuration.userContentController.removeScriptMessageHandler(forName: "logging")
+        configuration.userContentController.removeAllUserScripts()
+    }
+    public func userContentController(_ userContentController: WKUserContentController,
+                                      didReceive message: WKScriptMessage) {
+        if message.name == "logging" {
+            //Tool.debugLog("[CONSOLE]\(message.body)")
+            //Crashlytics.crashlytics().log("[CONSOLE]\(message.body)")
+        }
+    }
+}
+
+
+extension NSObject {
+    class var className: String {
+        return String(describing: self)
+    }
+
+    var className: String {
+        return type(of: self).className
     }
 }

@@ -105,7 +105,6 @@ struct MultiBlock:PageComponent {
         return newHeader
     }
     var body :some View {
-       
         InfinityScrollView(
             viewModel: self.infinityScrollModel,
             axes: .vertical,
@@ -114,11 +113,13 @@ struct MultiBlock:PageComponent {
             header : self.header,
             headerSize : self.headerSize,
             marginTop : self.marginTop,
-            marginBottom : self.marginBottom,
+            marginBottom : 0,
             marginHorizontal: self.marginHorizontal,
             spacing: 0,
             isRecycle : self.isRecycle,
-            useTracking:self.useBodyTracking){
+            useTracking:self.useBodyTracking,
+            onTopButtonMarginBottom:self.marginBottom
+        ){
             
             if let topDatas = self.topDatas ,!topDatas.isEmpty {
                 
@@ -138,7 +139,7 @@ struct MultiBlock:PageComponent {
             }
            
             if !self.datas.isEmpty {
-                if #available(iOS 15.0, *) {
+                if #available(iOS 14.0, *) {
                     if let data = self.tipBlock {
                         TipBlock(data:data)
                             .modifier(MatchHorizontal(height:  Dimen.tab.light))
@@ -182,14 +183,12 @@ struct MultiBlock:PageComponent {
                 }
                 if self.useFooter {
                     Footer(){
-                        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
-                            self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx, .bottom)
-                        }
+                        self.infinityScrollModel.uiEvent = .scrollMove(Self.footerIdx, .bottom)
                     }
                     .modifier(ListRowInset(spacing: 0))
-                    Spacer().modifier(MatchHorizontal(height:Dimen.margin.thin))
-                        .id(Self.footerIdx)
                 }
+                Spacer().modifier(MatchHorizontal(height:self.marginBottom))
+                    .id(Self.footerIdx)
                 
             }
             
@@ -326,7 +325,7 @@ struct MultiBlockCell:PageComponent {
                 useTracking:self.useTracking
             )
             .frame(height:data.listHeight)
-            
+           
         case .kidsTicket :
             KidsHomeBlock(
                 pageObservable:self.pageObservable,
@@ -335,6 +334,7 @@ struct MultiBlockCell:PageComponent {
                 useTracking:self.useTracking
             )
             .frame(height:data.listHeight)
+            
         }
     }//body
 }

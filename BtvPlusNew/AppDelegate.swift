@@ -49,32 +49,7 @@ class AppObserver: ObservableObject, PageProtocol {
             self.page = WhereverYouCanGo.parseIwillGo(json: pageJson)
         }
     }
-    /*
-    @discardableResult
-    func addNotice(_ userInfo: [AnyHashable: Any])->AlramData?{
-        var title:String = ""
-        var body:String = ""
-        //var needSave:Bool = true
-        if let aps = userInfo["aps"] as? [String: Any] {
-            if let mutableContent = aps["mutable-content"] as? String {
-                if mutableContent == "1" { return nil}
-            } else if let mutableContent = aps["mutable-content"] as? Int {
-                if mutableContent == 1 { return nil}
-            }
-            if let alert = aps["alert"] as? [String: Any] {
-                if let value = alert["title"] as? String { title = value }
-                if let value = alert["body"] as? String { body = value }
-            } else {
-                if let value = aps["alert"] as? String { body = value }
-            }
-        }
-        let alram = AlramData().setData(title: title, text: body, userData: userInfo as? [String: Any])
-        NotificationCoreData().addNotice(userInfo)
-        
-        return alram
-        
-    }
-    */
+    
     @discardableResult
     func handleUniversalLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }

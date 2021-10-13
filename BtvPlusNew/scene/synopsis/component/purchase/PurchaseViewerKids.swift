@@ -62,10 +62,7 @@ struct PurchaseViewerKids: PageComponent{
                     isSelected: true,
                     isFixSize: false
                 ){_ in
-                    if self.vsManager.isGranted {
-                        self.vsManager.accountPairingAlert()
-                        return
-                    }
+                    
                     self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                     DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                         self.pagePresenter.openPopup(

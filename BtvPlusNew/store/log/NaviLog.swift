@@ -111,7 +111,7 @@ struct NaviLog {
         
         case .webview: return nil
         case .person: return nil
-        case .search: return "/search/input"
+        case .search: return "/search"
         case .schedule: return "/epg"
         case .adultCertification: return "/adult_certification"
         case .userCertification: return nil
@@ -288,6 +288,7 @@ struct NaviLog {
         case clickVodConfigDetail = "click.vod.config_detail"       // 7. 재생 컨텐츠의 세부설정
         // 10 편성표
         case clickGnbExit = "click.gnb.exit"                        // 2. 편성표(/epg) 나가기
+        case clickGnbQuickMenu = "click.gnb.quick_menu"
         // 11 스마트 검색
         case clickContentsVoice = "click.contents.voice"            // 2. 음성검색 선택
         case clickSearchBack = "click.search.back"                  // 4. 검색입력 페이지 뒤로가기 선택
@@ -321,6 +322,7 @@ struct NaviLog {
        
         // 19.최근시청_찜_구매목록
         case clickRecentContentsList = "click.recent_contents.list"     // 1. 최근시청 목록 내 컨텐츠 선택
+        case clickRecentContentsTab = "click.recent_contents.tab" 
         case clickPickContentsList = "click.pick_contents.list"         // 2. 찜 목록 내 컨텐츠 선택
         case clickPurchaseListTabMenu = "click.purchase_list.tab_menu"  // 1. 탭 메뉴 선택
         case clickPurchaseListList = "click.purchase_list.list"         // 2. 탭 메뉴 선택

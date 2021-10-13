@@ -349,8 +349,15 @@ struct PageSynopsis: PageView {
                     switch type {
                     case .purchaseCompleted(let pid) :
                         self.purchasedPid = pid
-                        self.isAfterPurchase = true
-                        self.resetPage()
+                        if self.synopsisData?.progressTime != nil {
+                            
+                        } else {
+                            self.isAfterPurchase = true
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                            self.resetPage()
+                        }
                     default : break
                     }
                 default : break
@@ -514,6 +521,7 @@ struct PageSynopsis: PageView {
     @State var purchasedPid:String? = nil
     @State var isAfterPurchase:Bool = false
     @State var playStartTime:Int? = nil
+    @State var isFullScreenRedirect:Bool = false
     
     /*Layer*/
     @State var isBottom:Bool = false
@@ -806,8 +814,10 @@ struct PageSynopsis: PageView {
             self.isPlayAble = self.purchaseViewerData?.isPlayAble ?? true
             self.isPlayViewActive = true
         }
-        self.playerModel.start()
-        self.checkCornerPlay()
+        DispatchQueue.main.async {
+            self.checkCornerPlay()
+            self.playerModel.start()
+        }
         //guard let synopsisModel = self.synopsisModel else { return }
         if self.relationContentsModel.isReady {
             PageLog.d("already synopsisRelationData", tag: self.tag)
@@ -857,6 +867,12 @@ struct PageSynopsis: PageView {
             self.isUIView = true
         }
         self.playStartLog()
+        if self.isFullScreenRedirect{
+            self.isFullScreenRedirect = false
+            if self.isPlayAble {
+                self.onFullScreenViewMode()
+            }
+        }
         if self.isAfterPurchase {
             self.isAfterPurchase = false
             if self.hasAuthority == true {

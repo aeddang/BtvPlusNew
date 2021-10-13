@@ -300,5 +300,9 @@ extension String {
         public static var earphoneClose = "alertEarphoneClose".loaalized()
         public static var earphoneCloseText = "alertEarphoneCloseText".loaalized()
         public static var moveBtvPairing = "alertMoveBtvPairing".loaalized()
+        
+        public static var appleTvDisable = "alertAppleTvDisable".loaalized()
+        public static var appleTvDisableText = "alertAppleTvDisableText".loaalized()
+        public static var appleTvDisableSub = "alertAppleTvDisableSub".loaalized()
     }
 }

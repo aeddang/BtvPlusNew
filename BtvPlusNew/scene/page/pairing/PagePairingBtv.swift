@@ -23,6 +23,7 @@ struct PagePairingBtv: PageView {
     @State var isFocus = false
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var errorMsg:String? = nil
+    
     struct TextBlock:PageComponent {
         var body :some View {
             VStack(alignment:.leading , spacing:0) {
@@ -50,13 +51,14 @@ struct PagePairingBtv: PageView {
     struct InputBlock:PageComponent {
         @Binding var input:String
         @Binding var isFocus:Bool
-        
+        @Binding var msg:String?
         var body :some View {
             VStack(alignment:.center , spacing:Dimen.margin.regularExtra) {
                 
                 HStack(alignment:.center, spacing:Dimen.margin.light){
                     Text(String.app.certificationNumber)
                         .modifier(BoldTextStyle(size: Font.size.light))
+                        //.padding(.top, (Font.size.black - Font.size.light)/2)
                     VStack(alignment: .center, spacing:Dimen.margin.tiny){
                         FocusableTextField(
                             text:self.$input,
@@ -69,13 +71,22 @@ struct PagePairingBtv: PageView {
                                 size: Font.size.black )
                                 .textModifier,
                             isfocus: self.isFocus,
-                           
+                            inputChanged: { _ in
+                                if self.msg != nil {
+                                    msg = nil
+                                }
+                            },
                             inputCopmpleted: { text in
                                 self.isFocus = false
                             })
                             .frame(height:Font.size.black)
                         Spacer().modifier(MatchHorizontal(height: 1))
                             .background(Color.app.blackLight)
+                        /*
+                        if let msg = self.msg {
+                            Text(msg)
+                                .modifier(BoldTextStyle(size: Font.size.microUltra, color:Color.brand.primary))
+                        }*/
                     }
                     .frame(width:SystemEnvironment.isTablet ? 250 : 173)
                 }
@@ -116,7 +127,7 @@ struct PagePairingBtv: PageView {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(height:SystemEnvironment.isTablet ? 336 : 200)
                                 
-                                InputBlock(input: self.$input, isFocus: self.$isFocus)
+                                InputBlock(input: self.$input, isFocus: self.$isFocus, msg:self.$errorMsg)
                                     .padding(.top, Dimen.margin.regularExtra)
                                 
                                 if let errorMsg = self.errorMsg {
@@ -142,7 +153,7 @@ struct PagePairingBtv: PageView {
                                 } else {
                                     Spacer().modifier(MatchHorizontal(height: 0))
                                 }
-                                InputBlock(input: self.$input, isFocus: self.$isFocus)
+                                InputBlock(input: self.$input, isFocus: self.$isFocus, msg:self.$errorMsg)
                                     .padding(.vertical, Dimen.margin.medium)
                                 if let errorMsg = self.errorMsg {
                                     Text(errorMsg)
@@ -214,7 +225,9 @@ struct PagePairingBtv: PageView {
                 case .connectError(let header, _) :
                     if header?.result == NpsNetwork.resultCode.pairingLimited.code {
                         self.appSceneObserver.alert = .limitedDevice(nil)
-                    } else {
+                    } else if header?.result == NpsNetwork.resultCode.authcodeWrong.code {
+                        self.errorMsg = NpsNetwork.getConnectErrorMeassage(data: header)
+                    }else {
                         self.appSceneObserver.alert = .pairingError(header)
                     }
                 case .connectErrorReason(let info) :

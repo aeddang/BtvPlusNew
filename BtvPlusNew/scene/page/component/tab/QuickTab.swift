@@ -25,7 +25,7 @@ struct QuickTab: PageComponent{
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var dataProvider:DataProvider
-    
+    @EnvironmentObject var naviLogManager:NaviLogManager
     let menus:[QuickData] = SystemEnvironment.isTablet
         ? [
             QuickData(pageId : .previewList, text: String.quickMenu.menu1, icon: Asset.quickMenu.icon1),
@@ -78,6 +78,7 @@ struct QuickTab: PageComponent{
         }
     }
     func movePreview(){
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"공개예정"))
         if let block = self.dataProvider.bands.getPreviewBlockData()  {
             let data = CateData().setData(data: block)
             self.pagePresenter.openPopup(
@@ -94,6 +95,7 @@ struct QuickTab: PageComponent{
     }
     
     func moveEvent(){
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"이벤트"))
         if let block = self.dataProvider.bands.getEventBlockData()  {
             let data = CateData().setData(data: block)
             self.pagePresenter.openPopup(
@@ -109,6 +111,7 @@ struct QuickTab: PageComponent{
     }
     
     func moveTip(){
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"이용꿀팁"))
         if let block = self.dataProvider.bands.getTipBlockData()  {
             let data = CateData().setData(data: block)
             self.pagePresenter.openPopup(
@@ -123,10 +126,16 @@ struct QuickTab: PageComponent{
     }
     
     func moveCashCharge(){
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"충전소"))
         self.pagePresenter.openPopup(
             PageProvider
                 .getPageObject(.cashCharge)
         )
+    }
+    
+    func moveJoinCenter(){
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"가입센터"))
+        AppUtil.openURL("https://m.bdirectshop.com/Btvapp/Btvapp.do")
     }
 }
 

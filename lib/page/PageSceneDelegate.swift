@@ -520,7 +520,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
             self.updateUserInterfaceStyle(style: style)
         }
         
-       
         self.syncOrientation(willChangePage)
     }
     

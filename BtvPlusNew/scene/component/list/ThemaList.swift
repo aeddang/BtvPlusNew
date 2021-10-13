@@ -21,11 +21,16 @@ class ThemaData:InfinityData{
     private(set) var usePrice:Bool = true
     private(set) var blocks:[BlockItem]? = nil
     private(set) var cateType:CateBlock.ListType = .poster
+    private(set) var contentLog:MenuNaviContentsBodyItem? = nil
+    private(set) var menuNm:String? = nil
+    var logPosition:String? = nil
     init(usePrice:Bool = true) {
         self.usePrice = usePrice
         super.init()
     }
+    
     func setData(data:ContentItem, cardType:BlockData.CardType = .squareThema, idx:Int = -1) -> ThemaData {
+    
         setCardType(cardType)
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
@@ -34,6 +39,26 @@ class ThemaData:InfinityData{
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: type.size, isAdult:isAdult, convType:.alpha)
 
         index = idx
+        return self.setNaviLog(data: data)
+    }
+    
+    func setNaviLog(data:ContentItem) -> ThemaData {
+        self.contentLog = MenuNaviContentsBodyItem(
+            type: "thema",
+            title: self.title,
+            channel_name: nil,
+            genre_text: nil,
+            genre_code: data.meta_typ_cd,
+            paid: nil,
+            purchase: nil,
+            episode_id: data.epsd_id,
+            episode_resolution_id: nil,
+            product_id: data.prd_prc_id,
+            purchase_type: nil,
+            monthly_pay: nil,
+            list_price: data.prd_prc?.description ?? nil,
+            payment_price: nil
+        )
         return self
     }
     
@@ -49,8 +74,11 @@ class ThemaData:InfinityData{
         index = idx
         blocks = data.blocks
         menuId = data.menu_id
+        menuNm = data.menu_nm
         return self
     }
+    
+    
     
     private func setCardType(_ cardType:BlockData.CardType){
         switch cardType {
@@ -116,6 +144,7 @@ enum ThemaType {
 }
 
 struct ThemaList: PageComponent{
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var pagePresenter:PagePresenter
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
@@ -141,6 +170,14 @@ struct ThemaList: PageComponent{
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
                 .onTapGesture {
+                    var actionBody = MenuNaviActionBodyItem()
+                    actionBody.menu_id = data.menuId
+                    actionBody.menu_name = data.menuNm
+                    actionBody.position = data.logPosition
+                    
+                    self.naviLogManager.actionLog(.clickBannerBanner,
+                                                  actionBody: actionBody, contentBody:data.contentLog)
+                    
                     if let action = self.action {
                         action(data)
                     }else{

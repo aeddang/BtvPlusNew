@@ -73,13 +73,23 @@ struct PlayerMoreBoxKids: PageView{
                         self.viewModel.event = .fixUiStatus(true)
                     } else {
                         self.viewModel.event = .fixUiStatus(false)
-                        self.viewModel.playerUiStatus = .hidden
+                        //self.viewModel.playerUiStatus = .hidden
                     }
                 default : break
                 }
             }
         }
-        
+        .onReceive(self.viewModel.$playerUiStatus) { st in
+            switch st {
+            case .hidden :
+                if self.isShowing {
+                    self.viewModel.btvUiEvent = .more
+                }
+                
+            default : break
+            }
+            
+        }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
         }

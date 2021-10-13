@@ -36,7 +36,9 @@ struct InputNumberGroupBox: PageComponent {
                 },
                 next:{ char in
                     self.input2 = char
-                    self.focusIdx = 1
+                    DispatchQueue.main.async {
+                        self.focusIdx = 1
+                    }
                 })
             .onTapGesture {
                 self.focusIdx = 0
@@ -47,11 +49,15 @@ struct InputNumberGroupBox: PageComponent {
                 input: self.$input2,
                 focusIdx: self.focusIdx,
                 prev: {
-                    self.focusIdx = 0
+                    DispatchQueue.main.async {
+                        self.focusIdx = 0
+                    }
                 },
                 next:{ char in
                     self.input3 = char
-                    self.focusIdx = 2
+                    DispatchQueue.main.async {
+                        self.focusIdx = 2
+                    }
                 })
             .onTapGesture {
                 self.focusIdx = 1
@@ -62,11 +68,15 @@ struct InputNumberGroupBox: PageComponent {
                 input: self.$input3,
                 focusIdx: self.focusIdx,
                 prev: {
-                    self.focusIdx = 1
+                    DispatchQueue.main.async {
+                        self.focusIdx = 1
+                    }
                 },
                 next:{ char in
                     self.input4 = char
-                    self.focusIdx = 3
+                    DispatchQueue.main.async {
+                        self.focusIdx = 3
+                    }
                 })
             .onTapGesture {
                 self.focusIdx = 2
@@ -77,7 +87,9 @@ struct InputNumberGroupBox: PageComponent {
                 input: self.$input4,
                 focusIdx: self.focusIdx,
                 prev: {
-                    self.focusIdx = 2
+                    DispatchQueue.main.async {
+                        self.focusIdx = 2
+                    }
                 },
                 action: {
                     self.focusIdx = self.findFocus()
@@ -134,6 +146,7 @@ struct InputNumberGroupItem: PageView {
                 textAlignment: .left,
                 maxLength:self.maxLength,
                 isfocus: self.focusIdx == self.idx,
+                isDynamicFocus: true,
                 isSecureTextEntry:self.isSecure,
                 inputChangedNext :{ char  in
                     self.next?(char)

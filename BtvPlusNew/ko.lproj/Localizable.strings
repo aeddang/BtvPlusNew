@@ -554,6 +554,11 @@
 "alertEarphoneClose" = "B tv 이어폰 모드 종료";
 "alertEarphoneCloseText" = "B tv 이어폰 모드를 종료하고\n모바일 B tv 콘텐츠를 시청하시겠습니까?";
 "alertMoveBtvPairing" = "모바일 Btv 연결하기 화면으로 이동합니다.";
+
+"alertAppleTvDisable" = "이용 제한 안내";
+"alertAppleTvDisableText" = "Apple TV 연결 상태에서는\n이용하실 수 없는 기능입니다.";
+"alertAppleTvDisableSub" = "Apple TV 서비스 제공 정책에 따라\n일부 기능 이용이 제한됩니다.";
+
 /*
  PageTitle
 */
@@ -594,6 +599,7 @@
 "titleKids" = "ZEM 키즈";
 "titleMobileBtv" = "모바일 B tv";
 "titleBtv" = "B tv";
+"titlePerson" = "인물정보";
 /*
  PagePairing
 */
@@ -1352,7 +1358,7 @@
 /*
  Vs
  */
-"vsAccount" = "TV프로바이더 안내";
+"vsAccount" = "Apple TV 연결 안내";
 "vsAccountExpirationDate" = "인증기간이 만료되었습니다.\nTV프로바이더 로그인후 다시 실행해주세요.";
 "vsAccountAutoPairing" = "TV프로바이더와\n동기화 실행중 입니다";
 "vsAccountUnPairing" = "TV프로바이더와 동기화를 위해\n페어링을 해재합니다";
@@ -1363,7 +1369,10 @@
 "vsAccountSynchronizationFailDifferentStb" = "TV프로바이더 로그인정보와\n현제 페어링 정보가 다릅니다.\nTV프로바이더에서 다시 로그인 하거나\nTV프로바이더와 동기화해주세요.";
 "vsAccountSynchronizationFailExistPairing" = "TV프로바이더 사용함으로 설정되어있습니다.\nTV프로바이더를 사용안함으로 설정해주세요";
 
-"vsAccountForbiddenUnpairing" = "TV프로바이더 에서\n로그아웃 하셔야 합니다.";
+
+"vsUnpairing" = "Apple TV 연결 해제 안내";
+"vsAccountForbiddenUnpairing" = "TV Provider를 통해 연결하신 경우\n[기기 설정 > TV > TV Provider]\n메뉴에서 계정 로그아웃하여\n연결 해제 가능합니다.\n해당 메뉴로 이동하시겠습니까?";
+
 "vsAccountProviderPairing" = "TV프로바이더 에서\n로그인 하셔야 합니다.";
 "vsAccountProviderPairingTip" = "TV프로바이더를 사용으로 설정해둔경우\nTV프로바이더에서 로그인하셔야합니다";
 "vsAccountProviderPairingInfo" = "TV프로바이더를 사용하시려면\n현재 페어링해재 후 TV프로바이더로\n로그인하셔야합니다";

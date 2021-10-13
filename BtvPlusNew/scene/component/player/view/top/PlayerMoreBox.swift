@@ -16,6 +16,7 @@ extension PlayerMoreBox{
 
 struct PlayerMoreBox: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     
     @State var isFullScreen:Bool = false
@@ -42,7 +43,7 @@ struct PlayerMoreBox: PageView{
                     .modifier(
                         MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
             }
-            if self.viewModel.synopsisPlayerData?.type != .clip() {
+            if self.viewModel.synopsisPlayerData?.type != .clip() && self.pairing.pairingStbType != .apple {
                 Button(action: {
                     self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "view_btv")
                     self.viewModel.btvUiEvent = .watchBtv
@@ -99,13 +100,23 @@ struct PlayerMoreBox: PageView{
                         self.viewModel.event = .fixUiStatus(true) 
                     } else {
                         self.viewModel.event = .fixUiStatus(false)
-                        self.viewModel.playerUiStatus = .hidden
+                        //self.viewModel.playerUiStatus = .hidden
                     }
                 default : break
                 }
             }
         }
-        
+        .onReceive(self.viewModel.$playerUiStatus) { st in
+            switch st {
+            case .hidden :
+                if self.isShowing {
+                    self.viewModel.btvUiEvent = .more
+                }
+                
+            default : break
+            }
+            
+        }
         .onReceive(self.pagePresenter.$isFullScreen){fullScreen in
             self.isFullScreen = fullScreen
         }

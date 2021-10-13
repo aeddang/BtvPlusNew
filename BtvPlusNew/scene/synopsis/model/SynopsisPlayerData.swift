@@ -11,7 +11,7 @@ import Foundation
 enum SynopsisPlayType:Equatable {
     case unknown, preview(Int, Bool? = nil) , preplay(Bool? = nil),
          clip(Bool? = nil , SynopsisData? = nil), 
-         vod(Double = 0, Bool? = nil), vodNext(Double = 0, Bool? = nil), vodChange(Double = 0, Bool? = nil)
+         vod(Double = 0, Bool? = nil), vodNext(Double = 0, Bool? = nil, isNextAuto:Bool = true), vodChange(Double = 0, Bool? = nil)
     
     var name: String? {
         switch self {
@@ -67,7 +67,8 @@ class SynopsisPlayerData {
     private(set) var nextSeason:SeasonData? = nil
     private(set) var openingTime:Double? = nil
     private(set) var endingTime:Double? = nil
-    func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil, isPairing:Bool? = nil) -> SynopsisPlayerData {
+    func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil,
+                 isPairing:Bool? = nil) -> SynopsisPlayerData {
         
         self.type = type
         switch type {

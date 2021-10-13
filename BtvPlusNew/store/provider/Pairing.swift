@@ -27,7 +27,7 @@ enum PairingRequest:Equatable{
     }
 }
 
-enum PairingDeviceType{
+enum PairingDeviceType:String{
     case btv, apple
 }
 
@@ -146,15 +146,18 @@ class Pairing:ObservableObject, PageProtocol {
         self.request = request
         
     }
+    
     func reset(){
         self.status = .initate
     }
+    
     func ready(){
         let status = self.status
         if status == .disConnect {
             self.event = .ready
         }
     }
+    
     func connected(stbData:StbData?){
         self.stbId = NpsNetwork.hostDeviceId 
         self.status = self.stbId != "" ? .connect : .disConnect
@@ -163,6 +166,8 @@ class Pairing:ObservableObject, PageProtocol {
     
     func disconnected() {
         self.stbId = ""
+        self.pairingDeviceType = .btv
+        self.pairingStbType = .btv
         self.isPairingAgreement = false
         self.isPairingUser = false
         self.hostDevice = nil
@@ -199,7 +204,9 @@ class Pairing:ObservableObject, PageProtocol {
     }
     
     func checkCompleted(isSuccess:Bool) {
-        self.event = .pairingCheckCompleted(isSuccess)
+        DispatchQueue.main.async {
+            self.event = .pairingCheckCompleted(isSuccess)
+        }
     }
     
     func foundDevice(mdnsData:[MdnsDevice]){

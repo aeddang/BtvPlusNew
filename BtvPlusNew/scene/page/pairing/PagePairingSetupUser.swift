@@ -279,9 +279,7 @@ struct PagePairingSetupUser: PageView {
             self.editType = on
                 ? .nickName
                 : self.editType == .nickName ? .none : self.editType
-            /*
-            self.safeAreaBottom = on
-                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom*/
+        
         }
     }
 

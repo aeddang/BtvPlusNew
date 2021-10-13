@@ -33,7 +33,6 @@ struct SynopsisBody: PageComponent{
     var episodeViewerData:EpisodeViewerData? = nil
     var purchaseViewerData:PurchaseViewerData? = nil
     var summaryViewerData:SummaryViewerData? = nil
-    //var srisId:String? = nil
     var epsdId:String?
     var hasAuthority:Bool? = nil
   
@@ -63,7 +62,7 @@ struct SynopsisBody: PageComponent{
             useTracking:true
             ){
             
-            VStack(alignment: .leading, spacing: 0){
+            //VStack(alignment: .leading, spacing: 0){
                 if let episodeViewerData = self.episodeViewerData {
                     Text(episodeViewerData.episodeTitle)
                         .modifier(BoldTextStyle( size: Font.size.boldExtra ))
@@ -94,21 +93,20 @@ struct SynopsisBody: PageComponent{
                     } else {
                         EpisodeViewer(data:episodeViewerData)
                             .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                        if !self.isPosson {
-                            HStack(spacing:0){
-                                FunctionViewer(
-                                    componentViewModel: self.componentViewModel,
-                                    synopsisData :self.synopsisData,
-                                    synopsisModel:self.synopsisModel,
-                                    purchaseViewerData: self.purchaseViewerData,
-                                    funtionLayout:self.funtionLayout,
-                                    isBookmark: self.$isBookmark,
-                                    isLike: self.$isLike
-                                )
-                                Spacer()
-                            }
-                            .modifier(ListRowInset(spacing: SynopsisBody.spacing))
+                        HStack(spacing:0){
+                            FunctionViewer(
+                                componentViewModel: self.componentViewModel,
+                                synopsisData :self.synopsisData,
+                                synopsisModel:self.synopsisModel,
+                                purchaseViewerData: self.purchaseViewerData,
+                                funtionLayout:self.funtionLayout,
+                                isBookmark: self.$isBookmark,
+                                isLike: self.$isLike
+                            )
+                            Spacer()
                         }
+                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
+                        
                     }
                 }
                 
@@ -124,10 +122,7 @@ struct SynopsisBody: PageComponent{
                     FillButton(
                         text: String.button.connectBtv
                     ){_ in
-                        if self.vsManager.isGranted {
-                            self.vsManager.accountPairingAlert()
-                            return
-                        }
+                        
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.pairing)
                                 .addParam(key: PageParam.subType, value: "mob-uixp-synop")
@@ -147,7 +142,7 @@ struct SynopsisBody: PageComponent{
                     )
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                 }
-            }
+           // }
             if let hasRelationVod = self.hasRelationVod {
                 RelationVodList(
                     componentViewModel: self.componentViewModel,
@@ -167,117 +162,4 @@ struct SynopsisBody: PageComponent{
 }
 
 
-
-/*
-SynopsisBodyHeader(
-    componentViewModel: self.componentViewModel,
-    relationContentsModel: self.relationContentsModel,
-    peopleScrollModel: self.peopleScrollModel,
-    pageDragingModel: self.pageDragingModel,
-    isBookmark: self.$isBookmark,
-    isLike: self.$isLike,
-    funtionLayout: self.funtionLayout,
-    usePullTracking: self.usePullTracking
-)*/
-
-struct SynopsisBodyHeader: PageComponent{
-    @EnvironmentObject var pagePresenter:PagePresenter
-    @EnvironmentObject var vsManager:VSManager
-    
-    var componentViewModel:SynopsisViewModel
-    var relationContentsModel:RelationContentsModel
-    var peopleScrollModel: InfinityScrollModel
-    var pageDragingModel:PageDragingModel
-    @Binding var isBookmark:Bool?
-    @Binding var isLike:LikeStatus?
-    var isRecommand:Bool?
-    var isPosson:Bool
-    var synopsisData:SynopsisData?
-    var synopsisModel:SynopsisModel?
-    var isPairing:Bool? = nil
-    var episodeViewerData:EpisodeViewerData?
-    var purchaseViewerData:PurchaseViewerData?
-    var summaryViewerData:SummaryViewerData?
-    var epsdId:String?
-    var hasAuthority:Bool?
-    var hasRelationVod:Bool?
-    var funtionLayout:Axis
-    var usePullTracking:Bool
-    
-    var body: some View {
-        //VStack(alignment: .leading, spacing: 0){
-            if let episodeViewerData = self.episodeViewerData {
-                Text(episodeViewerData.episodeTitle)
-                    .modifier(BoldTextStyle( size: Font.size.boldExtra ))
-                    .lineLimit(2)
-                    .modifier(ContentHorizontalEdges())
-                    .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
-                if self.funtionLayout == .horizontal {
-                    HStack(alignment:.top , spacing:0){
-                        EpisodeViewer(data:episodeViewerData)
-                        //Spacer()
-                        FunctionViewer(
-                            componentViewModel: self.componentViewModel,
-                            synopsisData :self.synopsisData,
-                            synopsisModel:self.synopsisModel,
-                            purchaseViewerData: self.purchaseViewerData,
-                            isBookmark: self.$isBookmark,
-                            isLike: self.$isLike
-                        )
-                    }
-                    .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                } else {
-                    EpisodeViewer(data:episodeViewerData)
-                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                    HStack(spacing:0){
-                        FunctionViewer(
-                            componentViewModel: self.componentViewModel,
-                            synopsisData :self.synopsisData,
-                            synopsisModel:self.synopsisModel,
-                            purchaseViewerData: self.purchaseViewerData,
-                            isBookmark: self.$isBookmark,
-                            isLike: self.$isLike
-                        )
-                        Spacer()
-                    }
-                    .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                }
-            }
-            
-            if self.hasAuthority != nil , let purchaseViewerData = self.purchaseViewerData {
-                PurchaseViewer(
-                    componentViewModel: self.componentViewModel,
-                    data: purchaseViewerData, isPosson:self.isPosson)
-                    .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-            }
-            if self.hasAuthority == false && self.isPairing == false && !self.isPosson && self.synopsisModel?.isRecommandAble == true {
-                FillButton(
-                    text: String.button.connectBtv
-                ){_ in
-                    if self.vsManager.isGranted {
-                        self.vsManager.accountPairingAlert()
-                        return
-                    }
-                    self.pagePresenter.openPopup(
-                        PageProvider.getPageObject(.pairing)
-                            .addParam(key: PageParam.subType, value: "mob-uixp-synop")
-                    )
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: SynopsisBody.spacing))
-            }
-            
-            if self.summaryViewerData != nil {
-                SummaryViewer(
-                    componentViewModel:self.componentViewModel,
-                    peopleScrollModel:self.peopleScrollModel,
-                    data: self.summaryViewerData!,
-                    useTracking: self.usePullTracking,
-                    isSimple: self.hasRelationVod == nil ? true : false
-                )
-                .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-            }
-        //}
-    }//body
-}
 

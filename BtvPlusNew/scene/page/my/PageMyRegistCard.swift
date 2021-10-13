@@ -6,7 +6,7 @@
 //
 import Foundation
 import SwiftUI
-
+import Combine
 extension PageMyRegistCard{
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.mediumExtra : Dimen.margin.medium
     static let titleSpacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin
@@ -41,7 +41,8 @@ struct PageMyRegistCard: PageView {
     @State var isChange:Bool = false
     @State var safeAreaBottom:CGFloat = 0
     @State var useEdit:[EditType] = []
-        
+    
+    let posBottom = UUID().hashValue
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -61,9 +62,10 @@ struct PageMyRegistCard: PageView {
                             
                         InfinityScrollView(
                             viewModel: self.infinityScrollModel,
-                            marginBottom:self.safeAreaBottom,
+                            marginBottom: 0,
                             isRecycle:false,
-                            useTracking: true
+                            useTracking: true,
+                            useTopButton: false
                             ){
                             VStack(alignment:.leading ,
                                    spacing:Self.spacing) {
@@ -75,20 +77,18 @@ struct PageMyRegistCard: PageView {
                                         focusIdx: self.$cardNoFocus,
                                         completed : {
                                             
-                                            withAnimation{
-                                                if self.useEdit.firstIndex(of: .pw) != nil {
-                                                    self.editType = .pw
-                                                } else {
-                                                    self.editType = .birth
-                                                }
-                                            }
+                                        if self.useEdit.firstIndex(of: .pw) != nil {
+                                            self.editType = .pw
+                                        } else {
+                                            self.editType = .birth
                                         }
+                                        self.infinityScrollModel.uiEvent = .scrollMove(self.posBottom)
+                                    }
                                     ){ no in
                                         self.cardNo = no
                                         withAnimation{
                                             self.editType = .card
                                         }
-                                        
                                     }
                                 }
                                 if self.useEdit.firstIndex(of: .pw) != nil {
@@ -111,11 +111,15 @@ struct PageMyRegistCard: PageView {
                                             prev: {
                                                 self.cardNoFocus = 3
                                             })
+                                            
                                         .onTapGesture {
+                                            if self.editType == .pw {return}
                                             self.cardNoFocus = -1
                                             withAnimation{
                                                 self.editType = .pw
                                             }
+                                            self.delayFocusBottom()
+                                            
                                         }
                                         .frame(height:Dimen.tab.regular)
                                         .padding(.top, Self.titleSpacing)
@@ -190,16 +194,22 @@ struct PageMyRegistCard: PageView {
                                             })
                                             .frame(height:Dimen.tab.regular)
                                         .onTapGesture {
+                                            if self.editType == .birth {return}
                                             self.cardNoFocus = -1
                                             withAnimation{
                                                 self.editType = .birth
                                             }
+                                            self.delayFocusBottom()
+                                            
                                         }
                                     }
                                 }
+                                Spacer().modifier(MatchHorizontal(height: self.safeAreaBottom + Dimen.button.medium))
+                                    .id(self.posBottom)
                             }
                             .padding(.horizontal, SystemEnvironment.isTablet ? Dimen.margin.heavy : Dimen.margin.regular)
                         }//scroll
+                        
                         VStack(spacing:0){
                             Spacer()
                             FillButton(
@@ -214,7 +224,12 @@ struct PageMyRegistCard: PageView {
                     }
                     .modifier(MatchParent())
                     .background(Color.brand.bg)
-                    
+                    .onTapGesture {
+                        AppUtil.hideKeyboard()
+                        self.cancelFocusBottom()
+                        self.cardNoFocus = -1
+                        self.editType = .none
+                    }
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -222,8 +237,8 @@ struct PageMyRegistCard: PageView {
                 .onReceive(self.infinityScrollModel.$event){evt in
                     guard let evt = evt else {return}
                     switch evt {
-                    case .down, .up :
-                        if self.keyboardObserver.isOn { AppUtil.hideKeyboard() }
+                    case .down, .up :break
+                       
                     case .pullCompleted:
                         self.pageDragingModel.uiEvent = .pullCompleted(geometry)
                     case .pullCancel :
@@ -241,9 +256,11 @@ struct PageMyRegistCard: PageView {
                     self.cardNoFocus = 0
                 }
             }
-            .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
+            .onReceive(self.sceneObserver.$isUpdated){ isUpdated in
+                if !isUpdated {return}
+                PageLog.d("pos " + self.sceneObserver.safeAreaBottom.description, tag:self.tag)
                 withAnimation{
-                    self.safeAreaBottom = pos
+                    self.safeAreaBottom = self.sceneObserver.safeAreaBottom
                 }
             }
             .onReceive(self.keyboardObserver.$isOn){ on in
@@ -309,15 +326,16 @@ struct PageMyRegistCard: PageView {
 
             }
             .onDisappear{
-        
+                self.cancelFocusBottom()
             }
         }//geo
     }//body
     
     func updatekeyboardStatus(on:Bool) {
-        withAnimation{
-            self.safeAreaBottom = on
-                ? self.keyboardObserver.keyboardHeight : self.sceneObserver.safeAreaBottom
+        if !on {
+            self.editType = .none
+            self.cardNoFocus = -1
+            self.cancelFocusBottom()
         }
     }
 
@@ -396,6 +414,7 @@ struct PageMyRegistCard: PageView {
             self.editType = .none
         }
         AppUtil.hideKeyboard()
+        self.cancelFocusBottom()
         self.updatekeyboardStatus(on: false)
     }
     
@@ -405,9 +424,26 @@ struct PageMyRegistCard: PageView {
         withAnimation{
             self.editType = .none
         }
+        self.cancelFocusBottom()
         AppUtil.hideKeyboard()
     }
     
+    @State private var focusBottom:AnyCancellable?
+    private func delayFocusBottom(){
+        self.focusBottom?.cancel()
+        self.focusBottom = Timer.publish(
+            every: 0.5, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                self.cancelFocusBottom()
+                self.infinityScrollModel.uiEvent = .scrollMove(self.posBottom)
+                
+            }
+    }
+    private func cancelFocusBottom(){
+        self.focusBottom?.cancel()
+        self.focusBottom = nil
+    }
     
 }
 

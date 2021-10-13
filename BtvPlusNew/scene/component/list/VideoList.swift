@@ -26,6 +26,7 @@ class VideoData:InfinityData, Copying{
     private(set) var srisId:String? = nil
     private(set) var prodId:String? = nil
     private(set) var isClip:Bool = false
+    private(set) var isSearch:Bool = false
     private(set) var usePrice:Bool = true
     private(set) var useAge:Bool = true
     private(set) var tagData: TagData? = nil
@@ -60,7 +61,7 @@ class VideoData:InfinityData, Copying{
         playTime = original.playTime
         pageType = original.pageType
         isWatched = original.isWatched
-        
+        isSearch = original.isSearch
         actionLog = original.actionLog
         contentLog = original.contentLog
     
@@ -330,6 +331,7 @@ class VideoData:InfinityData, Copying{
     func setData(data:CategoryClipItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.clip)
         isClip = true
+        isSearch = true
         count = data.no_epsd
         playTime = data.running_time?.toHMS()
         title = data.title
@@ -349,6 +351,7 @@ class VideoData:InfinityData, Copying{
     func setData(data:CategorySrisItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.video)
         title = data.title
+        isSearch = true
         subTitle = data.title_sub
         index = idx
         epsdId = data.epsd_id
@@ -367,6 +370,7 @@ class VideoData:InfinityData, Copying{
     
     func setData(data:CategoryCornerItem, searchType:BlockData.SearchType, idx:Int = -1) -> VideoData {
         setCardType(.video)
+        isSearch = true
         title = data.title
         index = idx
         epsdId = data.epsd_id
@@ -546,7 +550,14 @@ struct VideoList: PageComponent{
         ){
             if let banners = self.banners {
                 ForEach(banners) { data in
-                    BannerItem(data: data)
+                    BannerItem(data: data){
+                        var actionBody = MenuNaviActionBodyItem()
+                        actionBody.menu_id = data.menuId
+                        actionBody.menu_name = data.menuNm
+                        actionBody.position = data.logPosition
+                        actionBody.config = data.logConfig
+                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                    }
                 }
             }
             ForEach(self.datas) { data in
@@ -572,7 +583,7 @@ struct VideoList: PageComponent{
             action(data)
         }else{
             guard let synopsisData = data.synopsisData else { return }
-            if data.isClip , let parent = self.parentData {
+            if data.isClip && !data.isSearch , let parent = self.parentData {
                 
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.clipPreviewList)

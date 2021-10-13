@@ -35,7 +35,7 @@ class SynopsisPrerollData {
         }
         switch playType {
         case .vod(let t, _), .vodChange(let t, _): startType = t > 0 ? .continuous : .first
-        case .vodNext : startType = .seris
+        case .vodNext(_, _ ,let isAutoPlay) : startType = isAutoPlay ? .seris : .first
         case .preplay : startType = .preplay
         case .preview : startType = .first
         default:do{}

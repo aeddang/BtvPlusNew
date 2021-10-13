@@ -152,7 +152,7 @@ struct PagePairingManagement: PageView {
                         }
                     }
                     .modifier(ContentHorizontalEdgesTablet())
-                    
+                    Spacer()
                 }
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))

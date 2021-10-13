@@ -104,7 +104,6 @@ struct EpisodeViewer: PageComponent{
             case .registLike(_, _ , _, let changeLike, let changeDislike):
                 self.updateRate(changeLike: changeLike, changeDislike: changeDislike)
         
-               
             default: break
             }
             

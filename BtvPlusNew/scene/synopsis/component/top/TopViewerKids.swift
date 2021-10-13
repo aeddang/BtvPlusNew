@@ -57,10 +57,7 @@ struct TopViewerKids: PageComponent{
                                 isSelected : true,
                                 isFixSize : false
                             ){_ in
-                                if self.vsManager.isGranted {
-                                    self.vsManager.accountPairingAlert()
-                                    return
-                                }
+                            
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairing)
                                         .addParam(key: PageParam.subType, value: "mob-com-popup")

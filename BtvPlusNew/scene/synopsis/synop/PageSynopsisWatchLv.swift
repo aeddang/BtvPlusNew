@@ -30,6 +30,7 @@ extension PageSynopsis {
         if self.isPairing == true {
             
             if episodeViewerData.isAdult == true && !SystemEnvironment.isAdultAuth{
+                self.isFullScreenRedirect = self.isFullScreen
                 self.pagePresenter.openPopup(
                     PageProvider.getPageObject(.adultCertification)
                         .addParam(key: .id, value: self.tag)
@@ -55,6 +56,7 @@ extension PageSynopsis {
             {
                 let watchLv = model.watchLevel
                 if SystemEnvironment.watchLv != 0 && SystemEnvironment.watchLv <= watchLv {
+                    self.isFullScreenRedirect = self.isFullScreen
                     if SystemEnvironment.currentPageType == .btv {
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.confirmNumber)

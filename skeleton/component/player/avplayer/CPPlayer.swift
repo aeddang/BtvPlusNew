@@ -77,7 +77,12 @@ struct CPPlayer: PageComponent {
             //case .load : self.clearWaitDuration()
             //case .stop, .pause :  self.clearWaitDuration()
             case .seeking : self.autoUiHidden?.cancel()
-            case .fixUiStatus(let isFix): if isFix { self.autoUiHidden?.cancel()}
+            case .fixUiStatus(let isFix):
+                if isFix {
+                    self.autoUiHidden?.cancel()
+                } else {
+                    self.delayAutoUiHidden()
+                }
             default : break
             }
         }

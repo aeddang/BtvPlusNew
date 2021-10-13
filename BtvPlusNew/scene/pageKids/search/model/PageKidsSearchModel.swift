@@ -70,7 +70,7 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
             VideoData(pageType: .kids).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
         }
         let block = BlockData(pageType: .kids)
-            .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword)
+            .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, max:30)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }

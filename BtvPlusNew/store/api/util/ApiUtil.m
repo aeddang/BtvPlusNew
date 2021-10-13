@@ -451,4 +451,30 @@
     return [_pHexString copy];
 }
 
+
+
+/**
+ * 가족앨범 outlink 암호화
+ */
++ (NSString *)getEncyptedString:(NSString *)string key:(NSData *)key iv:(NSData *)iv
+{
+    const char *_iv = [iv bytes];
+    const char *_key = [key bytes];
+    
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *result = [self AES256EncryptWithKey:_key theData:data andIv:_iv];
+    NSString *cipherText = [self hexEncode:result];
+    return cipherText;
+}
+
++ (NSString *)getDecryptedString:(NSString *)string key:(NSData *)key iv:(NSData *)iv
+{
+    const char *_iv = [iv bytes];
+    const char *_key = [key bytes];
+    
+    NSData *data = [self decodeHexString:string];
+    NSData *result = [self AES256DecryptWithKey:_key theData:data andIv:_iv];
+    NSString *dec = [[NSString alloc] initWithBytes:[result bytes] length:[result length] encoding:NSASCIIStringEncoding];
+    return dec;
+}
 @end

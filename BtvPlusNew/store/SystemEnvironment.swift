@@ -14,7 +14,7 @@ struct SystemEnvironment {
     static let systemVersion:String = UIDevice.current.systemVersion
     static let bundleVersion:String = AppUtil.version
     static let bundleVersionKey:String = AppUtil.version// 사용안함
-    static let buildNumber:String = AppUtil.build.description
+    static let buildNumber:String = AppUtil.build
     
     static let originDeviceId = Self.getDeviceId()
     static var tvUserId:String? = nil
@@ -88,7 +88,7 @@ struct SystemEnvironment {
         if let prevUUID = wrapper?.object(forKey: Security.kSecAttrAccount) as? String {
             if !prevUUID.isEmpty {
                 DataLog.d( "exist UUID " + prevUUID, tag: "getDeviceId")
-                if prevUUID.hasSuffix("I") { return prevUUID }
+                if prevUUID.hasPrefix("I") { return prevUUID }
                 else { return "I" + prevUUID }
             }
         }

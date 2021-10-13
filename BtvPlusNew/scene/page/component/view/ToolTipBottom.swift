@@ -10,6 +10,7 @@ import SwiftUI
 
 struct TooltipBottom: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var naviLogManager:NaviLogManager
     var text:String = ""
     var close:() -> Void
     var body: some View {
@@ -29,6 +30,7 @@ struct TooltipBottom: PageView {
                     .padding(.all, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin)
                 
                 Button(action: {
+                    self.naviLogManager.actionLog(.clickTopGnbNotice, actionBody:.init(category:"close"))
                     self.close()
                 }) {
                     Image(Asset.icon.close)
@@ -45,6 +47,7 @@ struct TooltipBottom: PageView {
         }
         
         .onTapGesture {
+            self.naviLogManager.actionLog(.clickTopGnbNotice, actionBody:.init(category:"notice")) 
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.myAlram)
             )

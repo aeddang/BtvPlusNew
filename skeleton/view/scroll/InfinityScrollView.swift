@@ -9,10 +9,6 @@
 import Foundation
 import SwiftUI
 import Combine
-
-
-
-
 struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where Content: View {
     @EnvironmentObject var sceneObserver:PageSceneObserver
 
@@ -35,6 +31,18 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
     var bgColor:Color //List only
     var isAlignCenter:Bool = false
     let isRecycle: Bool
+    
+    let onTopButton = SystemEnvironment.currentPageType == .btv
+        ? Asset.icon.onTop
+        : AssetKids.icon.onTop
+    let onTopButtonSize = SystemEnvironment.currentPageType == .btv
+        ? InfinityScrollModel.onTopSize
+        : InfinityScrollModel.onTopSizeKids
+
+    var onTopButtonMargin = SystemEnvironment.currentPageType == .btv
+        ? Dimen.margin.light
+        : 0
+    var onTopButtonMarginBottom:CGFloat? = nil
     
     @State var isTop:Bool = true
     @State var scrollPos:Float? = nil
@@ -66,6 +74,8 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         useTracking:Bool = true,
         useTopButton:Bool = true,
         bgColor:Color = SystemEnvironment.currentPageType == .btv ? Color.brand.bg : Color.kids.bg,
+        onTopButtonMargin: CGFloat? = nil,
+        onTopButtonMarginBottom: CGFloat? = nil,
         @ViewBuilder content: () -> Content) {
         
         self.viewModel = viewModel
@@ -86,6 +96,9 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
         self.useTracking = useTracking
         self.bgColor = bgColor
         self.useTopButton = useTopButton
+        self.onTopButtonMargin = onTopButtonMargin ?? self.onTopButtonMargin
+        self.onTopButtonMarginBottom = onTopButtonMarginBottom
+            
         self.scrollType = scrollType ?? ( self.axes == .vertical ? .vertical(isDragEnd: false) : .horizontal(isDragEnd: false) )
         if !viewModel.isSetup {
             viewModel.setup(type: self.scrollType)
@@ -123,14 +136,13 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
             && self.contentNum <= self.viewModel.limitedScrollIndex
             && self.header == nil
         {
-            ZStack(alignment: .leading){
-                LazyVStack(alignment: self.isAlignCenter ? .center : .leading, spacing: self.spacing){
-                    self.content
-                }
+            ZStack(alignment: self.isAlignCenter ? .top : .topLeading){
+                Spacer().modifier(MatchParent())
+                self.content
                 .padding(.top, self.marginTop)
             }
-            .frame(alignment: .leading)
             .modifier(MatchParent())
+            
             .onReceive(self.sceneObserver.$isUpdated){update in
                 if update {
                     self.viewModel.setup(scrollSize: self.sceneObserver.screenSize)
@@ -158,15 +170,10 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                     spacing: self.spacing,
                     isRecycle: self.isRecycle,
                     useTracking: self.useTracking,
-                    onTopButton:
-                        self.useTopButton
-                        ? SystemEnvironment.currentPageType == .btv ? Asset.icon.onTop : AssetKids.icon.onTop
-                        : nil,
-                    onTopButtonSize : SystemEnvironment.currentPageType == .btv
-                        ? InfinityScrollModel.onTopSize
-                        : InfinityScrollModel.onTopSizeKids,
-                    
-                    onTopButtonMargin : SystemEnvironment.currentPageType == .btv ? Dimen.margin.light : 0,
+                    onTopButton: self.useTopButton ? self.onTopButton : nil,
+                    onTopButtonSize : self.onTopButtonSize,
+                    onTopButtonMargin : self.onTopButtonMargin,
+                    onTopButtonMarginBottom : self.onTopButtonMarginBottom,
                     onReady: {self.onReady()},
                     onMove: {pos in self.onMove(pos:pos)},
                     content: self.content)

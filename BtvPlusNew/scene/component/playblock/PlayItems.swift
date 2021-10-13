@@ -156,6 +156,7 @@ struct PlayItemFunction: PageView {
         if self.data.srisId != nil && self.isInit {
             LikeButton(
                 playBlockModel:self.viewModel,
+                playData: data,
                 srisId: self.data.srisId!, isLike: self.$isLike, useText:false, isThin:true, isPreview: true){ value in
                 self.data.isLike = value
             }
@@ -163,6 +164,7 @@ struct PlayItemFunction: PageView {
             if self.data.notificationData != nil {
                 AlramButton(
                     playBlockModel:self.viewModel,
+                    playData: data,
                     data: self.data.notificationData!, isAlram: self.$isAlram){ value in
                     self.data.isAlram = value 
                 }

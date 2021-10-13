@@ -87,6 +87,7 @@ class Lgs: Rest{
             dic["psnlProfId"] =  NpsNetwork.pairingId //모름
         prfList.append(dic)
            
+        params["visionFactor"] = playData.rate
         params["prfList"] = prfList
         fetch(route: LgsPostWatchLog(body: params), completion: completion, error:error)
     }
@@ -131,6 +132,7 @@ class Lgs: Rest{
         params["play_end"] = playData.end ?? playData.eventTime
         params["play_position"] = playData.position
         params["end_rate"] = playData.rate
+        params["visionFactor"] = playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
         

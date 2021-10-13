@@ -24,6 +24,7 @@ struct BottomTab: PageComponent{
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var naviLogManager:NaviLogManager
     @State var pages:[PageSelecterble] = []
     @State var selectedPage:PageObject? = nil
     @State var selectedMenuId:String? = nil
@@ -40,6 +41,10 @@ struct BottomTab: PageComponent{
                         noImgAc: band.noImgAc,
                         axis: SystemEnvironment.isTablet ? .horizontal : .vertical
                     ){
+                        self.naviLogManager.actionLog(.clickBottomGnbMenu, actionBody: .init(
+                            menu_id:band.menuId,
+                            menu_name:band.text
+                        ))
                         self.pagePresenter.changePage(
                             PageProvider
                                 .getPageObject(band.id)

@@ -30,9 +30,7 @@ struct MySetup: View {
                     
                     self.pagePresenter.openPopup(
                         PageProvider
-                            .getPageObject(.webview)
-                            .addParam(key: .data, value: BtvWebView.happySenior)
-                            .addParam(key: .title , value: String.pageText.setupHappySeniorPicture)
+                            .getPageObject(.pairingHappySeniorPicture)
                     )
                 }) {
                     VStack(spacing:Dimen.margin.thinExtra){

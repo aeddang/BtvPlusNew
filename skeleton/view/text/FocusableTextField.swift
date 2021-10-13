@@ -8,7 +8,7 @@
 
 import Foundation
 import SwiftUI
-struct FocusableTextField: UIViewRepresentable {
+struct FocusableTextField: UIViewRepresentable{
     @Binding var text:String
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .default
@@ -20,7 +20,10 @@ struct FocusableTextField: UIViewRepresentable {
     var kernHolder: CGFloat? = nil
     var textModifier:TextModifier = RegularTextStyle().textModifier
     var isfocus:Bool
+    var isDynamicFocus:Bool = false
     var isSecureTextEntry:Bool = false
+    var focusIn: (() -> Void)? = nil
+    var focusOut: (() -> Void)? = nil
     var inputChange: ((_ text:String) -> Void)? = nil
     var inputChangedNext: ((_ char:String) -> Void)? = nil
     var inputChanged: ((_ text:String) -> Void)? = nil
@@ -42,6 +45,7 @@ struct FocusableTextField: UIViewRepresentable {
         let color = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
         textField.textColor = color
         textField.isSecureTextEntry = self.isSecureTextEntry
+        textField.autoresizingMask = .flexibleWidth
         textField.defaultTextAttributes.updateValue(self.kern, forKey: .kern)
         textField.attributedPlaceholder = NSAttributedString(
             string: self.placeholder ,
@@ -57,16 +61,34 @@ struct FocusableTextField: UIViewRepresentable {
     func updateUIView(_ uiView: UITextField, context: Context) {
         if uiView.text != self.text { uiView.text = self.text }
         
-        if self.isfocus == self.isFinalFocus {return}
-        if self.isfocus {
-            if !uiView.isFocused {
-                uiView.becomeFirstResponder()
+        if self.isfocus == self.isFinalFocus {
+            if #available(iOS 15.0, *) {
+                if self.isfocus && self.isDynamicFocus {
+                    if !uiView.isFocused {
+                        DispatchQueue.main.async {
+                            uiView.becomeFirstResponder()
+                        }
+                    }
+                }
             }
-        } else {
+            return
+        }
+        if self.isfocus {
+            ComponentLog.d("on focus " + uiView.isFocused.description, tag:"FocusableTextField")
+            if !uiView.isFocused {
+                ComponentLog.d("uiView.becomeFirstResponder " + uiView.isFocused.description, tag:"FocusableTextField")
+                uiView.becomeFirstResponder()
+                self.focusIn?()
+            }
+        }else if !self.isfocus {
+            ComponentLog.d("dis focus " + uiView.isFocused.description, tag:"FocusableTextField")
             if uiView.isFocused {
+                ComponentLog.d("uiView.resignFirstResponder " + uiView.isFocused.description, tag:"FocusableTextField")
                 uiView.resignFirstResponder()
+                self.focusOut?()
             }
         }
+        
         DispatchQueue.main.async {
             self.isFinalFocus = self.isfocus
         }

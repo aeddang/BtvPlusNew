@@ -30,6 +30,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
     var onTopButton: String? = nil
     var onTopButtonSize: CGSize = CGSize(width: 0, height: 0)
     var onTopButtonMargin:CGFloat = 0
+    var onTopButtonMarginBottom:CGFloat? = nil
     let onReady:()->Void
     let onMove:(CGFloat)->Void
     
@@ -61,6 +62,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
         onTopButton: String?,
         onTopButtonSize: CGSize,
         onTopButtonMargin:CGFloat,
+        onTopButtonMarginBottom:CGFloat?,
         onReady:@escaping ()->Void,
         onMove:@escaping (CGFloat)->Void,
         content:Content) {
@@ -86,6 +88,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
         self.onTopButton = onTopButton
         self.onTopButtonSize = onTopButtonSize
         self.onTopButtonMargin = onTopButtonMargin
+        self.onTopButtonMarginBottom = onTopButtonMarginBottom
         self.scrollType = scrollType 
     }
         
@@ -186,7 +189,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                                             width: self.onTopButtonSize.width,
                                             height: self.onTopButtonSize.height)
                                 }
-                                .padding(.bottom,  self.marginBottom)
+                                .padding(.bottom,  self.onTopButtonMarginBottom ?? self.marginBottom)
                                 .padding(.trailing,  self.onTopButtonMargin)
                             }
                             
@@ -203,7 +206,7 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                     guard let idx = idx else {return}
                     if idx == -1 {return}
                     if self.isSmothMove {
-                        withAnimation{ reader.scrollTo(idx, anchor: anchor)}
+                        withAnimation(.easeOut(duration: 0.2)){ reader.scrollTo(idx, anchor: anchor)}
                     } else {
                         reader.scrollTo(idx, anchor: anchor)
                     }

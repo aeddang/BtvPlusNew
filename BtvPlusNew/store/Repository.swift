@@ -175,6 +175,8 @@ class Repository:ObservableObject, PageProtocol{
         let storage = LocalNamedStorage(name:  SystemEnvironment.isStage ? "Stage" : "Release")
         self.namedStorage = storage
         if SystemEnvironment.tvUserId == nil && self.vsManager?.currentAccountId == nil{
+            let tvUserId = storage.tvUserId
+            DataLog.d("tvUserId " + (tvUserId ?? ""), tag:"VSManager")
             SystemEnvironment.tvUserId = storage.tvUserId
         }
         let currentPush = self.namedStorage?.registPushUserAgreement
@@ -212,6 +214,8 @@ class Repository:ObservableObject, PageProtocol{
                 self.namedStorage?.tvUserId = nil
                 self.audioMirroring?.close()
                 //NotificationCoreData().removeAllNotice()
+                DataLog.d("disConnected", tag:"VSManager")
+               
                 
             case .pairingCompleted :
                 self.userSetup.saveUser(self.pairing.user)
@@ -226,7 +230,10 @@ class Repository:ObservableObject, PageProtocol{
                 if pairingDeviceType == .apple {
                     self.pairing.authority.requestAuth(.updateMyinfo(isReset: false))
                 }
-                if pairingDeviceType == .apple && prevName == nil{
+                
+                DataLog.d("pairingCompleted " + pairingDeviceType.rawValue, tag:"VSManager")
+                DataLog.d("prevName " + (prevName ??  "nil"), tag:"VSManager")
+                if pairingDeviceType == .apple && prevName?.isEmpty != false{
                     self.pagePresenter?.openPopup(
                         PageProvider.getPageObject(.pairingAppleTv)
                     )
@@ -236,17 +243,17 @@ class Repository:ObservableObject, PageProtocol{
                         : String.alert.pairingCompleted
                     )
                 }
-                self.namedStorage?.tvUserId = self.vsManager?.currentAccountId
+                if let currentAccountId = self.vsManager?.currentAccountId {
+                    DataLog.d("setup currentAccountId " + currentAccountId, tag:"VSManager")
+                    self.namedStorage?.tvUserId = currentAccountId
+                }
                 switch self.pairing.pairingType {
                 case .wifi :
                     self.dataProvider.requestData(
-                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setMessage(type: .MeTV)))
+                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setMessage(type: .Me_TV)))
                     )
                 default : break
                 }
-                
-                
-                
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
             case .syncFail :

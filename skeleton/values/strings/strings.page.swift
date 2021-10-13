@@ -45,7 +45,7 @@ extension String{
         public static let myRegistCardOk = "titleMyRegistCardOk".loaalized()
         public static let mobileBtv = "titleMobileBtv".loaalized()
         public static let btv = "titleBtv".loaalized()
-        
+        public static let person = "titlePerson".loaalized()
     }
     
     struct pageText {

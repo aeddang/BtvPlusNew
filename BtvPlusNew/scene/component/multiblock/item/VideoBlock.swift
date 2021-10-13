@@ -69,7 +69,9 @@ struct VideoBlock:BlockProtocol, PageComponent {
                             textModifier: MediumTextStyle(size: Font.size.thin, color: Color.app.white).textModifier
                         ){_ in
                             self.sendLog(self.naviLogManager)
-                            if data.cardType == .clip || data.videos?.first?.isClip == true{
+                            let firstData = data.videos?.first
+                            
+                            if (data.cardType == .clip || firstData?.isClip == true) && firstData?.isSearch == false {
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.clipPreviewList)
                                         .addParam(key: .data, value: data)

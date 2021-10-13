@@ -30,9 +30,11 @@ struct ConnectButton: View {
                         
                     Text(self.text)
                         .modifier(BoldTextStyle(size: Font.size.thin, color: Color.app.greyLightExtra))
+                        .multilineTextAlignment(.leading)
                     if let tip = self.tip {
                         Text(tip)
                             .kerning(Font.kern.thin)
+                            .multilineTextAlignment(.leading)
                             .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.app.grey))
                             .padding(.top,  Dimen.margin.tinyExtra)
                     }
@@ -81,6 +83,7 @@ struct ConnectButtonTablet: View {
                             .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                     }
                     Text(self.text)
+                        .multilineTextAlignment(.leading)
                         .modifier(BoldTextStyle(size: Font.size.micro, color: Color.app.greyLightExtra))
                         .padding(.top,  Dimen.margin.tinyExtra)
                     
@@ -94,6 +97,7 @@ struct ConnectButtonTablet: View {
             )
             if let tip = self.tip {
                 Text(tip)
+                    .multilineTextAlignment(.leading)
                     .modifier(MediumTextStyle(size: Font.size.microExtra, color: Color.app.grey))
                     .padding(.top,  Dimen.margin.tinyExtra)
             }

@@ -162,6 +162,8 @@ class Pairing:ObservableObject, PageProtocol {
         self.stbId = NpsNetwork.hostDeviceId 
         self.status = self.stbId != "" ? .connect : .disConnect
         self.event = self.status == .connect ? .connected(stbData) : .connectError(nil)
+        
+        
     }
     
     func disconnected() {

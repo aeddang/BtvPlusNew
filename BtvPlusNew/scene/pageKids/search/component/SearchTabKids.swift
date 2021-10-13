@@ -14,7 +14,15 @@ struct SearchTabKids: PageView {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @ObservedObject var searchScrollModel: InfinityScrollModel = InfinityScrollModel()
     
-    var isFocus:Bool = false
+    @Binding var isFocus:Bool
+    var scrollPos = UUID().hashValue
+    var scrollPosTop = UUID().hashValue
+    var textModifier = TextModifier(
+        family: Font.familyKids.bold,
+        size: Font.sizeKids.regular,
+        color: Color.app.brownDeep,
+        sizeScale: 1.15
+    )
     var isVoiceSearch:Bool = false
     @Binding var keyword:String
     var datas:[SearchData] = []
@@ -41,46 +49,61 @@ struct SearchTabKids: PageView {
             .padding(.top, DimenKids.margin.tinyExtra)
             if !self.isVoiceSearch {
                 VStack(spacing:0){
-                    HStack(spacing:DimenKids.margin.tiny){
-                        FocusableTextField(
-                            text: self.$keyword,
-                            returnVal: .done,
-                            placeholder: String.kidsText.kidsSearchInput,
-                            placeholderColor: Color.app.sepia.opacity(0.3),
-                            textAlignment: .left,
-                            textModifier: TextModifier(
-                                family: Font.familyKids.bold,
-                                size: Font.sizeKids.regular,
-                                color: Color.app.brownDeep
-                            ),
-                            isfocus: self.isFocus,
-                            inputChanged: {text in
-                                self.inputChanged?(text)
-                            },
-                            inputCopmpleted: {text in
-                                self.inputCopmpleted?(text)
-                            })
-                            .modifier(MatchHorizontal(height: DimenKids.tab.regular))
-                            .clipped()
-                            .padding(.top, 1)
-                        /*
-                        FocusableTextView(
-                            text: self.$keyword,
-                            isfocus: self.isFocus,
-                            textModifier: TextModifier(
-                                family: Font.familyKids.bold,
-                                size: Font.sizeKids.regular,
-                                color: Color.app.brownDeep
-                            ),
-                            inputChanged: {text, _ in
-                                self.inputChanged?(text)
-                            },
-                            inputCopmpleted : { text in
-                                self.inputCopmpleted?(text)
+                    HStack(spacing:0){
+                        ScrollViewReader{ reader in
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                LazyHStack(spacing:0){
+                                    Spacer().frame(width: DimenKids.margin.regular, height: 1)
+                                        .id(self.scrollPosTop)
+                                    FocusableTextField(
+                                        text: self.$keyword,
+                                        returnVal: .done,
+                                        placeholder: String.kidsText.kidsSearchInput,
+                                        placeholderColor: Color.app.sepia.opacity(0.3),
+                                        textAlignment: .left,
+                                        textModifier: self.textModifier,
+                                        isfocus: self.isFocus,
+                                        focusIn: {
+                                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                                reader.scrollTo(self.scrollPos)
+                                            }
+                                        },
+                                        focusOut: {
+                                            DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                                reader.scrollTo(self.scrollPosTop, anchor: .leading)
+                                            }
+                                        },
+                                        inputChanged: {text in
+                                            self.inputChanged?(text)
+                                            DispatchQueue.main.async {
+                                                ComponentLog.d("inputChanged", tag: self.tag)
+                                                reader.scrollTo(self.scrollPos)
+                                            }
+                                        },
+                                        inputCopmpleted: {text in
+                                            self.inputCopmpleted?(text)
+                                            DispatchQueue.main.async {
+                                                ComponentLog.d("inputCopmpleted", tag: self.tag)
+                                                reader.scrollTo(self.scrollPosTop, anchor: .leading)
+                                            }
+                                        })
+                                        .frame(width: max(
+                                            textModifier.getTextWidth(self.keyword),
+                                            textModifier.getTextWidth(String.kidsText.kidsSearchInput)) + Dimen.margin.thin)
+                                    
+                                    Spacer().frame(width: 1, height: 1)
+                                            .id(self.scrollPos)
+                                 }
                             }
-                        )
-                        */
-                        
+                            //.padding(.leading, DimenKids.margin.regular)
+                            .modifier(MatchHorizontal(height: DimenKids.tab.regular))
+                            .background(Color.transparent.clearUi)
+                            .onTapGesture {
+                                self.isFocus = true
+                            }
+                            .padding(.top, 1)
+                            
+                        }
                         
                         if !self.keyword.isEmpty {
                             Button(action: {
@@ -94,10 +117,10 @@ struct SearchTabKids: PageView {
                                     .frame(width: DimenKids.icon.light,
                                            height: DimenKids.icon.light)
                             }
+                            .padding(.trailing, DimenKids.margin.tiny)
                         }
                         
                         Button(action: {
-
                             self.inputCopmpleted?(self.keyword)
                         }) {
                             Image(AssetKids.icon.search)
@@ -108,7 +131,7 @@ struct SearchTabKids: PageView {
                                        height: DimenKids.icon.light)
                         }
                     }
-                    .padding(.leading, DimenKids.margin.regular)
+                    
                     .padding(.trailing, DimenKids.margin.tiny)
                     if !self.datas.isEmpty {
                         if datas.count > 6 {

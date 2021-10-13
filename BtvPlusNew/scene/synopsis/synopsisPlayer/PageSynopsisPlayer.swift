@@ -352,7 +352,7 @@ struct PageSynopsisPlayer: PageView {
                 
                 self.playListData = PlayListData(
                     listTitle: String.pageText.synopsisClipView,
-                    title: content.title,
+                    title: self.episodeViewerData?.seasonTitle,
                     datas: playList)
             } else {
                 self.playListData = PlayListData(
@@ -432,10 +432,10 @@ struct PageSynopsisPlayer: PageView {
             self.appSceneObserver.alert = .confirm(
                 String.pageText.synopsisNextPlay, String.pageText.synopsisNextClipPlayConfirm) { isOk in
                 if isOk {
-                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"예")
+                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"확인")
                     nextVod(auto:false, isUser:false)
                 } else {
-                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"아니오") 
+                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"취소")
                 }
             }
             return true

@@ -72,7 +72,7 @@ class Lgs: Rest{
         params["play_start"] = playData.start ?? playData.eventTime
         params["play_end"] = playData.end ?? playData.eventTime
         params["play_position"] = playData.position
-        params["end_rate"] = playData.rate
+        params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
         params["profile_id"] = pairing.kid?.id //모름 기존 키즈 프로필아이디로 사용하던건데....
@@ -131,7 +131,7 @@ class Lgs: Rest{
         params["play_start"] = playData.start ?? playData.eventTime
         params["play_end"] = playData.end ?? playData.eventTime
         params["play_position"] = playData.position
-        params["end_rate"] = playData.rate
+        params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
         params["visionFactor"] = playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"

@@ -480,7 +480,7 @@ struct PageRemotecon: PageView {
                 self.checkHostDeviceStatus()
             }
             
-            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
+            self.sendLog(action: .clickSearchTextInput, actionBody: .init(
                 config:"채널번호입력",
                 search_keyword: value,
                 category: "channel_number"
@@ -489,7 +489,7 @@ struct PageRemotecon: PageView {
             if host.isEnableStringInput() {
                 ctrl = .StrInput
             }
-            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
+            self.sendLog(action: .clickSearchTextInput, actionBody: .init(
                 config:"문자입력",
                 search_keyword: value,
                 category: "character"))
@@ -497,7 +497,7 @@ struct PageRemotecon: PageView {
             if host.isEnableStringInput() {
                 ctrl = .Mobile_Search
             }
-            self.sendLog(action: .clickRemoteconFunction, actionBody: .init(
+            self.sendLog(action: .clickSearchTextInput, actionBody: .init(
                 config:"검색어입력",
                 search_keyword: value,
                 category: "search"))

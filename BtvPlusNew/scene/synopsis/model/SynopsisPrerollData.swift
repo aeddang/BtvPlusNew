@@ -43,7 +43,7 @@ class SynopsisPrerollData {
         
         self.type = startType
         self.contentId = epsdRsluId
-        self.productId = data.curSynopsisItem?.prdPrcId ?? ""
+        self.productId = data.purchasedPPMItem?.isDirectview  == true ? (data.purchasedPPMItem?.prdPrcId ?? "") : ""
         return self
         
     }

@@ -215,6 +215,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 .episode_resolution_id?
                 .replace("{", with: "").replace("}", with: "")
         }
+        if contentBody?.payment_price?.isEmpty == false, let price = modifyContentBody?.payment_price {
+            modifyContentBody?.payment_price = price.toInt().description
+        }
+        
         
         
         let  data = NaviLogData()

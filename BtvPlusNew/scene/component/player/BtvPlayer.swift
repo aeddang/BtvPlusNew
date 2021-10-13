@@ -65,6 +65,7 @@ struct BtvPlayer: PageComponent{
                                 guard let epsdId = data.epsdId else { return }
                                 self.viewModel.btvPlayerEvent = .changeView(epsdId)
                                 self.listViewModel.itemEvent = .select(data)
+                                self.viewModel.btvUiEvent = .closeList
                             }
                             .modifier(MatchHorizontal(height: ListItem.video.size.height))
                             .opacity( self.isFullScreen && (self.isUiShowing || self.isPlayListShowing) ? 1.0 : 0)
@@ -505,7 +506,10 @@ struct BtvPlayer: PageComponent{
         self.playListTapOpacity = Double( pos / top )
     }
     func onPlaylistChange(value:DragGesture.Value){
-        if !self.isPlayListShowing { self.isPlayListShowing = true }
+        if !self.isPlayListShowing {
+            self.isPlayListShowing = true
+            self.viewModel.playerUiStatus = .hidden
+        }
         if self.startPlayListOffset == -1 {self.startPlayListOffset = self.playListOffset }
         self.playListOffset  = self.startPlayListOffset - value.translation.height
         self.updateListTapOpacity()

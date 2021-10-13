@@ -30,6 +30,7 @@ extension String{
         public static let registKidNeedPairing = "registKidNeedPairing".loaalized()
         
         public static let synopsisRelationVod = "synopsisRelationVodKids".loaalized()
+        public static let synopsisRelationVodWith = "synopsisRelationVodKidsWith".loaalized()
         public static let synopsisNoRelationVod = "synopsisNoRelationVodKids".loaalized()
         
         public static let kidsMyNoProfile = "kidsMyNoProfile".loaalized()

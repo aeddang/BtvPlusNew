@@ -74,19 +74,19 @@ struct FocusableTextField: UIViewRepresentable{
             return
         }
         if self.isfocus {
-            ComponentLog.d("on focus " + uiView.isFocused.description, tag:"FocusableTextField")
+            //ComponentLog.d("on focus " + uiView.isFocused.description, tag:"FocusableTextField")
             if !uiView.isFocused {
-                ComponentLog.d("uiView.becomeFirstResponder " + uiView.isFocused.description, tag:"FocusableTextField")
+                //ComponentLog.d("uiView.becomeFirstResponder " + uiView.isFocused.description, tag:"FocusableTextField")
                 uiView.becomeFirstResponder()
-                self.focusIn?()
             }
+            self.focusIn?()
         }else if !self.isfocus {
-            ComponentLog.d("dis focus " + uiView.isFocused.description, tag:"FocusableTextField")
+            //ComponentLog.d("dis focus " + uiView.isFocused.description, tag:"FocusableTextField")
             if uiView.isFocused {
-                ComponentLog.d("uiView.resignFirstResponder " + uiView.isFocused.description, tag:"FocusableTextField")
+               // ComponentLog.d("uiView.resignFirstResponder " + uiView.isFocused.description, tag:"FocusableTextField")
                 uiView.resignFirstResponder()
-                self.focusOut?()
             }
+            self.focusOut?()
         }
         
         DispatchQueue.main.async {

@@ -213,7 +213,7 @@ struct FillButton: View, SelecterbleProtocol{
                     }
                     if self.isNew {
                         if let count = self.count {
-                            Text(count.description)
+                            Text(count == 99 ? "99+" : count.description)
                                 .kerning(Font.kern.thin)
                                 .modifier(BoldTextStyle(
                                     size: Font.size.micro,

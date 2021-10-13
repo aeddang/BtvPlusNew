@@ -22,9 +22,9 @@ class PlayerListData:InfinityData{
             self.title = data.sub_title
         } else {
             self.title = title
-            if let count = data.brcast_tseq_nm {
-                self.count = count + String.app.broCount
-            }
+        }
+        if let count = data.brcast_tseq_nm {
+            self.count = count + String.app.broCount
         }
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItemKids.video.size)
         index = idx

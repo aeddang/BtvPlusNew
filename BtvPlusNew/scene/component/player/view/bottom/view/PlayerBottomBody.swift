@@ -123,7 +123,8 @@ struct PlayerBottomBody: PageComponent{
                 
                 if self.showFullVod {
                     RectButton(
-                        text: String.player.fullVod
+                        text: String.player.fullVod,
+                        icon: Asset.icon.play
                         ){_ in
                         guard let synop = self.viewModel.fullVod else { return }
                         self.viewModel.btvPlayerEvent = .fullVod(synop)

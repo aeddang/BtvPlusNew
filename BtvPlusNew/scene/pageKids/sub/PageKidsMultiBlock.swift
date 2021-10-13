@@ -399,10 +399,10 @@ struct PageKidsMultiBlock: PageView {
                 monthlyData.isSubJoin ? $0.subs_id == monthlyData.subJoinId
                 : $0.prod_id == monthlyData.prdPrcId })
             {
-            self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
+            self.setupMonthlyGuide(ticketData: PurchaseTicketData(pageType: .kids).setData(data: item))
         } else {
             if monthlyData.hasAuth {
-                self.setupMonthlyGuide(ticketData: PurchaseTicketData())
+                self.setupMonthlyGuide(ticketData: PurchaseTicketData(pageType: .kids))
             } else {
                 self.setupMonthlyPurchaseTicket(monthlyData:monthlyData)
             }
@@ -416,11 +416,11 @@ struct PageKidsMultiBlock: PageView {
                 monthlyData.isSubJoin ? $0.subs_id == monthlyData.subJoinId
                 : $0.prod_id == monthlyData.prdPrcId })
             {
-            self.setupMonthlyGuide(ticketData: PurchaseTicketData().setData(data: item))
+            self.setupMonthlyGuide(ticketData: PurchaseTicketData(pageType: .kids).setData(data: item))
           
         } else {
             if monthlyData.hasAuth {
-                self.setupMonthlyGuide(ticketData: PurchaseTicketData())
+                self.setupMonthlyGuide(ticketData: PurchaseTicketData(pageType: .kids))
             } else {
                 self.setupMonthlyPurchaseTicket(monthlyData:monthlyData)
             }

@@ -303,7 +303,7 @@ extension PageSynopsis {
             
             if let curSynopsisItem = synopsisModel.curSynopsisItem {
                 contentsItem.product_id = curSynopsisItem.prdPrcId
-                contentsItem.purchase_type = curSynopsisItem.prd_typ_cd
+                contentsItem.purchase_type = PrdTypCd(rawValue: curSynopsisItem.prd_typ_cd)?.logName ?? ""
                 contentsItem.monthly_pay = curSynopsisItem.ppm_prd_typ_cd
                 contentsItem.list_price = curSynopsisItem.prd_prc_vat.description
                 contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description

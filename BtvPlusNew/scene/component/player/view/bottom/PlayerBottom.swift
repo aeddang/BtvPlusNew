@@ -262,7 +262,7 @@ struct PlayerBottom: PageView{
     
     func setupInside(data:SynopsisPlayerData, duration:Double){
         self.openingTime = min(self.viewModel.openingTime, Self.openProgressTime)
-        if data.hasNext {
+        if data.hasNext && self.setup.nextPlay {
             self.nextBtnTitle = self.viewModel.synopsisPlayerData?.nextString
             self.isSeasonNext = self.viewModel.synopsisPlayerData?.nextEpisode == nil
         }

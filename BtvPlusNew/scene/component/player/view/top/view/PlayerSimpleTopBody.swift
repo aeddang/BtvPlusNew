@@ -31,7 +31,9 @@ struct PlayerSimpleTopBody: PageView{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
+                    .opacity(self.isShowing ? 1 : 0)
                 }
+               
                 Spacer().modifier(MatchHorizontal(height: 0))
                 ImageButton(
                     defaultImage: Asset.player.volumeOn,
@@ -50,7 +52,7 @@ struct PlayerSimpleTopBody: PageView{
                         self.viewModel.event = .mute(true, isUser: true)
                     }
                 }
-                
+                .opacity(self.isShowing || self.isMute ? 1 : 0)
                 
             }
             Spacer()

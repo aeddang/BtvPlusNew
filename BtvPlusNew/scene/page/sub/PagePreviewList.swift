@@ -260,7 +260,7 @@ struct PagePreviewList: PageView {
                 episode_id: playData.epsdId,
                 episode_resolution_id: playData.epsdRsluId,
                 product_id: playData.prdId,
-                purchase_type: playData.prdTypeCd
+                purchase_type: PrdTypCd(rawValue: playData.prdTypeCd ?? "")?.logName ?? ""
             )
             let action = MenuNaviActionBodyItem(
                 result: playData.isAutoPlay == false ? "자동재생불가" : "자동재생")
@@ -388,7 +388,7 @@ struct PagePreviewList: PageView {
             episode_resolution_id: playData.epsdRsluId,
             cid: nil,
             product_id: playData.prdId,
-            purchase_type: playData.prdTypeCd,
+            purchase_type: PrdTypCd(rawValue: playData.prdTypeCd ?? "")?.logName ?? "",
             monthly_pay: nil,
             list_price: nil,
             payment_price: nil)

@@ -96,6 +96,7 @@ struct PageKidsIntro: PageView {
         }
         
         .onAppear{
+            
             self.isFirst = Self.isFirst
             if Self.isFirst {
                 Self.isFirst = false
@@ -128,40 +129,43 @@ struct PageKidsIntro: PageView {
         if !self.isKidsProfileCompleted {return}
         if self.isCompleted {return}
         self.isCompleted = true
-        if let movePage = self.movePage {
-            if movePage.isPopup {
-                self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
-                self.pagePresenter.openPopup(movePage)
+        DispatchQueue.main.async {
+            KidProfile.isOverAgeInfo = false
+            if let movePage = self.movePage {
+                if movePage.isPopup {
+                    self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
+                    self.pagePresenter.openPopup(movePage)
+                } else {
+                    self.pagePresenter.changePage(movePage)
+                }
+                
             } else {
-                self.pagePresenter.changePage(movePage)
+                self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
             }
             
-        } else {
-            self.pagePresenter.changePage(PageKidsProvider.getPageObject(.kidsHome))
-        }
-        
-        if self.pairing.kid == nil {
-            switch self.kidsProfileEvent {
-            case .notFoundKid:
-                if pairing.kids.isEmpty {
-                    self.emptyKids()
-                } else {
-                    self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
-                        if isOk {
+            if self.pairing.kid == nil {
+                switch self.kidsProfileEvent {
+                case .notFoundKid:
+                    if pairing.kids.isEmpty {
+                        self.emptyKids()
+                    } else {
+                        self.appSceneObserver.alert = .confirm(nil, String.alert.kidsProfileNotfound ,nil) { isOk in
+                            if isOk {
+                                self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
+                            }
+                        }
+                    }
+                case .updatedKids:
+                    if pairing.kids.isEmpty {
+                        self.emptyKids()
+                    
+                    } else {
+                        self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
                             self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
                         }
                     }
+                default: break
                 }
-            case .updatedKids:
-                if pairing.kids.isEmpty {
-                    self.emptyKids()
-                
-                } else {
-                    self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) { 
-                        self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
-                    }
-                }
-            default: break
             }
         }
     }

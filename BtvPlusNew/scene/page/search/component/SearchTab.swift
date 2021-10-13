@@ -8,12 +8,13 @@
 import Foundation
 import SwiftUI
 import AVFoundation
-
+import Combine
 struct SearchTab: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     
     @Binding var isFocus:Bool
     var scrollPos = UUID().hashValue
+    var scrollPosTop = UUID().hashValue
     var textModifier = TextModifier(
         family:Font.family.bold,
         size:Font.size.lightExtra,
@@ -26,9 +27,7 @@ struct SearchTab: PageView {
     var inputCopmpleted: ((_ text:String) -> Void)? = nil
     var inputVoice: (() -> Void)? = nil
     var goBack: (() -> Void)? = nil
-    
-   
-    
+
     var body: some View {
         HStack(spacing:Dimen.margin.thinExtra){
             Button(action: {
@@ -43,31 +42,46 @@ struct SearchTab: PageView {
                            height: Dimen.icon.regular)
             }
             HStack(spacing:Dimen.margin.tiny){
-                /*
                 ScrollViewReader{ reader in
                     ScrollView(.horizontal, showsIndicators: false) {
                         LazyHStack(spacing:0){
+                            Spacer().frame(width: Dimen.margin.tiny, height: 1)
+                                .id(self.scrollPosTop)
+
                             FocusableTextField(
                                 text:self.$keyword,
                                 textAlignment:.left,
                                 textModifier:self.textModifier,
                                 isfocus: self.isFocus,
-                                
+                                focusIn: {
+                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                        reader.scrollTo(self.scrollPos)
+                                    }
+                                },
+                                focusOut: {
+                                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                                        reader.scrollTo(self.scrollPosTop, anchor: .leading)
+                                    }
+                                },
                                 inputChanged:{ text in
                                     self.inputChanged?(text)
                                     DispatchQueue.main.async {
+                                        ComponentLog.d("inputChanged", tag: self.tag)
                                         reader.scrollTo(self.scrollPos)
                                     }
                                 },
                                 inputCopmpleted: { text in
                                     self.inputCopmpleted?(text)
-                                    
+                                    DispatchQueue.main.async {
+                                        ComponentLog.d("inputCopmpleted", tag: self.tag)
+                                        reader.scrollTo(self.scrollPosTop, anchor: .leading)
+                                    }
                                 })
                                 .frame(width: textModifier.getTextWidth(self.keyword) + Dimen.margin.thin)
+                                
                             Spacer().frame(width: 1, height: 1)
                                 .id(self.scrollPos)
                         }
-                        .padding(.horizontal, Dimen.margin.tiny)
                     }
                     .modifier(MatchParent())
                     .background(Color.transparent.clearUi)
@@ -77,7 +91,7 @@ struct SearchTab: PageView {
                     //.clipped()
                     .padding(.top, 1)
                 }
-                 */
+                /*
                 FocusableTextField(
                     text:self.$keyword,
                     textAlignment:.left,
@@ -93,7 +107,7 @@ struct SearchTab: PageView {
                     .modifier(MatchParent())
                     .clipped()
                     .padding(.top, 1)
-                 
+                 */
                 if self.keyword.isEmpty == false {
                     Button(action: {
                         self.keyword = ""
@@ -129,4 +143,5 @@ struct SearchTab: PageView {
             .modifier(MatchHorizontal(height: Dimen.tab.light))
         }
     }
+    
 }

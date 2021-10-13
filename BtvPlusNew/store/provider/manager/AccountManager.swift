@@ -192,7 +192,15 @@ class AccountManager : PageProtocol{
         apiManager.$event.sink(receiveValue: {evt in
             switch evt {
             case .pairingHostChanged :
-                if NpsNetwork.isPairing { self.pairing.connected(stbData:self.requestDevice) }
+                if NpsNetwork.isPairing {
+                    self.pairing.connected(stbData:self.requestDevice)
+                    if let requestDevice = self.requestDevice, let deviceAddress = requestDevice.address {
+                        let address = UnsafeMutablePointer(mutating: (deviceAddress as NSString).utf8String)
+                        let callno = UnsafeMutablePointer(mutating: ("01000000000" as NSString).utf8String)
+                        MDNSServiceProxyClient()
+                            .sendCompleteMessage(address, callno: callno)
+                    }
+                }
                 else { self.pairing.disconnected() }
             default: break
             }

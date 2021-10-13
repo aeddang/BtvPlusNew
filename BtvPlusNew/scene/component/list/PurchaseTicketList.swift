@@ -27,13 +27,18 @@ class PurchaseTicketData:InfinityData{
     private(set) var contractPeriod: String? = nil
     private(set) var prodId: String? = nil
     private(set) var type:PurchaseTicketType = .list
+    private(set) var pageType:PageType = .btv
+    init(pageType:PageType = .btv) {
+        self.pageType = pageType
+        super.init()
+    }
     func setData(data:PurchaseFixedChargeItem, idx:Int = -1) -> PurchaseTicketData {
         isMonthly = true
         title = data.title
         price = data.selling_price
         prodId = data.prod_id
         joinDate = data.reg_date?.subString(start: 2, len: 8)
-        period = String.monthly.kids //data.period
+        period = self.pageType == .kids ? String.monthly.kids : data.period
         payment = data.method_pay_nm
         
         if data.ncms_prod_code == "38" {

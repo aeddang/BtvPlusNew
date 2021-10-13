@@ -47,8 +47,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     }
     
     func mdnsServiceFound(_ serviceJsonString: UnsafeMutablePointer<Int8>) {
-        
-        
+    
         let mdnsData = String(cString: serviceJsonString).replace("\n", with: "")
         guard let data = mdnsData.data(using: .utf8) else {
             ComponentLog.e("foundDevice : jsonString data error", tag: self.tag)

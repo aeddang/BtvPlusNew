@@ -30,7 +30,8 @@ struct PageKidsSearch: PageView {
     @State var isInput:Bool = false
     
     @State var marginTop:CGFloat = 0
-    
+    let scrollPos = UUID().hashValue
+    let scrollPosTop = UUID().hashValue
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -103,7 +104,9 @@ struct PageKidsSearch: PageView {
                         }
                     }
                     SearchTabKids(
-                        isFocus:self.isFocus,
+                        isFocus:self.$isFocus,
+                        scrollPos:self.scrollPos,
+                        scrollPosTop:self.scrollPosTop,
                         isVoiceSearch: self.isVoiceSearch,
                         keyword: self.$keyword,
                         datas:self.datas,
@@ -117,6 +120,7 @@ struct PageKidsSearch: PageView {
                         inputCopmpleted : { text in
                             if self.keyword.isEmpty {
                                 self.appSceneObserver.alert = .alert( String.kidsText.kidsSearchInput)
+                                AppUtil.hideKeyboard()
                                 return
                             }
                             self.search(keyword: text)

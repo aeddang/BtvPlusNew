@@ -49,10 +49,10 @@ extension PageSynopsis {
             self.appSceneObserver.alert = .confirm(
                 String.pageText.synopsisNextPlay, String.pageText.synopsisNextPlayConfirm) { isOk in
                 if isOk {
-                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"예")
+                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"확인")
                     nextVod(auto:false, isUser:false)
                 } else {
-                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"아니오")
+                    self.naviLog(pageID: .playInside, action: .clickContinuousPlayButton, result:"취소")
                 }
             }
             return true

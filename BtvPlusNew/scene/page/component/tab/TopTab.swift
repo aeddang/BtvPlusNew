@@ -19,6 +19,7 @@ struct TopTab: PageComponent{
     @EnvironmentObject var setup:Setup
     @State var showAlram:Bool = false
     @State var newCount:Int = 0
+    @State var newCountStr:String = ""
     @State var pairingStbType:PairingDeviceType = .btv
     @State var character:String? = nil
     var body: some View {
@@ -37,12 +38,12 @@ struct TopTab: PageComponent{
                         .frame(width: Dimen.icon.regular,
                                height: Dimen.icon.regular)
                     if self.showAlram {
-                        Text(self.newCount.description)
+                        Text(self.newCountStr)
                             .modifier(BoldTextStyle(
                                 size: Font.size.micro,
                                 color: Color.app.white
                             ))
-                            .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                            .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)
                             .background(Color.brand.primary)
                             .clipShape(Circle())
                             .padding(.leading, Dimen.icon.regular - (Dimen.icon.tinyExtra/2))
@@ -148,6 +149,7 @@ struct TopTab: PageComponent{
         .onReceive(self.repository.alram.$newCount){ count in
             if self.pairing.status != .pairing { return }
             self.newCount = min(99, count)
+            self.newCountStr = self.newCount == 99 ? "99+" : self.newCount.description
             withAnimation{self.showAlram = count>0}
         }
         .onReceive(self.repository.alram.$needUpdateNew){ update in

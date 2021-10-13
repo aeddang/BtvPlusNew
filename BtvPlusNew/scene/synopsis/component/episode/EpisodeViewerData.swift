@@ -44,7 +44,7 @@ class EpisodeViewerData {
     var episodeSubTitle:String {
         guard let count = self.count else { return self.subTitle ?? self.title }
         if count.isEmpty { return self.subTitle ?? self.title}
-        return (self.subTitle ?? self.title) + " " + count + String.app.broCount
+        return (self.subTitle ?? self.title) + " (" + count + String.app.broCount + ")"
     }
     
     var episodeTitleKids:String {
@@ -56,7 +56,7 @@ class EpisodeViewerData {
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         if self.type == .btv {
             self.title = data.title ?? ""
-            self.subTitle = data.epsd_snss_cts
+            self.subTitle = data.sub_title
             self.seasonTitle = data.sson_choic_nm
         } else {
             if data.sub_title?.isEmpty == false {

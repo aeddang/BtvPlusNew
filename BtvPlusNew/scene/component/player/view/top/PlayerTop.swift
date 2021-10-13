@@ -59,7 +59,7 @@ struct PlayerTop: PageView{
         }
         .modifier(MatchParent())
         .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
-        .opacity(self.isShowing ? 1 : 0)
+        .opacity(self.isShowing || self.isSimple ? 1 : 0)
         .onReceive(self.viewModel.$playerUiStatus) { st in
             withAnimation{
                 switch st {

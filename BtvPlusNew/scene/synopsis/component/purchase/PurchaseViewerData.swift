@@ -65,13 +65,15 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             
         } else if !synopsisModel.isNScreen {
             if isPosson {
-                serviceInfo = String.pageText.synopsisTerminationBtv
+                serviceInfo = String.pageText.synopsisOnlyBtvFree
             } else {
+                /*
                 serviceInfo = purchas?.hasAuthority ?? false
-                ? isFree ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisWatchOnlyBtv
+                ? isFree ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
                 : synopsisModel.holdbackType == .holdOut
                         ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
-                
+                */
+                serviceInfo = String.pageText.synopsisOnlyBtv
             }
             playerInfo = String.pageText.synopsisDisableNScreen
             isPlayAble = false

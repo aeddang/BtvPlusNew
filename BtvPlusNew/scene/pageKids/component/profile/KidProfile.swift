@@ -17,6 +17,10 @@ import Foundation
 import Foundation
 import SwiftUI
 
+extension KidProfile{
+    static var isOverAgeInfo:Bool = false
+}
+
 struct KidProfile: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -90,7 +94,8 @@ struct KidProfile: PageComponent{
             } else {
                 self.title = kid.nickName
             }
-            if (kid.age ?? 0) > 13 {
+            if (kid.age ?? 0) > 13 && !KidProfile.isOverAgeInfo{
+                KidProfile.isOverAgeInfo = true
                 self.appSceneObserver.event = .toast(String.alert.kidsOverAge)
             }
             

@@ -87,6 +87,22 @@ public enum PrdTypCd: String {
         }
     }
     
+    var logName: String {
+        switch self {
+        case .ppv: return "ppv"
+        case .pps: return "pps"
+        case .vodppm: return "ppm"
+        case .vodppmterm: return "ppm"
+        case .cbvodppm: return "ppm"
+        case .cbppm: return "ppm"
+        case .relvodppm: return "ppm"
+        case .omnipack: return "ppm" //복합 vod ppm omni팩
+        case .ppp: return "ppp"
+        case .relppp: return "ppp"
+        default: return ""
+        }
+    }
+    
     static var ppms: [PrdTypCd] {
         [.vodppm, .vodppmterm]
     }

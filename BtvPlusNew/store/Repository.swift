@@ -247,13 +247,7 @@ class Repository:ObservableObject, PageProtocol{
                     DataLog.d("setup currentAccountId " + currentAccountId, tag:"VSManager")
                     self.namedStorage?.tvUserId = currentAccountId
                 }
-                switch self.pairing.pairingType {
-                case .wifi :
-                    self.dataProvider.requestData(
-                        q: .init(id: self.tag, type: .pushMessage(NpsMessage().setMessage(type: .Me_TV)))
-                    )
-                default : break
-                }
+                
             case .syncError :
                 self.appSceneObserver?.alert = .pairingRecovery
             case .syncFail :

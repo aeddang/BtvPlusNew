@@ -113,7 +113,12 @@ class BannerData:InfinityData, PageProtocol{
         
         case .page:
             if isFloat {
-                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 240, height: 0))  ?? image
+                if SystemEnvironment.isTablet {
+                    image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 480, height: 0))  ?? image
+                } else {
+                    image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: 360, height: 0))  ?? image
+                }
+                
             } else{
                 if SystemEnvironment.isTablet {
                     image = ImagePath.thumbImagePath(filePath: data.width_focus_off_path , size: CGSize(width: 640, height: 0))  ?? image

@@ -52,7 +52,7 @@ struct TopBanner: PageComponent {
             //.background(Color.app.red.opacity(0.4))
             if self.useQuickMenu {
                 QuickTab()
-                    .padding(.leading, Dimen.margin.thin)
+                    
                     //.background(Color.app.white.opacity(0.4))
                     
             }

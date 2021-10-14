@@ -403,7 +403,11 @@ struct AppLayout: PageComponent{
     func onPageRestart(){
         self.isInit = true
         self.isLoading = false
-        self.pairing.ready()
+        if self.pagePresenter.currentPage?.pageID == .serviceError {
+            self.onPageReset()
+        } else {
+            self.pairing.ready()
+        }
     }
     
     func onPageReset(){

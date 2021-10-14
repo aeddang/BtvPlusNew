@@ -287,11 +287,12 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         }
         guard let currentPlayer = player else { return }
         if self.currentRate != 1 {
-            currentPlayer.rate = self.currentRate
+            DispatchQueue.main.async {
+                currentPlayer.rate = self.currentRate
+            }
         }
         if self.isAutoPlay { self.resume() }
         else { self.pause() }
-       
         /*
         guard let currentItem = currentPlayer.currentItem else { return }
         

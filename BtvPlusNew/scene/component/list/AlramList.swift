@@ -205,7 +205,7 @@ struct AlramItem: PageView {
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: Dimen.icon.tiny)
+                    .frame(height: SystemEnvironment.isTablet ? Dimen.icon.lightUltra : Dimen.icon.lightExtra)
                     .padding(.trailing, Dimen.margin.mediumExtra)
                     .opacity(self.isRead ? 0.5 : 1.0)
             }

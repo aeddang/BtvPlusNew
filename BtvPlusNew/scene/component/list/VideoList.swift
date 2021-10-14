@@ -202,7 +202,6 @@ class VideoData:InfinityData, Copying{
         }
        
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
-        
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: ListItem.video.size, isAdult: self.isAdult)
@@ -417,7 +416,7 @@ class VideoData:InfinityData, Copying{
                 return 0
             }
             if self.isClip {
-                return self.clipTitle?.isEmpty == false ? ListItem.video.type03 : ListItem.video.type02
+                return ListItem.video.type03
             }
             
             if (self.title != nil && self.subTitle != nil) {
@@ -773,7 +772,7 @@ struct VideoItemBody: PageView {
             height: self.data.type.size.height)
         
         if self.data.title != nil {
-            VStack(alignment: .leading, spacing:0){
+            VStack(alignment: .leading, spacing:Dimen.margin.tiny){
                 Spacer().modifier(MatchHorizontal(height: 0))
                 if let title = self.data.fullTitle {
                     Text(title)
@@ -787,8 +786,7 @@ struct VideoItemBody: PageView {
                     Text(subTitle)
                         .kerning(Font.kern.thin)
                         .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
-                        .lineLimit(1)
-                        .padding(.top, Dimen.margin.tiny)
+                        .lineLimit(2)
                 }
                 
                 if let clipTitle = self.data.clipTitle {
@@ -796,8 +794,7 @@ struct VideoItemBody: PageView {
                         .kerning(Font.kern.thin)
                         .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.app.white))
                         .lineLimit(1)
-                        .padding(.top, Dimen.margin.tiny)
-                       
+    
                 }
             }
             .padding(.horizontal, Dimen.margin.thin)

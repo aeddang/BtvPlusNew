@@ -245,7 +245,7 @@ struct PagePairingSetupUser: PageView {
             }
             .onAppear{
                 guard let obj = self.pageObject  else { return }
-                self.birth = self.birthList[30]
+                self.birth = "1990" + String.app.year
                 let type = obj.getParamValue(key: .type)
                 Self.pairingInType = obj.getParamValue(key: .subType) as? String ?? "mob-my"
                 self.pairingType = type as? PairingRequest ?? self.pairingType

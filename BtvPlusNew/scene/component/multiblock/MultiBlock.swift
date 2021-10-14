@@ -139,7 +139,7 @@ struct MultiBlock:PageComponent {
             }
            
             if !self.datas.isEmpty {
-                if #available(iOS 14.0, *) {
+                if #available(iOS 15.0, *) {
                     if let data = self.tipBlock {
                         TipBlock(data:data)
                             .modifier(MatchHorizontal(height:  Dimen.tab.light))

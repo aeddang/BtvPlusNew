@@ -56,7 +56,7 @@ class EpisodeViewerData {
     func setData(data:SynopsisContentsItem) -> EpisodeViewerData {
         if self.type == .btv {
             self.title = data.title ?? ""
-            self.subTitle = data.sub_title
+            self.subTitle =  data.sub_title  //data.epsd_snss_cts?.replace("\n", with:" ").replace("\r", with:"")
             self.seasonTitle = data.sson_choic_nm
         } else {
             if data.sub_title?.isEmpty == false {
@@ -68,10 +68,8 @@ class EpisodeViewerData {
                 self.subTitle = data.epsd_snss_cts
                 self.seasonTitle = ""
             }
-           
         }
        
-        
         self.srisId = data.sris_id
         if let time = data.brcast_dy, !time.isEmpty {
             self.date = time.toDate(dateFormat: "yyyyMMddHHmmss")?.toDateFormatter(dateFormat: "yy.MM.dd")

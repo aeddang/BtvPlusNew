@@ -50,7 +50,7 @@ class TicketData:InfinityData{
             image = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha ) ?? image
         }
         if let thumb = data.ppm_join_off_img_path {
-            joinImage = ImagePath.thumbImagePath(filePath: thumb, size: ListItem.monthly.size)
+            joinImage = ImagePath.thumbImagePath(filePath: thumb, size: type.size, convType:  .alpha)
         }
         
         index = idx
@@ -285,7 +285,6 @@ struct TicketItem: PageView {
     var data:TicketData
     var body: some View {
         ZStack{
-            
             KFImage(URL(string: self.image ?? ""))
                 .resizable()
                 .placeholder {
@@ -293,7 +292,7 @@ struct TicketItem: PageView {
                         .resizable()
                 }
                 .cancelOnDisappear(true)
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .modifier(MatchParent())
             
         }

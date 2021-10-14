@@ -57,7 +57,7 @@ struct PageContentBody: PageView  {
                 Spacer().modifier(MatchParent()).background(Color.transparent.black70)
                     .opacity(self.dragOpacity)
                     .onTapGesture {
-                        self.pageChanger.goBack()
+                       //self.pageChanger.goBack()
                     }
             }
             

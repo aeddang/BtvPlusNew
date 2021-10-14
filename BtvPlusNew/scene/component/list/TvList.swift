@@ -221,7 +221,7 @@ struct TvItem: PageView {
                         .lineLimit(1)
                     if self.data.subTitle != nil {
                         Spacer().modifier(MatchVertical(width: 1))
-                            .background(Color.app.greyMedium)
+                            .background(Color.app.greyDeep)
                             .frame(height: Dimen.line.heavyExtra)
                     }
                 }

@@ -61,7 +61,8 @@ struct PairingView: PageComponent{
                     defaultText: String.pageTitle.pairingManagement,
                     textModifier: TextModifier( family: Font.family.medium,
                         size: Font.size.thinExtra, color:Color.app.greyLight),
-                    image: Asset.icon.more) { _ in
+                    image: Asset.icon.more,
+                    spacing:0) { _ in
                         self.sendLog(action: .clickConnectTvSetup)
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.pairingManagement)

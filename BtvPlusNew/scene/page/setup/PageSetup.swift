@@ -75,7 +75,7 @@ struct PageSetup: PageView {
                                         SetupPossession(isInitate:self.isInitate)
                                         //SetupHappySenior()
                                     }
-                                    SetupOksusu(isInitate:self.isInitate)
+                                    //SetupOksusu(isInitate:self.isInitate)
                                     SetupGuideNVersion()
                                    
                                 }
@@ -116,7 +116,7 @@ struct PageSetup: PageView {
                                     SetupPossession(isInitate:self.isInitate)
                                     //SetupHappySenior()
                                 }
-                                SetupOksusu(isInitate:self.isInitate)
+                                //SetupOksusu(isInitate:self.isInitate)
                                 SetupGuideNVersion()
                                 //#if DEBUG
                                     SetupLaboratory()

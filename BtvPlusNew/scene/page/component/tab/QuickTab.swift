@@ -44,8 +44,8 @@ struct QuickTab: PageComponent{
     
     
     var body: some View {
-        HStack(alignment: .bottom ,
-               spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.regular){
+        HStack(alignment: .center ,
+               spacing: SystemEnvironment.isTablet ? Dimen.margin.tiny : 0){
             ForEach(self.menus) {menu in
                 if SystemEnvironment.isTablet {
                     QuickTabItemTablet(data: menu){
@@ -55,6 +55,7 @@ struct QuickTab: PageComponent{
                     QuickTabItem(data: menu){
                         self.move(data: menu)
                     }
+                    .modifier(MatchHorizontal(height: 46))
                     if !menu.isLast {
                         Spacer().modifier(MatchVertical(width: 1))
                             .frame( height: Dimen.line.heavy)
@@ -63,6 +64,7 @@ struct QuickTab: PageComponent{
                 }
             }
         }
+        .padding(.horizontal,  SystemEnvironment.isTablet ? 0 : Dimen.margin.regularExtra)
     }
     func move(data:QuickData ){
         switch data.pageId {
@@ -74,7 +76,7 @@ struct QuickTab: PageComponent{
                 self.moveTip()
             }
         case .cashCharge : self.moveCashCharge()
-        default : break
+        default : self.moveJoinCenter()
         }
     }
     func movePreview(){
@@ -134,7 +136,7 @@ struct QuickTab: PageComponent{
     }
     
     func moveJoinCenter(){
-        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"가입센터"))
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"가입#"))
         AppUtil.openURL("https://m.bdirectshop.com/Btvapp/Btvapp.do")
     }
 }
@@ -160,6 +162,7 @@ struct QuickTabItem: PageComponent{
                     ))
                     .fixedSize(horizontal: true, vertical: false)
             }
+            
         }
     }
 }

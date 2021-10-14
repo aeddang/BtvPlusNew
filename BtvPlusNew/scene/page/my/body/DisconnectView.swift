@@ -99,6 +99,7 @@ struct DisconnectView: PageComponent{
                         )
                     }
                 }
+                /*448
                 if self.isOksusu {
                     FillButton(
                         text: String.pageTitle.myOksusu,
@@ -109,7 +110,7 @@ struct DisconnectView: PageComponent{
                             PageProvider.getPageObject(.myOksusuPurchase)
                         )
                     }
-                }
+                }*/
             }
             if self.sceneOrientation == .landscape {
                 Image(Asset.image.myConnectIos)

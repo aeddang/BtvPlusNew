@@ -166,13 +166,15 @@ struct PlayerUI: PageComponent {
         .onReceive(self.viewModel.$duration) { tm in
             self.duration = tm.secToHourString()
         }
+        
         .onReceive(self.viewModel.$isPlay) { play in
             self.isPlaying = play
+            /*
             if self.isPlaying {
                 self.viewModel.playerUiStatus = .hidden
             }else {
                 self.viewModel.playerUiStatus = .view
-            }
+            }*/
         }
         .onReceive(self.viewModel.$playerUiStatus) { st in
             withAnimation{
@@ -193,7 +195,7 @@ struct PlayerUI: PageComponent {
                 if !self.isSeeking {
                     withAnimation{ self.isSeeking = true }
                 }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.viewModel.$streamEvent) { evt in

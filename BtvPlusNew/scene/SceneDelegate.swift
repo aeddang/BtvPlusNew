@@ -8,10 +8,13 @@
 
 import UIKit
 import SwiftUI
+import Combine
 //import Firebase
 
 class SceneDelegate: PageSceneDelegate {
     var repository:Repository? = nil
+    let zeroconf = ZeroConf()
+    
     override func onInitController(controller: PageContentController) {
         controller.pageControllerObservable.overlayView = AppLayout()
     }
@@ -69,6 +72,17 @@ class SceneDelegate: PageSceneDelegate {
             .environmentObject(setup) 
             .environmentObject(naviLogManager)
             .background(Color.brand.bg)
+        
+        pairing.$event.sink { evt in
+            guard let evt = evt else { return }
+            switch evt{
+            case .pairingCompleted:
+                self.zeroconf.sendZeroConf(networkObserver: self.repository?.networkObserver)
+            default: break
+            }
+        }
+                                 
+        
         return AnyView(environmentView)
     }
     
@@ -223,7 +237,6 @@ class SceneDelegate: PageSceneDelegate {
         
         // ZeroConf 앱 시작시, 포그라운드 진입시 전송
         if self.repository?.pairing.status == .pairing {
-            let zeroconf = ZeroConf()
             zeroconf.sendZeroConf(networkObserver: self.repository?.networkObserver)
         }
         

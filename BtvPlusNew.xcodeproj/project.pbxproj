@@ -583,6 +583,8 @@
 		31F42A0726FA144800EE6934 /* BtvPlus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */; };
 		31F42A0826FA194200EE6934 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
+		489DD960271529A800DBF93C /* String+base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489DD95F271529A800DBF93C /* String+base64.swift */; };
+		48A4A31D270EFA610062323B /* ZeroConf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A4A31C270EFA610062323B /* ZeroConf.swift */; };
 		D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */; };
 		D506D717258C8FFB00F27C00 /* PosterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D506D716258C8FFB00F27C00 /* PosterList.swift */; };
 		D506D722258C924500F27C00 /* ListStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D506D721258C924500F27C00 /* ListStyle.swift */; };
@@ -1362,6 +1364,8 @@
 		31F28040267336FD00F40B09 /* EpisodeViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeViewerData.swift; sourceTree = "<group>"; };
 		348DCDB744BAB8587ED219D4 /* Pods-BtvPlusNewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.release.xcconfig"; sourceTree = "<group>"; };
 		422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		489DD95F271529A800DBF93C /* String+base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+base64.swift"; sourceTree = "<group>"; };
+		48A4A31C270EFA610062323B /* ZeroConf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroConf.swift; sourceTree = "<group>"; };
 		562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AB7647BF720A2E85DC62906 /* Pods_BtvPlusNew_BtvPlusNewUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNew_BtvPlusNewUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82C464328C07082311FF19F2 /* Pods-BtvPlusNew.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.debug.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.debug.xcconfig"; sourceTree = "<group>"; };
@@ -3345,6 +3349,15 @@
 			path = episode;
 			sourceTree = "<group>";
 		};
+		48A4A31B270EFA470062323B /* zeroconf */ = {
+			isa = PBXGroup;
+			children = (
+				48A4A31C270EFA610062323B /* ZeroConf.swift */,
+				489DD95F271529A800DBF93C /* String+base64.swift */,
+			);
+			path = zeroconf;
+			sourceTree = "<group>";
+		};
 		D506D715258C8FCD00F27C00 /* list */ = {
 			isa = PBXGroup;
 			children = (
@@ -3916,6 +3929,7 @@
 				D56C6B1C257DACD800CF9AB8 /* storage */,
 				312D2D7126D5E8C7002EE783 /* keychain */,
 				31CABAF926C2021200B4B3C3 /* log */,
+				48A4A31B270EFA470062323B /* zeroconf */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,
@@ -4875,6 +4889,7 @@
 				317F990926A6BD9C00016C09 /* PageKidsMonthly.swift in Sources */,
 				319B378D26B1681B001501B1 /* RecommandBenefit.swift in Sources */,
 				3198CF8726D917B300918217 /* PageSynopsisKids.swift in Sources */,
+				489DD960271529A800DBF93C /* String+base64.swift in Sources */,
 				313E64DE26EA1F7800EBDE31 /* PageSynopsisHistory.swift in Sources */,
 				D56C6A57257DA0C700CF9AB8 /* RadioButton.swift in Sources */,
 				D56C6A2C257DA0C700CF9AB8 /* CustomPHPicker.swift in Sources */,
@@ -5096,6 +5111,7 @@
 				316719A726008681005AC3D2 /* Alerts.swift in Sources */,
 				318BA3992608C2660093BC7D /* SearchCategory.swift in Sources */,
 				318F7B502625739A00774B17 /* CardBlock.swift in Sources */,
+				48A4A31D270EFA610062323B /* ZeroConf.swift in Sources */,
 				31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */,
 				318AA03F265DDB1D00C089EC /* SetupAlram.swift in Sources */,
 				313E64D026E999FB00EBDE31 /* PageSynopsisCorner.swift in Sources */,

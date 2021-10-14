@@ -123,7 +123,7 @@ enum ApiServer:String{
     case WEB, NPS, NPS_V5, PSS, RVS, WEPG, VMS, STACM, SRCXPG,
     UPMC, ME, EVENT, EMS, LGS, METV, IMAGE, NAVILOG, NAVILOG_NPI, EUXP, SMD, CBS,
     IIP, METV2, SCS2, EPS, EPS2, NF, RVS2, VLS, KES, KMS, NSUTIL, PUCR, PUSH,
-    RPS, UORPS, MGMRPS
+    RPS, UORPS, MGMRPS, ZEROCONF
     
     var configKey:String {
         get {
@@ -168,6 +168,9 @@ enum ApiServer:String{
             case .SMD: return "smd"
             case .KMS: return "kms"
             case .NSUTIL:return "nsutil"
+                
+            // ZeroConf
+            case .ZEROCONF: return "zeroconf"
            
             }
         }
@@ -211,6 +214,10 @@ enum ApiServer:String{
         case "smd": return .SMD
         case "kms": return .KMS
         case "nsutil":return .NSUTIL
+            
+        // ZeroConf
+        case "zeroconf": return .ZEROCONF
+            
         default : return nil
         }
         

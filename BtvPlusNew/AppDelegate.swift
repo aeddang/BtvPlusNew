@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import Firebase
+import AdSupport
+import AppTrackingTransparency
 
 class AppObserver: ObservableObject, PageProtocol {
     @Published fileprivate(set) var page:IwillGo? = nil
@@ -107,6 +109,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             options: authOptions){ _ , error in
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
+                
+                //iOS15 에서 푸시 팝업으로 인해 IDFA팝업이 미노출되는 현상땜에 푸시 팝업 닫은 후 뜨도록 변경
+                self.initATT()
             }
         }
         
@@ -211,6 +216,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             AppDelegate.appObserver.handleApns(userInfo, isMove: true)
         }
         completionHandler()
+    }
+    
+    
+    func initATT(){
+        
+        // 사용자에게 Apple IDFA 수집 동의 대화상자 (AppTrackingTransparency)를 보입니다.
+        // SDK가 IDFA를 수집하지 않도록 star() 전 호출되어야 합니다.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            ATTrackingManager.requestTrackingAuthorization { (status) in
+                if status == .authorized {
+                    print("IDFA 승인")
+                }
+                
+            }
+        }
     }
     
 }

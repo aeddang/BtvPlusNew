@@ -583,6 +583,7 @@
 		31F42A0726FA144800EE6934 /* BtvPlus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D56C6931257D9EE600CF9AB8 /* BtvPlus.xcdatamodeld */; };
 		31F42A0826FA194200EE6934 /* NotificationCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C4BC96262D2D8600BB2167 /* NotificationCoreData.swift */; };
 		4624169650CBC1A8EF5A5678 /* Pods_BtvPlusNewTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */; };
+		488AF024271864C100D3CC2E /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 488AF023271864C100D3CC2E /* AppTrackingTransparency.framework */; };
 		489DD960271529A800DBF93C /* String+base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489DD95F271529A800DBF93C /* String+base64.swift */; };
 		48A4A31D270EFA610062323B /* ZeroConf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A4A31C270EFA610062323B /* ZeroConf.swift */; };
 		D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */; };
@@ -1364,6 +1365,7 @@
 		31F28040267336FD00F40B09 /* EpisodeViewerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeViewerData.swift; sourceTree = "<group>"; };
 		348DCDB744BAB8587ED219D4 /* Pods-BtvPlusNewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNewTests.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNewTests/Pods-BtvPlusNewTests.release.xcconfig"; sourceTree = "<group>"; };
 		422A939031A7D25F7E469FCB /* Pods_BtvPlusNewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		488AF023271864C100D3CC2E /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		489DD95F271529A800DBF93C /* String+base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+base64.swift"; sourceTree = "<group>"; };
 		48A4A31C270EFA610062323B /* ZeroConf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroConf.swift; sourceTree = "<group>"; };
 		562032BFA89FA1AD38D16D26 /* Pods_BtvPlusNew.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BtvPlusNew.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1558,6 +1560,7 @@
 				31631C4F25D22DC100E501F7 /* SKBNewAdSdk.framework in Frameworks */,
 				319BAFA02604394F0007273F /* libTycheSDK.a in Frameworks */,
 				3180855E25C233A900AE4A73 /* libPoCDrmAgent.a in Frameworks */,
+				488AF024271864C100D3CC2E /* AppTrackingTransparency.framework in Frameworks */,
 				D56C5FF025933DA9009AE769 /* libti2-mdns-service-proxy-client.a in Frameworks */,
 				D4D8529D19DCDC8D8370F889 /* Pods_BtvPlusNew.framework in Frameworks */,
 			);
@@ -1585,6 +1588,7 @@
 		309EBDAD795DF6595FE7C4A3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				488AF023271864C100D3CC2E /* AppTrackingTransparency.framework */,
 				317628AF26EE5D6D00144A8A /* VideoSubscriberAccount.framework */,
 				312D2D7526D5E946002EE783 /* Foundation.framework */,
 				318BA35526085F8E0093BC7D /* AdSupport.framework */,

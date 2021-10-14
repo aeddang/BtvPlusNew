@@ -144,6 +144,8 @@
 	<array>
 		<string>com.skb.episode.search</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>타겟팅 광고서비스 제공 목적으로 IDFA에 접근하려고 합니다.</string>
 	<key>NSVideoSubscriberAccountUsageDescription</key>
 	<string>TV프로바이더 연동</string>
 	<key>SKAdNetworkIdentifier</key>

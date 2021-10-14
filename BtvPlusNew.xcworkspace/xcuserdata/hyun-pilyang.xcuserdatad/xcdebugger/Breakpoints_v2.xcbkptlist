@@ -40,15 +40,15 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "313557B9-BD45-4E5F-8CB0-5435688A5D1D"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BtvPlusNew/store/Repository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "462"
-            endingLineNumber = "462"
-            landmarkName = "recivePush(_:data:)"
+            startingLineNumber = "467"
+            endingLineNumber = "467"
+            landmarkName = "updatePush(_:isSync:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -56,7 +56,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "59AFFADD-C75C-46F7-B858-15ED84997703"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BtvPlusNew/scene/AppLayout.swift"
@@ -88,7 +88,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "175E3017-27C8-48C5-B6E5-DD181E1452C7"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BtvPlusNew/scene/component/player/view/preroll/Preroll.swift"
@@ -216,7 +216,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "D4E9AA74-5C0F-4A7F-818F-51F31F930A81"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lib/page/PageProtocol.swift"
@@ -224,8 +224,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "319"
             endingLineNumber = "319"
-            landmarkName = "sceneDidBecomeActive(_:)"
-            landmarkType = "7">
+            landmarkName = "childViews"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -238,8 +238,8 @@
             filePath = "BtvPlusNew/scene/SceneDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "sceneDidBecomeActive(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -247,32 +247,64 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3E4A63E2-578B-40EA-ACC9-8EC6D982AE78"
+            uuid = "A386D516-0D8B-4E37-AD5E-8DE70E2A39FC"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/store/Repository.swift"
+            filePath = "BtvPlusNew/store/zeroconf/ZeroConf.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
-            landmarkName = "init(vsManager:dataProvider:pairing:audioMirroring:networkObserver:pagePresenter:appSceneObserver:setup:)"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "sendZeroConf(networkObserver:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "75F175FE-E252-4E3F-851C-C909EB347A72"
+            uuid = "8B5DE133-F2D0-4258-8136-2BDD9140BC94"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/SceneDelegate.swift"
+            filePath = "BtvPlusNew/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "adjustEnvironmentObjects(_:)"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
+            landmarkName = "initATT()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5D0F80AF-E8D9-4F5A-9879-4D68C4DF9342"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/store/Repository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "526"
+            endingLineNumber = "526"
+            landmarkName = "zeroConfUDPSend()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6968E5EE-83A2-4899-83D6-9E82AE87C1AC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/store/Repository.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
+            landmarkName = "setupPairing()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

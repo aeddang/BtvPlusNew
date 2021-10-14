@@ -38,8 +38,14 @@ struct AppUtil{
     }
     
     static var idfa: String {
-        if ASIdentifierManager.shared().isAdvertisingTrackingEnabled {
-            let identifier = ASIdentifierManager.shared().advertisingIdentifier
+        //isAdvertisingTrackingEnabled iOS14에서부터 deprecated되서 사용못함
+//        if ASIdentifierManager.shared().isAdvertisingTrackingEnabled {
+//            let identifier = ASIdentifierManager.shared().advertisingIdentifier
+//            return identifier.uuidString
+//        }
+//        return ""
+        let identifier = ASIdentifierManager.shared().advertisingIdentifier
+        if identifier.uuidString != "00000000-0000-0000-0000-000000000000" {
             return identifier.uuidString
         }
         return ""

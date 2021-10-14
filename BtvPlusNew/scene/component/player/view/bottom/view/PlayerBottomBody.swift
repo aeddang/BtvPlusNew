@@ -130,7 +130,7 @@ struct PlayerBottomBody: PageComponent{
                         self.viewModel.btvPlayerEvent = .fullVod(synop)
                         self.viewModel.btvLogEvent = .clickInsideButton(.clickInsideSkipIntro , .fullVod(synop))
                     }
-                    
+                    .opacity(self.isUiShowing ? 1.0 : 0.0)
                 }
                 
                 if self.showNext {

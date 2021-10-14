@@ -558,7 +558,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         } else {
             AppDelegate.orientationLock = pageModel.getPageOrientationLock(nil) ?? .all
         }
-        
         if let mask = changeOrientation, self.needOrientationChange(changeOrientation: changeOrientation) {
             self.requestDeviceOrientation(mask)
         }
@@ -588,19 +587,11 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     
     final func requestDeviceOrientation(_ mask:UIInterfaceOrientationMask, isForce:Bool = false){
         let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
-        /*
-        if let controller = self.window?.rootViewController as? PageHostingController<AnyView> {
-            switch changeOrientation {
-                case .landscapeLeft, .landscapeRight:
-                    controller.isIndicatorAutoHidden = true
-                case .portrait, .portraitUpsideDown:
-                    controller.isIndicatorAutoHidden = false
-                default:break
-            }
-        }*/
         if isForce {
             PageLog.d("requestDeviceOrientation mask force" , tag: "PageScene")
-            UINavigationController.attemptRotationToDeviceOrientation()
+            DispatchQueue.main.async {
+                UINavigationController.attemptRotationToDeviceOrientation()
+            }
             return
         }
         

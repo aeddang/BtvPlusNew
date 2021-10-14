@@ -114,6 +114,12 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
 
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
         if linkText != nil { return linkText }
+        if isUrl {
+            return self.title + "\n" + self.url.absoluteString
+        } else {
+            return self.title
+        }
+        /*
         if activityType == .message {
             if isUrl {
                 return self.title + "\n" + self.url.absoluteString
@@ -121,7 +127,7 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
                 return self.title
             }
         }
-        return isUrl ? self.url : self.title
+        return isUrl ? self.url : self.title*/
     }
     
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {

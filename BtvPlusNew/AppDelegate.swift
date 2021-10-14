@@ -117,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let launchedURL = launchOptions?[UIApplication.LaunchOptionsKey.url] as? URL
         
         //let launchedURL =  URL(string: "btvplus://menu?menus=BP_03_01/NM2000000262/NM2000000270/NM2000000272/NM2000003461")
-                //http://m.btvplus.co.kr?menus=BP_03_01/NM2000000262/NM2000000270/NM2000000272/NM2000003461
+        //let launchedURL =  URL(string: "http://m.btvplus.co.kr?menus=BP_03_01/NM2000000262/NM2000000270/NM2000000272/NM2000003461")
         
         return AppDelegate.appObserver.handleDynamicLink(launchedURL)
     }

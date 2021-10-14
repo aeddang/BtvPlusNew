@@ -445,8 +445,6 @@ struct MultiBlockBody: PageComponent {
                         self.currentOpenId = nil
                     }
                 }
-                
-                
             } else {
                 self.delayAddBlock()
             }

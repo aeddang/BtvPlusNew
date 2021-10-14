@@ -32,7 +32,6 @@ struct PlayerBottom: PageView{
     @State var isLock:Bool = false
     @State var durationTime:Double? = nil
     
-    
     var body: some View {
         ZStack(alignment: .topLeading){
             if self.type == .btv {

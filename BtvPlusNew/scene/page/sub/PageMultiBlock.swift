@@ -209,7 +209,10 @@ struct PageMultiBlock: PageView {
     
     private func setupOriginData(idx:Int? = nil){
         var moveIdx:Int = idx ?? 0
-        if idx == nil , let findIds = self.openId?.split(separator: "|") {
+        
+        if idx == nil ,
+           let findIds = openId?.contains("/") == true ? openId?.split(separator: "/") :  openId?.split(separator: "|")
+        {
             let tab = self.tabDatas?.first(
                 where: { t in
                     guard let menuId = t.menuId else {return false}

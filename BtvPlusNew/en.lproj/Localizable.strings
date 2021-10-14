@@ -293,8 +293,8 @@
 "alertConnect" = "B tv 연결 알림";
 "alertConnectWifi" = "Wi-Fi 네트워크에 연결해 주세요.";
 "alertConnectWifiSub" = "기기의 [설정 > Wi-Fi] 메뉴에서\nWi-Fi활성화 후 다시 시도해 주세요.";
-"alertConnectNotFound" = "연결가능한\nB tv가 없습니다.";
-"alertConnectNotFoundSub" = "다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
+"alertConnectNotFound" = "연결가능한\nB tv가 없습니다.\n다시 조회를 시도하시거나\n다른연결방법을 이용해 주세요.";
+"alertConnectNotFoundSub" = "※ Apple TV의 경우 Wi-Fi 외 다른 연결 방법을 이용해 주세요.";
 
 "alertNeedConnect" = "B tv와 연결이 필요합니다.\n연결하시겠습니까?";
 "alertNeedConnectSubPossession" = "※ B tv를 연결하시면 이전 B tv의 소장 VOD 확인 및 시청이 불가합니다.";
@@ -608,7 +608,7 @@
 
 "pairingBtnWifi" = "Wi-Fi로 연결하기";
 "pairingBtnWifiSub" = "B tv와 동일한 네트워크 연결이 필요합니다.";
-"pairingBtnWifiSubTip" = "※ 애플 TV는 Wi-Fi 외 다른 연결 방법을 이용해 주세요.";
+"pairingBtnWifiSubTip" = "※ Apple TV는 Wi-Fi 외 다른 연결 방법을 이용해 주세요.";
 
 "pairingBtnBtvCertification" = "B tv 인증번호로 연결하기";
 "pairingBtnBtvCertificationSub" = "B tv에서 확인한 인증번호를 입력합니다.";
@@ -891,6 +891,7 @@
  PageSynopsis
 */
 "synopsisDisableNScreen" = "모바일에서 이용하실 수 없는 콘텐츠입니다.\nB tv에서 구매/시청 가능합니다.";
+"synopsisDisableNScreenFree" = "모바일에서 이용하실 수 없는 콘텐츠입니다.\nB tv에서 시청 가능합니다.";
 "synopsisDisablePurchas" = "B tv에서 구매 후 모바일에서\n시청하실 수 있습니다.";
 "synopsisOnlyBtvFree" = "B tv에서 무료 시청 가능";
 "synopsisOnlyBtv" = "B tv에서 구매/시청 가능";

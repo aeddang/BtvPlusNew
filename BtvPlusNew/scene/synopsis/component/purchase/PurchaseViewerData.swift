@@ -49,7 +49,6 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let isOnlyBtvPurchasable = synopsisModel.isOnlyBtvPurchasable
         let holdbackType = synopsisModel.holdbackType
         
-        
         self.hasAuthority = false
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
@@ -67,22 +66,19 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             if isPosson {
                 serviceInfo = String.pageText.synopsisOnlyBtvFree
             } else {
-                /*
-                serviceInfo = purchas?.hasAuthority ?? false
-                ? isFree ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
-                : synopsisModel.holdbackType == .holdOut
-                        ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
-                */
-                serviceInfo = String.pageText.synopsisOnlyBtv
+                let fullPlayAbe = purchasAuthority || isFree ||  synopsisModel.holdbackType == .holdOut
+                serviceInfo = fullPlayAbe ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
+                playerInfo = fullPlayAbe ? String.pageText.synopsisDisableNScreenFree : String.pageText.synopsisDisableNScreen
             }
-            playerInfo = String.pageText.synopsisDisableNScreen
             isPlayAble = false
             isPlayAbleBtv = true
             
         } else if synopsisModel.isOnlyPurchasedBtv && !(purchas?.isDirectview ?? false) {
+            /*
             serviceInfo = purchas?.isFree ?? false
                 ? String.pageText.synopsisOnlyBtv
-                : String.pageText.synopsisOnlyPurchasBtv
+                : String.pageText.synopsisOnlyPurchasBtv*/
+            serviceInfo = String.pageText.synopsisOnlyPurchasBtv
             playerInfo = String.pageText.synopsisDisablePurchas
             isPlayAble = false
             isPlayAbleBtv = true

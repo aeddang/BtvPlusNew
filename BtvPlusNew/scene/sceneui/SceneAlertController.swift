@@ -283,6 +283,7 @@ struct SceneAlertController: PageComponent{
         self.title = String.alert.connect
         self.text = String.alert.connectNotFound
         self.subText = String.alert.connectNotFoundSub
+        
         self.buttons = [
             //AlertBtnData(title: String.app.retry, index: 0),
             AlertBtnData(title: String.app.confirm, index: 1)

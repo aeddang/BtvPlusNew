@@ -522,8 +522,8 @@
 "alertNeedAgreePrivacy" = "개인정보 수집 이용에 동의 해주셔야 합니다.";
 
 "alertNotAvailable" = "이용 제한 안내";
-"alertNotAvailableAppleTv" = "애플 TV 연결 상태에서는\n이용하실 수 없는 기능입니다.";
-"alertNotAvailableAppleTvTip" = "애플 TV 서비스 제공 정책에 따라\n일부 기능 이용이 제한됩니다.";
+"alertNotAvailableAppleTv" = "Apple TV 연결 상태에서는\n이용하실 수 없는 기능입니다.";
+"alertNotAvailableAppleTvTip" = "Apple TV 서비스 제공 정책에 따라\n일부 기능 이용이 제한됩니다.";
 
 "alertBtvplaySuccess" = "B tv로 재생합니다.";
 "alertBtvplayFail" = "B tv로 보기에 실패하였습니다.";

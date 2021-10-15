@@ -69,6 +69,7 @@ struct PageMyBenefits: PageView {
                             viewModel: self.viewPagerModel,
                             pages: self.pages,
                             titles: self.titles,
+                            usePull:nil,
                             isDivisionTab: true)
                             { idx in
                                 switch idx {

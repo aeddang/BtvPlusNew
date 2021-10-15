@@ -73,7 +73,7 @@ struct CPPageViewPager: PageComponent {
                     self.isPageReady = true
                 }
                 
-            default : do {}
+            default : break
             }
         }
         .onAppear{

@@ -66,8 +66,11 @@ class Authority:ObservableObject, PageProtocol {
                 needUpdate = true
                 self.request = .updateMonthlyPurchase(isPeriod: true)
             }
-            if !needUpdate { self.completedMyInfo() }
-            else { self.isMyInfoUpdate = true }
+            if !needUpdate {
+                self.completedMyInfo()
+            } else {
+                self.isMyInfoUpdate = true
+            }
         default : self.request = request
         }
     }

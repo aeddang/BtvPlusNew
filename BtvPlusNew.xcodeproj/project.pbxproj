@@ -537,6 +537,7 @@
 		31CABAFD26C2043F00B4B3C3 /* NaviLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */; };
 		31CABB0026C28DCC00B4B3C3 /* Navilog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */; };
 		31CADC50271911EB00956FB6 /* SetupQA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CADC4F271911EB00956FB6 /* SetupQA.swift */; };
+		31CADC5227191BF700956FB6 /* PageSetupApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CADC5127191BF700956FB6 /* PageSetupApi.swift */; };
 		31CC340E26F972FE00F76F0B /* QuickTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC340D26F972FE00F76F0B /* QuickTab.swift */; };
 		31D12E65270970400090820A /* PageSynopsisPlayerLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D12E64270970400090820A /* PageSynopsisPlayerLog.swift */; };
 		31D12E67270971BF0090820A /* PageSynopsisPackageLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D12E66270971BF0090820A /* PageSynopsisPackageLog.swift */; };
@@ -1326,6 +1327,7 @@
 		31CABAFC26C2043F00B4B3C3 /* NaviLogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaviLogManager.swift; sourceTree = "<group>"; };
 		31CABAFF26C28DCC00B4B3C3 /* Navilog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navilog.swift; sourceTree = "<group>"; };
 		31CADC4F271911EB00956FB6 /* SetupQA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupQA.swift; sourceTree = "<group>"; };
+		31CADC5127191BF700956FB6 /* PageSetupApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSetupApi.swift; sourceTree = "<group>"; };
 		31CC340D26F972FE00F76F0B /* QuickTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickTab.swift; sourceTree = "<group>"; };
 		31D12E64270970400090820A /* PageSynopsisPlayerLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisPlayerLog.swift; sourceTree = "<group>"; };
 		31D12E66270971BF0090820A /* PageSynopsisPackageLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisPackageLog.swift; sourceTree = "<group>"; };
@@ -1853,6 +1855,7 @@
 				31740C2B261C1BB60052A9C2 /* component */,
 				318AA039265DD96E00C089EC /* body */,
 				314D6B0125D0E9A50003C749 /* PageSetup.swift */,
+				31CADC5127191BF700956FB6 /* PageSetupApi.swift */,
 			);
 			path = setup;
 			sourceTree = "<group>";
@@ -2496,9 +2499,9 @@
 				318AA046265DE90B00C089EC /* SetupGuideNVersion.swift */,
 				318AA044265DE8D100C089EC /* SetupHappySenior.swift */,
 				318AA04B265DFA4F00C089EC /* SetupPossession.swift */,
-				318AA049265DE96900C089EC /* SetupLaboratory.swift */,
 				31AF564A2705505700045A41 /* SetupOksusu.swift */,
 				31CADC4F271911EB00956FB6 /* SetupQA.swift */,
+				318AA049265DE96900C089EC /* SetupLaboratory.swift */,
 			);
 			path = body;
 			sourceTree = "<group>";
@@ -4923,6 +4926,7 @@
 				318BA36726089A6C0093BC7D /* PageSearchWebview.swift in Sources */,
 				D56C6A26257DA0C600CF9AB8 /* dimen.swift in Sources */,
 				31A49FF82627D1620065E6C6 /* PagePairingGuide.swift in Sources */,
+				31CADC5227191BF700956FB6 /* PageSetupApi.swift in Sources */,
 				314D738A25B4F8B100907118 /* PageSynopsis.swift in Sources */,
 				314D0E3126DF9D0300BDCD5B /* PickerList.swift in Sources */,
 				316955AB25DF9D1500848507 /* Pss.swift in Sources */,
@@ -5206,7 +5210,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7527;
+				CURRENT_PROJECT_VERSION = 7528;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5231,7 +5235,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7527;
+				CURRENT_PROJECT_VERSION = 7528;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -5421,7 +5425,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7526;
+				CURRENT_PROJECT_VERSION = 7528;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5505,7 +5509,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7526;
+				CURRENT_PROJECT_VERSION = 7528;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

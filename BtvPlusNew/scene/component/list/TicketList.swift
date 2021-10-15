@@ -302,41 +302,70 @@ struct TicketItem: PageView {
        
         .onAppear(){
             self.image = self.data.getImage()
+            //self.pairing.authority.requestAuth(.updateMyinfo(isReset: false))
+        }
+        .onReceive(self.pairing.authority.$event){ evt in
+            guard let evt = evt else { return }
+            switch evt {
+            case .updatedMyinfo, .updatedMyTicketInfo :
+                if let list = self.pairing.authority.purchaseLowLevelTicketList {
+                    self.updateList(list:list, isSub: true)
+                }
+                if let list = self.pairing.authority.purchaseTicketList {
+                    self.updateList(list:list, isSub: false)
+                }
+                break
+            default : break
+            }
         }
         .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
             guard let list = list else { return }
-            self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
-            let willImage = self.data.getImage()
-            if willImage != self.image {
-                self.image = willImage
-            }
+            self.updateList(list:list, isSub: true)
         }
         .onReceive(self.pairing.authority.$purchaseTicketList){ list in
             guard let list = list else { return }
-            self.data.isJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
-            let willImage = self.data.getImage()
-            if willImage != self.image {
-                self.image = willImage
-            }
+            self.updateList(list:list, isSub: false)
            
         }
         .onReceive(self.pairing.authority.$monthlyPurchaseInfo){ _ in
-            guard let list = self.pairing.authority.periodMonthlyPurchaseList else { return }
-            self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
-            let willImage = self.data.getImage()
-            if willImage != self.image {
-                self.image = willImage
-            }
+            //guard let list = self.pairing.authority.monthlyPurchaseList else { return }
+            //self.updateList(list:list)
         }
         .onReceive(self.pairing.authority.$periodMonthlyPurchaseInfo){ _ in
-            guard let list = self.pairing.authority.periodMonthlyPurchaseList else { return }
-            self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
-            let willImage = self.data.getImage()
-            if willImage != self.image {
-                self.image = willImage
-            }
+           // guard let list = self.pairing.authority.periodMonthlyPurchaseList else { return }
+            //self.updateList(list:list)
         }
     }
+    
+    
+    private func updateList(list: [MonthlyInfoItem], isSub:Bool){
+        if isSub {
+            self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
+        } else {
+            self.data.isJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
+        }
+        
+        let willImage = self.data.getImage()
+        if willImage != self.image {
+            self.image = willImage
+        }
+    }
+    private func updateList(list: [ PurchaseFixedChargeItem]){
+        self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
+        let willImage = self.data.getImage()
+        if willImage != self.image {
+            self.image = willImage
+        }
+    }
+   
+    private func updateList(list: [PurchaseFixedChargePeriodItem]){
+        self.data.isSubJoin = (list.first(where: {$0.prod_id == self.data.prodId}) != nil)
+        let willImage = self.data.getImage()
+        if willImage != self.image {
+            self.image = willImage
+        }
+    }
+  
 }
 
 #if DEBUG

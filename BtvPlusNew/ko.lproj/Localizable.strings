@@ -1098,6 +1098,9 @@
 "monthlyTextFirstFreeStrong" = "첫 달 무료!";
 "monthlyTextFirstFreeTrailing" = "지금 이용권을 구독하고 마음껏 즐기세요";
 
+"monthlyTextFirstFreePurchase" = "첫 달 0원에 구매";
+"monthlyTextFirstFreePurchaseTrailing" = "| 다음 결제 %s(부가세 포함)";
+
 "monthlyOceanPurchaseLeading" = "매주 최신 영화가 쏟아지는";
 "monthlyOceanPurchaseTrailing" = "에 가입해 보세요!";
 "monthlyOceanAuthLeading" = "이용중!";

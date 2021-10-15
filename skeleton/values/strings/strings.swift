@@ -129,6 +129,8 @@ extension String {
 
         public static let textFirstFreeStrong = "monthlyTextFirstFreeStrong".loaalized()
         public static let textFirstFreeTrailing = "monthlyTextFirstFreeTrailing".loaalized()
+        public static let textFirstFreePurchase = "monthlyTextFirstFreePurchase".loaalized()
+        public static let textFirstFreePurchaseTrailing = "monthlyTextFirstFreePurchaseTrailing".loaalized()
         
         public static let oceanPurchaseLeading = "monthlyOceanPurchaseLeading".loaalized()
         public static let oceanPurchaseTrailing = "monthlyOceanPurchaseTrailing".loaalized()

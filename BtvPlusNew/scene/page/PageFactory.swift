@@ -33,6 +33,7 @@ extension PageID{
     static let myWatchedList:PageID = "myWatchedList"
     static let modifyProile:PageID = "modifyProile"
     static let setup:PageID = "setup"
+    static let setupApi:PageID = "setupApi"
     static let terminateStb:PageID = "terminateStb"
     static let oksusuUser:PageID = "oksusuUser"
     static let pairingSetupUser:PageID = "pairingSetupUser"
@@ -199,6 +200,7 @@ struct PageFactory{
         case .myRegistCard : return PageMyRegistCard()
         case .modifyProile : return PageModifyProfile()
         case .setup : return PageSetup()
+        case .setupApi : return PageSetupApi()
         case .terminateStb : return PageTerminateStb()
         case .oksusuUser : return PageOksusuUser()
         case .synopsis : return PageSynopsis()

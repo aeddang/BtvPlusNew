@@ -92,6 +92,7 @@ struct PagePairingHappySeniorPicture: PageView {
                     let path = "\(prefix)/?vid=\(encString)&device_id=\(deviceId)&time=\(time)"
                     
                     AppUtil.openURL(path)
+                    self.pagePresenter.closePopup(self.pageObject?.id)
                 }
             }
             .onReceive(dataProvider.$error) { err in

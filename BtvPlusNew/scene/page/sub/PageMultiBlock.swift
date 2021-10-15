@@ -118,6 +118,9 @@ struct PageMultiBlock: PageView {
                         self.isInit = true
                         self.setupOriginData()
                     }
+                    if self.themaType == .ticket {
+                        self.pairing.authority.requestAuth(.updateTicket)
+                    }
                 }
             }
             .onReceive(self.pairing.$event){ evt in

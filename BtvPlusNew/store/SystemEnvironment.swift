@@ -62,6 +62,7 @@ struct SystemEnvironment {
             isImageLock = true
         }
     }
+    static var FORCE_WEB:String? = nil
     
     static let VMS = "http://mobilebtv.com:9080"
     static let WEB = "http://mobilebtv.com:8080"

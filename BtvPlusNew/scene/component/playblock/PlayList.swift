@@ -43,10 +43,12 @@ class PlayData:InfinityData,ObservableObject{
     fileprivate(set) var playListData:PlayListData? = nil
     fileprivate(set) var episodeViewerData:EpisodeViewerData? = nil
     fileprivate(set) var isAutoPlay:Bool = false
-    
+    fileprivate(set) var durationTime:String? = nil
     fileprivate(set) var playRespond:ApiResultResponds? = nil
     fileprivate(set) var playData:Play? = nil
+   
     var playTime:Double = 0
+    
     @Published private(set) var isUpdated: Bool = false
         {didSet{ if isUpdated { isUpdated = false} }}
     
@@ -118,7 +120,7 @@ class PlayData:InfinityData,ObservableObject{
     func setData(data:ContentItem, idx:Int = -1) -> PlayData {
         isClip = true
         count = data.brcast_tseq_nm
-    
+        durationTime = data.play_tms_hms?.toHMS()
         title = data.title
         subTitle = data.keywrd_val
         image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.play.size, isAdult: self.isAdult)
@@ -138,6 +140,7 @@ class PlayData:InfinityData,ObservableObject{
     
     func setData(data:VideoData, idx:Int = -1) -> PlayData {
         isClip = true
+        durationTime = data.playTime
         count = data.count
         title = data.title
         subTitle = data.clipTitle

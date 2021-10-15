@@ -145,6 +145,7 @@ extension PageSynopsis {
     
     private func preplayCompleted(){
         PageLog.d("prevplayCompleted", tag: self.tag)
+        if self.pagePresenter.currentTopPage != self.pageObject {return}
         if self.firstPurchase { return }
         self.firstPurchase = true
         self.continueVod()

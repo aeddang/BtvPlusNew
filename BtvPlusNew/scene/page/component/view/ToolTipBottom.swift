@@ -43,7 +43,7 @@ struct TooltipBottom: PageView {
             }
             .background(Color.brand.primary)
             .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.heavy))
-            .padding(.top, -5)
+            .padding(.top, SystemEnvironment.isTablet ? -10 : -5)
         }
         
         .onTapGesture {

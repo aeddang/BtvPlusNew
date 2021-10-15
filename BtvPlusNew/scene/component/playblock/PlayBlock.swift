@@ -306,9 +306,12 @@ struct PlayBlock: PageComponent{
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 if self.pageObject == page , let pos = self.finalIndex{
                     DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
-                        self.onFocusChange(willFocus: pos)
                         self.infinityScrollModel.uiEvent = .scrollTo(self.datas[pos].hashId)
                     }
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
+                        self.onFocusChange(willFocus: pos)
+                    }
+                    
                 }
             }
             .onAppear(){

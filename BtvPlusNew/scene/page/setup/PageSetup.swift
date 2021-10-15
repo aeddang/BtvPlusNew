@@ -119,6 +119,7 @@ struct PageSetup: PageView {
                                 //SetupOksusu(isInitate:self.isInitate)
                                 SetupGuideNVersion()
                                 //#if DEBUG
+                                    SetupQA()
                                     SetupLaboratory()
                                 //#endif
                                 

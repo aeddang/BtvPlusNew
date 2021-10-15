@@ -197,16 +197,18 @@ extension PageSynopsis {
         guard let model = self.synopsisModel else {
             return
         }
-        self.synopsisData?.pId = model.purchasedPPMItem?.prdPrcId //model.curSynopsisItem?.prdPrcId
+        self.synopsisData?.pId = model.curSynopsisItem?.prdPrcId
         self.synopsisData?.contentId = model.epsdRsluId
         self.synopsisData?.cpId = model.cpId ?? ""
         self.synopsisData?.metaTypCd = model.metaTypCd
         self.synopsisData?.isLimitedWatch = model.isLimitedWatch
-        let purchaseModels = model.purchasedPPMItems
-        self.synopsisData?.ppmIds = purchaseModels.isEmpty
+        //let purchaseModels = model.purchasedPPMItems
+        self.synopsisData?.ppmIds = model.purchasedPPMItem?.prdPrcId
+        /*
+        purchaseModels.isEmpty
             ? ""
             :  purchaseModels.dropFirst().reduce(purchaseModels.first!.prdPrcId, {$0 + "," + $1.prdPrcId})
-        
+        */
     }
     
     //page log
@@ -269,6 +271,7 @@ extension PageSynopsis {
         }
         
         var actionBody = MenuNaviActionBodyItem()
+
         actionBody.menu_name = synopsisModel?.title
         actionBody.menu_id = synopsisModel?.menuId
         actionBody.category = category ?? ""

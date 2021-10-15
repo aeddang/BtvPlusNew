@@ -12,6 +12,10 @@ import UIKit
 
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
+        if server == .WEB && SystemEnvironment.FORCE_WEB?.isEmpty == false,
+            let force = SystemEnvironment.FORCE_WEB {
+            return force
+        }
         
         if let vmsPath = SystemEnvironment.serverConfig[server.configKey] {
             //DataLog.d(server.configKey + " : " +  vmsPath, tag: "ApiPath")

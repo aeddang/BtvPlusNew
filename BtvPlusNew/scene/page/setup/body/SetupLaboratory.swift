@@ -11,6 +11,8 @@ struct SetupLaboratory: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var repository:Repository
+    
+    
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
             Text("Laboratory").modifier(ContentTitle())
@@ -26,18 +28,28 @@ struct SetupLaboratory: PageView {
                 
                 SetupItem (
                     isOn: .constant(true),
-                    title: "강제로 APPLE",
+                    title: "APPLETV -> BTV",
                     more:{
                         if self.repository.pairing.pairingStbType == .btv {
                             self.repository.pairing.pairingStbType = .apple
+                            self.appSceneObserver.event = .toast("Apple TV로 설정되었습니다")
                         } else {
                             self.repository.pairing.pairingStbType = .btv
+                            self.appSceneObserver.event = .toast("B TV로 설정되었습니다")
                         }
                         
                     }
                 )
                 Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
-                
+                SetupItem (
+                    isOn: .constant(true),
+                    title: "API 설정",
+                    subTitle: "for 신길만팀장님",
+                    more:{
+                        self.pagePresenter.openPopup(PageProvider.getPageObject(.setupApi))
+                    }
+                )
+                Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                 SetupItem (
                     isOn: .constant(true),
                     title: "test push",

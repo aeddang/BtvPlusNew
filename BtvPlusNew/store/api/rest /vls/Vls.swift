@@ -69,9 +69,10 @@ class Vls: Rest{
         
         params["stb_id"] = stbId
         params["cp_id"] = synopData.cpId
-        params["ppm_ids"] = synopData.ppmIds ?? ""
+        params["ppm_ids"] = synopData.ppmIds
+        params["meta_typ_cd"] = synopData.metaTypCd
         params["episode_id"] = synopData.epsdId
-        params["limit_flag"] = synopData.isLimitedWatch ? "Y" : "N"
+        params["limit_flag"] = synopData.isLimitedWatch ? "N" : "Y"
         params["pc_id"] = pcId
         params["fromaction"] = nil
         fetch(route: VlsCheckProhibitionSimultaneous(body: params), completion: completion, error:error)

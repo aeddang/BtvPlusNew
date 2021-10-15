@@ -107,6 +107,9 @@ struct CPPlayer: PageComponent {
                 if self.viewModel.isReplay {
                     self.viewModel.event = .seekTime(0, true, isUser: false)
                 }
+            case .loaded :
+                self.viewModel.playerUiStatus = .view
+                self.delayAutoUiHidden()
             case .seeked:
                 //self.viewModel.playerUiStatus = .view
                 self.delayAutoUiHidden()

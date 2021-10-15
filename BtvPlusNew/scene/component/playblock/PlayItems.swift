@@ -53,6 +53,22 @@ struct PlayItemScreen: PageView {
                         .modifier(MatchParent())
                 }
                 
+                if let time = self.data.durationTime {
+                    ZStack(alignment:.bottomTrailing){
+                        Spacer().modifier(MatchParent())
+                        Text(time)
+                            .modifier(BoldTextStyle(size: Font.size.tiny))
+                            .lineLimit(1)
+                            .padding(.horizontal, Dimen.margin.micro)
+                            .padding(.top, Dimen.margin.micro)
+                            .padding(.bottom, Dimen.margin.microExtra)
+                            .background(Color.transparent.black70)
+                            .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.thin))
+                            .padding(.all, Dimen.margin.microUltra)
+                    }
+                    .modifier(MatchParent())
+                }
+                
                 if self.isLoading && self.isSelected{
                     CircularSpinner(resorce: Asset.ani.loading)
                 } else {

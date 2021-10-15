@@ -28,6 +28,7 @@ class PurchaseTicketData:InfinityData{
     private(set) var prodId: String? = nil
     private(set) var type:PurchaseTicketType = .list
     private(set) var pageType:PageType = .btv
+    private(set) var isFirstFree:Bool = false
     init(pageType:PageType = .btv) {
         self.pageType = pageType
         super.init()
@@ -40,6 +41,10 @@ class PurchaseTicketData:InfinityData{
         joinDate = data.reg_date?.subString(start: 2, len: 8)
         period = self.pageType == .kids ? String.monthly.kids : data.period
         payment = data.method_pay_nm
+        
+        if data.free_ppm_use_yn?.toBool() == true && data.free_ppm_use_month == "1" {
+            isFirstFree = true
+        }
         
         if data.ncms_prod_code == "38" {
             var counts:Int? = nil
@@ -313,19 +318,43 @@ struct PurchaseTicketItem: PageView {
             }
             
             if let price = self.data.price {
-                HStack(alignment:.bottom , spacing: Dimen.margin.micro){
-                    Text(String.app.purchasePrice)
-                        .modifier(MediumTextStyle(
-                                    size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
-                                    color: Color.app.black))
-                    Text(price)
-                        .modifier(MediumTextStyle(
-                                    size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
-                                    color: Color.app.black))
-                    Text("(" + String.app.vat + ")")
-                        .modifier(MediumTextStyle(
-                                    size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
-                                    color: Color.app.grey))
+                HStack(alignment:.bottom , spacing: SystemEnvironment.isTablet ? Dimen.margin.microExtra : Dimen.margin.micro){
+                    if self.data.isFirstFree {
+                        Text(String.app.purchasePrice)
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(
+                                        size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
+                                        color: Color.app.black))
+                            .padding(.trailing, Dimen.margin.micro)
+                        Text(String.monthly.textFirstFreePurchase)
+                            .kerning(Font.kern.thin)
+                            .modifier(BoldTextStyle(
+                                        size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
+                                        color: Color.app.black))
+                       
+                        Text(String.monthly.textFirstFreePurchaseTrailing.replace(price))
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(
+                                        size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
+                                        color: Color.app.grey))
+                    } else {
+                        Text(String.app.purchasePrice)
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(
+                                        size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
+                                        color: Color.app.black))
+                        Text(price)
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(
+                                        size: SystemEnvironment.isTablet ? Font.size.tiny : Font.size.regular,
+                                        color: Color.app.black))
+                        Text("(" + String.app.vat + ")")
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(
+                                        size: SystemEnvironment.isTablet ? Font.size.micro : Font.size.thinExtra,
+                                        color: Color.app.grey))
+                    }
+                    
                 }
                 .padding(.horizontal,
                          SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.regularExtra)

@@ -69,6 +69,8 @@ class Repository:ObservableObject, PageProtocol{
     private let drmAgent = DrmAgent.initialize() as? DrmAgent
     private(set) var isFirstLaunch = false
     
+    private let zeroconf = ZeroConf()
+    
     weak var naviLogManager:NaviLogManager? = nil
     init(
         vsManager:VSManager? = nil,
@@ -230,6 +232,9 @@ class Repository:ObservableObject, PageProtocol{
                 if pairingDeviceType == .apple {
                     self.pairing.authority.requestAuth(.updateMyinfo(isReset: false))
                 }
+                
+                // ZeroConf 전송
+                self.zeroConfUDPSend()
                 
                 DataLog.d("pairingCompleted " + pairingDeviceType.rawValue, tag:"VSManager")
                 DataLog.d("prevName " + (prevName ??  "nil"), tag:"VSManager")
@@ -517,5 +522,9 @@ class Repository:ObservableObject, PageProtocol{
         return drmAgent?.getDeviceInfo()
     }
     
-   
+    func zeroConfUDPSend() {
+        if self.pairing.status == .pairing {
+            zeroconf.sendZeroConf(networkObserver: self.networkObserver)
+        }
+    }
 }

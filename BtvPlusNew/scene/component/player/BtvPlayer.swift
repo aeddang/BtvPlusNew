@@ -85,11 +85,7 @@ struct BtvPlayer: PageComponent{
                                 if self.isFullScreen
                                     && (self.isUiShowing || self.isPlayListShowing)
                                     && !self.listData.datas.isEmpty {
-                                    
-                                    let range = geometry.size.height/2
-                                    if value.startLocation.y > range {
-                                        self.dragGestureType = .playList
-                                    }
+                                    self.dragGestureType = .playList
                                 }
                                 
                                 if let type = dragGestureType {
@@ -574,8 +570,12 @@ struct BtvPlayer: PageComponent{
         var targetBrightness  = self.startBrightness - diff
         targetBrightness = max(0, targetBrightness)
         targetBrightness = min(1, targetBrightness)
-        UIScreen.main.brightness = targetBrightness
         self.viewModel.brightness = targetBrightness
+        ComponentLog.d("onBrightnessChange " + targetBrightness.description , tag: self.tag)
+        DispatchQueue.main.async {
+            UIScreen.main.brightness = targetBrightness
+        }
+        
     }
 }
 

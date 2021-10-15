@@ -85,7 +85,7 @@ class PlayData:InfinityData,ObservableObject{
         if let release = data.release_dt?.subString(start: 0, len: 8) {
             if let date = release.toDate(dateFormat: "yyyyMMdd") {
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "M" + String.app.month + "d" + String.app.day
+                dateFormatter.dateFormat = "M" + String.app.month + " d" + String.app.day
                 //OR dateFormatter.dateFormat = "EEEE, MMMM dd, yyyy"
                 let currentDateString: String = dateFormatter.string(from: date)
                 let weekday = date.getWeekday()
@@ -121,7 +121,7 @@ class PlayData:InfinityData,ObservableObject{
     
         title = data.title
         subTitle = data.keywrd_val
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.play.size, isAdult: self.isAdult)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         index = idx

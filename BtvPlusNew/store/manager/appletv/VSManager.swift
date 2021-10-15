@@ -96,7 +96,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         if self.pairing.pairingDeviceType == .apple {
             DataLog.d("checkAccess", tag:self.tag)
             DispatchQueue.main.async {
-                self.pairing.requestPairing(.check)
+                self.pairing.requestPairing(.check(id:self.tag))
             }
         }
     }
@@ -164,7 +164,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                 DataLog.d("Btv pairingCompleted", tag:self.tag)
                 self.checkSync(isInterruptionAllowed:false)
                
-            case .pairingCheckCompleted(let isSuccess) :
+            case .pairingCheckCompleted(let isSuccess, _) :
                 if self.pairing.pairingDeviceType == .apple {
                     DataLog.d("Btv pairingCheckCompleted " + isSuccess.description, tag:self.tag)
                     self.checkUnpairingCompleted(isSuccess: isSuccess)

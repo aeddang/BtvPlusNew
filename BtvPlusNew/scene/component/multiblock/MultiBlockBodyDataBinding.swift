@@ -57,6 +57,7 @@ extension MultiBlockBody {
                             data.videos = blocks[0...min(max, blocks.count-1)].map{ d in
                                 VideoData(pageType: self.pageType, usePrice:usePrice).setData(data: d, cardType: data.cardType)
                             }
+                            
                         default: break
                         }
                     }
@@ -158,7 +159,7 @@ extension MultiBlockBody {
             }
         default: break
         }
-        
+        var isCountView:Bool? = nil
         var listHeight:CGFloat = 0
         var blockHeight:CGFloat = 0
         let tabHeight = self.viewModel.type == .btv ? Self.tabHeight : Self.tabHeightKids
@@ -171,6 +172,9 @@ extension MultiBlockBody {
         if let size = data.videos?.first{
             listHeight = size.type.size.height + size.bottomHeight
             blockHeight = listHeight + tabHeight
+            if size.isWatched && pageType == .kids {
+                isCountView = true
+            }
         }
         if let size = data.themas?.first?.type {
             listHeight = size.size.height
@@ -197,7 +201,8 @@ extension MultiBlockBody {
             }
             data.listHeight = blockHeight
         }
-        data.setDatabindingCompleted(total: total, parentTitle: self.viewModel.title)
+        
+        data.setDatabindingCompleted(total: total, parentTitle: self.viewModel.title, countView: isCountView)
         
 
     }

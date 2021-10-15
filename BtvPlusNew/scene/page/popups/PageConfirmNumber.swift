@@ -133,7 +133,7 @@ struct PageConfirmNumber: PageView {
             switch evt {
             case .pairingCompleted :  self.initPage()
             case .disConnected : self.closePage()
-            case .pairingCheckCompleted(let isSuccess) :
+            case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.initPage() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}
@@ -149,7 +149,7 @@ struct PageConfirmNumber: PageView {
             case .appear:
                 DispatchQueue.main.async {
                     switch self.pairing.status {
-                    case .pairing : self.pairing.requestPairing(.check)
+                    case .pairing : self.pairing.requestPairing(.check(id:self.tag))
                     case .unstablePairing : self.appSceneObserver.alert = .pairingRecovery
                     default :
                         self.appSceneObserver.alert = .needPairing(nil)

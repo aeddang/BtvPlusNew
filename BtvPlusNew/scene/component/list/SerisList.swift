@@ -162,7 +162,7 @@ struct SerisItem: PageView {
     @ObservedObject var relationContentsModel:RelationContentsModel
     var data:SerisData
     var isSelected:Bool? = nil
-    let iconSize:CGFloat = SystemEnvironment.isTablet ? Dimen.icon.regular :  Dimen.icon.mediumUltra
+    let iconSize:CGFloat = SystemEnvironment.isTablet ? Dimen.icon.regular :  Dimen.icon.regularExtra
     @State var isOn:Bool = false
     var body: some View {
         HStack(spacing:Dimen.margin.thin){

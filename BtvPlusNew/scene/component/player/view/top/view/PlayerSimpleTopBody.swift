@@ -52,7 +52,7 @@ struct PlayerSimpleTopBody: PageView{
                         self.viewModel.event = .mute(true, isUser: true)
                     }
                 }
-                .opacity(self.isShowing || self.isMute ? 1 : 0)
+                .opacity(self.isShowing || !self.isFullScreen ? 1 : 0)
                 
             }
             Spacer()

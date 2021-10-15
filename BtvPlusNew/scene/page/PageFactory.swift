@@ -110,9 +110,8 @@ struct PageProvider {
         if let _ = skimlink.range(of: "btvplusapp/PairingManager", options: .caseInsensitive) { return "Btv연결관리" }
         if let _ = skimlink.range(of: "btvplusapp/Pairing", options: .caseInsensitive) { return "Btv연결하기" }
         if let _ = skimlink.range(of: "btvplusapp/Settings", options: .caseInsensitive) { return "설정" }
-        if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return nil }
-        if let _ = skimlink.range(of: "btvplusapp/FamilyInvite", options: .caseInsensitive) { return nil }
-
+        if let _ = skimlink.range(of: "btvplusapp/chargeStation", options: .caseInsensitive) { return "충전소" }
+        if let _ = skimlink.range(of: "btvplusapp/FamilyInvite", options: .caseInsensitive) { return "가족초대문자발송" }
         return nil
     }
     
@@ -134,7 +133,7 @@ struct PageProvider {
              .purchase , .webview, .webviewList, .schedule, .modifyProile, .pairingHappySeniorPicture,
              .adultCertification, .userCertification, .terminateStb,
              .myPurchaseTicketList, .remotecon, .playerTest,
-             .myRecommand, .myRegistCard, .picker:
+             .myRecommand, .myRegistCard, .picker, .myBenefits:
             return  .vertical
         case .fullPlayer, .synopsisPlayer :
             return .none

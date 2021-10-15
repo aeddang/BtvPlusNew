@@ -148,7 +148,7 @@ struct PageRemotecon: PageView {
                     self.checkHostDeviceStatus()
                     
                 case .disConnected : self.isPairing = false
-                case .pairingCheckCompleted(let isSuccess) :
+                case .pairingCheckCompleted(let isSuccess, _) :
                     if isSuccess { self.isPairing = true }
                     else { self.isPairing = false }
                     self.checkHostDeviceStatus()
@@ -241,7 +241,7 @@ struct PageRemotecon: PageView {
                 }
             }
             .onAppear{
-                self.pairing.requestPairing(.check)
+                self.pairing.requestPairing(.check(id:self.tag))
                 self.dataProvider.broadcasting.reset()
                
                 if self.audioMirroring.isAudioMirrorSupported {

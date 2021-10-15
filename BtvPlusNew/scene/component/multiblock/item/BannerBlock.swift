@@ -29,7 +29,7 @@ struct BannerBlock:BlockProtocol, PageComponent {
                         actionBody.menu_name = banner.menuNm
                         actionBody.position = banner.logPosition
                         actionBody.config = banner.logConfig
-                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                        self.naviLogManager.actionLog(.clickBannerLineBanner, actionBody: actionBody)
                     }
                     .modifier(MatchParent())
                 }

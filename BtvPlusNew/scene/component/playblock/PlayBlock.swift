@@ -264,10 +264,11 @@ struct PlayBlock: PageComponent{
                 switch evt {
                 case .pairingCompleted : self.reload()
                 case .disConnected : self.reload()
+                /*
                 case .pairingCheckCompleted(let isSuccess) :
                     if self.pagePresenter.currentTopPage?.id != self.pageObject?.id {return}
                     if isSuccess { self.reload() }
-                    else { self.appSceneObserver.alert = .pairingCheckFail }
+                    else { self.appSceneObserver.alert = .pairingCheckFail }*/
                 default : break
                 }
             }
@@ -303,8 +304,11 @@ struct PlayBlock: PageComponent{
                 self.sceneOrientationUpdate()
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
-                if self.pageObject == page , let pos = self.finalIndex{ 
-                    self.onFocusChange(willFocus: pos)
+                if self.pageObject == page , let pos = self.finalIndex{
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.3) {
+                        self.onFocusChange(willFocus: pos)
+                        self.infinityScrollModel.uiEvent = .scrollTo(self.datas[pos].hashId)
+                    }
                 }
             }
             .onAppear(){
@@ -528,8 +532,10 @@ struct PlayBlock: PageComponent{
     @State var prevHalf:Int = 0
     @State var prevPos:CGFloat = 0
     private func onUpdate(){
+        if self.finalIndex != nil {return}
         if self.isHold { return }
         if self.maxCount < 1 {return}
+        
         let cPos = self.infinityScrollModel.scrollPosition
         let diff = cPos - prevPos
         prevPos = cPos

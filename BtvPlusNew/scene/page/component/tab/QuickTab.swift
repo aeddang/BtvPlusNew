@@ -64,7 +64,7 @@ struct QuickTab: PageComponent{
                 }
             }
         }
-        .padding(.horizontal,  SystemEnvironment.isTablet ? 0 : Dimen.margin.regularExtra)
+        .padding(.horizontal,  SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.regularExtra)
     }
     func move(data:QuickData ){
         switch data.pageId {

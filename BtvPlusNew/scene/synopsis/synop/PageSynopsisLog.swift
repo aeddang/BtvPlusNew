@@ -155,7 +155,9 @@ extension PageSynopsis {
                 self.naviLog(
                     pageID: self.pageLogId,
                     action: .clickContentsShare,
-                    config: isRecommand ? "Y" : "")
+                    config: isRecommand ? "Y" : "",
+                    category: "추천하기"
+                )
             }
             
         case .summaryMore:
@@ -195,7 +197,7 @@ extension PageSynopsis {
         guard let model = self.synopsisModel else {
             return
         }
-        self.synopsisData?.pId = model.curSynopsisItem?.prdPrcId
+        self.synopsisData?.pId = model.purchasedPPMItem?.prdPrcId //model.curSynopsisItem?.prdPrcId
         self.synopsisData?.contentId = model.epsdRsluId
         self.synopsisData?.cpId = model.cpId ?? ""
         self.synopsisData?.metaTypCd = model.metaTypCd
@@ -303,7 +305,7 @@ extension PageSynopsis {
             
             if let curSynopsisItem = synopsisModel.curSynopsisItem {
                 contentsItem.product_id = curSynopsisItem.prdPrcId
-                contentsItem.purchase_type = PrdTypCd(rawValue: curSynopsisItem.prd_typ_cd)?.logName ?? ""
+                contentsItem.purchase_type = curSynopsisItem.prd_typ_cd
                 contentsItem.monthly_pay = curSynopsisItem.ppm_prd_typ_cd
                 contentsItem.list_price = curSynopsisItem.prd_prc_vat.description
                 contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description

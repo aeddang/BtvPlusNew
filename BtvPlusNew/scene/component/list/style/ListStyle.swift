@@ -74,7 +74,7 @@ struct ListItem{
     }
     
     struct play {
-       static let size:CGSize = CGSize(width: 320, height: 180)
+       static let size:CGSize = CGSize(width: 480, height: 270)
     }
     
     struct watched {

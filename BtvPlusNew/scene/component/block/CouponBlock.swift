@@ -182,7 +182,7 @@ struct CouponBlock: PageComponent, Identifiable{
             switch evt {
             case .pairingCompleted : self.initLoad()
             case .disConnected : self.initLoad()
-            case .pairingCheckCompleted(let isSuccess) :
+            case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.initLoad() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}

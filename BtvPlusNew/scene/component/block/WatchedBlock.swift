@@ -169,7 +169,7 @@ struct WatchedBlock: PageComponent, Identifiable{
             switch evt {
             case .pairingCompleted : self.reload()
             case .disConnected : self.reload()
-            case .pairingCheckCompleted(let isSuccess) :
+            case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.reload() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
             default : break

@@ -513,12 +513,17 @@ class BlockData:InfinityData, ObservableObject{
         total:Int? = nil,
         parentTitle:String? = nil,
         modifyTitle:String? = nil,
+        countView:Bool? = nil,
         openId:String? = nil,
+        
         idx:Int = -1)
     {
+        if let countView = countView {
+            self.isCountView = countView
+        }
         if self.status != .initate { return }
-        if isCountView, let count = total {
-            self.subName = count.description
+        if self.isCountView, let count = total {
+            self.setCountName(count: count)
         }
         if self.cardType == .rankingPoster , let posters = self.posters{
             zip(posters, 0...posters.count).forEach{ data , idx in

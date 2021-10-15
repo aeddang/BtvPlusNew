@@ -106,7 +106,7 @@ struct PageSynopsisPlayer: PageView {
                 switch evt {
                 case .pairingCompleted : self.initPage()
                 case .disConnected : self.initPage()
-                case .pairingCheckCompleted(let isSuccess) :
+                case .pairingCheckCompleted(let isSuccess, _) :
                     if isSuccess { self.initPage() }
                     else { self.appSceneObserver.alert = .pairingCheckFail }
                 default : break
@@ -127,7 +127,7 @@ struct PageSynopsisPlayer: PageView {
                 case .appear:
                     DispatchQueue.main.async {
                         switch self.pairing.status {
-                        case .pairing : self.pairing.requestPairing(.check)
+                        case .pairing : self.pairing.requestPairing(.check(id:self.tag))
                         case .unstablePairing : self.appSceneObserver.alert = .pairingRecovery
                         default :
                             self.isPageDataReady = true
@@ -490,12 +490,13 @@ struct PageSynopsisPlayer: PageView {
         case .close :
             self.onContinuousPlay()
             self.playerModel.event = .stop(isUser: false)
+            /*
             self.pagePresenter.fullScreenExit(
                 isLock: false,
                 changeOrientation: nil)
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.05) {
-                self.pagePresenter.closePopup(self.pageObject?.id)
-            }
+            */
+            self.pagePresenter.closePopup(self.pageObject?.id)
+            
         default: break
         }
     }

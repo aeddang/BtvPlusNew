@@ -205,7 +205,7 @@ extension Asset{
         public static let lock = "icPlayerFullLock"
         public static let resume = "icPlayerPlay"
         public static let pause = "icPlayerPause"
-        
+        public static let releasePlay = "icReleasePlayerPlay"
         public static let fullScreen = "icPlayerHalfScalemax"
         public static let fullScreenOff = "icPlayerFullScalemin"
         public static let volumeOn = "icPlayerHalfVolume"

@@ -39,7 +39,7 @@ struct PlayItemScreen: PageView {
                     Image(Asset.noImg16_9)
                         .renderingMode(.original)
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .aspectRatio(contentMode: .fit)
                         .modifier(MatchParent())
                 } else {
                     KFImage(URL(string: self.data.image!))
@@ -60,10 +60,12 @@ struct PlayItemScreen: PageView {
                         self.data.reset()
                         self.action()
                     }) {
-                        Image(Asset.icon.thumbPlay)
+                        Image(Asset.player.releasePlay)
                             .renderingMode(.original).resizable()
                             .scaledToFit()
-                            .frame(width: Dimen.icon.heavyExtra, height: Dimen.icon.heavyExtra)
+                            .frame(
+                                width:Dimen.icon.medium,
+                                height:Dimen.icon.medium)
                     }
                     .buttonStyle(BorderlessButtonStyle())
                 }

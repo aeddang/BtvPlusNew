@@ -772,29 +772,31 @@ struct VideoItemBody: PageView {
             height: self.data.type.size.height)
         
         if self.data.title != nil {
-            VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+            VStack(alignment: .leading, spacing:0){
                 Spacer().modifier(MatchHorizontal(height: 0))
-                if let title = self.data.fullTitle {
-                    Text(title)
-                        .kerning(Font.kern.thin)
-                        .modifier(MediumTextStyle(size: Font.size.thinExtra))
-                        .lineLimit(self.data.isClip ? 2 : 1)
-                        .multilineTextAlignment(.leading)
+                VStack(alignment: .leading, spacing:Dimen.margin.tiny){
+                    if let title = self.data.fullTitle {
+                        Text(title)
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(size: Font.size.thinExtra))
+                            .lineLimit(self.data.isClip ? 2 : 1)
+                            .multilineTextAlignment(.leading)
 
-                }
-                if let subTitle = self.data.subTitle {
-                    Text(subTitle)
-                        .kerning(Font.kern.thin)
-                        .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
-                        .lineLimit(2)
-                }
-                
-                if let clipTitle = self.data.clipTitle {
-                    Text(clipTitle)
-                        .kerning(Font.kern.thin)
-                        .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.app.white))
-                        .lineLimit(1)
-    
+                    }
+                    if let subTitle = self.data.subTitle {
+                        Text(subTitle)
+                            .kerning(Font.kern.thin)
+                            .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
+                            .lineLimit(2)
+                    }
+                    
+                    if let clipTitle = self.data.clipTitle {
+                        Text(clipTitle)
+                            .kerning(Font.kern.thin)
+                            .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.app.white))
+                            .lineLimit(1)
+        
+                    }
                 }
             }
             .padding(.horizontal, Dimen.margin.thin)

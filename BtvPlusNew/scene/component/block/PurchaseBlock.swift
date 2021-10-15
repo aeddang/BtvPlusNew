@@ -178,12 +178,22 @@ struct PurchaseBlock: PageComponent, Identifiable{
             guard let change = isSelect else { return }
             if !self.isEdit {return}
             if !change && self.isSelectAll {
-                self.isSelectAll = false
+                DispatchQueue.main.async {
+                    self.isSelectAll = false
+                    if self.datas.count == 1 {
+                        self.isDeletAble = false
+                    }
+                }
                 return
                 
             }else if !self.isSelectAll && change {
                 if self.datas.first(where: {!$0.isSelected}) == nil {
-                    self.isSelectAll = true
+                    DispatchQueue.main.async {
+                        self.isSelectAll = true
+                        if self.datas.count == 1 {
+                            self.isDeletAble = true
+                        }
+                    }
                     return
                 }
             }
@@ -232,7 +242,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
             switch evt {
             case .pairingCompleted : self.initLoad()
             case .disConnected : self.initLoad()
-            case .pairingCheckCompleted(let isSuccess) :
+            case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.initLoad() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
             default : do{}

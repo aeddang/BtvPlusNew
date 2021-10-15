@@ -238,7 +238,7 @@ extension PlayBlock{
             SortTab(
                 count:self.totalCount,
                 isSortAble: self.isSortAble,
-                sortOption: [.popularity, .latest, .title],
+                sortOption: [.popularity, .latest],
                 action:self.action
             )
             .padding(.horizontal, Dimen.margin.thin)

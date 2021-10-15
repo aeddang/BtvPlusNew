@@ -54,12 +54,12 @@ struct PageMyBenefits: PageView {
             PageDragingBody(
                 pageObservable: self.pageObservable, 
                 viewModel:self.pageDragingModel,
-                axis:.horizontal
+                axis:.vertical
             ) {
                 VStack(spacing:0){
                     PageTab(
                         title: String.pageTitle.myBenefits,
-                        isBack: true,
+                        isClose: true,
                         style: .dark
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
@@ -161,6 +161,7 @@ struct PageMyBenefits: PageView {
                     
                 }
             }
+            /*
             .onReceive(self.viewPagerModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
@@ -171,7 +172,7 @@ struct PageMyBenefits: PageView {
                 case .pull(let pos) :
                     self.pageDragingModel.uiEvent = .pull(geometry, pos)
                 }
-            }
+            }*/
             .onAppear{
                 if let obj = self.pageObject  {
                     if let idx = obj.getParamValue(key: .id) as? Int {

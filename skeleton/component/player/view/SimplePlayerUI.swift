@@ -137,10 +137,12 @@ struct SimplePlayerUI: PageComponent {
             if !self.isSeeking {
                 VStack(spacing:Dimen.margin.regular){
                     ImageButton(
-                        defaultImage: Asset.icon.thumbPlay,
+                        defaultImage: self.isFullScreen ? Asset.player.resume : Asset.player.releasePlay,
                         activeImage: Asset.player.pause,
                         isSelected: self.isPlaying,
-                        size: CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                        size: self.isFullScreen
+                        ? CGSize(width:Dimen.icon.heavyExtra,height:Dimen.icon.heavyExtra)
+                        : CGSize(width:Dimen.icon.medium,height:Dimen.icon.medium)
                     ){ _ in
                         self.viewModel.isUserPlay = self.isPlaying ? false  : true
                         self.viewModel.event = .togglePlay(isUser: true)

@@ -260,6 +260,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             }
         }
         
+       
         private var forceRetryCount:Int = 0
         private var isForceRetry:Bool = false
         func forceRetry(webView: WKWebView) {
@@ -281,7 +282,9 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             ComponentLog.e("didFail: " + error.localizedDescription , tag: self.tag )
         }
         
+        private var isInitLoading:Bool = true
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            self.isInitLoading = false
             webView.scrollView.bounces = false
             webView.scrollView.alwaysBounceVertical = false
             webView.keyboardDisplayRequiresUserAction = false
@@ -364,7 +367,9 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
             if scheme == "http" || scheme == "https" {
                 let errorCode = (error as NSError).code
                 if errorCode == -1001 || errorCode == -1003 || errorCode == -1009 {
-                    self.parent.appSceneObserver.alert = .serviceUnavailable(failingUrlStr)
+                    if self.isInitLoading {
+                        self.parent.appSceneObserver.alert = .serviceUnavailable(failingUrlStr)
+                    }
                     return
                 }
             }

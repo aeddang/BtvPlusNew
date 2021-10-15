@@ -153,6 +153,7 @@ struct PurchaseList: PageComponent{
             }
         }
         .onReceive(self.purchaseBlockModel.$isEditmode) { isEdit in
+            if self.isEdit == isEdit {return}
             self.datas.forEach{$0.isEdit = isEdit}
             withAnimation{ self.isEdit = isEdit }
         }

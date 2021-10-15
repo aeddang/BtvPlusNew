@@ -99,8 +99,8 @@ class AccountManager : PageProtocol{
                 }
             case .unPairing :
                 self.dataProvider.requestData(q: .init(type: .postUnPairing, isOptional: true))
-            case .check :
-                self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus, isOptional: true))
+            case .check(let id) :
+                self.dataProvider.requestData(q: .init(type: .getDevicePairingStatus(callBack: id), isOptional: true))
             case .userInfo :
                 self.dataProvider.requestData(q: .init(type: .getPairingUserInfo(self.pairing.hostDevice?.apiMacAdress), isOptional: true))
             case .hostNickNameInfo(let isAll) : 
@@ -293,10 +293,10 @@ class AccountManager : PageProtocol{
                 }
                 self.pairing.foundDevice(stbInfoDatas: datas)
             
-            case .getDevicePairingStatus :
+            case .getDevicePairingStatus(let id):
                 guard let resData = res.data as? DevicePairingStatus  else { return }
                 if resData.header?.result != NpsNetwork.resultCode.success.code {
-                    self.pairing.checkCompleted(isSuccess:false)
+                    self.pairing.checkCompleted(isSuccess:false, id:id)
                     return
                 }
                 self.pairing.checkCompleted(isSuccess: resData.body?.pairingid?.isEmpty == false)

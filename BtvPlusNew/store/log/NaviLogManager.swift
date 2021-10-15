@@ -209,21 +209,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
                    memberBody:MenuNaviMemberItem? = nil
                    ){
         
-        var modifyContentBody = contentBody
-        if contentBody?.episode_resolution_id?.isEmpty == false {
-            modifyContentBody?.episode_resolution_id = contentBody?
-                .episode_resolution_id?
-                .replace("{", with: "").replace("}", with: "")
-        }
-        if contentBody?.payment_price?.isEmpty == false, let price = modifyContentBody?.payment_price {
-            modifyContentBody?.payment_price = price.toInt().description
-        }
-        
-        
-        
+       
         let  data = NaviLogData()
         data.actionBody = actionBody
-        data.contentsBody = modifyContentBody
+        data.contentsBody = contentBody
         data.member = memberBody ?? self.currentMemberItem
         
         let fixedPageId:String? = pageId.rawValue.isEmpty == true
@@ -274,16 +263,31 @@ class NaviLogManager : ObservableObject, PageProtocol {
     
     private func send(_ data:MenuNaviItem, isAnonymous:Bool){
         
+        var modifyData = data
+        if var modifyContentBody = data.contents_body {
+            if modifyContentBody.episode_resolution_id?.isEmpty == false {
+                modifyContentBody.episode_resolution_id = modifyContentBody
+                    .episode_resolution_id?
+                    .replace("{", with: "").replace("}", with: "")
+            }
+            if modifyContentBody.payment_price?.isEmpty == false, let price = modifyContentBody.payment_price {
+                modifyContentBody.payment_price = Int(round(price.toDouble())).description
+            }
+            if modifyContentBody.purchase_type?.isEmpty == false, let purchase_type = modifyContentBody.purchase_type{
+                modifyContentBody.purchase_type = PrdTypCd(rawValue: purchase_type)?.logName 
+            }
+            modifyData.contents_body = modifyContentBody
+        }
         #if DEBUG
         if !isAnonymous {
             DataLog.d("***********", tag: self.tag )
             DataLog.d("***********", tag: self.tag )
             
             DataLog.d("NaviLog Start", tag: self.tag )
-            DataLog.d("page_id : " + (data.page_id ?? "") , tag: self.tag )
-            DataLog.d("action_id : " + (data.action_id ?? "") , tag: self.tag )
-            if let watchType = data.vod_watch_type { DataLog.d("vod_watch_type : " + watchType , tag: self.tag )}
-            if let action = data.action_body {
+            DataLog.d("page_id : " + (modifyData.page_id ?? "") , tag: self.tag )
+            DataLog.d("action_id : " + (modifyData.action_id ?? "") , tag: self.tag )
+            if let watchType = modifyData.vod_watch_type { DataLog.d("vod_watch_type : " + watchType , tag: self.tag )}
+            if let action = modifyData.action_body {
                 DataLog.d("send action : ", tag: self.tag )
                 if let value = action.config{ DataLog.d("  config : " +  value, tag: self.tag )}
                 if let value = action.category{ DataLog.d("  category : " +  value, tag: self.tag )}
@@ -294,7 +298,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 if let value = action.search_keyword{ DataLog.d("  search_keyword : " +  value, tag: self.tag )}
                 if let value = action.position{ DataLog.d("  position : " +  value, tag: self.tag )}
             }
-            if let content = data.contents_body {
+            if let content = modifyData.contents_body {
                 DataLog.d("send content : ", tag: self.tag )
                 if let value = content.title{ DataLog.d("  title : " +  value, tag: self.tag )}
                 if let value = content.episode_id{ DataLog.d("  episode_id : " +  value, tag: self.tag )}
@@ -308,12 +312,13 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 if let value = content.running_time{ DataLog.d("  running_time : " +  value, tag: self.tag )}
                 if let value = content.channel_name{ DataLog.d("  channel_name : " +  value, tag: self.tag )}
                 if let value = content.channel{ DataLog.d("  channel : " +  value, tag: self.tag )}
+                if let value = content.purchase_type{ DataLog.d("  purchase_type : " +  value, tag: self.tag )}
                 
             }
         }
         #endif
         
-        self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: data), isAnonymous: isAnonymous))
+        self.repository.apiManager.load(.sendNaviLog(self.getJsonString(data: modifyData), isAnonymous: isAnonymous))
     }
 
     private func getRealNameData(

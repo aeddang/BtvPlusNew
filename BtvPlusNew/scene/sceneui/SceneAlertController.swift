@@ -374,7 +374,7 @@ struct SceneAlertController: PageComponent{
         if idx == 0 {
             self.pagePresenter.goBack()
         }else{
-            self.pairing.requestPairing(.check)
+            self.pairing.requestPairing(.check(id:self.tag))
         }
     }
     

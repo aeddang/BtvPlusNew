@@ -247,16 +247,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "168E3A25-88A1-4CE2-95B2-F121D2D9B80B"
-            shouldBeEnabled = "No"
+            uuid = "A40816A0-79FB-4660-8C15-DE3FF0220D59"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/AppDelegate.swift"
+            filePath = "BtvPlusNew/scene/synopsis/synopsisPlayer/PageSynopsisPlayerLog.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
-            landmarkName = "handleDynamicLink(_:)"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
+            landmarkName = "checkInsideViewLog(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

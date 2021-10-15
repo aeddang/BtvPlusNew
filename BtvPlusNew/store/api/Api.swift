@@ -97,7 +97,7 @@ enum ApiType{
     
     //NPS
     case registHello,
-         getDevicePairingStatus,
+         getDevicePairingStatus(callBack:String? = nil),
          getUserDevicePairingStatus,
          getDevicePairingInfo(String?, String?, prevResult:NpsCommonHeader? = nil),
          postDevicePairing(User?, StbData?),

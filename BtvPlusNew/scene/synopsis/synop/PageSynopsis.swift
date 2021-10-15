@@ -296,7 +296,7 @@ struct PageSynopsis: PageView {
                 switch evt {
                 case .pairingCompleted : self.initPage()
                 case .disConnected : self.initPage()
-                case .pairingCheckCompleted(let isSuccess) :
+                case .pairingCheckCompleted(let isSuccess, _) :
                     if isSuccess {
                         let isPairing = self.pairing.status == .pairing
                         if isPairing == self.isCheckdPairing {return}
@@ -322,7 +322,7 @@ struct PageSynopsis: PageView {
                 case .appear:
                     DispatchQueue.main.async {
                         switch self.pairing.status {
-                        case .pairing : self.pairing.requestPairing(.check)
+                        case .pairing : self.pairing.requestPairing(.check(id:self.tag))
                         case .unstablePairing : self.appSceneObserver.alert = .pairingRecovery
                         default :
                             self.isPageDataReady = true

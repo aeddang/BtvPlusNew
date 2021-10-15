@@ -75,10 +75,7 @@ struct KidsPlayer: PageComponent{
                             if self.isFullScreen
                                 && (self.isUiShowing || self.isPlayListShowing)
                                 && !self.listData.datas.isEmpty {
-                                let range = geometry.size.height/2
-                                if value.startLocation.y > range {
-                                    self.dragGestureType = .playList
-                                }
+                                self.dragGestureType = .playList
                             }
 
                             if let type = dragGestureType {
@@ -461,8 +458,11 @@ struct KidsPlayer: PageComponent{
         var targetBrightness  = self.startBrightness - diff
         targetBrightness = max(0, targetBrightness)
         targetBrightness = min(1, targetBrightness)
-        UIScreen.main.brightness = targetBrightness
         self.viewModel.brightness = targetBrightness
+        DispatchQueue.main.async {
+            UIScreen.main.brightness = targetBrightness
+        }
+       
     }
 }
 

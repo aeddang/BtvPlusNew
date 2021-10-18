@@ -137,7 +137,7 @@ class VideoData:InfinityData, Copying{
         if cardType == .watchedVideo {
             self.usePrice = false
             self.isWatched = true
-            if let rt = data.kes?.position {
+            if let rt = data.kes?.watching_progress?.toDouble() {
                 self.progress = Float(rt) / 100.0
             } else {
                 self.progress = 0
@@ -554,8 +554,11 @@ struct VideoList: PageComponent{
                         actionBody.menu_id = data.menuId
                         actionBody.menu_name = data.menuNm
                         actionBody.position = data.logPosition
+                        actionBody.target = "banner"
                         actionBody.config = data.logConfig
-                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                        self.naviLogManager.actionLog(
+                            data.pageType == .btv ? .clickContentsView : .clickContentsButton,
+                            actionBody: actionBody)
                     }
                 }
             }
@@ -564,6 +567,7 @@ struct VideoList: PageComponent{
                             ? false
                             : self.contentID == data.epsdId)
                 .id(data.hashId)
+                //.accessibility(label: data.title ?? data.subTitle ?? "")
                 .onTapGesture {
                     self.onTap(data: data)
                 }
@@ -835,11 +839,13 @@ struct VideoItemBodyKids: PageView {
                     }else {
                         Spacer().modifier(MatchParent())
                     }
-                    if self.data.progress != nil {
-                        Spacer().frame(
-                            width: (self.data.type.size.width - (DimenKids.margin.thinExtra*2)) * CGFloat(self.data.progress!),
-                            height: DimenKids.line.medium)
-                            .background(Color.kids.primary)
+                    if let progress = self.data.progress {
+                        if progress < MetvNetwork.maxWatchedProgress {
+                            Spacer().frame(
+                                width: (self.data.type.size.width - (DimenKids.margin.thinExtra*2)) * CGFloat(progress),
+                                height: DimenKids.line.medium)
+                                .background(Color.kids.primary)
+                        }
                     }
                 }
             }

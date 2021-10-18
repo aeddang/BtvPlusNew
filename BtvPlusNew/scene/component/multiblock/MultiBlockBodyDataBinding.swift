@@ -44,10 +44,11 @@ extension MultiBlockBody {
             data.errorMassage = resData.status_reason
             guard let grid = resData.grid else {return data.setBlank()}
             if grid.isEmpty {return data.setBlank()}
-            total = resData.total_count
+            
             if grid.count == 1 {
                 grid.forEach{ g in
                     if let blocks = g.block {
+                        total = blocks.count
                         switch data.uiType {
                         case .poster :
                             data.posters = blocks[0...min(max, blocks.count-1)].map{ d in

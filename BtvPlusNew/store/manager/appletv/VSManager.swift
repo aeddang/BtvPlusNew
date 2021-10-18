@@ -19,6 +19,7 @@ enum VSFlag {
 }
 
 class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDelegate{
+    private let pagePresenter:PagePresenter
     private let pairing:Pairing
     private let dataProvider:DataProvider
     private var appSceneObserver:AppSceneObserver? = nil
@@ -32,10 +33,12 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     private var currentAccountManager:VSAccountManager = VSAccountManager()
     private var isInit:Bool = true
     init(
+        pagePresenter:PagePresenter,
         pairing:Pairing,
         dataProvider:DataProvider,
         appSceneObserver:AppSceneObserver? = nil) {
         
+        self.pagePresenter = pagePresenter
         self.pairing = pairing
         self.dataProvider = dataProvider
         self.appSceneObserver = appSceneObserver
@@ -73,6 +76,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
             return
         }
         self.isInit = false
+        self.pagePresenter.isLoading = true
         self.currentAccountManager.checkAccessStatus(
             options: [VSCheckAccessOption.prompt: true],
             completionHandler: { (status, error) in
@@ -82,6 +86,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                     if self.isGranted == true {
                         self.checkSync(isInterruptionAllowed: isInterruptionAllowed)
                     } else {
+                        self.pagePresenter.isLoading = false
                         if self.pairing.pairingDeviceType == .apple {
                             DataLog.d("denied apple tv pairing user", tag:self.tag)
                             self.accountPairingSynchronizationDenied()
@@ -92,13 +97,38 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         })
     }
     func checkAccess(){
-        self.isGranted = nil
-        if self.pairing.pairingDeviceType == .apple {
-            DataLog.d("checkAccess", tag:self.tag)
-            DispatchQueue.main.async {
-                self.pairing.requestPairing(.check(id:self.tag))
-            }
+        if self.pairing.status == .pairing && self.pairing.pairingDeviceType == .btv {
+            return
         }
+        self.isGranted = nil
+        //if self.pairing.pairingDeviceType == .apple {
+        self.currentAccountManager.checkAccessStatus(
+            options: [VSCheckAccessOption.prompt: false],
+            completionHandler: { (status, error) in
+                DataLog.d( "status" + status.rawValue.description , tag:self.tag)
+                DispatchQueue.main.async {
+                    if status == .granted {
+                        self.isGranted = true
+                        if self.pairing.pairingDeviceType == .apple {
+                            DataLog.d("checkAccess", tag:self.tag)
+                            DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
+                                self.pairing.requestPairing(.check(id:self.tag))
+                            }
+                        } else {
+                            self.checkSync(isInterruptionAllowed: false)
+                        }
+                    } else {
+                        if self.pairing.pairingDeviceType == .apple {
+                            self.redirectFlag = .unpairingTvProvider
+                            NpsNetwork.resetPairing()
+                            SystemEnvironment.tvUserId = nil
+                            self.currentAccountId = nil
+                            self.pairing.disconnected()// 실제 언페어링은 프로바이더에서하기때문에 데이타만 처리
+                        }
+                    }
+                }
+        })
+        //}
     }
     
     func accountUnPairingAlert(){
@@ -162,15 +192,22 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                 
             case .pairingCompleted :
                 DataLog.d("Btv pairingCompleted", tag:self.tag)
+                
                 self.checkSync(isInterruptionAllowed:false)
                
             case .pairingCheckCompleted(let isSuccess, _) :
+                
                 if self.pairing.pairingDeviceType == .apple {
                     DataLog.d("Btv pairingCheckCompleted " + isSuccess.description, tag:self.tag)
                     self.checkUnpairingCompleted(isSuccess: isSuccess)
                 }
             case .disConnected :
                 DataLog.d("Btv disConnected", tag:self.tag)
+                if self.redirectFlag == .unpairingTvProvider {
+                    self.redirectFlag = nil
+                    DataLog.d("Btv unpairing completed", tag:self.tag)
+                    return
+                }
                 self.checkSync(isInterruptionAllowed:false)
                 
             case .ready :
@@ -206,32 +243,33 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         var isPairing = self.pairing.status == .pairing
         if flag == .disconnect && !isPairing {
             DataLog.d( "disconnect Sync completed", tag:self.tag)
+            self.pagePresenter.isLoading = false
             return
         }
         if flag == .unpairingTvProvider && !isPairing {
-            DataLog.d( "sync  unpairingTvProvider ", tag:self.tag)
+            DataLog.d( "sync unpairingTvProvider ", tag:self.tag)
+            self.pagePresenter.isLoading = false
             self.accountUnPairing()
             return
         }
         if flag == .syncTvProvider && !isPairing && self.currentAccountId != nil{
             DataLog.d( "syncTvProvider fail", tag:self.tag)
+            self.pagePresenter.isLoading = false
             self.accountPairingSyncFail()
             return
         }
-        
         if flag == .disconnectAndSyncTvProvider{
             DataLog.d( "disconnectAndSyncTvProvider", tag:self.tag)
         }
-        
-      
-        
         self.requestVSAccountMetadata(
             isInterruptionAllowed: isInterruptionAllowed ,
             completionHandler: { meta , error in
             DispatchQueue.main.async {
+                self.pagePresenter.isLoading = false
                 isPairing = self.pairing.status == .pairing
                 self.removePresent()
                 if let meta = meta {
+                    
                     if let expireDate = meta.authenticationExpirationDate {
                         let now = Date()
                         if expireDate.timeIntervalSince1970 < now.timeIntervalSince1970 {
@@ -240,16 +278,18 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                             return
                         }
                     }
-                    guard let pair = self.checkMetaData(meta) else {
+                    guard let pair = self.checkMetaData(meta) else { // meta없다면 다른업채 로그인
                         if !isInterruptionAllowed {
                             DataLog.d( "no MetaData ", tag:self.tag)
                             return
                         }
+                        self.accountNoMetadata()
+                        /*
                         if isPairing {
                             self.accountPairingSynchronization()
                         } else {
                             self.accountPairingMetaError() 
-                        }
+                        }*/
                         DataLog.d( "error MetaData ", tag:self.tag)
                         return
                     }
@@ -267,6 +307,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                         DataLog.d( "no MetaData ", tag:self.tag)
                         return
                     }
+                    
                     if isPairing {
                         if flag == .disconnectTvProviderAndUnpairing {
                             self.accountPairingSynchronizationDenied()
@@ -311,6 +352,19 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
             if isPairing {
                 self.redirectFlag = .disconnect
                 self.pairing.requestPairing(.unPairing)
+            }
+        }
+    }
+    private func accountNoMetadata(){
+        self.appSceneObserver?.alert = .confirm(
+            String.vs.account,
+            String.vs.accountNoMetadata,
+            confirmText: String.vs.pairingRequestTvProvider
+        ){ isOk in
+            if isOk {
+                self.moveSetup()
+            } else {
+                
             }
         }
     }
@@ -384,6 +438,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     private func accountAutoPairing(pairingId:String){
         //"TV프로바이더와\n동기화 실행중 입니다";
         SystemEnvironment.tvUserId = self.currentAccountId
+        DataLog.d( "SystemEnvironment.tvUserId " + (self.currentAccountId ?? "nil"), tag:self.tag)
         self.redirectFlag = .syncTvProvider
         DispatchQueue.main.async {
             self.appSceneObserver?.event = .toast(String.vs.accountAutoPairing)
@@ -418,10 +473,10 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     private func accountPairingCheck(pairingId:String){
         //"TV프로바이더와 동기화에\n실패했습니다.\nTV프로바이더에서 로그아웃 하거나\n다시 페어링 해주세요.";
         if pairingId != NpsNetwork.pairingId {
-            DataLog.d("accountPairingSynchronizationDifferentStb")
+            DataLog.d("accountPairingSynchronizationDifferentStb", tag:self.tag)
             self.accountPairingSynchronizationDifferentStb()
         } else {
-            DataLog.d("TvProvider pairing completed")
+            DataLog.d("TvProvider pairing completed", tag:self.tag)
         }
     }
     

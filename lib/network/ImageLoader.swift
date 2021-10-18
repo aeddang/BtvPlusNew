@@ -24,13 +24,18 @@ class ImageLoader: ObservableObject, PageProtocol{
     private var isLoading = false
    
     deinit {
-        guard let task = task else {return}
-        task.cancel()
+        self.cancel()
     }
     
     func reload(url: String?){
         isLoading = false
         load(url: url)
+    }
+    
+    func cancel(){
+        guard let task = task else {return}
+        task.cancel()
+        self.task = nil
     }
     
     @discardableResult
@@ -84,8 +89,8 @@ class ImageLoader: ObservableObject, PageProtocol{
     }
     
     private func loadCash(path:String){
-        cache.retrieveImage(forKey: path) {  [weak self] (result) in
-            guard let self = self else { return }
+        cache.retrieveImage(forKey: path) {  /*[weak self]*/ (result) in
+           // guard let self = self else { return }
             switch result {
             case .success(let value):
                 guard let img = value.image else {
@@ -94,7 +99,7 @@ class ImageLoader: ObservableObject, PageProtocol{
                     self.isLoading = false
                     return
                 }
-                //DataLog.d("cached image" + path , tag:self.tag)
+               //DataLog.d("cached image" + path , tag:self.tag)
                 self.event = .complete(img)
                 self.isLoading = false
                 
@@ -106,8 +111,8 @@ class ImageLoader: ObservableObject, PageProtocol{
     }
     
     private func loadServer(url: URL, path:String){
-        self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) { [weak self] (result) in
-            guard let self = self else { return }
+        self.task = downloader.downloadImage(with: url, options: nil, progressBlock: nil) { /*[weak self]*/ (result) in
+            //guard let self = self else { return }
             switch result {
             case .success(let value):
                 //DataLog.d("loaded image" + value.originalData.bytes.description , tag:self.tag)

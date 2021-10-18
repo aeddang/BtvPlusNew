@@ -548,9 +548,28 @@ class BlockData:InfinityData, ObservableObject{
         
         
         if let datas = self.posters {
-            let count = datas.count
             let pageType = self.posters?.first?.pageType
-            zip(0...count, datas).forEach{idx, data in
+            var count = datas.count
+            let leadingCount = self.leadingBanners?.count ?? 0
+            if let banners = self.leadingBanners {
+                zip(0...leadingCount, banners).forEach{idx, data in
+                    if pageType == .kids && logType == .list {
+                        data.logPosition = (idx+1).description + "@"
+                        + (leadingCount + count).description
+                    } else {
+                        if self.totalBlockNum > 0 {
+                            data.logPosition = (idx+1).description + "@"
+                            + (self.currentBlockIndex+1).description + "@"
+                            + self.totalBlockNum.description
+                        } else {
+                            data.logPosition = (idx+1).description + "@"
+                            + (leadingCount + count).description
+                        }
+                    }
+                }
+            }
+            count = leadingCount + count
+            zip(leadingCount...count, datas).forEach{idx, data in
                 if pageType == .kids && logType == .list {
                     action.position = (idx+1).description + "@" + count.description
                     action.category = data.synopsisType.logCategory
@@ -577,9 +596,28 @@ class BlockData:InfinityData, ObservableObject{
         }
         
         if let datas = self.videos {
-            let count = datas.count
             let pageType = self.videos?.first?.pageType
-            zip(0...count, datas).forEach{idx, data in
+            var count = datas.count
+            let leadingCount = self.leadingBanners?.count ?? 0
+            if let banners = self.leadingBanners {
+                zip(0...leadingCount, banners).forEach{idx, data in
+                    if pageType == .kids && logType == .list {
+                        data.logPosition = (idx+1).description + "@"
+                        + (leadingCount + count).description
+                    } else {
+                        if self.totalBlockNum > 0 {
+                            data.logPosition = (idx+1).description + "@"
+                            + (self.currentBlockIndex+1).description + "@"
+                            + self.totalBlockNum.description
+                        } else {
+                            data.logPosition = (idx+1).description + "@"
+                            + (leadingCount + count).description
+                        }
+                    }
+                }
+            }
+            count = leadingCount + count
+            zip(leadingCount...count, datas).forEach{idx, data in
                 if pageType == .kids && logType == .list{
                     action.position = (idx+1).description + "@" + count.description
                     action.category = data.synopsisType.logCategory

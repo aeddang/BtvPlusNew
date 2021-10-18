@@ -266,7 +266,7 @@ struct FillButton: View, SelecterbleProtocol{
                 Rectangle().stroke( self.strokeColor ,lineWidth: self.strokeWidth )
             )
         }
-        
+        .accessibility(label: Text(self.text))
         
     }
 }

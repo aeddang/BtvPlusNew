@@ -235,7 +235,7 @@ class PurchaseWebviewModel {
             ptype = .ppm
             pid = monthlyPid
         } else {
-            ptype = .ppv
+            ptype = .ppm
         }
         conTitle = synopsisData?.contents?.title ?? ""
         return self

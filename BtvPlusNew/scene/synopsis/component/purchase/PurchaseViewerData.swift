@@ -73,7 +73,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             isPlayAble = false
             isPlayAbleBtv = true
             
-        } else if synopsisModel.isOnlyPurchasedBtv && !(purchas?.isDirectview ?? false) {
+        } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority {
             /*
             serviceInfo = purchas?.isFree ?? false
                 ? String.pageText.synopsisOnlyBtv

@@ -180,7 +180,7 @@ struct PagePairingBtv: PageView {
                         isSelected: self.isInputCompleted()
                     ){_ in
                         self.naviLogManager.actionLog(.clickConnectConfirm, pageId:.pairingAuthNumber,
-                                                      actionBody: .init(config:PairingType.wifi.logPageConfig))
+                                                      actionBody: .init(config:PairingType.btv.logPageConfig))
                         self.inputCompleted()
                     }
                     .padding(.bottom, self.safeAreaBottom)

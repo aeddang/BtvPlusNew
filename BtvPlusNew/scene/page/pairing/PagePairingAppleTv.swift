@@ -110,9 +110,6 @@ struct PagePairingAppleTv: PageView {
             .background(Color.brand.bg)
         }
         .modifier(MatchParent())
-        .onAppear(){
-           
-        }
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             if res.id != self.tag { return }
@@ -129,7 +126,13 @@ struct PagePairingAppleTv: PageView {
             default: break
             }
         }
-        
+        .onAppear(){
+           
+        }
+        .onDisappear(){
+            self.pagePresenter.onPageEvent(
+                self.pageObject, event: .init(id: self.tag, type: .completed))
+        }
     }//body
     
     private func sendLog(category:String? = nil) {

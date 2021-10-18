@@ -73,6 +73,7 @@ class RelationContentsModel:ObservableObject {
         self.unavailableSeris = false
         self.pageType = pageType
     }
+
     
     func setData(synopsis:SynopsisModel? = nil) {
         guard let synopsis = synopsis else { return }

@@ -41,12 +41,12 @@ enum PairingType{
         case .token: return "token"
         }
     }
-    
+   
     var logPageConfig:String { 
         switch self {
-        case .wifi: return "WI-FI로 연결하기"
-        case .btv: return "B tv인증번호로 연결하기 페이지"
-        case .user: return "가입자 확인 후 연결하기"
+        case .wifi: return "wifi"
+        case .btv: return "btv_auth_number"
+        case .user: return "subscriber_auth"
         case .token: return ""
         }
     }
@@ -133,12 +133,12 @@ class Pairing:ObservableObject, PageProtocol {
         case .wifi :
             self.event = .pairingRequest
             self.pairingType = .wifi
-        case .btv :
-            self.event = .pairingRequest
-            self.pairingType = .btv
         case .user :
             self.event = .pairingRequest
             self.pairingType = .user
+        case .auth :
+            self.event = .pairingRequest
+            self.pairingType = .btv
         case .token :
             self.pairingType = .token
         default : break

@@ -107,9 +107,15 @@ class PurchaseTicketData:InfinityData{
             if let endDate = data.dd_end_perd {
                 let endDates = endDate.split(separator: " ")
                 if let yyyymmdd = endDates.first {
+                    var hhmmss = ""
+                    if endDates.count > 1 {
+                        let hms = String(endDates[1])
+                        hhmmss = hms.count > 5 ? hms.subString(start:0,len:5) : hms
+                        hhmmss = " " + hhmmss
+                    }
                     let origin = String(yyyymmdd)
                     let convertDate = origin.count >= 10 ? origin.subString(2) : origin
-                    periodTrailing = "(" + convertDate + String.app.untill + ")"
+                    periodTrailing = "(" + convertDate + hhmmss + String.app.untill + ")"
                 }
             }
         }

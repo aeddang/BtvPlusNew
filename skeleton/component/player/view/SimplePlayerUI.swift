@@ -98,6 +98,9 @@ struct SimplePlayerUI: PageComponent {
                         isSelected: self.isFullScreen,
                         size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                     ){ _ in
+                        if let model =  self.viewModel as? BtvPlayerModel {
+                            model.btvLogEvent = .clickFullScreen(!self.isFullScreen)
+                        }
                         if self.viewModel.useFullScreenAction {
                             let changeOrientation:UIInterfaceOrientationMask = SystemEnvironment.isTablet
                             ? (self.sceneObserver.sceneOrientation == .portrait ? .portrait :.landscape)
@@ -107,7 +110,7 @@ struct SimplePlayerUI: PageComponent {
                                 ? self.pagePresenter.fullScreenExit(changeOrientation: changeOrientation)
                                 : self.pagePresenter.fullScreenEnter()
                         } else{
-                            self.viewModel.event = .fullScreen(!self.isFullScreen)
+                            self.viewModel.event = .fullScreen(!self.isFullScreen, isUser:true)
                         }
                     }
                     

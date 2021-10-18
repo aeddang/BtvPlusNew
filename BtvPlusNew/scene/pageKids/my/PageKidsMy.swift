@@ -147,8 +147,14 @@ struct PageKidsMy: PageView {
         }
     }
     
+    @State var isInit:Bool = true
     private func checkProfileStatus(evt:PairingEvent){
         if self.pairing.status != .pairing {return}
+        if self.isInit {
+            self.isInit = false
+            return
+        }
+        
         if self.pairing.kid == nil {
             if pairing.kids.isEmpty {
                 switch evt {

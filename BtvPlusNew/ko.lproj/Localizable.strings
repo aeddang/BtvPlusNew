@@ -276,7 +276,7 @@
 "alertPlayError" = "재생오류";
 "alertPlayErrorPlayback" = "재생중 문제가 발생하였습니다.\n다시 시도해 주세요.";
 "alertPlayProhibitionSimultaneous" = "동시 시청 제한 안내";
-"alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 이용권에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
+"alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 월정액에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
 "alertPlayProhibitionSimultaneous2" = "현재 선택하신 영상과 동일한 제공사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 일부 제공사의 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
 "alertPlayProhibitionSimultaneous3" = "현재 이 영상을\n다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로\n동일 영상은 동시 시청이 불가하오니\n시청 종료 후 이용해 주세요.";
 
@@ -721,6 +721,7 @@
 
 "myRegistPictureFammly" = "B tv에 가족사진 등록하기";
 "myWatchedInfo" = "최근 1개월 간 시청한 VOD 목록입니다.";
+"myWatchedInfoBtv" = "버튼을 누르면 B tv에서 시청하실 수 있습니다.";
 "myTicketInfo" = "할인내역 및 구매 상품의 상세정보 확인, 변경은 B tv내 구매내역에서 확인하실 수 있습니다.";
 "myTicketMore" = "둘러보기";
 "myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
@@ -1376,6 +1377,7 @@
 
 "vsUnpairing" = "Apple TV 연결 해제 안내";
 "vsAccountForbiddenUnpairing" = "TV Provider를 통해 연결하신 경우\n[기기 설정 > TV > TV Provider]\n메뉴에서 계정 로그아웃하여\n연결 해제 가능합니다.\n해당 메뉴로 이동하시겠습니까?";
+"vsAccountNoMetadata" = "Apple TV의 TV 제공업체 설정으로 이동해서\nTV 제공업체 B tv에 대해서 로그인 해주세요.";
 
 "vsAccountProviderPairing" = "TV프로바이더 에서\n로그인 하셔야 합니다.";
 "vsAccountProviderPairingTip" = "TV프로바이더를 사용으로 설정해둔경우\nTV프로바이더에서 로그인하셔야합니다";
@@ -1384,7 +1386,7 @@
 "vsAccountAutoPairingConfirm" = "TV프로바이더 로그인 되어있습니다. TV프로바이더 로그아웃후 재실행시 연결이 끊어집니다.";
 
 "vsPairingMaintain" = "TV프로바이더 정보로 변경";
-"vsPairingRequestTvProvider" = "TV프로바이더 열기";
+"vsPairingRequestTvProvider" = "설정";
 "vsPairingDisconnect" = "페어링 해재";
 
 

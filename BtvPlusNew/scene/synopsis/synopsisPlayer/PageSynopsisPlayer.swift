@@ -79,7 +79,7 @@ struct PageSynopsisPlayer: PageView {
             .onReceive(self.playerModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .fullScreen(let isFullScreen) :
+                case .fullScreen(let isFullScreen, _) :
                     if isFullScreen { return }
                     self.pagePresenter.closePopup(self.pageObject?.id)
                 case .recovery(let isUser) :

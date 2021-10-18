@@ -235,7 +235,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
                         let diff = value - self.pullOffset
                         let dr:CGFloat = diff > 0 ? 1 : -1
                         var d = dr * max(abs(diff),minDiff)
-                        let m:CGFloat = self.axis == .horizontal ? 1.3 : 1.3
+                        let m:CGFloat = self.axis == .horizontal ? 1.0 : 1.0
                         if dr == 1 {d = d * m}
                         //ComponentLog.d("pull value " + value.description , tag: "InfinityScrollViewProtocol")
                         if self.viewModel.status != .drag && self.viewModel.status != .pull  {return}
@@ -311,10 +311,11 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         if abs(diff) > maxDiff { return }
         if abs(diff) < minDiff { return }
         let bodyOffset = max( 0, offset - self.dragInitOffset)
-        //ComponentLog.d("self.dragInitOffset " + self.dragInitOffset.description , tag: "DIFF")
+        //ComponentLog.d("bodyOffset " + bodyOffset.description , tag: "DIFF")
         self.bodyOffset = ceil(bodyOffset)
         self.viewModel.event = .drag(offset, dragOpacity)
         self.pagePresenter.dragOpercity = dragOpacity
+       
     }
 
     func onDragEndAction(isBottom: Bool, offset: CGFloat) {

@@ -95,11 +95,13 @@ struct WatchedList: PageComponent{
                     scrollType : .reload(isDragEnd:false),
                     header: self.watchedType == .kids
                         ? nil
-                        : InfoAlert(
-                            text: String.pageText.myWatchedInfo,
-                            horizontalMargin: self.horizontalMargin
-                    ),
-                    headerSize: Dimen.button.thinUltra + Dimen.margin.thin,
+                        : WatchedHeader(
+                            type: self.watchedType,
+                            horizontalMargin:self.horizontalMargin
+                        ),
+                    headerSize: self.watchedType == .btv
+                        ? (Dimen.button.thinUltra + Dimen.margin.thin)
+                        : (Dimen.button.thinUltra * 2 + Dimen.margin.tiny ),
                     marginTop: Dimen.margin.regular ,
                     marginBottom: self.marginBottom,
                     spacing:0,
@@ -108,7 +110,9 @@ struct WatchedList: PageComponent{
                 ){
                     
                     ForEach(self.datas) { data in
-                        WatchedItem( data:data , delete:self.deleteAble ? self.delete : nil)
+                        WatchedItem( data:data ,
+                                     watchedType: self.watchedType,
+                                     delete:self.deleteAble ? self.delete : nil)
                             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
                             .onTapGesture {
                                 guard let synopsisData = data.synopsisData else { return }
@@ -182,10 +186,33 @@ struct WatchedList: PageComponent{
                                       actionBody: action, contentBody: content)
     }
 }
+struct WatchedHeader: PageView{
+    let type:WatchedBlockType
+    var horizontalMargin:CGFloat = Dimen.margin.thin
+    var body: some View {
+        VStack(alignment:.leading , spacing:Dimen.margin.tiny){
+            InfoAlert(
+                text: String.pageText.myWatchedInfo,
+                horizontalMargin: self.horizontalMargin)
+            if self.type == .mobile {
+                InfoAlert(
+                    icon: Asset.icon.watchBTvListInfo,
+                    text: String.pageText.myWatchedInfoBtv,
+                    horizontalMargin: self.horizontalMargin)
+            }
+         }
+    }
+}
+
 
 struct WatchedItem: PageView {
+    @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var repository:Repository
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var setup:Setup
     var data:WatchedData
+    var watchedType:WatchedBlockType = .btv
     var delete: ((_ data:WatchedData) -> Void)? = nil
     var body: some View {
         HStack( spacing:Dimen.margin.light){
@@ -256,18 +283,34 @@ struct WatchedItem: PageView {
                 }
             }
             .modifier(MatchParent())
-            if let del = self.delete {
-                Button(action: {
-                    del(self.data)
-                }) {
-                    Image(Asset.icon.close)
-                        .renderingMode(.original)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: Dimen.icon.light,
-                               height: Dimen.icon.light)
-                        
-                        .colorMultiply(Color.app.grey)
+            HStack(spacing:Dimen.margin.thin){
+                if self.watchedType == .mobile {
+                    Button(action: {
+                        self.checkWatchBtv()
+                    }) {
+                        Image(Asset.icon.watchBTvList)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tiny,
+                                   height: Dimen.icon.tiny)
+                            
+                    }
+                    Spacer().modifier(MatchVertical(width: 1))
+                        .background(Color.app.white.opacity(0.1))
+                        .frame(height: Dimen.icon.tiny)
+                }
+                if let del = self.delete {
+                    Button(action: {
+                        del(self.data)
+                    }) {
+                        Image(Asset.icon.deleteList)
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: Dimen.icon.tiny,
+                                   height: Dimen.icon.tiny)
+                    }
                 }
             }
         }
@@ -281,7 +324,107 @@ struct WatchedItem: PageView {
             default : break
             }
         }
+        .onReceive(self.dataProvider.$result){ res in
+            guard let res = res else {return}
+            if !res.id.hasPrefix(self.data.id) {return}
+            switch res.type {
+            case .getSynopsis :
+                guard let data = res.data as? Synopsis else {return}
+                self.checkWatchBtvAuth(synop: data)
+            case .getDirectView :
+                guard let data = res.data as? DirectView else {return}
+                self.onWatchBtvAuth(data: data)
+            case .sendMessage :
+                guard let data = res.data as? ResultMessage else { return }
+                self.watchBtvCompleted(isSuccess: data.header?.result == ApiCode.success)
+            default : break
+            }
+        }
+        .onReceive(self.dataProvider.$error){ err in
+            guard let err = err else {return}
+            if !err.id.hasPrefix(self.data.id) {return}
+            switch err.type {
+            case .getSynopsis, .getDirectView, .sendMessage :
+                self.watchBtvCompleted(isSuccess: false)
+            default : break
+            }
+        }
+    }
+    
+    @State var synopsisModel:SynopsisModel? = nil
+    @State var purchaseViewerData:PurchaseViewerData? = nil
+    @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
+    private func checkWatchBtv(){
+        if let purchaseViewerData = self.purchaseViewerData {
+            self.watchBtv(purchaseViewerData: purchaseViewerData)
+            return
+        }
         
+        guard let synop = data.synopsisData else {return}
+        self.dataProvider.requestData( q: .init(id:self.data.id, type: .getSynopsis(synop), isOptional: true))
+    }
+    
+    private func checkWatchBtvAuth(synop:Synopsis){
+        let model = SynopsisModel(type: .seasonFirst).setData(data: synop)
+        self.synopsisModel = model
+        self.purchaseWebviewModel = PurchaseWebviewModel().setParam(synopsisData: synop)
+        self.dataProvider.requestData( q: .init(id:self.data.id, type: .getDirectView(model), isOptional: true))
+    }
+    
+    
+    func onWatchBtvAuth(data:DirectView){
+        guard let synopsisModel = self.synopsisModel else {return}
+        synopsisModel.setData(directViewData: data)
+        self.purchaseViewerData = PurchaseViewerData(type: .btv).setData(synopsisModel: synopsisModel, isPairing: true)
+        self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: self.synopsisModel?.salePPMItem?.prdPrcId)
+        if let purchaseViewerData = self.purchaseViewerData {
+            self.watchBtv(purchaseViewerData: purchaseViewerData)
+        }
+        
+    }
+    func watchBtv(purchaseViewerData:PurchaseViewerData){
+        guard let synopsisModel = self.synopsisModel else {return}
+       
+        let playAble = purchaseViewerData.isPlayAble
+        let playAbleBtv = purchaseViewerData.isPlayAbleBtv
+        let hasAuthority = purchaseViewerData.hasAuthority
+         
+        if self.synopsisModel?.isDistProgram == false {
+            self.appSceneObserver.alert = .alert(
+                String.alert.purchaseDisable,
+                String.alert.purchaseDisableService
+            )
+            return
+        }
+       
+        if self.synopsisModel?.isCancelProgram == false{ //결방일경우 비티비로 보냄
+            if !(!playAble && playAbleBtv) && !hasAuthority{
+                //btv에서만 가능한 컨텐츠 권한없어도 비티로 보기 지원
+                self.purchaseConfirm(msg: String.alert.purchaseContinueBtv)
+                return
+            }
+        }
+        let msg:NpsMessage = NpsMessage().setPlayVodMessage(
+            contentId: synopsisModel.epsdRsluId ?? "" ,
+            playTime: 0)
+        self.dataProvider.requestData( q: .init(id:self.data.id, type: .sendMessage( msg), isOptional: true))
+    }
+    
+    func watchBtvCompleted(isSuccess:Bool){
+        if isSuccess {
+            if self.setup.autoRemocon {
+                self.pagePresenter.openPopup(
+                    PageProvider.getPageObject(.remotecon)
+                )
+            }
+            self.appSceneObserver.event = .toast(String.alert.btvplaySuccess)
+        } else {
+            self.appSceneObserver.event = .toast(String.alert.btvplayFail)
+        }
+    }
+    func purchaseConfirm(msg:String? = nil){
+        guard  let model = self.purchaseWebviewModel else { return }
+        self.appSceneObserver.alert = .needPurchase(model, msg)
     }
 }
 

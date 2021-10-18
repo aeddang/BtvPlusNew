@@ -110,6 +110,12 @@ struct PageSceneModel: PageModel {
         }
     }
     
+    static func disableApple(_ pageObject:PageObject) -> Bool{
+        switch pageObject.pageID {
+        case .remotecon: return true
+        default : return false
+        }
+    }
     
     static func needPairing(_ pageObject:PageObject) -> Bool{
         switch pageObject.pageID {

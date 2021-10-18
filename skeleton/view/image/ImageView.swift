@@ -32,12 +32,12 @@ struct ImageView : View, PageProtocol {
                 self.onImageEvent(evt: evt)
             }
             .onAppear(){
-                
-                self.imageLoader.cash(url: self.url)
                 self.creatAutoReload()
+                self.imageLoader.cash(url: self.url)
             }
             .onDisappear(){
                 self.clearAutoReload()
+                self.imageLoader.cancel()
             }
         
     }
@@ -65,10 +65,12 @@ struct ImageView : View, PageProtocol {
             self.resetImage()
             break
         case .complete(let img) :
-            self.image = img
-            withAnimation{self.opacity = 1.0}
-            
             self.clearAutoReload()
+            DispatchQueue.main.async {
+                self.image = img
+                withAnimation{self.opacity = 1.0}
+            }
+            
         case .error :
             self.clearAutoReload()
             break

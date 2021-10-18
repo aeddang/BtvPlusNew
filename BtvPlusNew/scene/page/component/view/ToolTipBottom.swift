@@ -11,6 +11,7 @@ import SwiftUI
 struct TooltipBottom: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var naviLogManager:NaviLogManager
+   
     var text:String = ""
     var close:() -> Void
     var body: some View {
@@ -47,7 +48,8 @@ struct TooltipBottom: PageView {
         }
         
         .onTapGesture {
-            self.naviLogManager.actionLog(.clickTopGnbNotice, actionBody:.init(category:"notice")) 
+            self.naviLogManager.actionLog(.clickTopGnbNotice, actionBody:.init(category:"notice"))
+            self.close()
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.myAlram)
             )

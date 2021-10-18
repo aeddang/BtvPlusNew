@@ -54,7 +54,9 @@ enum BtvLogEvent {
                            config:String? = nil, result:String? = nil),
          
          clickConfigButton(NaviLog.Action,
-                           config:String? = nil)
+                           config:String? = nil),
+    
+         clickFullScreen(Bool)
 }
 
 enum BtvPlayerEvent {

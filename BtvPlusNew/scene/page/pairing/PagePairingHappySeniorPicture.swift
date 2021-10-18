@@ -75,7 +75,7 @@ struct PagePairingHappySeniorPicture: PageView {
                 } else {
                     let deviceId = SystemEnvironment.deviceId
                     let stbId = NpsNetwork.hostDeviceId ?? ""
-                    let macAddress = self.pairing.hostDevice?.macAdress ?? ApiConst.defaultMacAdress
+                    let macAddress = self.pairing.hostDevice?.convertMacAdress ?? ApiConst.defaultMacAdress
                     let time = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss")
                     let pcid = self.repository.namedStorage?.getPcid() ?? ""
                     let sessionid = self.repository.namedStorage?.getSessionId() ?? ""

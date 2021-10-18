@@ -28,12 +28,12 @@ class TagData{
         self.pageType = pageType
     }
     
-    func setData(data:ContentItem, isAdult:Bool, useCaptionFlag:Bool = true) -> TagData {
+    func setData(data:ContentItem, isAdult:Bool) -> TagData {
         if let prc = data.sale_prc_vat {
             if prc == 0 { isFree = true }
             self.price = prc.formatted(style: .decimal) + String.app.cash
         }
-        self.useCaptionFlag = useCaptionFlag
+
         self.isQuiz = data.quiz_yn?.toBool() ?? false
         self.setTranslation(code: data.epsd_lag_capt_typ_cd)
         self.studyIcon = AssetKids.study.getIcon(watchingProgress: data.kes?.watching_progress)

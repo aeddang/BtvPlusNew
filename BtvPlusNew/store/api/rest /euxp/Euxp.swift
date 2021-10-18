@@ -73,7 +73,9 @@ extension EuxpNetwork{
         case MENU_KIDS = "NM2000002471"
         case MENU_KIDS_HOME = "NM2000031454"
         case MENU_KIDS_HOME_FIRST = "NM2000031456"
+        case MENU_KIDS_HOME_FIRST_STAGE = "NM2000038374"
         case MENU_KIDS_MY = "NM2000031458"
+        case MENU_KIDS_MY_STAGE = "NM2000038375"
         case MENU_KIDS_MONTHLY = "NM2000032813"
     }
     

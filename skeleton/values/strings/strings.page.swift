@@ -199,6 +199,7 @@ extension String{
         public static let myinviteFammlyText2 = "myinviteFammlyText2".loaalized()
         public static let myRegistPictureFammly = "myRegistPictureFammly".loaalized()
         public static let myWatchedInfo = "myWatchedInfo".loaalized()
+        public static let myWatchedInfoBtv = "myWatchedInfoBtv".loaalized()
         public static let myWatchedEmpty = "myWatchedEmpty".loaalized()
         public static let myWatchedKids = "myWatchedKids".loaalized()
         public static let myWatchedKidsButton = "myWatchedKidsButton".loaalized()

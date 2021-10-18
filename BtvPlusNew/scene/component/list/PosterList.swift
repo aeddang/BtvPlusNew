@@ -514,44 +514,78 @@ struct PosterList: PageComponent{
             isRecycle: true, //self.banners?.isEmpty == false ? false : true,
             useTracking: self.useTracking
             ){
-            if banners?.isEmpty == false, let banners = self.banners {
-                ForEach(banners) { data in
-                    BannerItem(data: data){
-                        var actionBody = MenuNaviActionBodyItem()
-                        actionBody.menu_id = data.menuId
-                        actionBody.menu_name = data.menuNm
-                        actionBody.position = data.logPosition
-                        actionBody.config = data.logConfig
-                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
-                    }
-                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
-                }
-                if let subDataSets = self.subDataSets {
-                    ForEach(subDataSets) {sets in
-                        HStack(spacing:self.spacing){
-                            ForEach(sets.datas) { data in
-                                PosterItem( data:data )
-                                    .onTapGesture {
-                                        self.onTap(data: data)
-                                    }
-                            }
+            if #available(iOS 15.0, *) {
+                if banners?.isEmpty == false, let banners = self.banners {
+                    ForEach(banners) { data in
+                        BannerItem(data: data){
+                            var actionBody = MenuNaviActionBodyItem()
+                            actionBody.menu_id = data.menuId
+                            actionBody.menu_name = data.menuNm
+                            actionBody.position = data.logPosition
+                            actionBody.target = "banner"
+                            actionBody.config = data.logConfig
+                            self.naviLogManager.actionLog(
+                                data.pageType == .btv ? .clickContentsView : .clickContentsButton,
+                                actionBody: actionBody)
                         }
-                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
                     }
                 }
-            } else {
                 ForEach(self.datas) { data in
                     PosterItem( data:data , isSelected: self.contentID == nil
                                     ? false
                                     : self.contentID == data.epsdId)
                         //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                        .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                         .onTapGesture {
                             self.onTap(data: data)
                         }
                 }
+            } else {
+                if banners?.isEmpty == false, let banners = self.banners {
+                    ForEach(banners) { data in
+                        BannerItem(data: data){
+                            var actionBody = MenuNaviActionBodyItem()
+                            actionBody.menu_id = data.menuId
+                            actionBody.menu_name = data.menuNm
+                            actionBody.position = data.logPosition
+                            actionBody.target = "banner"
+                            actionBody.config = data.logConfig
+                            self.naviLogManager.actionLog(
+                                data.pageType == .btv ? .clickContentsView : .clickContentsButton,
+                                actionBody: actionBody)
+                        }
+                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                    }
+                    if let subDataSets = self.subDataSets {
+                        ForEach(subDataSets) {sets in
+                            HStack(spacing:self.spacing){
+                                ForEach(sets.datas) { data in
+                                    PosterItem( data:data )
+                                        .onTapGesture {
+                                            self.onTap(data: data)
+                                        }
+                                }
+                            }
+                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                        }
+                    }
+                } else {
+                    ForEach(self.datas) { data in
+                        PosterItem( data:data , isSelected: self.contentID == nil
+                                        ? false
+                                        : self.contentID == data.epsdId)
+                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                            .onTapGesture {
+                                self.onTap(data: data)
+                            }
+                    }
+                }
             }
+            
         }
         .onAppear{
+            if #available(iOS 15.0, *) {return}
             guard let banners = self.banners else {return}
             if banners.isEmpty {return}
             self.onBindingData(datas: self.datas)
@@ -642,8 +676,10 @@ struct PosterViewList: PageComponent{
                     text: self.text,
                     episodeViewerData: self.episodeViewerData
                 )
+                .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                 .modifier(HolizentalListRowInset(spacing: self.spacing))
                 .onTapGesture {
+                    
                     if let action = self.action {
                         action(data)
                     }
@@ -699,6 +735,7 @@ struct PosterSet: PageComponent{
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     PosterItem( data:data )
+                    .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                     .onTapGesture {
                         if data.hasLog {
                             self.naviLogManager.actionLog(

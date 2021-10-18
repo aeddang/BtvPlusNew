@@ -222,7 +222,7 @@ struct NaviLog {
                 actionBody.category = type.logCategory
             }
             return actionBody
-        case .pairing: return .init(config:"연결세부 페이지")
+        case .pairing: return .init(config:"main")
         case .pairingDevice: return .init(config:PairingType.wifi.logPageConfig)
         case .pairingBtv: return .init(config:PairingType.btv.logPageConfig)
         case .pairingUser: return .init(config:PairingType.user.logPageConfig)

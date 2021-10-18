@@ -62,7 +62,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                 HStack(alignment: .center, spacing:DimenKids.margin.thin){
                     VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
-                        HStack( spacing:DimenKids.margin.thin){
+                        HStack( spacing:DimenKids.margin.tiny){
                             if let kidName = self.kidName {
                                 Text(String.app.sir.replace(kidName)).modifier(BlockTitleKids())
                                     .lineLimit(1)

@@ -37,7 +37,8 @@ extension PageSynopsis {
             }
         case .clickConfigButton(let action, let config) :
             self.naviLog(action: action, config:config )
-            
+        case .clickFullScreen(let isFullScreen) :
+            self.naviLog(action: .clickVodScreenOption, config:isFullScreen ? "true" : "false" )
         }
     }
     
@@ -52,7 +53,7 @@ extension PageSynopsis {
         case .changeView(let epsdId):
             self.insideChangeViewId = epsdId
             self.insideChangeViewRuntime = self.naviLogManager.getContentsWatchTime()
-            
+    
         /*
         case .play80 :
             self.log(type: .play80)
@@ -98,13 +99,17 @@ extension PageSynopsis {
             }
         case .replay/*(let isReplay)*/ : 
            self.naviLog(action: .clickVodReplay)
+       
         default: break
         }
     }
     
     func onEventLog(streamEvent:PlayerStreamEvent){
         switch streamEvent {
-        case .stoped, .paused:
+        case .stoped:
+            
+            self.playLog(isPlay: false)
+        case .paused:
             self.playLog(isPlay: false)
             //self.log(type: .playBase)
         case .completed:
@@ -173,7 +178,8 @@ extension PageSynopsis {
             self.naviLog(
                 pageID: self.pageLogId,
                 action: .clickContentsProductionActor,
-                target: (data.name ?? "") + "|" + (data.descriptionRole ?? "")
+                target: (data.name ?? "") + "|" + (data.descriptionRole ?? ""),
+                actorId: data.prsId
             )
         case .changeOption(let option):
             self.naviLogKids(action: .clickCaptionOption, target:option?.title)
@@ -190,6 +196,10 @@ extension PageSynopsis {
     }
     
     func onDisappearLog(){
+        if self.naviLogManager.currentPlayStartTime != nil {
+            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+            self.naviLogManager.contentsWatch(isPlay: false)
+        }
         self.naviLogManager.clearSysnopsis() 
     }
     
@@ -264,7 +274,7 @@ extension PageSynopsis {
     func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
-                 category: String? = nil, result: String? = nil,  target:String? = nil
+                 category: String? = nil, result: String? = nil,  target:String? = nil , actorId:String? = nil
                  ){
         if naviLogManager.currentSysnopsisContentsItem?.episode_id != self.epsdId { 
             self.setupContent()
@@ -283,7 +293,8 @@ extension PageSynopsis {
             pageId: pageID ?? (self.type == .btv ? .play : .kidsPlay),
             action: action,
             actionBody: actionBody,
-            watchType : watchType
+            watchType : watchType,
+            actorId : actorId
         )
     }
     
@@ -306,10 +317,10 @@ extension PageSynopsis {
             contentsItem.episode_id = insideChangeViewId
             contentsItem.running_time = insideChangeViewRuntime
             
-            if let curSynopsisItem = synopsisModel.curSynopsisItem {
+            if let curSynopsisItem = synopsisModel.purchasedPPMItem ?? synopsisModel.curSynopsisItem{
                 contentsItem.product_id = curSynopsisItem.prdPrcId
                 contentsItem.purchase_type = curSynopsisItem.prd_typ_cd
-                contentsItem.monthly_pay = curSynopsisItem.ppm_prd_typ_cd
+                contentsItem.monthly_pay = curSynopsisItem.ppm_prd_nm 
                 contentsItem.list_price = curSynopsisItem.prd_prc_vat.description
                 contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description
             }

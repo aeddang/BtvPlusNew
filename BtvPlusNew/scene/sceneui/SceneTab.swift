@@ -22,7 +22,7 @@ struct SceneTab: PageComponent{
    
     @State var isDimed:Bool = false
     @State var isLoading:Bool = false
-    
+    @State var isPairing:Bool = false
     @State var safeAreaTop:CGFloat = 0
     @State var safeAreaBottom:CGFloat = 0
     
@@ -52,7 +52,7 @@ struct SceneTab: PageComponent{
                             }
                         }
                         TopTab()
-                        if self.showAlram && !self.readShowAlram {
+                        if self.showAlram && !self.readShowAlram && self.isPairing {
                             TooltipBottom(text: String.alert.newAlram){
                                 self.setup.alramUnvisibleDate = Setup.getDateKey()
                                 withAnimation{self.readShowAlram = true}
@@ -119,11 +119,13 @@ struct SceneTab: PageComponent{
         .onReceive (self.pairing.$status){ stat in
             switch stat {
             case .pairing :
+                self.isPairing = true
                 if self.headerBannerData != nil {
                     self.headerBannerData = nil
                     self.updateTopPos()
                 }
             case .disConnect :
+                self.isPairing = false
                 if self.headerBannerData == nil {
                     self.headerBannerData = nil
                     //self.headerBannerData = BannerData().setPairing()

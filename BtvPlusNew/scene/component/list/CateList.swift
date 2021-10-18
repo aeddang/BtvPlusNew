@@ -135,6 +135,7 @@ struct CateSet: PageComponent{
                 }
                 CateItem( data:data )
                 .frame(width: ListItem.cate.width)
+                .accessibility(label: Text(data.title ?? ""))
                 .onTapGesture {
                     self.naviLogManager.actionLog(.clickCategoryMenu,
                                                   actionBody: .init(

@@ -85,6 +85,7 @@ struct BookMarkButton: PageView {
                 }
             }
         }//btn
+        .accessibility(label: Text(String.button.heart))
         .opacity(self.isActive ? 1.0 : 0.5)
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }

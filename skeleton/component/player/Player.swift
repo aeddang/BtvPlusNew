@@ -165,7 +165,7 @@ enum PlayerUIEvent {//input
          addSeekForward(Double, Bool? = nil, isUser:Bool), addSeekBackword(Double, Bool? = nil, isUser:Bool),
          check, neetLayoutUpdate, fixUiStatus(Bool),
          screenGravity(AVLayerVideoGravity), screenRatio(CGFloat),
-         fullScreen(Bool),
+         fullScreen(Bool, isUser:Bool),
          replay(Bool),
          recovery(isUser:Bool = false)
             

@@ -96,13 +96,14 @@ class NaviLogManager : ObservableObject, PageProtocol {
         contentsItem.episode_resolution_id = synop.epsdRsluId?.replace("{", with: "").replace("}", with: "") ?? ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         //contentsItem.cid = contents.contrp_id?.replace("", with: "{").replace("", with: "}") ?? ""        // 4.0
 
-        if let curSynopsisItem = synop.curSynopsisItem {
+        if let curSynopsisItem = synop.purchasedPPMItem ?? synop.curSynopsisItem {
             contentsItem.product_id = curSynopsisItem.prdPrcId
             contentsItem.purchase_type = curSynopsisItem.prd_typ_cd  // 구매유형, ex) ppv(단품)/pps(시리즈)/ppp(패키지)/ppm(월정액) --> 재생 버튼 선택 후 확인 가능
-            contentsItem.monthly_pay = curSynopsisItem.ppm_prd_typ_cd     // 월정액유형, ex)프리미어, 프리미어 라이트, 지상파월정액, JTBC월정액
+            contentsItem.monthly_pay = curSynopsisItem.ppm_prd_nm    // 월정액유형, ex)프리미어, 프리미어 라이트, 지상파월정액, JTBC월정액
             contentsItem.list_price = curSynopsisItem.prd_prc_vat.description    // 할인 전 가격
             contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description  // 할인 후 최종 결제 시 지불한 가격
         }
+        
         //contentsItem.running_time = ""    // 초단위
         //contentsItem.actor_id = ""   // 배우ID
         self.currentSysnopsisContentsItem = contentsItem
@@ -159,7 +160,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     func contentsLog(pageId:NaviLog.PageId? = nil, action:NaviLog.Action,
                    actionBody:MenuNaviActionBodyItem? = nil,
-                   watchType:NaviLog.watchType? = nil){
+                     watchType:NaviLog.watchType? = nil, actorId:String? = nil){
         
         let fixedPageId:String? = pageId?.rawValue.isEmpty == true
             ? nil
@@ -168,6 +169,9 @@ class NaviLogManager : ObservableObject, PageProtocol {
         let data = NaviLogData()
         data.actionBody = actionBody
         data.contentsBody = self.currentSysnopsisContentsItem
+        if let value = actorId {
+            data.contentsBody?.actor_id = value
+        }
         data.member = self.currentMemberItem
     
         if let findPageId = fixedPageId {
@@ -271,8 +275,21 @@ class NaviLogManager : ObservableObject, PageProtocol {
                     .replace("{", with: "").replace("}", with: "")
             }
             if modifyContentBody.payment_price?.isEmpty == false, let price = modifyContentBody.payment_price {
-                modifyContentBody.payment_price = Int(round(price.toDouble())).description
+                if price == "-1" {
+                    modifyContentBody.payment_price = ""
+                } else {
+                    modifyContentBody.payment_price = Int(round(price.toDouble())).description
+                }
+                
             }
+            if modifyContentBody.list_price?.isEmpty == false, let price = modifyContentBody.list_price {
+                if price == "-1" {
+                    modifyContentBody.list_price = ""
+                } else {
+                    modifyContentBody.list_price = Int(round(price.toDouble())).description
+                }
+            }
+            
             if modifyContentBody.purchase_type?.isEmpty == false, let purchase_type = modifyContentBody.purchase_type{
                 modifyContentBody.purchase_type = PrdTypCd(rawValue: purchase_type)?.logName 
             }
@@ -308,11 +325,14 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 if let value = content.genre_code{ DataLog.d("  genre_code : " +  value, tag: self.tag )}
                 if let value = content.genre_text{ DataLog.d("  genre_text : " +  value, tag: self.tag )}
                 if let value = content.paid{ DataLog.d("  paid : " +  value.description, tag: self.tag )}
+                if let value = content.list_price{ DataLog.d("  list_price : " +  value, tag: self.tag )}
                 if let value = content.payment_price{ DataLog.d("  payment_price : " +  value, tag: self.tag )}
                 if let value = content.running_time{ DataLog.d("  running_time : " +  value, tag: self.tag )}
                 if let value = content.channel_name{ DataLog.d("  channel_name : " +  value, tag: self.tag )}
                 if let value = content.channel{ DataLog.d("  channel : " +  value, tag: self.tag )}
                 if let value = content.purchase_type{ DataLog.d("  purchase_type : " +  value, tag: self.tag )}
+                if let value = content.monthly_pay{ DataLog.d("  monthly_pay : " +  value, tag: self.tag )}
+                if let value = content.actor_id{ DataLog.d("  actor_id : " +  value, tag: self.tag )}
                 
             }
         }
@@ -343,7 +363,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         menuNaviItem.service_name = "btv_plus_pi"
         menuNaviItem.device_base_time = naviLogData?.now.toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS")
         menuNaviItem.pcid = self.repository.namedStorage?.getPcid()
-        menuNaviItem.stb_id = (NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId)
+        menuNaviItem.stb_id = (NpsNetwork.hostDeviceId ?? "")
                 .replace("{", with: "").replace("}", with: "")
         menuNaviItem.stb_mac = self.repository.pairing.hostDevice?.convertMacAdress  ?? ""
         menuNaviItem.session_id = self.repository.namedStorage?.getSessionId()

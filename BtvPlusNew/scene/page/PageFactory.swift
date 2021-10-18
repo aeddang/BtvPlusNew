@@ -150,6 +150,7 @@ struct PageProvider {
             return PageSynopsis.useLayer
         }
         switch pageID{
+        case .pairingAppleTv : return true
         default : return  false
         }
     }

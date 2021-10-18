@@ -143,12 +143,15 @@ struct KidsPlayerUI: PageComponent {
                         size: self.isFullScreen ? Self.iconFullScreen : Self.icon,
                         padding: Self.spacing
                     ){ _ in
+                        if let model =  self.viewModel as? BtvPlayerModel {
+                            model.btvLogEvent = .clickFullScreen(!self.isFullScreen)
+                        }
                         if self.viewModel.useFullScreenAction {
                             self.isFullScreen
                                 ? self.pagePresenter.fullScreenExit(changeOrientation: nil)
                                 : self.pagePresenter.fullScreenEnter(changeOrientation: nil)
                         } else{
-                            self.viewModel.event = .fullScreen(!self.isFullScreen)
+                            self.viewModel.event = .fullScreen(!self.isFullScreen, isUser:true)
                         }
                     }
                     .buttonStyle(BorderlessButtonStyle())

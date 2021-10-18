@@ -187,6 +187,7 @@ struct PageKidsHome: PageView {
     //Block init
     
     private func checkProfileStatus(evt:PairingEvent){
+        if self.pagePresenter.currentTopPage != self.pageObject {return}
         if self.pairing.status != .pairing {return}
         if self.pairing.kid == nil {
             if pairing.kids.isEmpty {

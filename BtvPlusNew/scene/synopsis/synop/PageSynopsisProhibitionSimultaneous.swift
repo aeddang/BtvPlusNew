@@ -93,6 +93,7 @@ extension PageSynopsis {
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = synopsisModel?.menuId
         actionBody.config = reason.config
+      
         self.naviLogManager.contentsLog(
             pageId: .prohibitionSimultaneous,
             action: .pageShow,

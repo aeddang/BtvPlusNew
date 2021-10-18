@@ -206,7 +206,7 @@ struct PlayBlock: PageComponent{
             .onReceive(self.playerModel.$event){evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .fullScreen(let isFullScreen) :
+                case .fullScreen(let isFullScreen, _) :
                     if isFullScreen {
                         self.openFullScreen()
                     } else {

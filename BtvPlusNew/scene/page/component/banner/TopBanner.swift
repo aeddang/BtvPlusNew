@@ -40,21 +40,35 @@ struct TopBanner: PageComponent {
     var useQuickMenu:Bool = false
     @State var pages: [PageViewProtocol] = []
     @State var isHorizontal:Bool = false
-   
     var action:((_ idx:Int) -> Void)? = nil
+    
+    let menus = SystemEnvironment.isTablet
+    ? [
+        QuickData(pageId : .previewList, text: String.quickMenu.menu1, icon: Asset.quickMenu.icon1),
+        QuickData(pageId : .webviewList, text: String.quickMenu.menu2, icon: Asset.quickMenu.icon2),
+        QuickData(pageId : .webviewList, text: String.quickMenu.menu3, icon: Asset.quickMenu.icon3),
+        QuickData(pageId : .home, text: String.quickMenu.menu5, icon: Asset.quickMenu.icon5)
+    ]
+    : [
+        QuickData(pageId : .previewList, text: String.quickMenu.menu1, icon: Asset.quickMenu.icon1),
+        QuickData(pageId : .webviewList, text: String.quickMenu.menu2, icon: Asset.quickMenu.icon2),
+        QuickData(pageId : .webviewList, text: String.quickMenu.menu3, icon: Asset.quickMenu.icon3),
+        QuickData(pageId : .cashCharge, text: String.quickMenu.menu4, icon: Asset.quickMenu.icon4),
+        QuickData(pageId : .home, text: String.quickMenu.menu5, icon: Asset.quickMenu.icon5,
+                  isLast: true)
+    ]
     var body: some View {
         VStack(alignment: SystemEnvironment.isTablet ? .leading : .center, spacing: Self.quickMenuTopMargin){
             LoopSwipperView(
+                pageObservable: self.pageObservable,
                 viewModel : self.viewModel,
                 pages: self.pages
-                )
-            .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
-            //.background(Color.app.red.opacity(0.4))
+            ).modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
             if self.useQuickMenu {
-                QuickTab()
-                    
-                    //.background(Color.app.white.opacity(0.4))
-                    
+                QuickTab(
+                    pageObservable: self.pageObservable,
+                    menus:self.menus
+                )
             }
         }
         
@@ -159,6 +173,7 @@ struct TopBannerItem: PageComponent, Identifiable {
         Spacer()
         .modifier(MatchParent())
         .background(Color.transparent.clearUi)
+        .accessibility(label: Text(data.menuNm ?? ""))
         .onTapGesture {
             var actionBody = MenuNaviActionBodyItem()
             actionBody.menu_id = data.menuId

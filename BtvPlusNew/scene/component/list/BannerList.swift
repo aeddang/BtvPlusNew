@@ -150,7 +150,8 @@ struct BannerItem: PageView {
             }
         }
         .background(self.data.bgColor ?? Color.app.blueLight)
-        .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius)) 
+        .clipShape(RoundedRectangle(cornerRadius: self.data.type.radius))
+        .accessibility(label: Text(data.title ?? ""))
         .onTapGesture {
             action?()
             BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data: self.data)

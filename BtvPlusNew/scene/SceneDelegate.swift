@@ -30,6 +30,7 @@ class SceneDelegate: PageSceneDelegate {
         let networkObserver = NetworkObserver()
         let setup = Setup()
         let vsManager: VSManager = VSManager(
+            pagePresenter: self.pagePresenter, 
             pairing:pairing,
             dataProvider: dataProvider,
             appSceneObserver: appSceneObserver
@@ -80,7 +81,14 @@ class SceneDelegate: PageSceneDelegate {
     override func willChangeAblePage(_ page:PageObject?)->Bool{
        
         guard let willPage = page else { return false }
-         
+        
+        if self.repository?.pairing.pairingStbType == .apple {
+            if PageSceneModel.disableApple(willPage) && self.repository?.pairing.status == .pairing {
+                self.repository?.appSceneObserver?.alert = .disableAppleTv
+                return false
+            }
+        }
+        
         if PageType.getType(willPage.pageGroupID) == .kids
             && PageType.getType(self.repository?.pagePresenter?.currentPage?.pageGroupID) == .btv
             && !willPage.isPopup

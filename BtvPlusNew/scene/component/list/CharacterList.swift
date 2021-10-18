@@ -19,16 +19,17 @@ struct CharacterRowData:Identifiable{
     func getRow(lineNum:Int) -> [CharacterRows] {
         var rows:[CharacterRows] = []
         var cells:[CharacterData] = []
+       
         self.datas.forEach{ d in
             if cells.count < lineNum {
                 cells.append(d)
             }else{
-                rows.append(CharacterRows(cells: cells))
+                rows.append(CharacterRows(idx:rows.count, cells: cells))
                 cells = [d]
             }
         }
         if !cells.isEmpty {
-            rows.append(CharacterRows(cells: cells))
+            rows.append(CharacterRows(idx:rows.count, cells: cells))
         }
         return rows
     }
@@ -36,6 +37,7 @@ struct CharacterRowData:Identifiable{
 
 struct CharacterRows:Identifiable{
     let id = UUID().uuidString
+    let idx:Int
     var cells:[CharacterData]
 }
 

@@ -139,8 +139,13 @@ enum DiagnosticReportType:String, CaseIterable{
 }
 
 class StudyData{
-    public var resultSentence:String? = nil
+    var firstSelect:DiagnosticReportType? = nil
+    var resultSentence:String? = nil
     func setData(_ data:KidStudy){
+        if let find = data.recomm_menus?.first(where: {$0.is_test_result?.toBool() == true}) {
+            self.firstSelect = KidsPlayType.getType(find.svc_prop_cd).diagnosticReportType  
+        }
+        
         if let count = data.recomm_menus?.count {
             if count > 1 {
                 self.resultSentence = data.recomm_menus?[1].items?.first?.test_result_sentence

@@ -53,6 +53,7 @@ struct BtvButton: PageView {
                         height: DimenKids.icon.light)
             }
         }//btn
+        .accessibility(label: Text(String.button.connectBtv))
         .opacity(self.isActive ? 1.0 : 0.5)
     }//body
 }

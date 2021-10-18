@@ -129,8 +129,14 @@ class KidsGnbItemData:InfinityData, ObservableObject{
     func getMyData() -> [BlockItem]? {
         if !self.isHome { return nil }
         let myBlocks = self.blocks?
-            .first(where: {$0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME_FIRST.rawValue})?.blocks?
-                    .first(where: {$0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_MY.rawValue})?.blocks
+            .first(where: {
+                $0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME_FIRST.rawValue
+                || $0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_HOME_FIRST_STAGE.rawValue
+            })?.blocks?
+                    .first(where: {
+                        $0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_MY.rawValue
+                        || $0.menu_id == EuxpNetwork.MenuTypeCode.MENU_KIDS_MY_STAGE.rawValue
+                    })?.blocks
         
         return myBlocks
     }
@@ -167,6 +173,19 @@ enum KidsPlayType:Equatable{
         }
     }
     
+    var diagnosticReportType:DiagnosticReportType? {
+        get{
+            switch self {
+            case .play: return nil
+            case .english: return .english
+            case .tale: return .infantDevelopment
+            case .create: return .creativeObservation
+            case .subject: return nil
+            default : return nil
+            }
+        }
+    }
+    
     var noImage:String {
         get{
             switch self {
@@ -193,17 +212,7 @@ enum KidsPlayType:Equatable{
         }
     }
     
-    var diagnosticReportType:DiagnosticReportType? {
-        get{
-            switch self {
-            case .english: return .english
-            case .tale: return .infantDevelopment
-            case .create: return .creativeObservation
-            default : return  nil
-            }
-        }
-    }
-    
+
     static func ==(lhs: KidsPlayType, rhs: KidsPlayType) -> Bool {
         switch (lhs, rhs) {
         case ( .play, .play): return true

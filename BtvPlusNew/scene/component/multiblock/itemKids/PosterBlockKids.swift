@@ -49,7 +49,7 @@ struct PosterBlockKids:PageComponent, BlockProtocol {
                 HStack(alignment: .center, spacing:DimenKids.margin.thin){
                     VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
-                        HStack( spacing:DimenKids.margin.thin){
+                        HStack( spacing:DimenKids.margin.tiny){
                             Text(data.name).modifier(BlockTitleKids())
                                 .lineLimit(1)
                             Text(data.subName).modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.brownDeep))

@@ -188,7 +188,9 @@ class BannerData:InfinityData, PageProtocol{
             self.move = PageProvider.getPageId(skimlink: url)
             self.logConfig = PageProvider.getPageLog(skimlink: url)
             if move == .snsShare {
-                self.logConfig = ""
+                if self.logConfig == nil {
+                    self.logConfig = ""
+                }
                 var param = [PageParam:Any]()
                 param[.type] = PageSnsShare.ShareType.familyInvite(type: "mob-banner")
                 self.moveData = param

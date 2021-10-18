@@ -22,7 +22,11 @@ struct KidsTopTab: PageComponent{
             KidProfile().onTapGesture {
                 
                 self.sendLog(menuName: "프로필")
-                
+                let status = self.pairing.status
+                if status != .pairing {
+                    self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsMy))
+                    return
+                }
                 if self.pairing.kids.isEmpty || self.pairing.kid == nil{
                     if !self.setup.isRegistUnvisibleDate() {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))

@@ -75,9 +75,12 @@ struct PageSelectKidCharacter: PageView {
                             .fixedSize(horizontal: false, vertical: true)
                        
                         VStack (alignment: .center, spacing: Self.spacing){
-                            ForEach(self.characterSets) { set in
+                            ForEach(self.characterSets) { characterSet in
                                 HStack(alignment: .top, spacing: Self.spacing) {
-                                    ForEach( set.cells.reversed()) { data in
+                                    ForEach( characterSet.idx % 2 == 0
+                                            ? characterSet.cells.reversed()
+                                            : characterSet.cells
+                                    ) { data in
                                         CharacterKidItem(
                                             isSelected: self.characterIdx == data.idx,
                                             data: data)

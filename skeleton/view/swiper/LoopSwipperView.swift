@@ -15,6 +15,7 @@ extension LoopSwipperView {
     static let aniBg:Animation = Animation.easeOut(duration: duration)
 }
 struct LoopSwipperView : View , PageProtocol, Swipper {
+    @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var viewModel:ViewPagerModel = ViewPagerModel()
     var pages: [PageViewProtocol]
     var isForground:Bool = true

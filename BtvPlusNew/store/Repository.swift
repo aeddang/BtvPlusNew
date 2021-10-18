@@ -232,16 +232,16 @@ class Repository:ObservableObject, PageProtocol{
                 if pairingDeviceType == .apple {
                     self.pairing.authority.requestAuth(.updateMyinfo(isReset: false))
                 }
-                
                 // ZeroConf 전송
                 self.zeroConfUDPSend()
-                
                 DataLog.d("pairingCompleted " + pairingDeviceType.rawValue, tag:"VSManager")
                 DataLog.d("prevName " + (prevName ??  "nil"), tag:"VSManager")
                 if pairingDeviceType == .apple && prevName?.isEmpty != false{
-                    self.pagePresenter?.openPopup(
-                        PageProvider.getPageObject(.pairingAppleTv)
-                    )
+                    DispatchQueue.main.async {
+                        self.pagePresenter?.openPopup(
+                            PageProvider.getPageObject(.pairingAppleTv)
+                        )
+                    }
                 } else if !NpsNetwork.isAutoPairing {
                     self.appSceneObserver?.event = .toast(  self.pairing.user?.isAutoPairing == true
                         ? String.alert.pairingCompletedAuto
@@ -296,7 +296,10 @@ class Repository:ObservableObject, PageProtocol{
         self.apiManager.$error.sink(receiveValue: { err in
             guard let err = err else { return }
            
-            if self.status != .ready && !err.isOptional && !err.isLog{ self.status = .error(err) }
+            if self.status != .ready && !err.isOptional && !err.isLog{
+                self.status = .error(err)
+                
+            }
             self.dataProvider.error = err
             if !err.isOptional && !err.isLog {
                 self.appSceneObserver?.alert = .apiError(err)
@@ -423,10 +426,11 @@ class Repository:ObservableObject, PageProtocol{
         }
         //self.appSceneObserver?.event = .toast("onReadyApiManager")
         self.dataProvider.requestData(q: .init(type: .getGnb))
+        /*
         if self.status == .reset {
             self.event = .reset
             self.status = .ready
-        }
+        }*/
     }
     
     private func onReadyRepository(gnbData:GnbBlock){

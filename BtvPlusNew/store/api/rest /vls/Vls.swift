@@ -41,7 +41,7 @@ extension VlsNetwork{
             switch self {
             case .R1 : return "지상파월정액시청"
             case .R2: return "동일cp사시청"
-            case .R4: return "동일 장르영상"
+            case .R4: return "동일cp장르"
             default : return "동일콘텐츠시청"
             }
         }

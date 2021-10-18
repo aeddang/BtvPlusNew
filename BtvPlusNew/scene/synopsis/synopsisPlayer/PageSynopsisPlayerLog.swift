@@ -27,7 +27,10 @@ extension PageSynopsisPlayer {
             }
         case .clickConfigButton(let action, let config) :
             self.naviLog(action: action, config:config )
-
+        case .clickFullScreen(let isFullScreen) :
+            self.naviLog(action: .clickVodScreenOption,
+                         config:isFullScreen ? "true" : "false",
+                         result: self.synopsisModel?.title )
         }
     }
     
@@ -156,7 +159,7 @@ extension PageSynopsisPlayer {
             if let curSynopsisItem = synopsisModel.curSynopsisItem {
                 contentsItem.product_id = curSynopsisItem.prdPrcId
                 contentsItem.purchase_type = curSynopsisItem.prd_typ_cd
-                contentsItem.monthly_pay = curSynopsisItem.ppm_prd_typ_cd
+                contentsItem.monthly_pay = curSynopsisItem.ppm_prd_nm
                 contentsItem.list_price = curSynopsisItem.prd_prc_vat.description
                 contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description
             }

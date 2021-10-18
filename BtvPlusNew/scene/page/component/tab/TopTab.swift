@@ -21,6 +21,7 @@ struct TopTab: PageComponent{
     @State var newCount:Int = 0
     @State var newCountStr:String = ""
     @State var pairingStbType:PairingDeviceType = .btv
+    @State var isPairing:Bool = false
     @State var character:String? = nil
     var body: some View {
         HStack(alignment: .bottom ,spacing:Dimen.margin.tiny){
@@ -37,7 +38,7 @@ struct TopTab: PageComponent{
                         .scaledToFit()
                         .frame(width: Dimen.icon.regular,
                                height: Dimen.icon.regular)
-                    if self.showAlram {
+                    if self.showAlram && self.isPairing{
                         Text(self.newCountStr)
                             .modifier(BoldTextStyle(
                                 size: Font.size.micro,
@@ -133,18 +134,16 @@ struct TopTab: PageComponent{
                 self.onUpdatedUser(self.pairing.user)
             case .pairingCompleted :
                 self.onUpdatedUser(self.pairing.user)
-        
+            case .updatedUser :
+                self.onUpdatedUser(self.pairing.user)
             default :break
             }
         }
-        .onReceive(self.pairing.$event){ evt in
-            guard let evt = evt else {return}
-            switch evt {
-            case .updatedUser :
-                self.onUpdatedUser(self.pairing.user)
-            default: break
-            }
-            
+        .onReceive (self.pairing.$status){ stat in
+            self.isPairing = stat == .pairing
+        }
+        .onReceive (self.appSceneObserver.$useTop) { use in
+            self.pairingStbType = self.pairing.pairingStbType
         }
         .onReceive(self.repository.alram.$newCount){ count in
             if self.pairing.status != .pairing { return }

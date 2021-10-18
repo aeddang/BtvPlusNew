@@ -140,6 +140,7 @@ struct InfinityScrollView<Content>: PageView, InfinityScrollViewProtocol where C
                 Spacer().modifier(MatchParent())
                 self.content
                 .padding(.top, self.marginTop)
+                .modifier(MatchParent())
             }
             .modifier(MatchParent())
             

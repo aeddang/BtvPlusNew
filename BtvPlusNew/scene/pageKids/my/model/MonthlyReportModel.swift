@@ -98,11 +98,20 @@ class MonthlyReportModel:ObservableObject, PageProtocol{
             
             if let age = kid?.ageMonth {
                 if age <= KidsPlayType.limitedLv1 {
-                    self.datas = infos.filter{KidsPlayType.getType($0.svc_prop_cd) != .subject}.map{ MonthlyReportData().setData($0)}
+                    self.datas = infos.filter{
+                        KidsPlayType.getType($0.svc_prop_cd) != .subject
+                        && KidsPlayType.getType($0.svc_prop_cd) != .play
+                    }
+                    .map{ MonthlyReportData().setData($0)}
                 } else if age <= KidsPlayType.limitedLv2 {
-                    self.datas = infos.map{ MonthlyReportData().setData($0) }
+                    self.datas = infos.filter{
+                        KidsPlayType.getType($0.svc_prop_cd) != .play
+                    }.map{ MonthlyReportData().setData($0) }
                 }  else {
-                    self.datas = infos.filter{KidsPlayType.getType($0.svc_prop_cd) != .create}.map{ MonthlyReportData().setData($0)}
+                    self.datas = infos.filter{
+                        KidsPlayType.getType($0.svc_prop_cd) != .create
+                        && KidsPlayType.getType($0.svc_prop_cd) != .play
+                    }.map{ MonthlyReportData().setData($0)}
                 }
                 
             } else {

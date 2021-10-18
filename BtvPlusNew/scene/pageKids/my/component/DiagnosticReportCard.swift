@@ -228,7 +228,7 @@ struct DiagnosticReportCard: PageComponent{
             } else {
                 self.profile = AssetKids.image.noProfile
             }
-            self.selectedData( self.selectedType ?? .english )
+            self.selectedData( self.selectedType ?? self.viewModel.studyData.firstSelect ?? .english )
         }
     }
     

@@ -43,7 +43,8 @@ struct FunctionViewer: PageComponent{
                     LikeButton(
                         componentViewModel: self.componentViewModel,
                         srisId: srisId,
-                        isLike: self.$isLike
+                        isLike: self.$isLike,
+                        isActive: self.synopsisData?.isPosson != true
                     ){ ac in
                        
                     }
@@ -60,8 +61,8 @@ struct FunctionViewer: PageComponent{
                             componentViewModel: self.componentViewModel,
                             srisId:srisId,
                             epsdId:self.synopsisData?.epsdId,
-                            isRecommand: self.isPairing ? self.synopsisModel?.isRecommand : false,
-                            isActive: self.synopsisData?.isPosson != true
+                            isRecommand: self.isPairing ? self.synopsisModel?.isRecommand : false
+                           // isActive: self.synopsisData?.isPosson != true
                         )
                         .buttonStyle(BorderlessButtonStyle())
                         .fixedSize()

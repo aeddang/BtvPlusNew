@@ -27,6 +27,7 @@ struct TopBannerBg: PageComponent {
     var body: some View {
         ZStack(alignment: .bottom){
             LoopSwipperView(
+                pageObservable: self.pageObservable,
                 viewModel : self.viewModel,
                 pages: self.pages,
                 isForground : false,

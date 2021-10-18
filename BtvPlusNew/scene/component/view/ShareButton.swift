@@ -59,6 +59,7 @@ struct ShareButton: PageView {
             }
             
         }//btn
+        .accessibility(label: Text(String.button.share))
         .opacity(self.isActive ? 1.0 : 0.5)
         
     }//body

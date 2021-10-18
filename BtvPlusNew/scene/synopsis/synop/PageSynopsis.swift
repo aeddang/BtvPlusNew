@@ -211,7 +211,7 @@ struct PageSynopsis: PageView {
                 .onReceive(self.playerModel.$event){evt in
                     guard let evt = evt else { return }
                     switch evt {
-                    case .fullScreen(_) :
+                    case .fullScreen:
                         self.onFullScreenControl()
                     case .recovery(let isUser) :
                         if isUser { self.resetPage() }
@@ -294,8 +294,15 @@ struct PageSynopsis: PageView {
                 guard let _ = evt else {return}
                 self.isPageDataReady = true
                 switch evt {
-                case .pairingCompleted : self.initPage()
-                case .disConnected : self.initPage()
+                case .pairingCompleted :
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                        if self.pairing.pairingDeviceType == .apple {
+                            self.playerModel.event = .stop(isUser: false)
+                        } else {
+                            self.initPage()
+                        }
+                    }
+                //case .disConnected : self.initPage()
                 case .pairingCheckCompleted(let isSuccess, _) :
                     if isSuccess {
                         let isPairing = self.pairing.status == .pairing
@@ -304,6 +311,17 @@ struct PageSynopsis: PageView {
                         self.initPage()
                     }
                     else { self.appSceneObserver.alert = .pairingCheckFail }
+                default : break
+                }
+            }
+            .onReceive(self.pagePresenter.$event){evt in
+                guard let evt = evt else {return}
+                if evt.id != "PagePairingAppleTv" {return}
+                switch evt.type {
+                case .completed :
+                    DispatchQueue.main.async {
+                        self.initPage()
+                    }
                 default : break
                 }
             }
@@ -947,8 +965,9 @@ struct PageSynopsis: PageView {
         
     private func setupDirectView (_ data:DirectView?, isSeasonWatchAll:Bool = false){
         PageLog.d("setupDirectView", tag: self.tag)
-        self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: nil)
         self.synopsisModel?.setData(directViewData: data, isSeasonWatchAll: isSeasonWatchAll)
+        self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: self.synopsisModel?.salePPMItem?.prdPrcId)
+        
         self.relationContentsModel.setData(synopsis: self.synopsisModel)
         self.isBookmark = self.synopsisModel?.isBookmark
         PageLog.d("self.isBookmark " + (self.isBookmark?.description ?? "nil"), tag: self.tag)

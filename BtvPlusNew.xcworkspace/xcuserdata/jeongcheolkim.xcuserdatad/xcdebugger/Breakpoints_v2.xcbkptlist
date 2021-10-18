@@ -231,32 +231,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "96D5BB0D-464D-4D03-851C-F8AFF0461A21"
+            uuid = "3842F963-05E6-4E8A-9660-78ADABF0ACAF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/synopsis/synopsisPlayer/PageSynopsisPlayerLog.swift"
+            filePath = "BtvPlusNew/store/Repository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
-            landmarkName = "onEventLog(btvLogEvent:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A40816A0-79FB-4660-8C15-DE3FF0220D59"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/scene/synopsis/synopsisPlayer/PageSynopsisPlayerLog.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
-            landmarkName = "checkInsideViewLog(_:)"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
+            landmarkName = "respondApi(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

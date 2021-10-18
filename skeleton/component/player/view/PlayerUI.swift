@@ -108,6 +108,10 @@ struct PlayerUI: PageComponent {
                             isSelected: self.isFullScreen,
                             size: CGSize(width:Dimen.icon.regular,height:Dimen.icon.regular)
                         ){ _ in
+                            if let model =  self.viewModel as? BtvPlayerModel {
+                                model.btvLogEvent = .clickFullScreen(!self.isFullScreen)
+                            }
+                            
                             if self.viewModel.useFullScreenAction {
                                 let changeOrientation:UIInterfaceOrientationMask = self.isFullScreen ? .portrait : .landscape
                                 self.isFullScreen
@@ -116,7 +120,7 @@ struct PlayerUI: PageComponent {
                                         isLock: SystemEnvironment.isTablet ,
                                         changeOrientation: changeOrientation)
                             } else{
-                                self.viewModel.event = .fullScreen(!self.isFullScreen)
+                                self.viewModel.event = .fullScreen(!self.isFullScreen, isUser:true)
                             }
                         }
                     }

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct InfoAlert: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    var icon:String = Asset.icon.alertInfo
     let text:String
     var horizontalMargin:CGFloat = 0
     var actionIcon:String? = nil
@@ -18,7 +19,7 @@ struct InfoAlert: PageView {
     var body: some View {
        HStack(alignment: .center, spacing: Dimen.margin.tinyExtra){
             HStack(alignment: .top, spacing: Dimen.margin.tinyExtra){
-                Image(Asset.icon.alertInfo)
+                Image(self.icon)
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)

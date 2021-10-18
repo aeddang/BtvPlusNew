@@ -21,7 +21,7 @@ class PlayerListData:InfinityData{
         if  isClip {
             self.title = data.sub_title
         } else {
-            self.title = title
+            self.title = data.sub_title ?? data.brcast_exps_dy
         }
         if let count = data.brcast_tseq_nm {
             self.count = count + String.app.broCount

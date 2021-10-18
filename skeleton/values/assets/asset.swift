@@ -89,6 +89,9 @@ extension Asset{
         public static let pairingUser2 = "icPoupPairing03"
         
         public static let watchBTv = "icSynopTvNor"
+        public static let watchBTvListInfo = "icMyBtv01"
+        public static let watchBTvList = "icMyBtv02"
+        public static let deleteList = "icListDelete"
         public static let likeOff = "icSynopRatingDownFoc"
         public static let likeOn = "icSynopRatingFoc"
         public static let like = "icSynopRatingNor"

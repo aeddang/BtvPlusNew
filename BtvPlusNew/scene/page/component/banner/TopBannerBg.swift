@@ -136,6 +136,7 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                     .resizable()
                         .modifier(MatchHorizontal(height:isHorizontal ? TopBanner.heightHorizontal :TopBanner.height))
                 }
+               
             }
             if SystemEnvironment.isTablet {
                 VStack(alignment:.leading, spacing:0){
@@ -235,7 +236,9 @@ struct TopBannerBgItem: PageComponent, Identifiable {
             
            
         }
+        .accessibility(hidden: true)
         .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.imageHeightHorizontal : TopBanner.imageHeight))
+        
         .onReceive(self.sceneObserver.$isUpdated) { update in
             if !update {return}
             if !SystemEnvironment.isTablet {return}

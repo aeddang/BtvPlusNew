@@ -168,6 +168,7 @@ struct MultiBlockBody: PageComponent {
                                     : max(self.headerOffset, -TopBanner.imageHeight)
                         )
                         .offset(y: self.marginHeader )
+                        
                             
                     }
                     ReflashSpinner(

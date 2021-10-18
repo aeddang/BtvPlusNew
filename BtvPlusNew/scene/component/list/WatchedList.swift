@@ -114,6 +114,7 @@ struct WatchedList: PageComponent{
                                      watchedType: self.watchedType,
                                      delete:self.deleteAble ? self.delete : nil)
                             .modifier(ListRowInset(marginHorizontal:self.horizontalMargin ,spacing: Dimen.margin.tinyExtra))
+                            .accessibility(label: Text(data.title ?? ""))
                             .onTapGesture {
                                 guard let synopsisData = data.synopsisData else { return }
                                 self.sendLogData(data)

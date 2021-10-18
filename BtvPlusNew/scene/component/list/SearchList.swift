@@ -76,6 +76,7 @@ struct SearchList: PageComponent{
                             spacing: 0,
                             marginTop: data.isSectionChange ? Dimen.margin.mediumUltra : 0
                         ))
+                        .accessibility(label: Text(data.keyword)) 
                         .onTapGesture {
                             if data.isSection {return}
                             action?(data)

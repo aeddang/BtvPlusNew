@@ -172,7 +172,7 @@ struct TopBannerItem: PageComponent, Identifiable {
     var body: some View {
         Spacer()
         .modifier(MatchParent())
-        .background(Color.transparent.clearUi)
+        .background(Color.transparent.clearUi) 
         .accessibility(label: Text(data.menuNm ?? ""))
         .onTapGesture {
             var actionBody = MenuNaviActionBodyItem()

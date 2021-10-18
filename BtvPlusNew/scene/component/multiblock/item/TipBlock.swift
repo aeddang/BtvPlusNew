@@ -62,6 +62,7 @@ struct TipBlock:PageComponent {
             textStrongColor: data.textColor,
             bgColor: data.bgColor)
         .modifier( ContentHorizontalEdges() )
+        .accessibility(label: Text(data.data?.title ?? ""))
         .onTapGesture {
             if !self.data.isMore {return}
             

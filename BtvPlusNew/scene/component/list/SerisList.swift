@@ -148,6 +148,7 @@ struct SerisList: PageComponent{
         ){
             ForEach(self.datas) { data in
                 SerisItem( relationContentsModel:  RelationContentsModel(), data:data, isSelected: self.contentID == data.contentID )
+                .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                 .onTapGesture {
                     
                 }

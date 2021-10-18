@@ -130,6 +130,7 @@ struct PurchaseList: PageComponent{
                         purchaseBlockModel:self.purchaseBlockModel,
                         data:data )
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.tinyExtra))
+                    .accessibility(label: Text(data.title ?? ""))
                     .onTapGesture {
                         self.sendLog(data: data)
                         if let synopsisData = data.synopsisData {

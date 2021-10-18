@@ -93,6 +93,7 @@ struct StbList: PageComponent{
         VStack (alignment: .leading, spacing: 0){
             ForEach(self.datas) { data in
                 StbItem( data: data)
+                .accessibility(label: Text(data.title ?? ""))
                 .onTapGesture {
                     self.action(data)
                 }

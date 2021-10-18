@@ -138,8 +138,10 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
-        params["m_drm"] = SystemEnvironment.isStage ? "fairplay" : ""
+        params["m_drm"] = "fairplay"
         params["use_subtitle_yn"] = "n"
+            
+        params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsPreview(query: params), completion: completion, error:error)
     }
     
@@ -167,10 +169,11 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
-        params["m_drm"] = SystemEnvironment.isStage ? "fairplay" : ""
+        params["m_drm"] = "fairplay"
         params["use_subtitle_yn"] = "n"
         
-       
+        params["mac_address"] = ""
+        params["mac_exclude_check_yn"] = "Y"
         fetch(route: ScsPreplay(query: params), completion: completion, error:error)
     }
     
@@ -208,8 +211,11 @@ class Scs: Rest{
         params["verf_req_data"] = ApiUtil.getSCSVerfReqData(stbId, plainText: plainText, date: date)
         params["req_date"] = ScsNetwork.getReqData(date:date)
         params["method"] = "get"
-        params["m_drm"] = SystemEnvironment.isStage ? "fairplay" : ""
+        params["m_drm"] = "fairplay" //SystemEnvironment.isStage ? "fairplay" : ""
         params["use_subtitle_yn"] = "n"
+        
+        params["mac_address"] = ""
+        params["mac_exclude_check_yn"] = "Y"
         fetch(route: ScsPlay(path:path, query: params, overrideHeaders: overrideHeaders), completion: completion, error:error)
 
     }
@@ -232,6 +238,8 @@ class Scs: Rest{
         params["passwd"] = pw;
         params["passwd_type"] = type?.rawValue ?? ScsNetwork.ConfirmType.adult.rawValue;
         params["method"] = "get"
+            
+        params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsConfirmPassword(query: params), completion: completion, error:error)
     }
     
@@ -252,6 +260,8 @@ class Scs: Rest{
         params["stb_id"] = stbId
         params["mac_address"] = macAdress
         params["method"] = "post"
+            
+        params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsStbInfo(body: params), completion: completion, error:error)
     }
     

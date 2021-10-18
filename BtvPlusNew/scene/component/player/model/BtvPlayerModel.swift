@@ -276,13 +276,16 @@ class BtvPlayerModel:PlayerModel{
     
     private func appendQuality(name:String, path:String, drmLicense:String?){
         if path.isEmpty {return}
+        let quality = Quality(name: name, path: path, drmLicense:drmLicense)
+        qualitys.append(quality)
+        /*
         if SystemEnvironment.isStage {
             let quality = Quality(name: name, path: path, drmLicense:drmLicense)
             qualitys.append(quality)
         } else {
             let quality = Quality(name: name, path: path, drmLicense:nil)
             qualitys.append(quality)
-        }
+        }*/
       
         
     }

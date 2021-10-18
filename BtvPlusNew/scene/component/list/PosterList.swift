@@ -562,6 +562,7 @@ struct PosterList: PageComponent{
                             HStack(spacing:self.spacing){
                                 ForEach(sets.datas) { data in
                                     PosterItem( data:data )
+                                        .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                                         .onTapGesture {
                                             self.onTap(data: data)
                                         }
@@ -576,6 +577,7 @@ struct PosterList: PageComponent{
                                         ? false
                                         : self.contentID == data.epsdId)
                             //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                            .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                             .onTapGesture {
                                 self.onTap(data: data)
                             }

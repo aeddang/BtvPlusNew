@@ -104,6 +104,7 @@ struct PeopleList: PageComponent{
             
             ForEach(self.datas) { data in
                 PeopleItem( data:data )
+                .accessibility(label: Text((data.name ?? "") + (data.descriptionRole ?? "") ))
                 .onTapGesture {
                     self.componentViewModel?.uiEvent = .selectPerson(data)
                     if data.epsdId == nil {return}

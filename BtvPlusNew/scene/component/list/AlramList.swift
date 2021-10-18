@@ -268,6 +268,7 @@ struct AlramItem: PageView {
         }
         .padding(.vertical, Dimen.margin.thin)
         .background(Color.app.blueLight)
+        .accessibility(label: Text(data.title ?? ""))
         .onTapGesture {
             if !self.isRead { self.read() }
             self.naviLogManager.actionLog(.clickNotificationList, actionBody: self.data.actionLog)

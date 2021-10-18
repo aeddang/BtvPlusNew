@@ -79,6 +79,7 @@ struct TextTabList: PageComponent{
             ForEach(self.datas) { data in
                 TextTabItem( data:data , isSelected: self.selectedIdx == data.index)
                     .id(data.hashId)
+                    .accessibility(label: Text(data.title))
                     .onTapGesture {
                         if let action = self.action {
                             action(data)

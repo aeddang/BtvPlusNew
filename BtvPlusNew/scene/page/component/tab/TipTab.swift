@@ -74,6 +74,7 @@ struct TipTab: PageComponent{
             }
             .padding(.horizontal, Dimen.margin.micro)
         }
+        
         .modifier( MatchHorizontal(height: Dimen.button.regularExtra) )
         .background(self.bgColor)
         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.heavy))

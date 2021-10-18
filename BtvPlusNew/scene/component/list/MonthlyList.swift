@@ -177,7 +177,8 @@ struct MonthlyList: PageComponent{
             ){
             ForEach(self.datas) { data in
                 MonthlyItem( data:data )
-                    .id(data.hashId)
+                .id(data.hashId)
+                .accessibility(label: Text(data.title ?? ""))
                 .onTapGesture {
                     if let action = self.action {
                         action(data)

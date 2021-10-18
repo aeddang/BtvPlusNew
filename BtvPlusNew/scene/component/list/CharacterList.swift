@@ -60,6 +60,7 @@ struct CharacterList: PageComponent{
                         CharacterItem(
                             selected: .constant(self.selectIdx == cell.idx),
                             data: cell)
+                            .accessibility(label: Text(cell.image))
                         .onTapGesture {
                             self.selectIdx = cell.idx
                             AppUtil.hideKeyboard()

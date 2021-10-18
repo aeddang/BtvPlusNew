@@ -43,7 +43,7 @@ struct SceneTab: PageComponent{
                         .resizable()
                         .modifier(MatchHorizontal(height: self.headerBgHeight))
                         .padding(.top, self.headerBgTop )
-                    
+                        .accessibility(hidden: true)
                     VStack(alignment:.leading, spacing:0){
                         if let bannerData = self.headerBannerData {
                             HeaderBanner(data:bannerData) {

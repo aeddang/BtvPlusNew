@@ -49,6 +49,7 @@ struct PickerList: PageComponent{
                             .modifier(ListRowInset(
                                 spacing:Dimen.margin.medium
                             ))
+                            .accessibility(label: Text(data.title))
                             .onTapGesture {
                                 action?(data)
                             }

@@ -169,6 +169,7 @@ struct ThemaList: PageComponent{
             }
             ForEach(self.datas) { data in
                 ThemaItem( data:data )
+                .accessibility(label: Text(data.title ?? ""))
                 .onTapGesture {
                     var actionBody = MenuNaviActionBodyItem()
                     actionBody.menu_id = data.menuId

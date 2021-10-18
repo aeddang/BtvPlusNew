@@ -131,6 +131,7 @@ struct TicketList: PageComponent{
             ForEach(self.datas) { data in
                 TicketItem( data:data )
                     .modifier(HolizentalListRowInset(spacing: Self.spacing))
+                    .accessibility(label: Text(data.title ?? ""))
                     .onTapGesture {
                         if !data.hasAuth {
                             let status = self.pairing.status

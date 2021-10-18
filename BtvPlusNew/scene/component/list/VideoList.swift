@@ -567,7 +567,7 @@ struct VideoList: PageComponent{
                             ? false
                             : self.contentID == data.epsdId)
                 .id(data.hashId)
-                //.accessibility(label: data.title ?? data.subTitle ?? "")
+                .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                 .onTapGesture {
                     self.onTap(data: data)
                 }
@@ -653,6 +653,7 @@ struct VideoSet: PageComponent{
             if self.isUiActive {
                 ForEach(self.cellDatas) { data in
                     VideoItem( data:data )
+                    .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                     .onTapGesture {
                         if data.hasLog {
                             self.naviLogManager.actionLog(

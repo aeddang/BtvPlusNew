@@ -48,6 +48,7 @@ struct PageTab: PageComponent{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
+                    .accessibility(label: Text( String.app.back))
                 }
                 Spacer()
                 if self.isClose {
@@ -66,6 +67,7 @@ struct PageTab: PageComponent{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
+                    .accessibility(label: Text( String.app.close))
                 }
                 if self.isSetting {
                     Button(action: {
@@ -81,6 +83,7 @@ struct PageTab: PageComponent{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
+                    .accessibility(label: Text( String.app.setup))
                 }
             }
             .padding(.horizontal, Dimen.margin.tiny)

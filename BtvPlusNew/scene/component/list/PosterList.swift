@@ -528,7 +528,7 @@ struct PosterList: PageComponent{
                                 data.pageType == .btv ? .clickContentsView : .clickContentsButton,
                                 actionBody: actionBody)
                         }
-                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
                     }
                 }
                 ForEach(self.datas) { data in

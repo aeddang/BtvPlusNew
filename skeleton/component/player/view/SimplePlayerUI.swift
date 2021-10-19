@@ -113,11 +113,13 @@ struct SimplePlayerUI: PageComponent {
                             self.viewModel.event = .fullScreen(!self.isFullScreen, isUser:true)
                         }
                     }
+                    .accessibility(label: Text(
+                        self.isFullScreen ? String.player.fullscreenExit :  String.player.fullscreen))
                     
                 }
                 .padding(.all, self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)
                 .opacity(self.isShowing  ? 1 : 0)
-                 
+                .accessibility(hidden: true)
                 if !self.isFullScreen {
                     ProgressSlider(
                         progress: self.progress,
@@ -131,6 +133,7 @@ struct SimplePlayerUI: PageComponent {
                             self.viewModel.event = .seekProgress(pct, isUser: true)
                             self.viewModel.seeking = 0
                         })
+                        .accessibility(hidden: true)
                         .frame(height: Dimen.stroke.regular )
                         .padding(.all, 0)
                 }
@@ -151,6 +154,8 @@ struct SimplePlayerUI: PageComponent {
                         self.viewModel.event = .togglePlay(isUser: true)
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                     }
+                    .accessibility(label: Text(
+                        self.isPlaying ? String.player.pause :  String.player.resume))
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         Text(self.viewModel.playInfo!)
                             .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))

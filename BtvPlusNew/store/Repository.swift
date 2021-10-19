@@ -473,13 +473,13 @@ class Repository:ObservableObject, PageProtocol{
     func recivePush(_ messageId:String?, data:AlramData?) {
         guard let messageId = messageId else { return }
         self.pushManager.recivePush(messageId)
-        self.naviLogManager?.actionLog(.pageShow, actionBody: data?.actionLog)
+        self.naviLogManager?.actionLog(.pageShow, pageId:.appPush , actionBody: data?.actionLog)
     }
     
     func confirmPush(_ messageId:String?, data:AlramData?) {
         guard let messageId = messageId else { return }
         self.pushManager.confirmPush(messageId)
-        self.naviLogManager?.actionLog(.clickAppPushMessage, actionBody: data?.actionLog)
+        self.naviLogManager?.actionLog(.clickAppPushMessage, pageId:.appPush , actionBody: data?.actionLog)
     }
     
     func updateWatchLv(_ lv:Setup.WatchLv?){

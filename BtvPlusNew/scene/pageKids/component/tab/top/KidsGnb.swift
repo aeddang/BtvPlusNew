@@ -31,6 +31,7 @@ struct KidsGnb: PageComponent{
                             data:data,
                             isSelected:self.selectedMenuId == data.menuId
                         )
+                        .accessibility(label: Text(data.title ?? ""))
                         .onTapGesture {
                             
                             self.naviLogManager.actionLog(

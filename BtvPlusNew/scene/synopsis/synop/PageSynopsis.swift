@@ -598,6 +598,7 @@ struct PageSynopsis: PageView {
         self.title = nil
         self.imgBg = nil
         self.textInfo = nil
+        self.onResetPageLog()
         self.onResetPageWatchLv()
         self.onResetPageInside()
         self.onResetPageCorner()
@@ -664,11 +665,11 @@ struct PageSynopsis: PageView {
                 if self.isPairing == true {
                     if model.hasExamPreview  && model.playTime > 5{
                         self.synopsisPlayType = .preplay()
-                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true, self.pairing.hostDevice )))
                     } else if model.hasPreview {
                         self.synopsisPlayType = .preview(0)
                         let item = model.previews[0]
-                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id,  self.pairing.hostDevice )))
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id, self.pairing.hostDevice )))
                     }  else {
                         PageLog.d("no preview", tag: self.tag)
                         self.errorProgress()
@@ -677,7 +678,7 @@ struct PageSynopsis: PageView {
                 } else {
                     if model.hasExamPreview {
                         self.synopsisPlayType = model.playTime > 5 ?  .preplay() : .preview(0)
-                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId,  true )))
+                        self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId, true, self.pairing.hostDevice)))
                     } else {
                         PageLog.d("no preview", tag: self.tag)
                         self.errorProgress()
@@ -693,7 +694,7 @@ struct PageSynopsis: PageView {
                     break
                 }
                 self.pageDataProviderModel.requestProgress( 
-                    q: .init(type: .getPlay(self.epsdRsluId, anotherStbId: self.anotherStb )))
+                    q: .init(type: .getPlay(self.epsdRsluId, anotherStbId: self.anotherStb, self.pairing.hostDevice)))
             }
             if self.hasAuthority == true  {
                 switch self.synopsisPlayType {

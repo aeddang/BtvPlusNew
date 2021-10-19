@@ -208,6 +208,7 @@ struct WatchedHeader: PageView{
 
 struct WatchedItem: PageView {
     @EnvironmentObject var dataProvider:DataProvider
+    @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pagePresenter:PagePresenter
@@ -287,6 +288,10 @@ struct WatchedItem: PageView {
             HStack(spacing:Dimen.margin.thin){
                 if self.watchedType == .mobile {
                     Button(action: {
+                        if self.pairing.pairingStbType == .apple {
+                            self.appSceneObserver.alert = .disableAppleTv
+                            return
+                        }
                         self.checkWatchBtv()
                     }) {
                         Image(Asset.icon.watchBTvList)

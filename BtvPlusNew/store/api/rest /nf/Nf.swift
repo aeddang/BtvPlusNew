@@ -68,13 +68,13 @@ class Nf: Rest{
     func postNotificationVod(
         data:NotificationData?,
         completion: @escaping (RegistNotificationVod) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        //let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var query = [String:String]()
         query["if"] = "IF-NF-002"
         query["ver"] = NfNetwork.VERSION
         
         var params = [String:String]()
-        params["dvc_id"] = stbId
+        params["dvc_id"] =  SystemEnvironment.originDeviceId
         params["sris_id"] = data?.srisId ?? ""
         params["epsd_id"] = data?.epsdId ?? ""
         params["prd_id"] = data?.prdId ?? ""

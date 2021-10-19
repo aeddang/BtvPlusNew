@@ -57,6 +57,7 @@ struct PlayerOptionSelectListKids: PageComponent{
                     }
                     self.viewModel.selectFunctionType = nil
                 }
+                .accessibility(label: Text( btn.accessibility))
             }
         }
     }//body

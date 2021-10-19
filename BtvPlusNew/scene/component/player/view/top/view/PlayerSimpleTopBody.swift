@@ -32,6 +32,7 @@ struct PlayerSimpleTopBody: PageView{
                                    height: Dimen.icon.regular)
                     }
                     .opacity(self.isShowing ? 1 : 0)
+                    .accessibility(label: Text( String.app.back))
                 }
                
                 Spacer().modifier(MatchHorizontal(height: 0))
@@ -53,7 +54,7 @@ struct PlayerSimpleTopBody: PageView{
                     }
                 }
                 .opacity(self.isShowing || !self.isFullScreen ? 1 : 0)
-                
+                .accessibility(label: Text( self.isMute ? String.player.muteOff : String.player.muteOn))
             }
             Spacer()
         }

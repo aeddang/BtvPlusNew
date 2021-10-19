@@ -69,5 +69,13 @@ extension String {
         public static let testResult = "btnTestResult".loaalized()
         public static let cashCharge = "btnCashCharge".loaalized()
         public static let end = "btnEnd".loaalized()
+        
+        public static let my = "btnMy".loaalized()
+        public static let remotecon = "btnRemotecon".loaalized()
+        public static let kids = "btnKids".loaalized()
+        public static let search = "btnSearch".loaalized()
+        public static let schedule = "btnSchedule".loaalized()
+        public static let ticket = "btnTicket".loaalized()
+        public static let exit = "btnExit".loaalized()
     }
 }

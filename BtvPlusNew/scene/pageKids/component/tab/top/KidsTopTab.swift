@@ -19,8 +19,9 @@ struct KidsTopTab: PageComponent{
     @State var selectedMenuId:String? = nil
     var body: some View {
         HStack(alignment: .center ,spacing:DimenKids.margin.light){
-            KidProfile().onTapGesture {
-                
+            KidProfile()
+                .accessibility(label: Text(String.button.my))
+                .onTapGesture {
                 self.sendLog(menuName: "프로필")
                 let status = self.pairing.status
                 if status != .pairing {
@@ -50,6 +51,7 @@ struct KidsTopTab: PageComponent{
                     .frame(width: DimenKids.icon.regular,
                            height: DimenKids.icon.regular)
             }
+            .accessibility(label: Text(String.button.ticket))
             Button(action: {
                 self.sendLog(menuName: "검색")
                 self.pagePresenter.openPopup(
@@ -63,6 +65,7 @@ struct KidsTopTab: PageComponent{
                     .frame(width: Dimen.icon.regular,
                            height: Dimen.icon.regular)
             }
+            .accessibility(label: Text(String.button.search))
             Button(action: {
                 self.sendLog(menuName: "나가기")
                 var move:PageObject? = nil
@@ -91,6 +94,7 @@ struct KidsTopTab: PageComponent{
                     .frame(width: Dimen.icon.regular,
                            height: Dimen.icon.regular)
             }
+            .accessibility(label: Text(String.button.exit))
         }
         .onReceive(self.appSceneObserver.$kidsGnbMenuId) { id in
             self.selectedMenuId = id

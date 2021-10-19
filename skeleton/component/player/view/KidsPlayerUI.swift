@@ -72,7 +72,7 @@ struct KidsPlayerUI: PageComponent {
             }
             .background(Color.transparent.black45)
             .opacity(self.isShowing  ? 1 : 0)
-                        
+            .accessibility(hidden: true)
             if self.isLoading {
                 CircularSpinner(resorce: Asset.ani.loading)
             }
@@ -88,6 +88,7 @@ struct KidsPlayerUI: PageComponent {
                         .background(Color.app.white.opacity(0.2))
                         .clipShape(RoundedRectangle(cornerRadius: DimenKids.radius.regularUltra))
                         .padding(.leading, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
+                        .accessibility(hidden: true)
                 }
                 HStack(alignment:.center, spacing:0){
                     ImageButton(
@@ -104,6 +105,7 @@ struct KidsPlayerUI: PageComponent {
                     .buttonStyle(BorderlessButtonStyle())
                     .padding(.leading, -Self.spacing/2)
                     .opacity(self.isReplay ? 1 : 0.6)
+                    .accessibility(hidden: true)
                     ZStack(alignment:.bottom){
                         HStack(alignment:.center, spacing:Dimen.margin.thin){
                             Text(self.time)
@@ -132,6 +134,7 @@ struct KidsPlayerUI: PageComponent {
                                 self.viewModel.seeking = 0
                                 
                             })
+                            .accessibility(hidden: true)
                             .frame(height:self.isFullScreen ? Self.uiHeightFullScreen :  Self.uiHeight)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -155,6 +158,8 @@ struct KidsPlayerUI: PageComponent {
                         }
                     }
                     .buttonStyle(BorderlessButtonStyle())
+                    .accessibility(label: Text(
+                        self.isFullScreen ? String.player.fullscreenExit :  String.player.fullscreen))
                     .padding(.trailing, -Self.spacing/2)
                 }
                 .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
@@ -178,6 +183,8 @@ struct KidsPlayerUI: PageComponent {
                         self.viewModel.event = .togglePlay(isUser: true)
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                     }
+                    .accessibility(label: Text(
+                        self.isPlaying ? String.player.pause :  String.player.resume))
                     .opacity(self.isLoading ? 0 : 1)
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         

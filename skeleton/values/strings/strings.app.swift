@@ -11,9 +11,10 @@ extension String {
         public static let appName = "appName".loaalized()
         public static let confirm = "confirm".loaalized()
         public static let close = "close".loaalized()
+        public static let back = "back".loaalized()
         public static let cancel = "cancel".loaalized()
         public static let retry = "retry".loaalized()
-        
+        public static let setup = "setup".loaalized()
         public static let nickName = "nickName".loaalized()
         public static let nickNameKids = "nickNameKids".loaalized()
         public static let nickNameHolder = "nickNameHolder".loaalized()

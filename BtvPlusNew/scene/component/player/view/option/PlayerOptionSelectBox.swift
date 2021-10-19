@@ -28,6 +28,7 @@ extension PlayerOptionSelectBox{
     struct BtnData:Identifiable{
         let id = UUID.init()
         let title:String
+        let accessibility:String
         let index:Int
         var value:Any? = nil
     }
@@ -115,7 +116,9 @@ struct PlayerOptionSelectBox: PageView{
                     if self.viewModel.currentQuality?.name == q.name {
                         self.selectedIdx = idx
                     }
-                    return BtnData(title: q.name, index: idx, value: q)
+                    return BtnData(title: q.name,
+                                   accessibility: q.name + String.player.qulity,
+                                   index: idx, value: q)
                 }
                 self.buttonSize = Dimen.button.mediumExtraRect
                    
@@ -124,7 +127,10 @@ struct PlayerOptionSelectBox: PageView{
                     if self.viewModel.rate == r {
                         self.selectedIdx = idx
                     }
-                    return BtnData(title: "x" + r.description , index: idx, value: r)
+                    return BtnData(
+                        title: "x" + r.description ,
+                        accessibility:r.description + String.player.speed,
+                        index: idx, value: r)
                 }
                 self.buttonSize = Dimen.button.mediumExtraRect
                 
@@ -133,7 +139,9 @@ struct PlayerOptionSelectBox: PageView{
                     if self.viewModel.screenGravity == r.gravity{
                         self.selectedIdx = idx
                     }
-                    return BtnData(title: r.name , index: idx, value: r.gravity )
+                    return BtnData(title: r.name ,
+                                   accessibility:r.name,
+                                   index: idx, value: r.gravity )
                 }
                 self.buttonSize = Dimen.button.mediumRect
                 

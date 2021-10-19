@@ -16,6 +16,7 @@ extension PlayerMoreBox{
 
 struct PlayerMoreBox: PageView{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var viewModel: BtvPlayerModel = BtvPlayerModel()
     
@@ -43,9 +44,13 @@ struct PlayerMoreBox: PageView{
                     .modifier(
                         MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
             }
-            if self.viewModel.synopsisPlayerData?.type != .clip() && self.pairing.pairingStbType != .apple {
+            if self.viewModel.synopsisPlayerData?.type != .clip(){
                 Button(action: {
                     self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "view_btv")
+                    if self.pairing.pairingStbType == .apple {
+                        self.appSceneObserver.alert = .disableAppleTv
+                        return
+                    }
                     self.viewModel.btvUiEvent = .watchBtv
                     self.hideBox()
                     

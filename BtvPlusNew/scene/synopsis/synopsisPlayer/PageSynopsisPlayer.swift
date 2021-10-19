@@ -238,7 +238,9 @@ struct PageSynopsisPlayer: PageView {
         self.imgBg = nil
         self.textInfo = nil
         self.isContinuousPlay = false
+        self.onResetPageLog()
         self.pageDataProviderModel.initate()
+        
         withAnimation{
             self.isPlayViewActive = false
         }
@@ -265,7 +267,7 @@ struct PageSynopsisPlayer: PageView {
         
         case 1 :
             self.pageDataProviderModel.requestProgress(
-                q: .init(type: .getPlay(self.epsdRsluId )))
+                q: .init(type: .getPlay(self.epsdRsluId, self.pairing.hostDevice )))
             self.progressCompleted = true
         default : do{}
         }
@@ -375,11 +377,13 @@ struct PageSynopsisPlayer: PageView {
             self.errorProgress()
             return
         }
+        
         guard let dataInfo = data.CTS_INFO else {
             PageLog.d("error PlayInfo", tag: self.tag)
             self.errorProgress()
             return
         }
+        
         if let synopsis = self.synopsisModel {
             if synopsis.originEpsdId?.isEmpty == false, let fullVod = synopsis.originEpsdId {
                 self.synopsisPlayType = .clip(nil, SynopsisData(
@@ -391,7 +395,6 @@ struct PageSynopsisPlayer: PageView {
             } else {
                 self.synopsisPlayType = .clip()
             }
-            
             //let prerollData = SynopsisPrerollData().setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             if let progress = self.synopsisData?.progressTime {
                 self.playerModel.continuousProgressTime = progress

@@ -58,6 +58,7 @@ struct SceneTab: PageComponent{
                                 withAnimation{self.readShowAlram = true}
                             }
                             .padding(.leading, Dimen.margin.thin)
+                            .accessibility(hidden: true)
                         }
                     }
                     .padding(.top, self.safeAreaTop)
@@ -77,6 +78,7 @@ struct SceneTab: PageComponent{
                     }
                 }
                 .opacity(self.useTop ? 1 : 0)
+                .accessibility(hidden: !self.useTop)
                 .padding(.top, self.positionTop)
                 Spacer()
                 if self.isLoading {
@@ -93,6 +95,7 @@ struct SceneTab: PageComponent{
                     Spacer().modifier(MatchParent())
                         .background(Color.transparent.black45)
                 }
+                .accessibility(hidden: !self.useTop)
             }
         }
         .modifier(MatchParent())

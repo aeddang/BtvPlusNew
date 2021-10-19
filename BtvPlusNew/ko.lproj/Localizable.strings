@@ -8,7 +8,8 @@
 "cancel" = "취소";
 "retry" = "다시시도";
 "close" = "닫기";
-
+"back" = "이전";
+"setup" = "설정";
 "nickName" = "닉네임";
 "nickNameHolder" = "닉네임을 입력하세요.";
 "nickNameKids" = "별명";
@@ -206,6 +207,15 @@
 "btnTestResult" = "진단 결과 보기";
 "btnCashCharge" = "B포인트 충전소";
 "btnEnd" = "종료하기";
+
+"btnMy" = "마이페이지";
+"btnRemotecon" = "리모컨";
+"btnKids" = "잼키즈";
+"btnSearch" = "검색";
+"btnSchedule" = "편성표";
+"btnTicket" = "이용권";
+"btnExit" = "나가기";
+
 /*
  Sort
 */
@@ -276,8 +286,8 @@
 "alertPlayError" = "재생오류";
 "alertPlayErrorPlayback" = "재생중 문제가 발생하였습니다.\n다시 시도해 주세요.";
 "alertPlayProhibitionSimultaneous" = "동시 시청 제한 안내";
-"alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 월정액에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
-"alertPlayProhibitionSimultaneous2" = "현재 선택하신 영상과 동일한 제공사의 영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 일부 제공사의 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
+"alertPlayProhibitionSimultaneous1" = "현재 지상파 방송사의 영상을\n다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 지상파 월정액에 포함된 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
+"alertPlayProhibitionSimultaneous2" = "현재 선택하신 영상과 동일한 제공사의\n영상을 다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 일부 제공사의 영상은 동시 시청이 불가하오니 다른 기기의 시청 종료 후 이용해 주세요.";
 "alertPlayProhibitionSimultaneous3" = "현재 이 영상을\n다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로\n동일 영상은 동시 시청이 불가하오니\n시청 종료 후 이용해 주세요.";
 
 "alertPlayProhibitionSimultaneous4" = "현재 선택하신 영상과\n제공사와 장르가 동일한 영상을\n다른 기기에서 시청 중입니다.\n\n콘텐츠 제공사의 요청으로 일부 제공사의 영상은 장르가 다른 경우에만 동시 시청이 가능하오니 다른 기기의 시청 종료 후 이용해 주세요.";
@@ -1050,6 +1060,20 @@
 
 "playerRecordDisable" = "화면 기록 불가";
 "playerRecordDisableText" = "재생 중에는 화면 기록을 사용 할\n수 없습니다.";
+
+"playerResume" = "재생";
+"playerPause" = "일시정지";
+"playerFullscreen" = "전체화면 보기";
+"playerFullscreenExit" = "전체화면 보기 취소";
+"playerHorizontal" = "가로로 보기";
+"playerVertical" = "세로로 보기";
+"playerMuteOn" = "음소거 설정";
+"playerMuteOff" = "음소거 해제";
+"playerQulity" = "화질";
+"playerSpeed" = "배속";
+"playerQulitySelect" = "화질 선택";
+"playerSpeedSelect" = "재생 속도 선택";
+
 
 /*
  Remote

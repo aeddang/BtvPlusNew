@@ -46,6 +46,7 @@ struct SimplePlayer: PageComponent{
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel, imgBg: self.thumbImage, contentMode: self.thumbContentMode)
                     .opacity(self.isWaiting == true ? 1.0 : 0)
+                    .accessibility(hidden: self.isWaiting == true ? false : true)
                 
             }
             .modifier(MatchParent())

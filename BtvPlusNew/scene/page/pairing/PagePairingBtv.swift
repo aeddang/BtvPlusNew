@@ -179,7 +179,7 @@ struct PagePairingBtv: PageView {
                         text: String.button.connect,
                         isSelected: self.isInputCompleted()
                     ){_ in
-                        self.naviLogManager.actionLog(.clickConnectConfirm, pageId:.pairingAuthNumber,
+                        self.naviLogManager.actionLog(.clickConnectStbConfirm, pageId:.pairingAuthNumber,
                                                       actionBody: .init(config:PairingType.btv.logPageConfig))
                         self.inputCompleted()
                     }

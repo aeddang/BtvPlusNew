@@ -21,9 +21,9 @@ extension VlsNetwork{
         case R1,R2,R4, unowned
         static func getType(_ value:String?)->ProhibitionReason{
             switch value {
-                case "R1": return .R1
-                case "R2": return .R2
-                case "R4": return .R4
+                case "R1": return .R1 //현재 지상파 방송사
+                case "R2": return .R2 //현재 선택하신 영상과 동일한 제공사의 영상을
+                case "R4": return .R4 //현재 선택하신 영상과\n제공사와 장르가 동일한 영상
             default : return .unowned
             }
         }
@@ -72,7 +72,7 @@ class Vls: Rest{
         params["ppm_ids"] = synopData.ppmIds
         params["meta_typ_cd"] = synopData.metaTypCd
         params["episode_id"] = synopData.epsdId
-        params["limit_flag"] = synopData.isLimitedWatch ? "N" : "Y"
+        params["limit_flag"] = synopData.isLimitedWatch ? "Y" : "N"
         params["pc_id"] = pcId
         params["fromaction"] = nil
         fetch(route: VlsCheckProhibitionSimultaneous(body: params), completion: completion, error:error)

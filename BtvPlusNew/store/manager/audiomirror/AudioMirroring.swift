@@ -53,7 +53,7 @@ class AudioMirroring : NSObject, ObservableObject, AudioMirrorServiceProxyClient
     var isAudioMirrorSupported:Bool {
         get{
             if pairing.status != .pairing { return false }
-            guard let ver = pairing.hostDevice?.patchVersion else { return false }
+            guard let ver = pairing.hostDevice?.patchVersion else { return true }
             let verA = ver.split(separator: ".")
             if !verA.isEmpty {
                 let major = String(verA.first ?? "").toInt()

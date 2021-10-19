@@ -19,6 +19,7 @@ struct PlayerWaiting: PageComponent{
     var body: some View {
         ZStack{
             ThumbImageViewer(imgBg: self.imgBg, contentMode: self.contentMode)
+                .accessibility(hidden: true)
             VStack(spacing:0){
                 HStack(spacing:self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
                     Button(action: {
@@ -33,6 +34,8 @@ struct PlayerWaiting: PageComponent{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
+                    .accessibility(label: Text(String.app.back))
+                   
                     Spacer()
                 }
                 Spacer()
@@ -47,11 +50,13 @@ struct PlayerWaiting: PageComponent{
                     self.viewModel.btvUiEvent = .initate
                     self.viewModel.isUserPlay = true
                 }
+                .accessibility(label: Text(String.player.resume))
                 if let info = self.viewModel.playInfo {
                     Text(info.replace(String.player.preplaying, with:String.player.preplay))
                         .modifier(BoldTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                 }
             }
+            
         }
         .modifier(MatchParent())
         .background(Color.app.black)

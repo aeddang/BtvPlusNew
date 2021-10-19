@@ -45,6 +45,7 @@ struct PlayerTopBodyKids: PageView{
                                 height: self.isFullScreen
                                     ? KidsPlayerUI.iconFullScreen.height : KidsPlayerUI.icon.height)
                     }
+                    .accessibility(label: Text( String.app.back))
                 }
                 if self.isFullScreen, let title = self.title {
                     VStack(alignment: .leading){
@@ -66,6 +67,7 @@ struct PlayerTopBodyKids: PageView{
             }
             PlayerMoreBoxKids( viewModel: self.viewModel, isLock:self.isLock )
                 .offset(x: SystemEnvironment.isTablet ? DimenKids.margin.light : DimenKids.margin.thin)
+                .accessibility(hidden: true)
             if self.showLockText {
                 Image(AssetKids.player.lockText)
                     .renderingMode(.original)
@@ -77,6 +79,7 @@ struct PlayerTopBodyKids: PageView{
                         height: self.isFullScreen
                             ? Self.lockTextSizeFull.height : Self.lockTextSize.height)
                     .offset(x: DimenKids.margin.light)
+                    .accessibility(hidden: true)
             }
             VStack( spacing:0){
                
@@ -95,6 +98,7 @@ struct PlayerTopBodyKids: PageView{
                         self.viewModel.btvUiEvent = .more
                     }
                 }
+                .accessibility(hidden: true)
                 
                 if !self.isLock {
                     ImageButton(
@@ -118,6 +122,7 @@ struct PlayerTopBodyKids: PageView{
                             self.viewModel.event = .mute(true, isUser: true)
                         }
                     }
+                    .accessibility(label: Text( self.isMute ? String.player.muteOff : String.player.muteOn))
                     ImageButton(
                         defaultImage: AssetKids.player.lockOn,
                         size: self.isFullScreen ? KidsPlayerUI.iconFullScreen : KidsPlayerUI.icon,
@@ -126,6 +131,7 @@ struct PlayerTopBodyKids: PageView{
                         self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "screen_lock") 
                         self.viewModel.isLock = true
                     }
+                    .accessibility(hidden: true)
                 }
                 Spacer()
             }

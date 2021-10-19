@@ -29,6 +29,7 @@ struct SceneKidsTab: PageComponent{
             VStack(spacing:Dimen.margin.regular){
                 KidsTop(positionTop:self.positionTop)
                 .opacity(self.useTop ? 1 : 0)
+                .accessibility(hidden: !self.useTop)
                 .fixedSize(horizontal: false, vertical: true)
                
                 Spacer()
@@ -45,6 +46,7 @@ struct SceneKidsTab: PageComponent{
                     Spacer().modifier(MatchParent())
                         .background(Color.transparent.black45)
                 }
+                .accessibility(hidden: !self.useTop)
             }
         }
         .modifier(MatchParent())

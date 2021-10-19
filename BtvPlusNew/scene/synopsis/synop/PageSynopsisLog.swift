@@ -8,7 +8,12 @@
 import Foundation
 import SwiftUI
 extension PageSynopsis {
-   
+    func onResetPageLog(isAllReset:Bool = false, isRedirectPage:Bool = false){
+        if self.naviLogManager.currentPlayStartTime != nil {
+            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+            self.naviLogManager.contentsWatch(isPlay: false)
+        }
+    }
     func onEventLog(btvUiEvent:BtvUiEvent){
         switch btvUiEvent {
         case .initate :
@@ -36,9 +41,9 @@ extension PageSynopsis {
                 self.naviLog(pageID: .playInside, action: action, category: "도입부건너뛰기" )
             }
         case .clickConfigButton(let action, let config) :
-            self.naviLog(action: action, config:config )
+            self.naviLog(action: action, config:config ,useMenuName:false)
         case .clickFullScreen(let isFullScreen) :
-            self.naviLog(action: .clickVodScreenOption, config:isFullScreen ? "true" : "false" )
+            self.naviLog(action: .clickVodScreenOption, config:isFullScreen ? "true" : "false" ,useMenuName:false)
         }
     }
     
@@ -48,7 +53,8 @@ extension PageSynopsis {
         case .close :
             self.naviLog(
                 action: .clickPlayBackList,
-                config: self.type == .btv ? self.sceneOrientation.logConfig : nil
+                config: self.type == .btv ? self.sceneOrientation.logConfig : nil,
+                useMenuName:false
                 )
         case .changeView(let epsdId):
             self.insideChangeViewId = epsdId
@@ -68,11 +74,11 @@ extension PageSynopsis {
     func onEventLog(prerollEvent:PrerollEvent){
         switch prerollEvent {
         case .moveAd :
-            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고정보더보기")
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
+            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고정보더보기",useMenuName:false)
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기",useMenuName:false)
         case .skipAd :
-            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고건너뛰기")
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
+            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고건너뛰기",useMenuName:false)
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기",useMenuName:false)
         default: break
         }
     }
@@ -212,10 +218,11 @@ extension PageSynopsis {
         self.synopsisData?.cpId = model.cpId ?? ""
         self.synopsisData?.metaTypCd = model.metaTypCd
         self.synopsisData?.isLimitedWatch = model.isLimitedWatch
-        //let purchaseModels = model.purchasedPPMItems
-        self.synopsisData?.ppmIds = model.purchasedPPMItem?.prdPrcId
+        self.synopsisData?.ppmIds = model.purchasedPPMItems.first(where: {$0.prdTypCd == .cbvodppm})?.prdPrcId
+            ?? model.purchasedPPMItem?.prdPrcId ?? ""
         /*
-        purchaseModels.isEmpty
+        let purchaseModels = model.purchasedPPMItems.first(where: {$0.prdTypCd == .cbvodppm}) ?? model.purchasedPPMItem?.prdPrcId
+        self.synopsisData?.ppmIds = purchaseModels.isEmpty
             ? ""
             :  purchaseModels.dropFirst().reduce(purchaseModels.first!.prdPrcId, {$0 + "," + $1.prdPrcId})
         */
@@ -266,7 +273,7 @@ extension PageSynopsis {
     }
     
     func playNaviLog( action:NaviLog.Action, watchType:NaviLog.watchType){
-        self.naviLog(action: action, watchType: watchType)
+        self.naviLog(action: action, watchType: watchType, useMenuName:false)
         
     }
     
@@ -274,15 +281,17 @@ extension PageSynopsis {
     func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
-                 category: String? = nil, result: String? = nil,  target:String? = nil , actorId:String? = nil
+                 category: String? = nil, result: String? = nil,  target:String? = nil , actorId:String? = nil,
+                 useMenuName:Bool = true
                  ){
         if naviLogManager.currentSysnopsisContentsItem?.episode_id != self.epsdId { 
             self.setupContent()
         }
         
         var actionBody = MenuNaviActionBodyItem()
-
-        actionBody.menu_name = synopsisModel?.title
+        if useMenuName {
+            actionBody.menu_name = synopsisModel?.title
+        }
         actionBody.menu_id = synopsisModel?.menuId
         actionBody.category = category ?? ""
         actionBody.result = result ?? ""

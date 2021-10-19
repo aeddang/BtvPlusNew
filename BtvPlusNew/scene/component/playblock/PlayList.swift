@@ -483,7 +483,7 @@ struct PlayItem: PageView {
                 dataProvider.requestData(q: .init(id:data.id, type: .getPreview(epsdRsluId, self.pairing.hostDevice)))
             }
             else {
-                dataProvider.requestData(q: .init(id:data.id, type: .getPreplay(epsdRsluId, false)))
+                dataProvider.requestData(q: .init(id:data.id, type: .getPreplay(epsdRsluId, false, self.pairing.hostDevice)))
             }
         }
         
@@ -575,7 +575,7 @@ struct PlayItem: PageView {
         if let data = self.data.playData {
             setupPlay(data)
         } else {
-            dataProvider.requestData(q: .init(id:data.id, type: .getPlay(epsdRsluId)))
+            dataProvider.requestData(q: .init(id:data.id, type: .getPlay(epsdRsluId, self.pairing.hostDevice)))
         }
        
     }

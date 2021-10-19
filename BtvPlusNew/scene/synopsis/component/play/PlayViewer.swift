@@ -23,6 +23,7 @@ struct PlayViewer: PageComponent{
     var body: some View {
         ZStack{
             ThumbImageViewer(imgBg: self.imgBg, contentMode: self.contentMode)
+                .accessibility(hidden: true)
             if self.isActive {
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? Dimen.margin.regular : Dimen.margin.light){
@@ -36,12 +37,14 @@ struct PlayViewer: PageComponent{
                                 .frame(width: Dimen.icon.regular,
                                        height: Dimen.icon.regular)
                         }
+                        .accessibility(label: Text( String.app.back))
                         if self.isFullScreen && self.title != nil {
                             Text(self.title!)
                                 .modifier(MediumTextStyle(
                                     size: Font.size.mediumExtra,
                                     color: Color.app.white)
                                 )
+                                .accessibility(hidden: true)
                         }
                         Spacer()
                     }
@@ -56,6 +59,7 @@ struct PlayViewer: PageComponent{
                     .scaledToFit()
                     .frame(width: 87,
                            height: 52)
+                
                 if let info = self.textInfo {
                     Text(info)
                         .multilineTextAlignment(.center)
@@ -63,6 +67,7 @@ struct PlayViewer: PageComponent{
                             size: self.isFullScreen ? Font.size.lightExtra :Font.size.thin ))
                 }
             }
+            .accessibility(hidden: true)
             .opacity(self.isActive ? 1.0 : 0.5)
         }
         .modifier(MatchParent())

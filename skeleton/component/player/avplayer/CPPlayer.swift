@@ -27,6 +27,7 @@ struct CPPlayer: PageComponent {
                             if self.isSimple { return }
                             self.viewModel.event = .seekBackword(self.viewModel.getSeekBackwordAmount(), isUser: true)
                         })
+                        //.accessibility(label: Text("영상 뒤로 건너뛰기"))
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
                         })
@@ -38,11 +39,13 @@ struct CPPlayer: PageComponent {
                             if self.isSimple { return }
                             self.viewModel.event = .seekForward(self.viewModel.getSeekForwardAmount(), isUser: true)
                         })
+                        //.accessibility(label: Text("영상 앞으로 건너뛰기"))
                         .onTapGesture(count: /*@START_MENU_TOKEN@*/1/*@END_MENU_TOKEN@*/, perform: {
                             self.uiViewChange()
                         })
                         
                 }
+                .accessibility(hidden: true)
                 if self.isSimple {
                     SimplePlayerUI(viewModel : self.viewModel, pageObservable:self.pageObservable)
                 }else{

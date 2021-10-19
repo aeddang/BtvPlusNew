@@ -458,12 +458,12 @@ class ApiManager :PageProtocol, ObservableObject{
             epsdRsluId: epsdRsluId, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getPreplay(let epsdRsluId, let isPreview) : self.scs.getPreplay(
-            epsdRsluId: epsdRsluId, isPreview: isPreview,
+        case .getPreplay(let epsdRsluId, let isPreview, let device) : self.scs.getPreplay(
+            epsdRsluId: epsdRsluId, isPreview: isPreview, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getPlay(let epsdRsluId, let anotherStb) : self.scs.getPlay(
-            epsdRsluId: epsdRsluId, anotherStbId: anotherStb, 
+        case .getPlay(let epsdRsluId, let anotherStb, let device) : self.scs.getPlay(
+            epsdRsluId: epsdRsluId, anotherStbId: anotherStb, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .confirmPassword(let pw, let device, let pwType) : self.scs.confirmPassword(

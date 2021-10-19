@@ -38,7 +38,9 @@ struct NaviLog {
         case recentContents = "/my/recent_contents"
         case synopsis = "/synopsis"
         case kidsSynopsis = "/category/zemkids/synopsis"
+      
         case empty = ""
+       
     }
     static func getPageID(pageID:PageID? = nil, repository:Repository?)-> String?{
         guard let pageID = pageID else {return nil}

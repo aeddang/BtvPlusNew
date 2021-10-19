@@ -111,6 +111,7 @@ struct PlayerGrade: PageView{
             }
             
         }
+        .accessibility(hidden: true)
         .modifier(MatchParent())
         .padding(.all, self.pageType == .btv
                  ? (self.isFullScreen ? PlayerUI.paddingFullScreen : PlayerUI.padding)

@@ -180,7 +180,7 @@ extension PageSynopsis {
         self.synopsisPlayType = .vodChange(self.playerModel.time)
         self.pageDataProviderModel.request = .init(
             id: SingleRequestType.changeOption.rawValue,
-            type: .getPlay(self.epsdRsluId,  anotherStbId:self.anotherStb ))
+            type: .getPlay(self.epsdRsluId,  anotherStbId:self.anotherStb, self.pairing.hostDevice ))
     }
     
     func changeVod(synopsisData:SynopsisData?, isRedirectPage:Bool = true,

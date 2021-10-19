@@ -161,7 +161,9 @@ struct PagePairingManagement: PageView {
             .onReceive(self.pairing.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .disConnected : self.pagePresenter.closePopup(self.pageObject?.id)
+                case .disConnected :
+                    // self.pagePresenter.closePopup(self.pageObject?.id)
+                    self.pagePresenter.closeAllPopup()
                 default : break
                 }
             }

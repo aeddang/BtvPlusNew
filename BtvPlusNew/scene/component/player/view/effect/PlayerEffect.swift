@@ -104,6 +104,7 @@ struct PlayerEffect: PageView{
             }
         }
         .modifier(MatchParent())
+        .accessibility(hidden: true)
         .onReceive(self.viewModel.$brightness){ brightness in
             if self.brightness == nil {
                 self.brightness = brightness

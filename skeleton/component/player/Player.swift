@@ -388,6 +388,7 @@ extension PlayBack {
     func onCompleted(){
         let d = self.viewModel.duration //광고플레이어에서도 동일한 이벤트 날림...
         if d <= 0 {return}
+        if viewModel.playerStatus == .complete {return}
         ComponentLog.d("onCompleted", tag: self.tag)
         viewModel.streamEvent = .completed
         viewModel.playerStatus = .complete

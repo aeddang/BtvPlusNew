@@ -184,7 +184,7 @@ struct SerisItem: PageView {
                         .modifier(MatchParent())
                         .background(Color.transparent.black45)
                 }
-                if data.isFree == true {
+                if data.isFree == true && !self.isOn {
                     Text(String.app.free)
                         .modifier(BoldTextStyle(size: Font.size.thinExtra))
                         .lineLimit(1)

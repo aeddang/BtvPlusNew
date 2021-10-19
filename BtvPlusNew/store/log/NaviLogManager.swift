@@ -275,19 +275,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
                     .replace("{", with: "").replace("}", with: "")
             }
             if modifyContentBody.payment_price?.isEmpty == false, let price = modifyContentBody.payment_price {
-                if price == "-1" {
-                    modifyContentBody.payment_price = ""
-                } else {
-                    modifyContentBody.payment_price = Int(round(price.toDouble())).description
-                }
-                
+                modifyContentBody.payment_price = self.getPriceValue(price: price)
             }
             if modifyContentBody.list_price?.isEmpty == false, let price = modifyContentBody.list_price {
-                if price == "-1" {
-                    modifyContentBody.list_price = ""
-                } else {
-                    modifyContentBody.list_price = Int(round(price.toDouble())).description
-                }
+                modifyContentBody.list_price = self.getPriceValue(price: price)
             }
             
             if modifyContentBody.purchase_type?.isEmpty == false, let purchase_type = modifyContentBody.purchase_type{
@@ -467,6 +458,20 @@ class NaviLogManager : ObservableObject, PageProtocol {
             }
         }
         return ""
+    }
+    
+    private func getPriceValue(price:String?)->String{
+        guard let price = price else {return ""}
+        if price == "-1" {
+            return ""
+        } else {
+            let pnum = price.replace(",", with:"").replace("원", with:"").toDouble()
+            if pnum == -1{
+                return price
+            } else {
+                return Int(round(pnum)).description
+            }
+        }
     }
 }
 

@@ -20,6 +20,7 @@ struct PlayerWaitingKids: PageComponent{
         ZStack{
             ThumbImageViewerKids(
                 imgBg: self.imgBg, contentMode: self.contentMode, isFullScreen: self.isFullScreen)
+                .accessibility(hidden: true)
             if self.isFullScreen {
                 VStack(spacing:0){
                     HStack(spacing:self.isFullScreen ? KidsPlayerUI.fullScreenSpacing : KidsPlayerUI.spacing){
@@ -38,6 +39,7 @@ struct PlayerWaitingKids: PageComponent{
                                     height: self.isFullScreen
                                         ? KidsPlayerUI.iconFullScreen.height : KidsPlayerUI.icon.height)
                         }
+                        .accessibility(label: Text(String.app.back))
                         Spacer()
                     }
                     Spacer()
@@ -54,6 +56,7 @@ struct PlayerWaitingKids: PageComponent{
                     self.viewModel.btvUiEvent = .initate
                     self.viewModel.isUserPlay = true
                 }
+                .accessibility(label: Text(String.player.resume))
                 if let info = self.viewModel.playInfo {
                     Text(info.replace(String.player.preplaying, with:String.player.preplay))
                         .modifier(BoldTextStyleKids(

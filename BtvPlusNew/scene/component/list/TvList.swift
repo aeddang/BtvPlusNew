@@ -232,6 +232,7 @@ struct TvItem: PageView {
                 }
             }
         }
+        .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
         .onTapGesture {
             if self.data.hasLog {
                 self.naviLogManager.actionLog(.clickContentsList, actionBody: data.actionLog, contentBody: data.contentLog) 

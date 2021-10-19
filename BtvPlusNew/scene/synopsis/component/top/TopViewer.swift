@@ -48,7 +48,9 @@ struct TopViewer: PageComponent{
                         }
                         .allowsHitTesting(false)
                     }
+                    .accessibility(hidden: true)
                 }
+                
                 KFImage(URL(string: self.data.image))
                     .resizable()
                     .placeholder {
@@ -56,6 +58,7 @@ struct TopViewer: PageComponent{
                             .resizable()
                     }
                     .cancelOnDisappear(true)
+                    .accessibility(hidden: true)
                     .aspectRatio(contentMode: SystemEnvironment.isTablet ? .fit : .fill)
                     .modifier(MatchParent())
                     .padding(.bottom, self.data.hasAuthority

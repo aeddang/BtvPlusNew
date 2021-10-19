@@ -39,6 +39,7 @@ struct PrerollUi: PageView{
             .onTapGesture {
                 self.uiViewChange()
             }
+            .accessibility(hidden: true)
             ZStack(alignment: .topLeading){
                 
                 if self.type == .btv{

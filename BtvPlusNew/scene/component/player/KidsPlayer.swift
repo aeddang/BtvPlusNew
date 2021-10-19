@@ -125,10 +125,12 @@ struct KidsPlayer: PageComponent{
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel
                 )
+                .accessibility(hidden:true)
                 PlayerWaitingKids(
                     pageObservable:self.pageObservable,
                     viewModel: self.viewModel, imgBg: self.thumbImage, contentMode: self.thumbContentMode)
                     .opacity(self.isWaiting == true || self.isPlayerComplete ? 1.0 : 0)
+                    .accessibility(hidden: self.isWaiting == true || self.isPlayerComplete ? false : true)
                 
             }
             .modifier(MatchParent())

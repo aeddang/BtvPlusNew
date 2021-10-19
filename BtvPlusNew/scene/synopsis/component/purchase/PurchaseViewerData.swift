@@ -48,7 +48,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let isOnlyPurchasedBtv = synopsisModel.isOnlyPurchasedBtv
         let isOnlyBtvPurchasable = synopsisModel.isOnlyBtvPurchasable
         let holdbackType = synopsisModel.holdbackType
-        
+        let useCaption = synopsisModel.useCaption
         self.hasAuthority = false
         if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
@@ -108,7 +108,9 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                         synopsisModel:synopsisModel, purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
                 }
                 if purchas?.hasAuthority == true{
-                    self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                    if synopsisModel.useCaption {
+                        self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                    }
                     self.hasAuthority = true
                 }
             }

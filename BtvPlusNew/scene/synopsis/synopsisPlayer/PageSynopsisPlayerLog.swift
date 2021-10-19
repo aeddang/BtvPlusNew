@@ -8,6 +8,12 @@
 import Foundation
 import SwiftUI
 extension PageSynopsisPlayer {
+    func onResetPageLog(isAllReset:Bool = false, isRedirectPage:Bool = false){
+        if self.naviLogManager.currentPlayStartTime != nil {
+            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+            self.naviLogManager.contentsWatch(isPlay: false)
+        }
+    }
     func onEventLog(btvUiEvent:BtvUiEvent){
         switch btvUiEvent {
         case .initate :
@@ -26,11 +32,12 @@ extension PageSynopsisPlayer {
             default : break
             }
         case .clickConfigButton(let action, let config) :
-            self.naviLog(action: action, config:config )
+            self.naviLog(action: action, config:config , useMenuName: false)
         case .clickFullScreen(let isFullScreen) :
             self.naviLog(action: .clickVodScreenOption,
                          config:isFullScreen ? "true" : "false",
-                         result: self.synopsisModel?.title )
+                         result: self.synopsisModel?.title ,
+                         useMenuName: false)
         }
     }
     
@@ -46,7 +53,8 @@ extension PageSynopsisPlayer {
         case .close :
             self.naviLog(
                 action: .clickPlayBackList,
-                config: self.sceneObserver.sceneOrientation.logConfig
+                config: self.sceneObserver.sceneOrientation.logConfig,
+                useMenuName: false
                 )
         default: break
         }
@@ -56,9 +64,9 @@ extension PageSynopsisPlayer {
     func onEventLog(prerollEvent:PrerollEvent){
         switch prerollEvent {
         case .moveAd :
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기", useMenuName: false)
         case .skipAd :
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기", useMenuName: false)
         default: break
         }
     }
@@ -88,6 +96,10 @@ extension PageSynopsisPlayer {
     }
     
     func onDisappearLog(){
+        if self.naviLogManager.currentPlayStartTime != nil {
+            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
+            self.naviLogManager.contentsWatch(isPlay: false)
+        }
         self.naviLogManager.clearSysnopsis()
     }
     
@@ -113,19 +125,22 @@ extension PageSynopsisPlayer {
     
     func playNaviLog( action:NaviLog.Action, watchType:NaviLog.watchType){
         self.naviLog(action: action, watchType: watchType,
-                     result:self.synopsisModel?.title)
+                     result:self.synopsisModel?.title, useMenuName: false)
     }
     
     
     func naviLog(pageID:NaviLog.PageId? = nil , action:NaviLog.Action,
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
-                 category: String? = nil , result: String? = nil
+                 category: String? = nil , result: String? = nil,
+                 useMenuName:Bool = true
                  ){
         
         var actionBody = MenuNaviActionBodyItem()
         if action != .clickInsideSkipIntro {
-            actionBody.menu_name = synopsisModel?.title
+            if useMenuName {
+                actionBody.menu_name = synopsisModel?.title
+            }
             actionBody.menu_id = synopsisModel?.menuId
         }
         actionBody.category = category ?? ""

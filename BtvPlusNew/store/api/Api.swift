@@ -89,8 +89,8 @@ enum ApiType{
          getPackageDirectView(SynopsisPackageModel? = nil, isPpm:Bool = false,
                               pidList:[String]? = nil,anotherStbId:String? = nil),
          getPreview(String?, HostDevice?),
-         getPreplay(String?, Bool?),
-         getPlay(String?, anotherStbId:String? = nil),
+         getPreplay(String?, Bool?, HostDevice?),
+         getPlay(String?, anotherStbId:String? = nil, HostDevice?),
          confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType),
          connectTerminateStb(ScsNetwork.ConnectType, String?),
          getStbInfo(HostDevice?)

@@ -584,12 +584,13 @@ class BlockData:InfinityData, ObservableObject{
                         action.position = (idx+1).description + "@"
                         + count.description
                     }
-                    
-                    action.category = data.synopsisType.logCategory
-                    action.result = data.synopsisType.logResult
                     switch self.logType {
-                    case .home :  data.setNaviLogHome(action: action)
-                    case .list :  data.setNaviLog(action: action)
+                    case .home :
+                        data.setNaviLogHome(action: action)
+                    case .list :
+                        action.category = data.synopsisType.logCategory
+                        action.result = data.synopsisType.logResult
+                        data.setNaviLog(action: action)
                     }
                 }
             }
@@ -633,14 +634,19 @@ class BlockData:InfinityData, ObservableObject{
                         + count.description
                     }
                     
-                    action.category = data.synopsisType.logCategory
-                    action.result = data.synopsisType.logResult
-                    if data.isClip {
-                        action.target = data.clipTitle ?? ""
-                    }
                     switch self.logType {
-                    case .home :  data.setNaviLogHome(action: action)
-                    case .list :  data.setNaviLog(action: action)
+                    case .home :
+                        if data.isClip {
+                            action.category = data.clipTitle ?? ""
+                        }
+                        data.setNaviLogHome(action: action)
+                    case .list :
+                        if data.isClip {
+                            action.target = data.clipTitle ?? ""
+                        }
+                        action.category = data.synopsisType.logCategory
+                        action.result = data.synopsisType.logResult
+                        data.setNaviLog(action: action)
                     }
                 }
             }

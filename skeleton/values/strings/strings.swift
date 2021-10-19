@@ -84,6 +84,19 @@ extension String {
         public static let disable =  "playerDisable".loaalized()
         public static let recordDisable =  "playerRecordDisable".loaalized()
         public static let recordDisableText =  "playerRecordDisableText".loaalized()
+        
+        public static let resume =  "playerResume".loaalized()
+        public static let pause =  "playerPause".loaalized()
+        public static let fullscreen =  "playerFullscreen".loaalized()
+        public static let fullscreenExit =  "playerFullscreenExit".loaalized()
+        public static let horizontal =  "playerHorizontal".loaalized()
+        public static let vertical =  "playerVertical".loaalized()
+        public static let muteOn =  "playerMuteOn".loaalized()
+        public static let muteOff =  "playerMuteOff".loaalized()
+        public static let qulity =  "playerQulity".loaalized()
+        public static let speed =  "playerSpeed".loaalized()
+        public static let qulitySelect =  "playerQulitySelect".loaalized()
+        public static let speedSelect =  "playerSpeedSelect".loaalized()
     }
     
     struct remote {

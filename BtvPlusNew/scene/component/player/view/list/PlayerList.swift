@@ -63,15 +63,15 @@ struct PlayerListItem: PageView {
             }
             VStack(alignment: .leading, spacing:0){
                 Spacer().modifier(MatchParent())
-                if self.data.title != nil {
-                    VStack(alignment: .center, spacing:0){
-                        Spacer().modifier(MatchHorizontal(height: 0))
-                        Text(self.data.count + " " + self.data.title!)
-                            .modifier(MediumTextStyle(size: Font.size.thinExtra))
-                            .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thinExtra)
-                            .lineLimit(1)
-                    }
+                VStack(alignment: .center, spacing:0){
+                    Spacer().modifier(MatchHorizontal(height: 0))
+                    
+                    Text(self.data.episodeTitle)
+                        .modifier(MediumTextStyle(size: Font.size.thinExtra))
+                        .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/, Dimen.margin.thinExtra)
+                        .lineLimit(1)
                 }
+                
             }
         }
         .frame(

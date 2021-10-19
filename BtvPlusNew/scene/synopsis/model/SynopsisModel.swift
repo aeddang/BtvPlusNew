@@ -55,6 +55,8 @@ class SynopsisModel : PageProtocol {
     private(set) var isLimitedWatch:Bool = false
     private(set) var isRecommandAble:Bool = false
     private(set) var isDemand:Bool = false
+    private(set) var useCaption:Bool = false
+    
     private(set) var seasonTitle:String? = nil
     private(set) var originEpsdId:String? = nil
     private(set) var title:String? = nil
@@ -106,6 +108,7 @@ class SynopsisModel : PageProtocol {
             if let watchAble = contents.smtn_wat_abl_yn?.toBool() {
                 self.isLimitedWatch = !watchAble
             }
+            self.useCaption = contents.lag_capt_typ_exps_yn?.toBool() ?? false
             self.nextSrisId = contents.next_sris_id
             self.nextEpsdId = contents.next_epsd_id == contents.prev_epsd_id ? nil : contents.next_epsd_id
             self.isSrisCompleted = contents.sris_cmpt_yn?.toBool() ?? false

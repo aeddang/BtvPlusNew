@@ -35,6 +35,7 @@ struct TopViewerKids: PageComponent{
                     .cancelOnDisappear(true)
                     .aspectRatio(contentMode: .fit)
                     .modifier(MatchParent())
+                    .accessibility(hidden: true)
                 VStack(alignment: .leading, spacing:0){
                     Spacer().modifier(MatchHorizontal(height:0))
                     Button(action: {

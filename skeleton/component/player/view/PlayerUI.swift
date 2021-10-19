@@ -68,7 +68,7 @@ struct PlayerUI: PageComponent {
             }
             .background(Color.transparent.black45)
             .opacity(self.isShowing  ? 1 : 0)
-                        
+            .accessibility(hidden: true)
             if self.isLoading {
                 CircularSpinner(resorce: Asset.ani.loading)
             }
@@ -94,6 +94,7 @@ struct PlayerUI: PageComponent {
                             self.viewModel.seeking = 0
                         
                         })
+                        .accessibility(hidden: true)
                         .frame(height: self.isFullScreen ? Self.uiHeightFullScreen : Self.uiHeight)
                         .fixedSize(horizontal: false, vertical: true)
                     
@@ -123,6 +124,8 @@ struct PlayerUI: PageComponent {
                                 self.viewModel.event = .fullScreen(!self.isFullScreen, isUser:true)
                             }
                         }
+                        .accessibility(label: Text(
+                            self.isFullScreen ? String.player.fullscreenExit :  String.player.fullscreen))
                     }
                 }
                 .padding(.horizontal, self.isFullScreen ? Self.paddingFullScreen : Self.padding)
@@ -144,6 +147,8 @@ struct PlayerUI: PageComponent {
                         ComponentLog.d("BtvPlayerModel isUserPlay set " + self.viewModel.isUserPlay.description  , tag: self.tag)
                        
                     }
+                    .accessibility(label: Text(
+                        self.isPlaying ? String.player.pause :  String.player.resume))
                     .opacity(self.isLoading ? 0 : 1)
                     if self.isFullScreen && ( self.viewModel.playInfo != nil ) && !self.isPlaying {
                         if let info = self.viewModel.playInfo{

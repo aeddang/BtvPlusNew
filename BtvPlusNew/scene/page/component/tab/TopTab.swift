@@ -57,6 +57,7 @@ struct TopTab: PageComponent{
                         */
                     }
                 }
+                .accessibility(label: Text(String.button.my))
                 .frame(width: Dimen.icon.regular,
                        height: Dimen.icon.regular,
                        alignment: .topLeading)
@@ -76,6 +77,7 @@ struct TopTab: PageComponent{
                     .frame(width: Dimen.icon.mediumExtra,
                            height: Dimen.icon.mediumExtra)
             }
+            .accessibility(label: Text(String.button.kids))
             Button(action: {
                 self.naviLogManager.actionLog(.clickTopGnbSearch)
                 self.pagePresenter.openPopup(
@@ -89,6 +91,7 @@ struct TopTab: PageComponent{
                     .frame(width: Dimen.icon.regular,
                            height: Dimen.icon.regular)
             }
+            .accessibility(label: Text(String.button.search))
             Button(action: {
                 self.naviLogManager.actionLog(.clickTopGnbEpg)
                 self.pagePresenter.openPopup(
@@ -102,6 +105,7 @@ struct TopTab: PageComponent{
                     .frame(width: Dimen.icon.regular,
                            height: Dimen.icon.regular)
             }
+            .accessibility(label: Text(String.button.schedule))
             if self.pairingStbType == .btv {
                 Button(action: {
                     self.naviLogManager.actionLog(.clickTopGnbRemotecon)
@@ -122,6 +126,7 @@ struct TopTab: PageComponent{
                         .frame(width: Dimen.icon.regular,
                                height: Dimen.icon.regular)
                 }
+                .accessibility(label: Text(String.button.remotecon))
             }
         }
         .modifier(ContentHorizontalEdges())

@@ -62,6 +62,7 @@ struct PageKidsTab: PageComponent{
                             .frame(width: DimenKids.icon.mediumExtra,
                                    height: DimenKids.icon.mediumExtra)
                     }
+                    .accessibility(label: Text( String.app.back))
                 }
                 Spacer()
                 
@@ -78,6 +79,7 @@ struct PageKidsTab: PageComponent{
                             .frame(width: DimenKids.icon.mediumExtra,
                                    height: DimenKids.icon.mediumExtra)
                     }
+                    .accessibility(label: Text( String.app.setup))
                 }
                 if self.isClose {
                     Button(action: {
@@ -94,6 +96,7 @@ struct PageKidsTab: PageComponent{
                             .frame(width: DimenKids.icon.regularUltra,
                                    height: DimenKids.icon.regularUltra)
                     }
+                    .accessibility(label: Text( String.app.close))
                 }
             }
         }

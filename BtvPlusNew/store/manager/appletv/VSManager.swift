@@ -264,59 +264,64 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         self.requestVSAccountMetadata(
             isInterruptionAllowed: isInterruptionAllowed ,
             completionHandler: { meta , error in
-            DispatchQueue.main.async {
-                self.pagePresenter.isLoading = false
-                isPairing = self.pairing.status == .pairing
-                self.removePresent()
-                if let meta = meta {
-                    
-                    if let expireDate = meta.authenticationExpirationDate {
-                        let now = Date()
-                        if expireDate.timeIntervalSince1970 < now.timeIntervalSince1970 {
-                            self.accountExpire()
-                            DataLog.d( "accountExpire ", tag:self.tag)
-                            return
+                if error != nil , let err = error as? VSError {
+                    DataLog.d( error.debugDescription, tag:self.tag)
+                    if err.code != .userCancelled {
+                        DispatchQueue.main.async {
+                            self.pagePresenter.isLoading = false
+                            self.removePresent()
+                            if !isInterruptionAllowed {
+                                DataLog.d( "no MetaData ", tag:self.tag)
+                            } else {
+                                self.accountNoMetadata()
+                            }
                         }
-                    }
-                    guard let pair = self.checkMetaData(meta) else { // meta없다면 다른업채 로그인
-                        if !isInterruptionAllowed {
-                            DataLog.d( "no MetaData ", tag:self.tag)
-                            return
-                        }
-                        self.accountNoMetadata()
-                        /*
-                        if isPairing {
-                            self.accountPairingSynchronization()
-                        } else {
-                            self.accountPairingMetaError() 
-                        }*/
-                        DataLog.d( "error MetaData ", tag:self.tag)
                         return
                     }
-                    self.currentAccountId = pair.0
-                    if !isPairing {
-                        DataLog.d( "accountAutoPairing ", tag:self.tag)
-                        self.accountAutoPairing(pairingId:pair.1)
+                }
+                DispatchQueue.main.async {
+                    self.pagePresenter.isLoading = false
+                    isPairing = self.pairing.status == .pairing
+                    self.removePresent()
+                    if let meta = meta {
+                        
+                        if let expireDate = meta.authenticationExpirationDate {
+                            let now = Date()
+                            if expireDate.timeIntervalSince1970 < now.timeIntervalSince1970 {
+                                self.accountExpire()
+                                DataLog.d( "accountExpire ", tag:self.tag)
+                                return
+                            }
+                        }
+                        guard let pair = self.checkMetaData(meta) else { // meta없다면 다른업채 로그인
+                            if !isInterruptionAllowed {
+                                DataLog.d( "no MetaData ", tag:self.tag)
+                                return
+                            }
+                            self.accountNoMetadata()
+                            DataLog.d( "error MetaData ", tag:self.tag)
+                            return
+                        }
+                        self.currentAccountId = pair.0
+                        if !isPairing {
+                            DataLog.d( "accountAutoPairing ", tag:self.tag)
+                            self.accountAutoPairing(pairingId:pair.1)
+                        } else {
+                            DataLog.d( "accountPairingCheck ", tag:self.tag)
+                            self.accountPairingCheck(pairingId:pair.1)
+                        }
+                        
                     } else {
-                        DataLog.d( "accountPairingCheck ", tag:self.tag)
-                        self.accountPairingCheck(pairingId:pair.1)
-                    }
-                    
-                } else {
-                    if !isInterruptionAllowed {
-                        DataLog.d( "no MetaData ", tag:self.tag)
-                        return
-                    }
-                    
-                    if isPairing {
-                        if flag == .disconnectTvProviderAndUnpairing {
-                            self.accountPairingSynchronizationDenied()
-                        } else {
-                            self.accountPairingSynchronization()
+                        
+                        if isPairing {
+                            if flag == .disconnectTvProviderAndUnpairing {
+                                self.accountPairingSynchronizationDenied()
+                            } else {
+                                self.accountPairingSynchronization()
+                            }
                         }
                     }
                 }
-            }
         })
         
     }

@@ -70,8 +70,8 @@ struct PlayerOptionSelectList: PageComponent{
                     }
                     self.viewModel.selectFunctionType = nil
                         
-    
                 }
+                .accessibility(label: Text( btn.accessibility))
             }
         }
     }//body

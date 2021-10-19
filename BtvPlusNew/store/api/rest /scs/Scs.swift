@@ -121,7 +121,7 @@ class Scs: Rest{
         
         let date = Date()
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let macAdress = hostDevice?.apiMacAdress ?? ""
         let plainText = ScsNetwork.getPlainText(stbId: stbId , macAdress: macAdress, epsdRsluId: epsdRsluId)
         var params = [String:String]()
         params["if"] = "IF-SCS-PRODUCT-UI520-013"
@@ -140,7 +140,6 @@ class Scs: Rest{
         params["method"] = "get"
         params["m_drm"] = "fairplay"
         params["use_subtitle_yn"] = "n"
-            
         params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsPreview(query: params), completion: completion, error:error)
     }
@@ -151,7 +150,7 @@ class Scs: Rest{
      * @param preFlag 예고편인 경우 false, 본편시 true
      */
     func getPreplay(
-        epsdRsluId:String?, isPreview:Bool?,
+        epsdRsluId:String?, isPreview:Bool?, hostDevice:HostDevice?,
         completion: @escaping (Preview) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let date = Date()
@@ -174,6 +173,9 @@ class Scs: Rest{
         
         params["mac_address"] = ""
         params["mac_exclude_check_yn"] = "Y"
+            
+        //params["mac_address"] = macAdress
+        //params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsPreplay(query: params), completion: completion, error:error)
     }
     
@@ -182,10 +184,11 @@ class Scs: Rest{
      * @param epsdRsluId 에피소드 해상도 ID
      */
     func getPlay(
-        epsdRsluId:String?, anotherStbId:String? = nil,
+        epsdRsluId:String?, anotherStbId:String? = nil, hostDevice:HostDevice?,
         completion: @escaping (Play) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let date = Date()
         var params = [String:String]()
+        let macAdress = hostDevice?.apiMacAdress ?? ""
         var stbId = ""
         var path = ""
         var overrideHeaders:[String : String]? = nil
@@ -213,9 +216,8 @@ class Scs: Rest{
         params["method"] = "get"
         params["m_drm"] = "fairplay" //SystemEnvironment.isStage ? "fairplay" : ""
         params["use_subtitle_yn"] = "n"
-        
-        params["mac_address"] = ""
-        params["mac_exclude_check_yn"] = "Y"
+        params["mac_address"] = macAdress
+        params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsPlay(path:path, query: params, overrideHeaders: overrideHeaders), completion: completion, error:error)
 
     }
@@ -229,7 +231,6 @@ class Scs: Rest{
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
-        
         var params = [String:String]()
         params["if"] = "IF-SCS-GWSVC-UI5-002"
         params["ver"] = ScsNetwork.VERSION
@@ -260,7 +261,6 @@ class Scs: Rest{
         params["stb_id"] = stbId
         params["mac_address"] = macAdress
         params["method"] = "post"
-            
         params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsStbInfo(body: params), completion: completion, error:error)
     }

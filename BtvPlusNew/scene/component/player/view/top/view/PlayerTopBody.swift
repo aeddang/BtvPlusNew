@@ -56,6 +56,7 @@ struct PlayerTopBody: PageView{
                             .frame(width: Dimen.icon.regular,
                                    height: Dimen.icon.regular)
                     }
+                    .accessibility(label: Text( String.app.back))
                     if self.isFullScreen && self.title != nil {
                         VStack(alignment: .leading){
                             Text(self.title!)
@@ -89,6 +90,7 @@ struct PlayerTopBody: PageView{
                             self.viewModel.event = .mute(true, isUser: true)
                         }
                     }
+                    .accessibility(label: Text( self.isMute ? String.player.muteOff : String.player.muteOn))
                     .fixedSize()
                    
                     if self.textQuality != nil {
@@ -102,6 +104,7 @@ struct PlayerTopBody: PageView{
                             self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfig, config: "resolution")
                             self.viewModel.selectFunctionType = .quality
                         }
+                        .accessibility(label: Text(String.player.qulitySelect))
                     }
                     if self.textRate != nil {
                         StrokeRectButton(
@@ -115,6 +118,7 @@ struct PlayerTopBody: PageView{
                             self.viewModel.selectFunctionType = .rate
                             
                         }
+                        .accessibility(label: Text(String.player.speedSelect))
                     }
                     
                 } else {
@@ -135,9 +139,10 @@ struct PlayerTopBody: PageView{
                         self.viewModel.btvUiEvent = .more
                     }
                 }
-                
+                .accessibility(hidden: true)
             }
             PlayerMoreBox( viewModel: self.viewModel )
+                    .accessibility(hidden: true)
             Spacer()
             
         }

@@ -73,6 +73,7 @@ struct SynopsisBody: PageComponent{
                         ZStack(alignment:.top ){
                             HStack(spacing:0){
                                 EpisodeViewer(data:episodeViewerData)
+                                    .accessibility(hidden: true)
                                 Spacer()
                             }
                             HStack(spacing:0){
@@ -93,6 +94,7 @@ struct SynopsisBody: PageComponent{
                     } else {
                         EpisodeViewer(data:episodeViewerData)
                             .modifier(ListRowInset(spacing: SynopsisBody.spacing))
+                            .accessibility(hidden: true)
                         HStack(spacing:0){
                             FunctionViewer(
                                 componentViewModel: self.componentViewModel,

@@ -118,6 +118,9 @@ struct MonthlyBlock: PageComponent {
                 guard let data = res.data as? MonthlyInfoData else { return }
                 if let monthly = self.monthlyDatas.first(where: {$0.prdPrcId == prcPrdId}) {
                     monthly.setData(data: data)
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                        self.viewModel.uiEvent = .scrollTo(monthly.hashId, .center)
+                    }
                 }
             default : break
             }

@@ -40,7 +40,10 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
     
     func makeUIView(context: Context) -> WKWebView  {
         let config = WKWebViewConfiguration()
-        let deviceType = AppUtil.isPad() ? "BtvTablet" : "BtvPhone"
+        var deviceType = AppUtil.isPad() ? "BtvTablet" : "BtvPhone"
+        if self.pairing.pairingStbType == .apple {
+            deviceType = deviceType + "/Atlanta"
+        }
         config.applicationNameForUserAgent = "BtvPlusApp/1.54/\(deviceType)"
         config.mediaTypesRequiringUserActionForPlayback = []
         config.allowsInlineMediaPlayback = true

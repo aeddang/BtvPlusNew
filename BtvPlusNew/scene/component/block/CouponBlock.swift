@@ -185,7 +185,7 @@ struct CouponBlock: PageComponent, Identifiable{
             case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.initLoad() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.pagePresenter.$event){ evt in

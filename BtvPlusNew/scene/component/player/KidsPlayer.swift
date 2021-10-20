@@ -260,8 +260,16 @@ struct KidsPlayer: PageComponent{
             .onReceive(self.prerollModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .start : self.viewModel.event = .mute(false,isUser: false)
+                case .start :
+                    self.viewModel.isPreroll = true
+                    self.viewModel.isPrerollPlay = true
+                    self.viewModel.event = .mute(false,isUser: false)
                 case .finish, .skipAd : self.initPlay()
+                case .moveAd :
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                        self.initPlay()
+                        self.viewModel.event = .pause(isUser: false)
+                    }
                 default : do{}
                 }
             }
@@ -317,6 +325,7 @@ struct KidsPlayer: PageComponent{
             self.viewModel.event = .stop()
             return
         }
+        self.viewModel.isPreroll = false
         let find = quality.path.contains("?")
         let leading = find ? "&" : "?"
         let path = quality.path + leading +

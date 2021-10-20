@@ -610,6 +610,7 @@
 "titleMobileBtv" = "모바일 B tv";
 "titleBtv" = "B tv";
 "titlePerson" = "인물정보";
+"titleJoinCenter" = "가입#";
 /*
  PagePairing
 */
@@ -735,7 +736,7 @@
 "myTicketInfo" = "할인내역 및 구매 상품의 상세정보 확인, 변경은 B tv내 구매내역에서 확인하실 수 있습니다.";
 "myTicketMore" = "둘러보기";
 "myAlramInfo" = "최근 15일간 수신한 알림 메시지입니다.";
-"myWatchedEmpty" = "최근 시청 내역이 없습니다.";
+"myWatchedEmpty" = "시청 중인 콘텐츠가 없습니다.";
 "myWatchedKids" = "키즈 콘텐츠 시청 목록은\nZEM 키즈 메뉴에서 확인하실 수 있습니다.";
 "myWatchedKidsButton" = "ZEM 키즈 시청 목록 보러 가기";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
@@ -1401,7 +1402,7 @@
 
 "vsUnpairing" = "Apple TV 연결 해제 안내";
 "vsAccountForbiddenUnpairing" = "TV Provider를 통해 연결하신 경우\n[기기 설정 > TV > TV Provider]\n메뉴에서 계정 로그아웃하여\n연결 해제 가능합니다.\n해당 메뉴로 이동하시겠습니까?";
-"vsAccountNoMetadata" = "Apple TV의 TV 제공업체 설정으로 이동해서\nTV 제공업체 B tv에 대해서 로그인 해주세요.";
+"vsAccountNoMetadata" = "Apple TV의 TV 제공업체 설정으로\n이동해서 TV 제공업체 B tv에 대해서\n로그인 해주세요.";
 
 "vsAccountProviderPairing" = "TV프로바이더 에서\n로그인 하셔야 합니다.";
 "vsAccountProviderPairingTip" = "TV프로바이더를 사용으로 설정해둔경우\nTV프로바이더에서 로그인하셔야합니다";

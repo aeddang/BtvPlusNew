@@ -21,7 +21,7 @@ struct PurchaseViewerKids: PageComponent{
         HStack(alignment:.center , spacing:DimenKids.margin.light) {
             if self.data.serviceInfo != nil {
                 HStack(spacing:DimenKids.margin.thin){
-                    Image( AssetKids.icon.warn )
+                    Image( self.data.isPlayAbleBtv ? AssetKids.icon.btv : AssetKids.icon.warn )
                         .renderingMode(.original).resizable()
                         .scaledToFit()
                         .frame(width: DimenKids.icon.thin)

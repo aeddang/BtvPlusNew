@@ -279,6 +279,13 @@ struct PageSearch: PageView {
                     }
                 }
             }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page == self.pageObject {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.05) {
+                        self.updatedLogPage()
+                    }
+                }
+            }
             .onReceive(self.sceneObserver.$safeAreaIgnoreKeyboardBottom){ bottom in
                 self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }

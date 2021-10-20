@@ -126,19 +126,20 @@ struct BannerItem: PageView {
             case .cell(let size, _), .cellKids(let size, _):
                 ImageView(
                     url: self.data.image,
-                    contentMode: .fill,
+                    contentMode:  SystemEnvironment.isTablet ? .fit : .fill,
                     noImg: self.data.type.noImage)
                     .frame(width: size.width, height: size.height)
+               
             case .horizontalList :
                 ImageView(
                     url: self.data.image,
-                    contentMode: .fill,
+                    contentMode: SystemEnvironment.isTablet ? .fit : .fill,
                     noImg: self.data.type.noImage)
                     .frame(width: self.data.type.size.width, height: self.data.type.size.height)
             case .kids :
                 ImageView(
                     url: self.data.image,
-                    contentMode: .fill,
+                    contentMode: SystemEnvironment.isTablet ? .fit : .fill,
                     noImg: self.data.type.noImage)
                     .frame(width: self.data.type.size.width, height: self.data.type.size.height)
             default :

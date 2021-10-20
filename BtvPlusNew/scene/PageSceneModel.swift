@@ -92,7 +92,7 @@ struct PageSceneModel: PageModel {
         } else {
             guard let page = pageObject else {return .lightContent}
             switch page.pageID {
-            case .purchase : return .darkContent
+            case .purchase, .cashCharge : return .darkContent
             default : return .lightContent
             }
         }

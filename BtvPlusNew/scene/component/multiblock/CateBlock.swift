@@ -260,6 +260,7 @@ struct CateBlock: PageComponent{
             self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
         }
         .onReceive(self.sceneObserver.$screenSize){ _ in
+            if self.pagePresenter.currentTopPage != self.pageObject {return}
             self.resetLoad()
         }
         .onReceive(self.viewModel.$isUpdate){ update in

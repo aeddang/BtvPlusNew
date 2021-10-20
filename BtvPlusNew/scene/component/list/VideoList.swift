@@ -792,7 +792,7 @@ struct VideoItemBody: PageView {
                         Text(subTitle)
                             .kerning(Font.kern.thin)
                             .modifier(MediumTextStyle(size: Font.size.tiny, color:Color.app.grey))
-                            .lineLimit(2)
+                            .lineLimit(self.data.fullTitle?.isEmpty == false ? 1 : 2)
                     }
                     
                     if let clipTitle = self.data.clipTitle {
@@ -800,6 +800,7 @@ struct VideoItemBody: PageView {
                             .kerning(Font.kern.thin)
                             .modifier(BoldTextStyle(size: Font.size.tiny, color:Color.app.white))
                             .lineLimit(1)
+                            .padding(.top, 1)
         
                     }
                 }

@@ -38,6 +38,7 @@ struct RemoteStyle{
     struct fontSize {
         static let title:CGFloat = isPad ? Font.size.lightExtra : Font.size.mediumExtra
         static let subTitle:CGFloat = isPad ? Font.size.thin : Font.size.regular
+        static let subTitleExtra:CGFloat = isPad ? Font.size.thinExtra : Font.size.light
         static let subText:CGFloat = isPad ? Font.size.tinyExtra : Font.size.thin
     }
 

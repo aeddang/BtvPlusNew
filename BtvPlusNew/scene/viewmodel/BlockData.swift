@@ -553,6 +553,10 @@ class BlockData:InfinityData, ObservableObject{
             let leadingCount = self.leadingBanners?.count ?? 0
             if let banners = self.leadingBanners {
                 zip(0...leadingCount, banners).forEach{idx, data in
+                    
+                    data.logPosition = (idx+1).description + "@"
+                    + (leadingCount + count).description
+                    /*
                     if pageType == .kids && logType == .list {
                         data.logPosition = (idx+1).description + "@"
                         + (leadingCount + count).description
@@ -565,7 +569,7 @@ class BlockData:InfinityData, ObservableObject{
                             data.logPosition = (idx+1).description + "@"
                             + (leadingCount + count).description
                         }
-                    }
+                    }*/
                 }
             }
             count = leadingCount + count
@@ -576,6 +580,7 @@ class BlockData:InfinityData, ObservableObject{
                     action.result = data.synopsisType.logResult
                     data.setNaviLogKids(action: action)
                 } else {
+                    /*
                     if self.totalBlockNum > 0 {
                         action.position = (idx+1).description + "@"
                         + (self.currentBlockIndex+1).description + "@"
@@ -583,7 +588,9 @@ class BlockData:InfinityData, ObservableObject{
                     } else {
                         action.position = (idx+1).description + "@"
                         + count.description
-                    }
+                    }*/
+                    action.position = (idx+1).description + "@"
+                    + count.description
                     switch self.logType {
                     case .home :
                         data.setNaviLogHome(action: action)
@@ -602,6 +609,9 @@ class BlockData:InfinityData, ObservableObject{
             let leadingCount = self.leadingBanners?.count ?? 0
             if let banners = self.leadingBanners {
                 zip(0...leadingCount, banners).forEach{idx, data in
+                    data.logPosition = (idx+1).description + "@"
+                    + (leadingCount + count).description
+                    /*
                     if pageType == .kids && logType == .list {
                         data.logPosition = (idx+1).description + "@"
                         + (leadingCount + count).description
@@ -614,7 +624,7 @@ class BlockData:InfinityData, ObservableObject{
                             data.logPosition = (idx+1).description + "@"
                             + (leadingCount + count).description
                         }
-                    }
+                    }*/
                 }
             }
             count = leadingCount + count
@@ -625,6 +635,7 @@ class BlockData:InfinityData, ObservableObject{
                     action.result = data.synopsisType.logResult
                     data.setNaviLogKids(action: action)
                 } else {
+                    /*
                     if self.totalBlockNum > 0 {
                         action.position = (idx+1).description + "@"
                         + (self.currentBlockIndex+1).description + "@"
@@ -632,8 +643,9 @@ class BlockData:InfinityData, ObservableObject{
                     } else {
                         action.position = (idx+1).description + "@"
                         + count.description
-                    }
-                    
+                    }*/
+                    action.position = (idx+1).description + "@"
+                    + count.description
                     switch self.logType {
                     case .home :
                         if data.isClip {
@@ -655,6 +667,9 @@ class BlockData:InfinityData, ObservableObject{
         if let datas = self.banners {
             let count = datas.count
             zip(0...count, datas).forEach{idx, data in
+                data.logPosition = (idx+1).description + "@"
+                + count.description
+                /*
                 if self.totalBlockNum > 0 {
                     data.logPosition = (idx+1).description + "@"
                     + (self.currentBlockIndex+1).description + "@"
@@ -662,13 +677,16 @@ class BlockData:InfinityData, ObservableObject{
                 } else {
                     data.logPosition = (idx+1).description + "@"
                     + count.description
-                }
+                }*/
             }
         }
         
         if let datas = self.themas {
             let count = datas.count
             zip(0...count, datas).forEach{idx, data in
+                data.logPosition = (idx+1).description + "@"
+                + count.description
+                /*
                 if self.totalBlockNum > 0 {
                     data.logPosition = (idx+1).description + "@"
                     + (self.currentBlockIndex+1).description + "@"
@@ -676,7 +694,7 @@ class BlockData:InfinityData, ObservableObject{
                 } else {
                     data.logPosition = (idx+1).description + "@"
                     + count.description
-                }
+                }*/
             }
         }
     }
@@ -684,16 +702,23 @@ class BlockData:InfinityData, ObservableObject{
     
     
     func getActionLog()->MenuNaviActionBodyItem {
+        if let action = self.pageShowActionLog {
+            return action
+        }
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_name = self.name.replace(" ", with: "")
         actionBody.menu_id = self.cwCallId ?? self.menuId
-        actionBody.search_keyword = self.keyword
+        if let keyword = self.keyword { actionBody.search_keyword = keyword }
         if let logPageTitle = self.logPageTitle {
             actionBody.config = logPageTitle
-            actionBody.target = self.logTabTitle
+            if self.logType == .home {
+                actionBody.target = self.logTabTitle
+            }
         } else {
             actionBody.config = self.parentTitle?.replace(" ", with: "")
-            actionBody.target = (self.cwCallId?.contains("RACE") ?? false) ? "Y" : "N"
+            if self.logType == .home {
+                actionBody.target = (self.cwCallId?.contains("RACE") ?? false) ? "Y" : "N"
+            }
         }
         if self.totalBlockNum > 0 {
             actionBody.position = (self.currentBlockIndex+1).description + "@" + self.totalBlockNum.description

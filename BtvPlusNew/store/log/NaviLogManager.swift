@@ -76,7 +76,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         DataLog.d("clearSysnopsis" , tag: self.tag )
     }
     
-    func setupSysnopsis(_ synop:SynopsisModel?, type:String? = nil  ){
+    func setupSysnopsis(_ synop:SynopsisModel?, type:String? = nil , title:String? = nil ){
         guard let synop = synop else {
             self.currentSysnopsisContentsItem = nil
             self.currentPlayStartTime = nil
@@ -85,7 +85,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         var contentsItem = MenuNaviContentsBodyItem()
         contentsItem.type = type ?? "vod"   // VOD/실시간 구분 ex)vod | live
         contentsItem.series_id = synop.srisId
-        contentsItem.title = synop.title ?? ""      // 제목, ex)1박2일, 9시 뉴스
+        contentsItem.title = title ?? synop.title ?? ""      // 제목, ex)1박2일, 9시 뉴스
         contentsItem.channel = ""   // live방송의 채널번호
         contentsItem.channel_name = synop.brcastChnlNm ?? ""    // channel 명
         contentsItem.genre_text = ""  // 장르, ex)영화
@@ -305,6 +305,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
                 if let value = action.target{ DataLog.d("  target : " +  value, tag: self.tag )}
                 if let value = action.search_keyword{ DataLog.d("  search_keyword : " +  value, tag: self.tag )}
                 if let value = action.position{ DataLog.d("  position : " +  value, tag: self.tag )}
+            
             }
             if let content = modifyData.contents_body {
                 DataLog.d("send content : ", tag: self.tag )

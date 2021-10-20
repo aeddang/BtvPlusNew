@@ -116,6 +116,7 @@ struct SetupItem: PageView {
                         }
                     }
                 }
+                .padding(.top, Dimen.margin.thin)
                 .padding(.trailing, Dimen.margin.thin)
                 
             }

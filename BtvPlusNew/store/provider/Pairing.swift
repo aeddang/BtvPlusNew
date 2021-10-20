@@ -78,7 +78,7 @@ class Pairing:ObservableObject, PageProtocol {
     @Published private(set) var status:PairingStatus = .initate
     @Published var user:User? = nil
     private(set) var pairingDeviceType:PairingDeviceType = .btv // 애플TV 프로바이더와 연결인지 일반연결인지
-    var pairingStbType:PairingDeviceType = .btv // 연결된 세탑 애플티비인지 일반 세탑인지
+    @Published var pairingStbType:PairingDeviceType = .btv // 연결된 세탑 애플티비인지 일반 세탑인지
     private(set) var pairingType:PairingType? = nil
     private(set) var isPairingUser:Bool = false
     private(set) var isPairingAgreement:Bool = false

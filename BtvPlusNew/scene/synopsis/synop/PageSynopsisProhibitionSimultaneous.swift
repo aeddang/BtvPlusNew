@@ -11,8 +11,10 @@ extension PageSynopsis {
     static let ProhibitionSimultaneous = "ProhibitionSimultaneous"
     func onResetPageProhibitionSimultaneous(){
         self.isProhibitionCheckComplete = false
+        self.isProhibitionChecking = false
     }
     func onProhibitionSimultaneous(_ data:ProhibitionSimultaneous){
+        self.isProhibitionChecking = false
         PageLog.d("onProhibitionSimultaneous " + (data.has_authority ?? ""), tag: Self.ProhibitionSimultaneous)
         if data.has_authority?.toBool() == false {
             let reason = VlsNetwork.ProhibitionReason.getType(data.has_authority_reason)
@@ -25,6 +27,8 @@ extension PageSynopsis {
         }
     }
     func checkProhibitionSimultaneous(){
+        if self.isProhibitionChecking {return}
+        self.isProhibitionChecking = true
         PageLog.d("checkProhibitionSimultaneous" , tag: Self.ProhibitionSimultaneous)
         self.isProhibitionCheckComplete = false
         if self.pairing.status == .pairing && self.hasAuthority == true , let synopsisData = self.synopsisData {
@@ -54,7 +58,11 @@ extension PageSynopsis {
         default: break
         }
     }
-    
+    func onDurationProhibition(duration:Double){
+        if duration > 1 {
+            self.checkProhibitionSimultaneous()
+        }
+    }
     func onEventProhibition(streamEvent:PlayerStreamEvent){
         switch streamEvent {
         case .loaded:
@@ -78,6 +86,7 @@ extension PageSynopsis {
     }
     
     func playLog(isPlay:Bool, isForce:Bool = false){
+        if self.playerModel.isPreroll {return}
         if !self.isProhibitionCheckComplete && !isForce {return}
         PageLog.d("playLog "  + isPlay.description, tag: Self.ProhibitionSimultaneous)
         switch self.synopsisPlayType {

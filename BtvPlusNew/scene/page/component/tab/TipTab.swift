@@ -28,10 +28,11 @@ struct TipTab: PageComponent{
             HStack(alignment:.center, spacing:Dimen.margin.micro){
                 if let icon = self.leadingIcon {
                     Image(icon).resizable()
-                        .renderingMode(.original).aspectRatio(contentMode: .fit)
+                        .renderingMode(.original)
+                        .aspectRatio(contentMode: .fit)
                         .frame(
                             width: Dimen.icon.regularExtra,
-                            height:Dimen.icon.regularExtra)
+                            height: Dimen.icon.regularExtra)
                 }
                 if let leading = self.leading {
                     Text(leading)
@@ -45,15 +46,28 @@ struct TipTab: PageComponent{
                         .modifier(BoldTextStyle(size: Font.size.thin, color: self.textStrongColor))
                 }
                 if let icon = self.icon {
-                    Image(icon).resizable()
-                        .renderingMode(.original).aspectRatio(contentMode: .fit)
-                        .frame(
-                            minWidth: Dimen.icon.regularExtra,
-                            maxWidth: Dimen.icon.heavyExtra,
-                            minHeight: Dimen.icon.tinyExtra,
-                            maxHeight: Dimen.icon.regularExtra
-                        )
-                        .fixedSize()
+                    if icon == Asset.icon.logoZem {
+                        Image(icon).resizable()
+                            .renderingMode(.original)
+                            .frame(
+                                width: Dimen.icon.regular,
+                                height: Dimen.icon.regular
+                            )
+                    } else {
+                        Image(icon).resizable()
+                            .renderingMode(.original)
+                            .aspectRatio(contentMode: .fit)
+                            /*
+                            .frame(
+                                minWidth: SystemEnvironment.isTablet ? Dimen.icon.heavy : Dimen.icon.regularExtra,
+                                maxWidth: SystemEnvironment.isTablet ? Dimen.icon.heavy : Dimen.icon.heavyExtra,
+                                minHeight: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.tinyExtra,
+                                maxHeight: SystemEnvironment.isTablet ? Dimen.icon.regular : Dimen.icon.regularExtra
+                            )*/
+                            .padding(.vertical,  SystemEnvironment.isTablet ?  Dimen.margin.tiny : Dimen.margin.lightExtra)
+                            .fixedSize(horizontal: true, vertical: false)
+                    }
+                    
                 }
                 if let strong = self.strongTrailing {
                     Text(strong)

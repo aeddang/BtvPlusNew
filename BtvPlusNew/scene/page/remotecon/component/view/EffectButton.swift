@@ -38,6 +38,35 @@ struct EffectButton: View, SelecterbleProtocol{
         self.action = action
     }
     var body: some View {
+        ZStack(){
+            Image(self.isSelected ?
+                    self.activeImage : self.defaultImage)
+                .renderingMode(.original).resizable()
+                .scaledToFit()
+                .modifier(MatchParent())
+                
+            if self.isEffect {
+                Image(self.effectImage)
+                    .renderingMode(.original).resizable()
+                    .scaledToFit()
+                    .modifier(MatchParent())
+            }
+        }
+        .modifier(MatchParent())
+        .onTapGesture {
+            self.isEffect = true
+            if self.setup.remoconVibration &&  self.useVibrate{
+                UIDevice.vibrate()
+            }
+            
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + RemoteStyle.effectTime) {
+                DispatchQueue.main.async {
+                    self.isEffect = false
+                }
+            }
+            self.action(self.index)
+        }
+        /*
         Button(action: {
             withAnimation {self.isEffect = true}
             if self.setup.remoconVibration &&  self.useVibrate{
@@ -68,6 +97,7 @@ struct EffectButton: View, SelecterbleProtocol{
             }
             .modifier(MatchParent())
         }
+        */
     }
 }
 

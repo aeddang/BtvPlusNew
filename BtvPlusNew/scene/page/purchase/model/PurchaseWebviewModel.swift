@@ -124,6 +124,7 @@ public enum PrdTypCd: String {
 class PurchaseWebviewModel {
     var epsdIds:[String] = [] // 에피소드 ID    여러 개일 경우 입력 값 포맷: URL Encoding(<id>,<id>,<id>)
     var srisId:String = "" // 시리즈 ID
+    var synopsisTypeCode:String? = nil
     var synopsisType:PurchaseSynopsisType = .title //진입한 시놉시스 유형(01 : 단편 시놉, 02 : 시즌 시놉)
     var ptype: PurchasePType = .ppv  // 상품 Type(10 : ppv, 20 : pps, 30: ppm, 41: ppp)    * pps는 시리즈 전편 구매 시에 사용(전편이 아닌 경우 ppv)
     var conTitle: String = ""  // 구입할 콘텐츠 제목(구매 화면에 제목 노출에 사용) URL Encoding
@@ -137,7 +138,7 @@ class PurchaseWebviewModel {
             var q =
                 "?epsd_id=" + (epsdIds.isEmpty ? "" :  epsdIds.dropFirst().reduce(epsdIds.first!, {$0 + "," + $1}))
                 + "&sris_id=" + srisId
-                + "&synopsis_type=" + synopsisType.code
+                + "&synopsis_type=" + (self.synopsisTypeCode ?? synopsisType.code)
                 + "&ptype=" + ptype.code
                 + "&conTitle=" + conTitle
             if let value = seriesNo { q = q + "&seriesNo=" + value }
@@ -288,7 +289,7 @@ class PurchaseWebviewModel {
     @discardableResult
     func setParam(synopsisType: String, pType: String, title: String, pId: String, pIdOnly: String) -> PurchaseWebviewModel{
         self.ptype = PurchasePType.getType(pType)
-        self.synopsisType = PurchaseSynopsisType.getType(synopsisType)
+        self.synopsisTypeCode = synopsisType
         self.conTitle = title
         self.pid = pId
         self.pidOnly = pIdOnly

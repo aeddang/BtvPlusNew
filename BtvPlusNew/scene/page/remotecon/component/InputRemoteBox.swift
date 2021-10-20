@@ -49,7 +49,8 @@ struct InputRemoteBox: PageComponent {
                                height: Dimen.icon.medium)
                 }
             }
-            .padding(.all, Dimen.margin.thin)
+            .padding(.top, RemoteStyle.margin.light + RemoteStyle.margin.regular)
+            .padding(.horizontal, RemoteStyle.margin.regular)
             Spacer()
             VStack (alignment: .center, spacing:0){
                 Text(self.title)
@@ -84,7 +85,7 @@ struct InputRemoteBox: PageComponent {
                     isSelected: self.isInputCompleted() ,
                     textModifier: TextModifier(
                         family: Font.family.bold,
-                        size: Font.size.lightExtra,
+                        size: Font.size.regular,
                         color: Color.app.white,
                         activeColor: Color.app.white
                     ),
@@ -124,7 +125,9 @@ struct InputRemoteBox: PageComponent {
                 }
             }
             .frame(
-                 height: CGFloat(SystemEnvironment.isTablet ? 253 : 205)
+                 height: CGFloat(SystemEnvironment.isTablet
+                                 ? self.tip == nil ? 253 : 293
+                                 : self.tip == nil ? 205 : 245)
             )
             Spacer()
         }

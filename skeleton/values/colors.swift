@@ -42,11 +42,13 @@ extension Color {
     struct app {
         public static let black =  Color.black
         public static let blackExtra =  Color.init(red: 20/255, green: 20/255, blue: 20/255)
+        public static let blackUltra =  Color.init(red: 26/255, green: 26/255, blue: 26/255)
         public static let blackMedium =  Color.init(red: 46/255, green: 46/255, blue: 46/255)
         public static let blackRegular =  Color.init(red: 65/255, green: 65/255, blue: 65/255)
         public static let blackLight =  Color.init(red: 83/255, green: 83/255, blue: 83/255)
        
         public static let greyDeep = Color.init(red: 102/255, green: 102/255, blue: 102/255)
+        
         public static let grey = Color.init(red: 136/255, green: 136/255, blue: 136/255)
         public static let greyExtra = Color.init(red: 153/255, green: 153/255, blue: 153/255)
         public static let greyMedium = Color.init(red: 170/255, green: 170/255, blue: 170/255)
@@ -57,12 +59,14 @@ extension Color {
         public static let whiteDeep = Color.init(red: 245/255, green: 245/255, blue: 245/255)
         public static let whiteExtra = Color.init(red: 255/255, green: 251/255, blue: 244/255)
         
+        
         public static let blueLight = Color.init(red: 29/255, green: 21/255, blue: 80/255)
         public static let blueLightExtra = Color.init(red: 49/255, green: 39/255, blue: 117/255)
         public static let blue = Color.init(red: 17/255, green: 3/255, blue: 58/255)
         public static let blueExtra = Color.init(red: 0/255, green: 78/255, blue: 162/255)
         public static let blueDeep = Color.init(red: 11/255, green: 1/255, blue: 39/255)
         public static let indigo = Color.init(red: 90/255, green: 65/255, blue: 255/255)
+        public static let indigoExtra = Color.init(red: 114/255, green: 111/255, blue: 144/255)
         
         public static let brownLight = Color.init(red: 137/255, green: 95/255, blue: 55/255)
         public static let brownExtra = Color.init(red: 137/255, green: 106/255, blue: 95/255)

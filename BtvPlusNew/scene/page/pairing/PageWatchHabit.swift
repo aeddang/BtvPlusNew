@@ -33,9 +33,6 @@ struct PageWatchHabit: PageView {
                     .padding(.top, self.sceneObserver.safeAreaTop)
                     BtvWebView( viewModel: self.webViewModel )
                         .modifier(MatchParent())
-                    
-                    
-                   
                 }
                 .padding(.bottom, self.marginBottom)
                 .modifier(PageFull())

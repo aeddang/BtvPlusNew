@@ -85,15 +85,17 @@ struct PagePairingManagement: PageView {
                                 Spacer()
                             }
                             HStack(spacing:Dimen.margin.thin){
-                                FillButton(text: String.button.modifyNick, strokeWidth: 1){ _ in
-                                    
-                                    self.naviLogManager.actionLog(
-                                        .clickReleaseButton,actionBody: .init( config: "B tv 닉네임 변경"))
-                                    
-                                    self.pagePresenter.openPopup(
-                                        PageProvider.getPageObject(.confirmNumber)
-                                            .addParam(key: .type, value: PageConfirmNumber.InputType.nickname)
-                                    ) 
+                                if self.pairing.pairingStbType == .btv {
+                                    FillButton(text: String.button.modifyNick, strokeWidth: 1){ _ in
+                                        
+                                        self.naviLogManager.actionLog(
+                                            .clickReleaseButton,actionBody: .init( config: "B tv 닉네임 변경"))
+                                        
+                                        self.pagePresenter.openPopup(
+                                            PageProvider.getPageObject(.confirmNumber)
+                                                .addParam(key: .type, value: PageConfirmNumber.InputType.nickname)
+                                        )
+                                    }
                                 }
                                 FillButton(text: String.button.disConnectBtv, strokeWidth: 1){ _ in
                                     self.naviLogManager.actionLog(

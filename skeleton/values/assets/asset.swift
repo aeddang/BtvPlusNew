@@ -242,6 +242,8 @@ extension Asset{
         public static let centerRight =  "icRemoteCenter04Pre"
         public static let centerOk = "icRemoteCenterOk"
         public static let centerPlayStop = "icRemoteCenterPlayStop"
+        public static let centerOkDown = "icRemoteCenterOk"
+        public static let centerPlayStopDown = "icRemoteCenterPlayStop"
         public static let centerSkip = "icRemoteCenterSkipNor"
         public static let centerSkipPrev = "icRemoteCenterSkip01Pre"
         public static let centerSkipNext = "icRemoteCenterSkip02Pre"

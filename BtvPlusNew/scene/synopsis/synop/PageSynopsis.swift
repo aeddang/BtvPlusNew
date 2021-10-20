@@ -206,7 +206,8 @@ struct PageSynopsis: PageView {
                 }
                 .onReceive(self.playerModel.$duration){duration in
                     self.onDurationSiri(duration: duration)
-                    //self.onSiri(userActivity: <#T##NSUserActivity#>)
+                    self.onDurationProhibition(duration:duration)
+                    
                 }
                 .onReceive(self.playerModel.$event){evt in
                     guard let evt = evt else { return }
@@ -231,6 +232,7 @@ struct PageSynopsis: PageView {
                     guard let status = status else { return }
                     self.onStatusLog(playerStatus: status)
                 }
+                
                 .onReceive(self.playerModel.$streamStatus){status in
                     guard let status = status else { return }
                     self.onStatusLog(streamStatus: status)
@@ -551,6 +553,7 @@ struct PageSynopsis: PageView {
     @State var firstPurchase:Bool = false
     @State var currentRedirectSris:String? = nil
     @State var isProhibitionCheckComplete:Bool = false
+    @State var isProhibitionChecking:Bool = false
     @State var isCheckRecommand:Bool = true
     
     @State var pageLogId:NaviLog.PageId? = nil

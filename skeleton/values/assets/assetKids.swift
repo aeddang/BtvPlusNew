@@ -48,6 +48,7 @@ extension AssetKids{
         public static let info = "zemkidsMBtnSynopsisTololtipInfoNor"
         public static let warn = "zemkidsMIcSysnopsisWarn"
         public static let tip = "zemkidsMIcSysnopsisTip"
+        public static let btv = "zemkidsMIcSysnopsisBtv"
         public static let watchBTv = "zemkidsMBtnSynopsisBtvNor"
         public static let playInfo = "zemkidsMBtnSynopsisInfoNor"
         public static let share = "zemkidsMBtnSynopsisShareNor"

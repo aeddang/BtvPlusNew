@@ -83,7 +83,7 @@ class BtvPlayerModel:PlayerModel{
     @Published var btvLogEvent:BtvLogEvent? = nil {didSet{ if btvLogEvent != nil { btvLogEvent = nil} }}
     @Published var btvPlayerEvent:BtvPlayerEvent? = nil {didSet{ if btvPlayerEvent != nil { btvPlayerEvent = nil} }}
     @Published var isPrerollPlay = false
-    
+    var isPreroll = false
     private(set) var synopsisPlayerData:SynopsisPlayerData? = nil
     private(set) var synopsisPrerollData:SynopsisPrerollData? = nil
     private(set) var openingTime:Double = 0

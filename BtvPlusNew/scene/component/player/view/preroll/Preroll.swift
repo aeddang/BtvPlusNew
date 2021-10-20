@@ -93,20 +93,28 @@ struct Preroll: UIViewRepresentable, PageProtocol {
             ComponentLog.d("Preroll event " + event.debugDescription, tag: self.parent.tag)
             switch event.eventType {
             case .ClickAd:
-                self.parent.viewModel.event = .moveAd
+                DispatchQueue.main.async {
+                    self.parent.viewModel.event = .moveAd
+                }
+                
             case .CloseLandingPage: break
             case .DidReceiveAd:
-                self.parent.viewModel.event = .start
-                self.parent.viewModel.request = .play
-                
+                DispatchQueue.main.async {
+                    self.parent.viewModel.event = .start
+                    self.parent.viewModel.request = .play
+                }
             case .FailReceiveAd,
                  .NotExistReceiveAd,
                  .FinishAd,
                  .StopAd:
-                
-                self.parent.viewModel.event = .finish
+                DispatchQueue.main.async {
+                    self.parent.viewModel.event = .finish
+                }
+          
             case .SkipAd:
-                 self.parent.viewModel.event = .skipAd
+                DispatchQueue.main.async {
+                    self.parent.viewModel.event = .skipAd
+                }
             default: break
             }
         }

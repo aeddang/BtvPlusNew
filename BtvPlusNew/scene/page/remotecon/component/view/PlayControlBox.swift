@@ -53,7 +53,7 @@ struct PlayControlBox: PageView {
                 }
             }
             
-            EffectButton(defaultImage: Asset.remote.centerPlayStop, effectImage: Asset.remote.centerOk)
+            EffectButton(defaultImage: Asset.remote.centerPlayStop, effectImage: Asset.remote.centerPlayStopDown)
             { _ in
                 self.action(.togglePlay)
             }

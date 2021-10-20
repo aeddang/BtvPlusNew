@@ -59,7 +59,7 @@ struct PageRemotecon: PageView {
                                     VStack( spacing: 0 ){
                                         Spacer()
                                             .modifier(MatchHorizontal(height: self.sceneObserver.safeAreaTop))
-                                            .background(Color.app.blackExtra)
+                                            .background(Color.app.blackUltra)
                                         Image(Asset.remote.bg)
                                             .renderingMode(.original).resizable()
                                             .modifier(MatchHorizontal(height: RemoteStyle.ui.size.height))
@@ -310,10 +310,11 @@ struct PageRemotecon: PageView {
         if pro.isOnAir {
             let d = pro.endTime - pro.startTime
             let c = Double(Date().timeIntervalSince1970) - pro.startTime
+            let sub = pro.channelNo?.isEmpty == false ? pro.channelNo! + "  " + (pro.channel ?? "") : pro.channel
             self.remotePlayData =  RemotePlayData(
                 progress: Float(c/d),
                 title: !isLock ? pro.title : String.app.lockAdultProgram,
-                subTitle: pro.channel,
+                subTitle: sub,
                 subText: (pro.startTimeStr ?? "") + "~" + (pro.endTimeStr ?? ""),
                 restrictAgeIcon: pro.restrictAgeIcon,
                 isOnAir: true)

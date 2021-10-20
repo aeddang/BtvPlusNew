@@ -41,12 +41,12 @@ class Nf: Rest{
     func getNotificationVod(
         srisId:[String]?, epsdId:[String]?, type:NfNetwork.NotiType?,
         completion: @escaping (NotificationVod) -> Void, error: ((_ e:Error) -> Void)? = nil){
-        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        //let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
         params["if"] = "IF-NF-001"
         params["ver"] = NfNetwork.VERSION
         params["response_format"] = NfNetwork.RESPONSE_FORMET
-        params["dvc_id"] = stbId
+        params["dvc_id"] = SystemEnvironment.originDeviceId
         if let ids = srisId , !ids.isEmpty {
             params["sris_id"] = ids.dropFirst().reduce(ids.first!){ a, b in a + "," + b }
         }
@@ -93,13 +93,13 @@ class Nf: Rest{
         srisId:String?,
         completion: @escaping (RegistNotificationVod) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
-        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        //let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var query = [String:String]()
         query["if"] = "IF-NF-003"
         query["ver"] = NfNetwork.VERSION
         
         var params = [String:String]()
-        params["dvc_id"] = stbId
+        params["dvc_id"] = SystemEnvironment.originDeviceId
         params["sris_id"] = srisId
         
         var headers = [String : String]()

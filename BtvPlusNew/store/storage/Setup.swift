@@ -85,7 +85,7 @@ class Setup:ObservableObject, PageProtocol {
     func initateSetup(){
         self.autoPlay = true
         self.nextPlay = true
-        self.dataAlram = true
+        self.dataAlram = false
         self.autoRemocon = true
         self.remoconVibration = SystemEnvironment.isTablet ? false : true
         self.isPurchaseAuth = false

@@ -53,24 +53,30 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
     
     private func getResultsVod(datas:[CategoryVodItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.vod + datas.count.description
+        actionData.menu_name = "VOD " + datas.count.description
         let allPosters:[PosterData] = datas.map{
             PosterData(pageType: .kids).setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
         }
+        
+        actionData.menu_name = "VOD"
         let block = BlockData(pageType: .kids)
             .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
     private func getResultsSris(datas:[CategorySrisItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.vod + datas.count.description
+        actionData.menu_name = "회차 " + datas.count.description
         actionData.category = "회차"
         let allPosters:[VideoData] = datas.map{
             VideoData(pageType: .kids).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
         }
+        
+        actionData.menu_name = "회차"
         let block = BlockData(pageType: .kids)
             .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, max:30)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }

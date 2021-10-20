@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 extension PageSynopsis {
     func onResetPageLog(isAllReset:Bool = false, isRedirectPage:Bool = false){
+        self.playNaviLog(action: .clickVodStop, watchType: .watchPause)
         if self.naviLogManager.currentPlayStartTime != nil {
-            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
             self.naviLogManager.contentsWatch(isPlay: false)
         }
     }
@@ -202,8 +202,8 @@ extension PageSynopsis {
     }
     
     func onDisappearLog(){
+        self.playNaviLog(action: .clickVodStop, watchType: .watchPause)
         if self.naviLogManager.currentPlayStartTime != nil {
-            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
             self.naviLogManager.contentsWatch(isPlay: false)
         }
         self.naviLogManager.clearSysnopsis() 
@@ -218,14 +218,13 @@ extension PageSynopsis {
         self.synopsisData?.cpId = model.cpId ?? ""
         self.synopsisData?.metaTypCd = model.metaTypCd
         self.synopsisData?.isLimitedWatch = model.isLimitedWatch
-        self.synopsisData?.ppmIds = model.purchasedPPMItems.first(where: {$0.prdTypCd == .cbvodppm})?.prdPrcId
-            ?? model.purchasedPPMItem?.prdPrcId ?? ""
-        /*
-        let purchaseModels = model.purchasedPPMItems.first(where: {$0.prdTypCd == .cbvodppm}) ?? model.purchasedPPMItem?.prdPrcId
+        //self.synopsisData?.ppmIds = model.purchasedPPMItems.first(where: {$0.prdTypCd == .cbvodppm})?.prdPrcId
+            //?? model.purchasedPPMItem?.prdPrcId ?? ""
+        let purchaseModels = model.purchasedPPMItems.filter({$0.isPurchase})
         self.synopsisData?.ppmIds = purchaseModels.isEmpty
             ? ""
-            :  purchaseModels.dropFirst().reduce(purchaseModels.first!.prdPrcId, {$0 + "," + $1.prdPrcId})
-        */
+            : purchaseModels.dropFirst().reduce(purchaseModels.first!.prdPrcId, {$0 + " " + $1.prdPrcId})
+        
     }
     
     //page log
@@ -243,7 +242,11 @@ extension PageSynopsis {
     //player watch log
 
     private func setupContent(){
-        self.naviLogManager.setupSysnopsis(synopsisModel, type:(self.synopsisData?.isDemand == true ? "demand" : "vod") )
+        self.naviLogManager.setupSysnopsis(
+            synopsisModel,
+            type:(self.synopsisData?.isDemand == true ? "demand" : "vod") ,
+            title: self.episodeViewerData?.episodeTitle
+        )
     }
     
     
@@ -313,7 +316,7 @@ extension PageSynopsis {
             var contentsItem = MenuNaviContentsBodyItem()
             contentsItem.type = "vod"
             contentsItem.series_id = synopsisModel.srisId
-            contentsItem.title = synopsisModel.title ?? ""
+            contentsItem.title = self.episodeViewerData?.episodeTitle ?? synopsisModel.title ?? ""
             contentsItem.channel = ""
             contentsItem.channel_name = synopsisModel.brcastChnlNm ?? ""
             contentsItem.genre_text = ""  // 장르, ex)영화

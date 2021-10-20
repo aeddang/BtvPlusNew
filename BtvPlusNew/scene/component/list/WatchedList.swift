@@ -19,6 +19,7 @@ class WatchedData:InfinityData{
     private(set) var subTitle: String? = nil
     private(set) var isContinueWatch:Bool = false
     private(set) var progress:Float? = nil
+    private(set) var watchTime:Double? = nil
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var restrictAgeIcon: String? = nil
     private(set) var srisId:String? = nil
@@ -34,6 +35,7 @@ class WatchedData:InfinityData{
             self.subTitle = rt.description + "% " + String.app.watch
             self.isContinueWatch = MetvNetwork.isWatchCardRateIn(data: data, isAll:isAll)
         }
+        watchTime = data.watch_time?.toDouble()
         watchLv = data.level?.toInt() ?? 0
         restrictAgeIcon = Asset.age.getListIcon(age: data.level)
         isAdult = data.adult?.toBool() ?? false
@@ -101,7 +103,7 @@ struct WatchedList: PageComponent{
                         ),
                     headerSize: self.watchedType == .btv
                         ? (Dimen.button.thinUltra + Dimen.margin.thin)
-                        : (Dimen.button.thinUltra * 2 + Dimen.margin.tiny ),
+                        : (Dimen.button.thinUltra * 2 + Dimen.margin.micro ),
                     marginTop: Dimen.margin.regular ,
                     marginBottom: self.marginBottom,
                     spacing:0,
@@ -228,7 +230,11 @@ struct WatchedItem: PageView {
                     .cancelOnDisappear(true)
                     .aspectRatio(contentMode: .fill)
                     .modifier(MatchParent())
-                
+                Image(Asset.shape.listGradientH)
+                    .resizable()
+                    .scaledToFill()
+                    .modifier(MatchParent())
+                    .opacity(0.9)
                 if self.data.isLock {
                     Image(Asset.icon.itemRock)
                         .renderingMode(.original)
@@ -412,7 +418,7 @@ struct WatchedItem: PageView {
         }
         let msg:NpsMessage = NpsMessage().setPlayVodMessage(
             contentId: synopsisModel.epsdRsluId ?? "" ,
-            playTime: 0)
+            playTime: self.data.watchTime ?? 0)
         self.dataProvider.requestData( q: .init(id:self.data.id, type: .sendMessage( msg), isOptional: true))
     }
     

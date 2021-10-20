@@ -46,6 +46,7 @@ extension String{
         public static let mobileBtv = "titleMobileBtv".loaalized()
         public static let btv = "titleBtv".loaalized()
         public static let person = "titlePerson".loaalized()
+        public static let joinCenter = "titleJoinCenter".loaalized()
     }
     
     struct pageText {

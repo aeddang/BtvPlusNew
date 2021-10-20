@@ -25,14 +25,13 @@ class PlayerListData:InfinityData{
         return self.count + " " + self.listTitle
     }
     var listTitle:String {
-        return self.title ?? self.subTitle ?? self.parentTitle ?? ""
+        return self.title ?? ""
     }
     func setData(data:SeriesInfoItem, title:String? = nil, isClip:Bool = false, idx:Int = -1) -> PlayerListData {
         self.parentTitle = title
         self.isClip = isClip
         if data.sub_title?.isEmpty == false { self.title = data.sub_title }
         if data.brcast_exps_dy?.isEmpty == false { self.subTitle = data.brcast_exps_dy }
-        
         if data.brcast_tseq_nm?.isEmpty == false, let count = data.brcast_tseq_nm {
             self.count = count + String.app.broCount
         }

@@ -34,7 +34,7 @@ struct DivisionTable : PageComponent {
     var title:String? = nil
     var header:TableCellSet? = nil
     var datas:[TableCellSet]? = nil
-    var lineColor:Color = Color.app.blueLightExtra
+    var lineColor:Color = Color.app.blueLight
     
     var body: some View {
         VStack(alignment: .leading, spacing:Dimen.margin.thin){

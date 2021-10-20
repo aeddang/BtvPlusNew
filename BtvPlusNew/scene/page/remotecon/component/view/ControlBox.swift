@@ -71,7 +71,7 @@ struct ControlBox: PageView {
                 }
             }
             
-            EffectButton(defaultImage: Asset.remote.centerOk, effectImage: Asset.remote.centerOk)
+            EffectButton(defaultImage: Asset.remote.centerOk, effectImage: Asset.remote.centerOkDown)
             { _ in
                 self.action(.ok)
             }

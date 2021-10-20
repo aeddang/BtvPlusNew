@@ -125,7 +125,14 @@ struct QuickTab: PageComponent{
     
     func moveJoinCenter(){
         self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"가입#"))
-        AppUtil.openURL("https://m.bdirectshop.com/Btvapp/Btvapp.do")
+        self.pagePresenter.openPopup(
+            PageProvider
+                .getPageObject(.webview)
+                .addParam(key: .data, value: "https://m.bdirectshop.com/Btvapp/Btvapp.do")
+                .addParam(key: .title , value: String.pageTitle.joinCenter)
+        )
+        
+            
     }
 }
 

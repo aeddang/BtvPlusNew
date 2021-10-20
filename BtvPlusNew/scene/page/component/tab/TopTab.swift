@@ -41,7 +41,7 @@ struct TopTab: PageComponent{
                     if self.showAlram && self.isPairing{
                         Text(self.newCountStr)
                             .modifier(BoldTextStyle(
-                                size: Font.size.micro,
+                                size: SystemEnvironment.isTablet ? Font.size.microExtra : Font.size.micro,
                                 color: Color.app.white
                             ))
                             .frame(width: Dimen.icon.tiny, height: Dimen.icon.tiny)

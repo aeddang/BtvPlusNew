@@ -113,7 +113,7 @@ struct CouponList: PageComponent{
                         horizontalMargin: self.horizontalMargin)
                     : nil,
                 headerSize: Dimen.tab.lightExtra + Dimen.margin.tinyExtra,
-                marginTop: Dimen.margin.medium,
+                marginTop: SystemEnvironment.isTablet ?  Dimen.margin.regularExtra : Dimen.margin.medium,
                 marginBottom: self.marginBottom,
                 spacing: 0,
                 useTracking: self.useTracking

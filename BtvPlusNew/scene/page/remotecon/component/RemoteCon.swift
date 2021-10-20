@@ -33,6 +33,7 @@ enum RemoteInputType{
 
 struct RemoteCon: PageComponent {
     @EnvironmentObject var appSceneObserver:AppSceneObserver
+    @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     var data:RemotePlayData? = nil
@@ -53,6 +54,7 @@ struct RemoteCon: PageComponent {
                         self.action(.toggleOn)
                     }
                     .frame(width: RemoteStyle.button.regular, height: RemoteStyle.button.regular)
+                    .padding(.trailing, SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.regular)
                     EffectButton(
                         defaultImage: Asset.remote.multiview,
                         effectImage: Asset.remote.multiviewOn)
@@ -61,8 +63,8 @@ struct RemoteCon: PageComponent {
                     }
                     .frame(width: RemoteStyle.button.thin, height: RemoteStyle.button.thin)
                     Spacer().modifier(MatchVertical(width: 1))
-                        .background(Color.app.grey)
-                        .padding(.vertical , Dimen.margin.tiny)
+                        .background(Color.app.grey.opacity(0.2))
+                        .frame( height: Dimen.line.heavyExtra)
                     EffectButton(
                         defaultImage: Asset.remote.chlist,
                         effectImage: Asset.remote.chlistOn)
@@ -72,8 +74,8 @@ struct RemoteCon: PageComponent {
                     .frame(width: RemoteStyle.button.thin, height: RemoteStyle.button.thin)
                     if self.isAudioAble {
                         Spacer().modifier(MatchVertical(width: 1))
-                            .background(Color.app.grey)
-                            .padding(.vertical , Dimen.margin.tiny)
+                            .background(Color.app.grey.opacity(0.2))
+                            .frame( height: Dimen.line.heavyExtra)
                         EffectButton(
                             defaultImage: Asset.remote.earphone,
                             effectImage: Asset.remote.earphoneOn,
@@ -138,7 +140,7 @@ struct RemoteCon: PageComponent {
                 }
                 .frame(height: RemoteStyle.ui.uiBoxHeight)
                 .padding(.top, RemoteStyle.margin.light)
-                
+               
                 HStack(alignment: .center, spacing: 0){
                     VerticalButtonBox(
                         defaultImage:Asset.remote.volume,
@@ -170,8 +172,7 @@ struct RemoteCon: PageComponent {
                            height: RemoteStyle.ui.verticalButton.height)
                 }
                 .frame(height: RemoteStyle.ui.uiBoxHeight)
-                
-                
+                .padding(.top,  self.getVerticalMargin())
                 HStack(alignment: .center, spacing: 0){
                     EffectButton(
                         defaultImage: Asset.remote.mute,
@@ -230,19 +231,28 @@ struct RemoteCon: PageComponent {
                         .frame(width: RemoteStyle.button.medium, height: RemoteStyle.button.medium)
                     }
                 }
-                
+                .padding(.top,  self.getVerticalMargin())
             }
             .padding(.all, RemoteStyle.margin.regular)
+           
         }
         .modifier(MatchParent())
         .onAppear(){
             let isVibrate = self.setup.remoconVibration
             self.isVibrate = isVibrate
+            
         }
     }//body
     
     
-    
+    private func getVerticalMargin() -> CGFloat {
+        if SystemEnvironment.isTablet {return 0}
+        let hei = self.sceneObserver.screenSize.height
+        if hei > 650 {
+            return SystemEnvironment.isTablet ? Dimen.margin.thin : Dimen.margin.regular
+        }
+        return 0
+    }
     
 }
 

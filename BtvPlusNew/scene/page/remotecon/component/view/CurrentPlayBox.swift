@@ -18,17 +18,17 @@ struct CurrentPlayBox: PageComponent {
                         VStack(alignment: .leading, spacing: 0){
                             if data.isEmpty {
                                 Text(String.remote.playEmpty)
-                                    .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))
+                                    .modifier(MediumTextStyle(size: RemoteStyle.fontSize.subTitleExtra, color: Color.app.grey))
                             } else if data.isError{
                                 Text(String.remote.playError)
-                                    .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))
+                                    .modifier(MediumTextStyle(size: RemoteStyle.fontSize.subTitleExtra, color: Color.app.grey))
                             } else if data.isNoInfo{
                                 Text(String.remote.playNoInfo)
-                                    .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))
+                                    .modifier(MediumTextStyle(size: RemoteStyle.fontSize.subTitleExtra, color: Color.app.grey))
                             }else {
                                 if let title = data.subTitle {
                                     Text(title)
-                                        .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subTitle, color: Color.app.grey))
+                                        .modifier(BoldTextStyle(size: RemoteStyle.fontSize.subText, color: Color.app.grey))
                                         .padding(.bottom, RemoteStyle.margin.thin)
                                 }
                                 if let title = data.title {

@@ -268,6 +268,9 @@ struct PairingView: PageComponent{
             self.pairingStbType = self.pairing.pairingStbType
             self.nick = user.nickName
         }
+        .onReceive(self.pairing.$pairingStbType){ type in
+            self.pairingStbType = type
+        }
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else {return}
             switch res.type {

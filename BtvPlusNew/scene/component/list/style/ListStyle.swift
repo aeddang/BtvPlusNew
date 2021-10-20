@@ -19,7 +19,7 @@ struct ListItem{
     }
     
     struct video {
-        static let size:CGSize = isPad ? CGSize(width: 248, height: 162) : CGSize(width: 164, height: 92)
+        static let size:CGSize = isPad ? CGSize(width: 248, height: 140) : CGSize(width: 164, height: 92)
         static let type01:CGFloat = isPad ? 54 : 36
         static let type02:CGFloat = isPad ? 80 : 52
         static let type03:CGFloat = isPad ? 106 : 68

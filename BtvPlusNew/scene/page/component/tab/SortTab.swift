@@ -60,6 +60,7 @@ struct SortTab: PageComponent{
             }
             if let info = self.info {
                 InfoAlert(text: info)
+                    .fixedSize(horizontal: true, vertical: true)
             }
             if self.isSortAble {
                 TextButton(

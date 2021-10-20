@@ -19,6 +19,13 @@ extension BtvWebView{
         case WebviewMethod.requestRemoconFunction.rawValue :
             guard let jsonData = getRemoteData(jsonParams:jsonParams) else { return }
             //let transactionId = jsonData["transactionId"] as? String ?? ""
+            if self.pairing.pairingStbType == .apple {
+                self.appSceneObserver.alert  = .disableAppleTv
+                return
+                
+            }
+            
+            
             let contentId = jsonData["contentId"] as? String ?? ""
             let playTime = jsonData["playTime"] as? Double ?? 0
             let isShowRemocon = jsonData["isShowRemocon"] as? Bool ?? false

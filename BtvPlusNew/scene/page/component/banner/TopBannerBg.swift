@@ -199,12 +199,14 @@ struct TopBannerBgItem: PageComponent, Identifiable {
                                 maxHeight: 80, alignment:.bottom)
                             
                             .padding(.horizontal, Dimen.margin.heavy)
-                    } else if data.title != nil {
+                    }
+                    /*
+                    else if data.title != nil {
                         Text(data.title!)
                             .modifier(BlackTextStyle(size: Font.size.black) )
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, Dimen.margin.heavy)
-                    }
+                    }*/
                     if let subTitle = data.subTitle1 {
                         Text(subTitle)
                             .kerning(Font.kern.thin)

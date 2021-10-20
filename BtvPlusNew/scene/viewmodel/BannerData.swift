@@ -108,7 +108,7 @@ class BannerData:InfinityData, PageProtocol{
                 self.type = cardType == .bannerList
                     ? .horizontalList
                     : .list
-                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size:  self.type.size)  ?? image
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: self.type.size.width, height: 0) )  ?? image
             }
         
         case .page:

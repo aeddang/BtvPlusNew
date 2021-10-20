@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 extension PageSynopsisPlayer {
     func onResetPageLog(isAllReset:Bool = false, isRedirectPage:Bool = false){
+        self.playNaviLog(action: .clickVodStop, watchType: .watchPause)
         if self.naviLogManager.currentPlayStartTime != nil {
-            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
             self.naviLogManager.contentsWatch(isPlay: false)
         }
     }
@@ -96,8 +96,8 @@ extension PageSynopsisPlayer {
     }
     
     func onDisappearLog(){
+        self.playNaviLog(action: .clickVodStop, watchType: .watchPause)
         if self.naviLogManager.currentPlayStartTime != nil {
-            self.playNaviLog(action: .clickVodPause, watchType: .watchPause)
             self.naviLogManager.contentsWatch(isPlay: false)
         }
         self.naviLogManager.clearSysnopsis()
@@ -107,7 +107,11 @@ extension PageSynopsisPlayer {
         self.pageLogId = .synopsis
         guard let synopsisModel = self.synopsisModel else {return}
         self.checkInsideViewLog(synopsisModel)
-        self.naviLogManager.setupSysnopsis(synopsisModel, type:self.synopsisData?.isDemand == true ? "demand" : "clip")
+        self.naviLogManager.setupSysnopsis(
+            synopsisModel,
+            type:self.synopsisData?.isDemand == true ? "demand" : "clip",
+            title: self.episodeViewerData?.episodeTitle
+        )
         self.naviLog(
             pageID: self.pageLogId,
             action: .pageShow,
@@ -160,7 +164,7 @@ extension PageSynopsisPlayer {
             var contentsItem = MenuNaviContentsBodyItem()
             contentsItem.type = self.synopsisData?.isDemand == true ? "demand" : "clip"
             contentsItem.series_id = synopsisModel.srisId
-            contentsItem.title = synopsisModel.title ?? ""
+            contentsItem.title = self.episodeViewerData?.episodeTitle ?? synopsisModel.title ?? ""
             contentsItem.channel = ""
             contentsItem.channel_name = synopsisModel.brcastChnlNm ?? ""
             contentsItem.genre_text = ""  // 장르, ex)영화

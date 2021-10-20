@@ -166,70 +166,82 @@ class PageSearchModel :ObservableObject, PageProtocol {
     
     private func getResultsVod(datas:[CategoryVodItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.vod + datas.count.description
+        actionData.menu_name = "VOD " + datas.count.description
         let allPosters:[PosterData] = datas.map{
             PosterData( usePrice: true).setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
         }
+        actionData.menu_name = "VOD" 
         let block = BlockData()
             .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword, usePrice: true)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
     private func getResultsSris(datas:[CategorySrisItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.vod + datas.count.description
+        actionData.menu_name = "회차 " + datas.count.description
         actionData.category = "회차"
         let allPosters:[VideoData] = datas.map{
             VideoData(usePrice: true).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
         }
+        actionData.menu_name = "회차"
         let block = BlockData()
             .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, usePrice: true)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
     private func getResultsClip(datas:[CategoryClipItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.clip + datas.count.description
-        actionData.category = "클립"
-        
+        actionData.menu_name = "클립 " + datas.count.description
+       
         let allPosters:[VideoData] = datas.map{
             actionData.target = $0.title_sris
             return VideoData(usePrice:true).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
         }
+        actionData.menu_name = "클립"
         let block = BlockData()
             .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword, usePrice: true)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
     private func getResultsCorner(datas:[CategoryCornerItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.config = "코너"
-        actionData.menu_name = String.app.corner + datas.count.description
+        actionData.menu_name = "장면/코너 " + datas.count.description
         let allPosters:[VideoData] = datas.map{
             VideoData(usePrice: true).setData(data: $0, searchType:.demand).setNaviLog(action: actionData)
         }
+        actionData.menu_name = "장면/코너"
         let block = BlockData()
             .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword, usePrice: true)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
     
     private func getResultsPeople(datas:[CategoryPeopleItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.people + datas.count.description
+        actionData.menu_name = "인물 " + datas.count.description
         let allPosters:[PosterData] = datas.map{ PosterData(usePrice:true).setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
+        
+        actionData.menu_name = "인물"
         let block = BlockData()
             .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword, usePrice:true)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }
     
     private func getResultsTv(datas:[CategoryTvItem],keyword:String? = nil) -> BlockData{
         var actionData = MenuNaviActionBodyItem(search_keyword:keyword)
-        actionData.menu_name = String.app.liveTv + datas.count.description
+        actionData.menu_name = "실시간방송  " + datas.count.description
         let allTvs:[TvData] = datas.map{ TvData().setData(data: $0, searchType: .live).setNaviLog(action: actionData)}
+        
+        actionData.menu_name = "실시간방송"
         let block = BlockData()
             .setData(title: String.app.liveTv, datas: allTvs, searchType:.live, keyword: keyword)
+            .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
        return block
     }

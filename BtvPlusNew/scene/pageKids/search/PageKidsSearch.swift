@@ -212,6 +212,13 @@ struct PageKidsSearch: PageView {
                 }
                 
             }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page == self.pageObject {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.05) {
+                        self.updatedLogPage()
+                    }
+                }
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if self.isInitPage {return}

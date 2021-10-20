@@ -67,7 +67,9 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 serviceInfo = String.pageText.synopsisOnlyBtvFree
             } else {
                 let fullPlayAbe = purchasAuthority || isFree ||  synopsisModel.holdbackType == .holdOut
-                serviceInfo = fullPlayAbe ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
+                if isPairing == true {
+                    serviceInfo = fullPlayAbe ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
+                }
                 playerInfo = fullPlayAbe ? String.pageText.synopsisDisableNScreenFree : String.pageText.synopsisDisableNScreen
             }
             isPlayAble = false
@@ -78,7 +80,9 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             serviceInfo = purchas?.isFree ?? false
                 ? String.pageText.synopsisOnlyBtv
                 : String.pageText.synopsisOnlyPurchasBtv*/
-            serviceInfo = String.pageText.synopsisOnlyPurchasBtv
+            if isPairing == true {
+                serviceInfo = String.pageText.synopsisOnlyPurchasBtv
+            }
             playerInfo = String.pageText.synopsisDisablePurchas
             isPlayAble = false
             isPlayAbleBtv = true

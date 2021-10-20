@@ -40,6 +40,7 @@ class TagData{
         self.isAdult = isAdult
         self.isLock = !SystemEnvironment.isImageLock ? false : isAdult
         self.restrictAgeIcon = self.pageType == .btv ? Asset.age.getListIcon(age: data.wat_lvl_cd) : AssetKids.age.getIcon(age: data.wat_lvl_cd)
+        
         self.ppmIcon = ImagePath.thumbImagePath(filePath: data.ppm_grid_icon_img_path,
                                            size:CGSize(width: 0, height: Dimen.icon.light),
                                            convType: .alpha)

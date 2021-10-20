@@ -46,8 +46,8 @@
             filePath = "BtvPlusNew/store/Repository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "467"
-            endingLineNumber = "467"
+            startingLineNumber = "466"
+            endingLineNumber = "466"
             landmarkName = "updatePush(_:isSync:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -184,7 +184,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "31E7E2C8-C2EF-4D70-BA73-567B0A6B27F2"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BtvPlusNew/store/zeroconf/ZeroConf.swift"
@@ -240,23 +240,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "234"
             endingLineNumber = "234"
-            landmarkName = "sceneDidBecomeActive(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A386D516-0D8B-4E37-AD5E-8DE70E2A39FC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/store/zeroconf/ZeroConf.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
-            landmarkName = "sendZeroConf(networkObserver:)"
+            landmarkName = "scene(_:didUpdate:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -264,7 +248,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "8B5DE133-F2D0-4258-8136-2BDD9140BC94"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BtvPlusNew/AppDelegate.swift"
@@ -286,25 +270,41 @@
             filePath = "BtvPlusNew/store/Repository.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "526"
-            endingLineNumber = "526"
-            landmarkName = "zeroConfUDPSend()"
+            startingLineNumber = "525"
+            endingLineNumber = "525"
+            landmarkName = "getDrmId()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6968E5EE-83A2-4899-83D6-9E82AE87C1AC"
+            uuid = "8A356DFA-FCCB-4D5F-9DBF-8FC0E21B477D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BtvPlusNew/scene/SceneDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "242"
+            endingLineNumber = "242"
+            landmarkName = "sceneDidBecomeActive(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AD220FA6-B4DB-426D-AEAE-D5A2F63D93CE"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "BtvPlusNew/store/Repository.swift"
+            filePath = "BtvPlusNew/store/zeroconf/ZeroConf.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
-            landmarkName = "setupPairing()"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "sendZeroConf(networkObserver:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

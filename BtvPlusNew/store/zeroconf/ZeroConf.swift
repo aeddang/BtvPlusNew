@@ -65,7 +65,7 @@ class ZeroConf {
         Self.connection?.send(content: param.data(using: String.Encoding.utf8), completion: NWConnection.SendCompletion.contentProcessed(({ (error) in
                 Self.connection?.cancel()
                 if error != nil {
-                    print(error ?? "ZeroConf Unkow Error")
+                    print(error ?? "ZeroConf Unkown Error")
                 }
             })))
     }

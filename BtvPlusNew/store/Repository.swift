@@ -232,8 +232,7 @@ class Repository:ObservableObject, PageProtocol{
                 if pairingDeviceType == .apple {
                     self.pairing.authority.requestAuth(.updateMyinfo(isReset: false))
                 }
-                // ZeroConf 전송
-                self.zeroConfUDPSend()
+
                 DataLog.d("pairingCompleted " + pairingDeviceType.rawValue, tag:"VSManager")
                 DataLog.d("prevName " + (prevName ??  "nil"), tag:"VSManager")
                 if pairingDeviceType == .apple && prevName?.isEmpty != false{
@@ -527,8 +526,8 @@ class Repository:ObservableObject, PageProtocol{
     }
     
     func zeroConfUDPSend() {
-        if self.pairing.status == .pairing {
-            zeroconf.sendZeroConf(networkObserver: self.networkObserver)
-        }
+//        if self.pairing.status == .pairing {
+        zeroconf.sendZeroConf(networkObserver: self.networkObserver)
+//        }
     }
 }

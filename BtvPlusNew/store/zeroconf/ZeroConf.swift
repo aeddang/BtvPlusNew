@@ -51,7 +51,7 @@ class ZeroConf {
                     case .preparing:
                         print("Preparing")
                     default:
-                        Self.connection?.cancel()
+//                        Self.connection?.cancel()
                         print("waiting or failed")
 
                     }
@@ -63,7 +63,7 @@ class ZeroConf {
     
     private func sendData(param : String) {
         Self.connection?.send(content: param.data(using: String.Encoding.utf8), completion: NWConnection.SendCompletion.contentProcessed(({ (error) in
-                Self.connection?.cancel()
+//                Self.connection?.cancel()
                 if error != nil {
                     print(error ?? "ZeroConf Unkow Error")
                 }

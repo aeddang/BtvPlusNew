@@ -284,6 +284,9 @@ class NaviLogManager : ObservableObject, PageProtocol {
             if modifyContentBody.purchase_type?.isEmpty == false, let purchase_type = modifyContentBody.purchase_type{
                 modifyContentBody.purchase_type = PrdTypCd(rawValue: purchase_type)?.logName 
             }
+            if data.vod_watch_type == NaviLog.watchType.watchStart.rawValue {
+                modifyContentBody.running_time = nil
+            }
             modifyData.contents_body = modifyContentBody
         }
         #if DEBUG

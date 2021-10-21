@@ -105,8 +105,6 @@ extension BtvWebView{
                     }
                 }
                 if monthly {
-                    self.moveMonthly()
-                    return
                     if !commerce {
                         let purchaseWebviewModel = PurchaseWebviewModel()
                             .setParam(seriesId: eventData.sris_id, epsId: eventData.epsd_id)

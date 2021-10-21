@@ -31,6 +31,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     @State var list: VideoList?
     @State var listId:String = ""
     @State var isListUpdated:Bool = true
+    @State var isWatchedBlock:Bool = false
     private func getList() -> some View {
         let key = (self.datas.first?.epsdId ?? "") + self.datas.count.description
         if key == self.listId,  let list = self.list {
@@ -98,7 +99,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     self.getList()
                         .fixedSize(horizontal: false, vertical: true)
                        
-                } else if self.useEmpty {
+                } else if self.useEmpty || self.isWatchedBlock{
                     EmptyAlert( text: self.data.dataType == .watched
                                 ? String.pageText.myWatchedEmpty
                                 : String.alert.dataError)
@@ -149,7 +150,15 @@ struct VideoBlock:BlockProtocol, PageComponent {
         .onReceive(self.pageObservable.$layer ){ layer  in
             switch layer {
             case .bottom : self.isUiActive = false
-            case .top, .below : self.isUiActive = true
+            case .below : self.isUiActive = true
+            case .top : self.isUiActive = true
+                if !self.isWatchedBlock {return}
+                if self.pairing.status != .pairing {return}
+                if let apiQ = self.getRequestApi(pairing: self.pairing.status, isReset: true) {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                        self.dataProvider.requestData(q: apiQ)
+                    }
+                }
             }
         }
         .onReceive(dataProvider.$result) { res in
@@ -192,7 +201,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     VideoData().setData(data: d, cardType: data.cardType)
                 }
                 allDatas.append(contentsOf: addDatas)
-            default: do {}
+            default: break
             }
             if allDatas.isEmpty { return onBlank() }
             self.datas = allDatas
@@ -250,6 +259,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.videos {
+                    self.isWatchedBlock = datas.first?.isWatched ?? false
                     withAnimation{ self.datas = datas }
                 }
             }

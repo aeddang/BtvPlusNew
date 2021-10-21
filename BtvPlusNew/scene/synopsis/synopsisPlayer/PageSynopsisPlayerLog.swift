@@ -32,12 +32,11 @@ extension PageSynopsisPlayer {
             default : break
             }
         case .clickConfigButton(let action, let config) :
-            self.naviLog(action: action, config:config , useMenuName: false)
+            self.naviLog(action: action, config:config )
         case .clickFullScreen(let isFullScreen) :
             self.naviLog(action: .clickVodScreenOption,
                          config:isFullScreen ? "true" : "false",
-                         result: self.synopsisModel?.title ,
-                         useMenuName: false)
+                         result: self.synopsisModel?.title )
         }
     }
     
@@ -53,8 +52,7 @@ extension PageSynopsisPlayer {
         case .close :
             self.naviLog(
                 action: .clickPlayBackList,
-                config: self.sceneObserver.sceneOrientation.logConfig,
-                useMenuName: false
+                config: self.sceneObserver.sceneOrientation.logConfig
                 )
         default: break
         }
@@ -64,9 +62,9 @@ extension PageSynopsisPlayer {
     func onEventLog(prerollEvent:PrerollEvent){
         switch prerollEvent {
         case .moveAd :
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기", useMenuName: false)
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
         case .skipAd :
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기", useMenuName: false)
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
         default: break
         }
     }
@@ -137,7 +135,7 @@ extension PageSynopsisPlayer {
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
                  category: String? = nil , result: String? = nil,
-                 useMenuName:Bool = true
+                 useMenuName:Bool = false
                  ){
         
         var actionBody = MenuNaviActionBodyItem()
@@ -173,7 +171,7 @@ extension PageSynopsisPlayer {
             contentsItem.purchase = synopsisModel.curSynopsisItem?.isDirectview ?? false
             contentsItem.episode_resolution_id = synopsisModel.epsdRsluId ?? ""
             contentsItem.episode_id = insideChangeViewId
-            contentsItem.running_time = insideChangeViewRuntime
+            //contentsItem.running_time = insideChangeViewRuntime
             
             if let curSynopsisItem = synopsisModel.curSynopsisItem {
                 contentsItem.product_id = curSynopsisItem.prdPrcId
@@ -184,9 +182,9 @@ extension PageSynopsisPlayer {
             }
             
             var actionBody = MenuNaviActionBodyItem()
-            actionBody.config = synopsisModel.title
+            actionBody.config = self.episodeViewerData?.subTitle ?? ""
             actionBody.result = insideChangeViewId
-            actionBody.menu_name = synopsisModel.seasonTitle
+            actionBody.menu_name = synopsisModel.title
             actionBody.menu_id = synopsisModel.srisId
             
             self.naviLogManager.actionLog(

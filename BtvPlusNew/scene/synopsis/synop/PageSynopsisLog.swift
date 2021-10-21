@@ -41,9 +41,9 @@ extension PageSynopsis {
                 self.naviLog(pageID: .playInside, action: action, category: "도입부건너뛰기" )
             }
         case .clickConfigButton(let action, let config) :
-            self.naviLog(action: action, config:config ,useMenuName:false)
+            self.naviLog(action: action, config:config)
         case .clickFullScreen(let isFullScreen) :
-            self.naviLog(action: .clickVodScreenOption, config:isFullScreen ? "true" : "false" ,useMenuName:false)
+            self.naviLog(action: .clickVodScreenOption, config:isFullScreen ? "true" : "false")
         }
     }
     
@@ -53,9 +53,7 @@ extension PageSynopsis {
         case .close :
             self.naviLog(
                 action: .clickPlayBackList,
-                config: self.type == .btv ? self.sceneOrientation.logConfig : nil,
-                useMenuName:false
-                )
+                config: self.type == .btv ? self.sceneOrientation.logConfig : nil)
         case .changeView(let epsdId):
             self.insideChangeViewId = epsdId
             self.insideChangeViewRuntime = self.naviLogManager.getContentsWatchTime()
@@ -74,11 +72,11 @@ extension PageSynopsis {
     func onEventLog(prerollEvent:PrerollEvent){
         switch prerollEvent {
         case .moveAd :
-            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고정보더보기",useMenuName:false)
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기",useMenuName:false)
+            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고정보더보기")
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고정보더보기")
         case .skipAd :
-            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고건너뛰기",useMenuName:false)
-            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기",useMenuName:false)
+            self.naviLog(pageID: self.pageLogId, action: .clickAdButton, category: "광고건너뛰기")
+            self.naviLog(pageID: .play, action: .clickAdButton, category: "광고건너뛰기")
         default: break
         }
     }
@@ -285,7 +283,7 @@ extension PageSynopsis {
                  watchType:NaviLog.watchType? = nil,
                  config:String? = nil,
                  category: String? = nil, result: String? = nil,  target:String? = nil , actorId:String? = nil,
-                 useMenuName:Bool = true
+                 useMenuName:Bool = false
                  ){
         if naviLogManager.currentSysnopsisContentsItem?.episode_id != self.epsdId { 
             self.setupContent()
@@ -327,7 +325,7 @@ extension PageSynopsis {
             contentsItem.purchase = synopsisModel.curSynopsisItem?.isDirectview ?? false
             contentsItem.episode_resolution_id = synopsisModel.epsdRsluId ?? ""
             contentsItem.episode_id = insideChangeViewId
-            contentsItem.running_time = insideChangeViewRuntime
+            //contentsItem.running_time = insideChangeViewRuntime
             
             if let curSynopsisItem = synopsisModel.purchasedPPMItem ?? synopsisModel.curSynopsisItem{
                 contentsItem.product_id = curSynopsisItem.prdPrcId
@@ -341,9 +339,9 @@ extension PageSynopsis {
             if self.type == .btv {  //동일한 케이스인데 키즈와  비티비가 다름 이런일 한두번도 아니고....
                 
                 var actionBody = MenuNaviActionBodyItem()
-                actionBody.config = synopsisModel.title
+                actionBody.config = self.episodeViewerData?.subTitle ?? ""
                 actionBody.result = insideChangeViewId
-                actionBody.menu_name = synopsisModel.seasonTitle
+                actionBody.menu_name = synopsisModel.title
                 actionBody.menu_id = synopsisModel.srisId
                 self.naviLogManager.actionLog(
                     .clickInsidePlayButton, pageId: .playInside,

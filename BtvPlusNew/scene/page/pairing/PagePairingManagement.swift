@@ -78,9 +78,10 @@ struct PagePairingManagement: PageView {
                                                 .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                                         }
                                     }
-                                    Text(String.app.macAdress + " : " + self.macAdress)
-                                        .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
-                                    
+                                    if self.macAdress.isEmpty == false {
+                                        Text(String.app.macAdress + " : " + self.macAdress)
+                                            .modifier(MediumTextStyle(size: Font.size.thinExtra, color: Color.app.greyLight))
+                                    }
                                 }
                                 Spacer()
                             }

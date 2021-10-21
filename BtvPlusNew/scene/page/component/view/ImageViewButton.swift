@@ -24,7 +24,9 @@ struct ImageViewButton: PageView{
     let action: () -> Void
     
     var body: some View {
-        ZStack{
+        Button(action: {
+            self.action()
+        }) {
             if self.axis == .vertical {
                 VStack(spacing:Dimen.margin.tiny){
                     if self.isSelected {
@@ -89,16 +91,18 @@ struct ImageViewButton: PageView{
                 }
             }
         }
-        .accessibility(label: Text(text ?? ""))
-        .onTapGesture {
-            self.action()
-        }
-        /*
-        Button(action: {
-            self.action()
-        }) {
-            
-        }*/
+        .accessibility(label:Text(self.text ?? ""))
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct ImageButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color(red: 0, green: 0, blue: 0.5))
+            .foregroundColor(.white)
+            .clipShape(Capsule())
     }
 }
 

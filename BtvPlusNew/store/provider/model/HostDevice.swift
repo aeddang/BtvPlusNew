@@ -38,6 +38,15 @@ class HostDevice {
         return true
     }
     
+    var playMacAdress :String{
+        if  self.macAdress == "00:00:00:00:00:00" ||
+            self.macAdress == ApiConst.defaultMacAdress ||
+            self.macAdress == nil {
+            return ""
+        }
+        return self.macAdress!
+    }
+    
     func setData(deviceData:HostDeviceData) -> HostDevice{
         self.macAdress = deviceData.stb_mac_address
         if let ma = self.macAdress {

@@ -107,6 +107,7 @@ struct ApiConst {
    
     static let defaultStbId = "{00000000-0000-0000-0000-000000000000}"
     static let defaultMacAdress = "ff:ff:ff:ff:ff:ff"
+    
 }
 
 struct ApiCode {

@@ -83,6 +83,7 @@ struct BannerList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var naviLogManager:NaviLogManager
     var viewModel: InfinityScrollModel = InfinityScrollModel()
+    var blockData: BlockData? = nil
     var datas:[BannerData]
     var useTracking:Bool = false
     var margin:CGFloat = SystemEnvironment.currentPageType == .btv ? Dimen.margin.thin : DimenKids.margin.regular
@@ -100,12 +101,12 @@ struct BannerList: PageComponent{
             ){
             ForEach(self.datas) { data in
                 BannerItem( data:data ){
-                        var actionBody = MenuNaviActionBodyItem()
-                        actionBody.menu_id = data.menuId
-                        actionBody.menu_name = data.menuNm
-                        actionBody.position = data.logPosition
-                        actionBody.config = data.logConfig
-                        self.naviLogManager.actionLog(.clickBannerBanner, actionBody: actionBody)
+                    var actionBody = MenuNaviActionBodyItem()
+                    actionBody.menu_id = blockData?.menuId
+                    actionBody.menu_name = blockData?.name
+                    actionBody.position = data.logPosition
+                    actionBody.config = "banner"
+                    self.naviLogManager.actionLog(.clickContentsView, actionBody: actionBody)
                 }
             }
         }

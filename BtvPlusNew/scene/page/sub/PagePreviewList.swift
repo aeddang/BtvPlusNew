@@ -192,6 +192,7 @@ struct PagePreviewList: PageView {
                         self.menuId = cateData.menu_id
                         return
                     }
+                    self.naviLogManager.actionLog(.pageShow, pageId:.scheduled)
                     return
                 }
                 
@@ -206,6 +207,7 @@ struct PagePreviewList: PageView {
                     
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
+                self.naviLogManager.actionLog(.pageShow, pageId:.clipViewAll)
                 
             }
             .onDisappear{

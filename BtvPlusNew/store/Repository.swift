@@ -253,7 +253,9 @@ class Repository:ObservableObject, PageProtocol{
                 }
                 
             case .syncError :
-                self.appSceneObserver?.alert = .pairingRecovery
+                if NpsNetwork.hostDeviceId?.isEmpty == false {
+                    self.appSceneObserver?.alert = .pairingRecovery
+                }
             case .syncFail :
                 self.appSceneObserver?.alert = .alert(String.alert.connect, String.alert.pairingError)
             default: break

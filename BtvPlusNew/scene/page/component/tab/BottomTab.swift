@@ -54,6 +54,7 @@ struct BottomTab: PageComponent{
                         self.selectedMenuId = band.menuId
                     }
                     .modifier(MatchParent())
+                   
                 }
             }
             .padding(.bottom, self.sceneObserver.safeAreaIgnoreKeyboardBottom)

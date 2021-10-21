@@ -62,6 +62,8 @@ struct InputRemoteBox: PageComponent {
                             text:self.$input,
                             keyboardType: self.keyboardType,
                             placeholder: self.placeHolder,
+                            placeholderModifier: MediumTextStyle(size: Font.size.black).textModifier,
+                            placeholderColor: Color.app.greyDeep,
                             maxLength: self.selectedInputSize ?? self.inputSize,
                             kern: 1,
                             textModifier: BoldTextStyle(size: Font.size.black).textModifier,

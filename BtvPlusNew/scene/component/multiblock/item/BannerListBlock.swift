@@ -31,6 +31,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
         if let list = self.list {return list}
         let newList = BannerList(
             viewModel:self.viewModel,
+            blockData:self.data,
             datas: self.datas,
             useTracking:true)
             

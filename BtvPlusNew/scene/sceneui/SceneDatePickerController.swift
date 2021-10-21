@@ -57,7 +57,7 @@ struct SceneDatePickerController: PageComponent{
                 self.isShow = true
             }
         }
-        
+        .accessibility(hidden: !self.isShow )
     }//body
     
     func reset(){

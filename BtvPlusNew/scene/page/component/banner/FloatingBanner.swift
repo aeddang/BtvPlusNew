@@ -112,7 +112,6 @@ struct FloatingBanner: PageComponent {
         }
         .onReceive( self.viewModel.$index ){ idx in
             self.setBar(idx:idx)
-            
         }
     }
     
@@ -131,14 +130,18 @@ struct FloatingBanner: PageComponent {
         }
         self.sendLog(action: .pageShow)
     }
+    
+    @State var finalShowId:String? = nil
     private func sendLog(action:NaviLog.Action, category:String? = "etc"){
         if self.viewModel.index < 0 {return}
         if self.viewModel.index >= self.datas.count {return}
         let data = self.datas[self.viewModel.index]
+        if data.menuId == self.finalShowId {return}
         var actionBody = MenuNaviActionBodyItem()
         actionBody.menu_id = data.menuId
         actionBody.menu_name = data.menuNm
         actionBody.category = category
+        self.finalShowId = data.menuId
         self.naviLogManager.actionLog( action, pageId: .popup, actionBody: actionBody)
     }
 }

@@ -28,9 +28,9 @@ struct AppLayout: PageComponent{
     var body: some View {
         ZStack{
             SceneTab()
-                .accessibility(hidden: self.pageType == .btv)
+                .accessibility(hidden: self.pageType != .btv)
             SceneKidsTab()
-                .accessibility(hidden: self.pageType == .kids)
+                .accessibility(hidden: self.pageType != .kids)
             if self.pageType == .btv && !self.hasPopup, let datas = self.floatBannerDatas {
                 FloatingBanner(datas:datas){ today in
                     if today {self.floatingBannerToDayUnvisible()}

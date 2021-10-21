@@ -114,6 +114,20 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                             DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
                                 self.pairing.requestPairing(.check(id:self.tag))
                             }
+                            self.requestVSAccountMetadata(
+                                isInterruptionAllowed: false ,
+                                completionHandler: { meta , error in
+                                    if error != nil , let err = error as? VSError {
+                                        DataLog.d( error.debugDescription, tag:self.tag)
+                                        switch err.code {
+                                        case .invalidVerificationToken, .providerRejected :
+                                            DispatchQueue.main.async {
+                                                self.accountExpire()
+                                            }
+                                        default : break 
+                                        }
+                                    }
+                                })
                         } else {
                             self.checkSync(isInterruptionAllowed: false)
                         }
@@ -128,7 +142,6 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                     }
                 }
         })
-        //}
     }
     
     func accountUnPairingAlert(){
@@ -284,12 +297,13 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
                     isPairing = self.pairing.status == .pairing
                     self.removePresent()
                     if let meta = meta {
-                        
                         if let expireDate = meta.authenticationExpirationDate {
                             let now = Date()
                             if expireDate.timeIntervalSince1970 < now.timeIntervalSince1970 {
-                                self.accountExpire()
                                 DataLog.d( "accountExpire ", tag:self.tag)
+                                DispatchQueue.main.async {
+                                    self.accountExpire()
+                                }
                                 return
                             }
                         }
@@ -348,16 +362,11 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     }
     
     private func accountExpire(){
-        let isPairing = self.pairing.status == .pairing
         self.appSceneObserver?.alert = .alert(
             String.vs.account,
             String.vs.accountExpirationDate,
-            String.vs.accountTip,
-            confirmText: isPairing ? String.vs.pairingDisconnect : String.app.confirm){
-            if isPairing {
-                self.redirectFlag = .disconnect
-                self.pairing.requestPairing(.unPairing)
-            }
+            confirmText: String.vs.pairingRequestTvProvider){
+                self.moveSetup()
         }
     }
     private func accountNoMetadata(){

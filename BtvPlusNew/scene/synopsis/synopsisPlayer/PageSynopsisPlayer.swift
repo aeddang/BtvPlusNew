@@ -232,6 +232,7 @@ struct PageSynopsisPlayer: PageView {
         self.progressError = false
         self.progressCompleted = false
         self.isAllProgressCompleted = false
+        self.isPlayAble = false
         self.episodeViewerData = nil
         self.playerData = nil
         self.title = nil
@@ -269,7 +270,7 @@ struct PageSynopsisPlayer: PageView {
             self.pageDataProviderModel.requestProgress(
                 q: .init(type: .getPlay(self.epsdRsluId, self.pairing.hostDevice )))
             self.progressCompleted = true
-        default : do{}
+        default : break
         }
     }
     
@@ -368,8 +369,6 @@ struct PageSynopsisPlayer: PageView {
         }
         
     }
-    
-
     
     private func setupPlay (_ data:Play){
         if data.result != ApiCode.success {
@@ -507,6 +506,7 @@ struct PageSynopsisPlayer: PageView {
     
     
     func onEvent(streamEvent:PlayerStreamEvent){
+        if !self.isPlayAble {return}
         switch streamEvent {
         case .completed:
             self.playCompleted()

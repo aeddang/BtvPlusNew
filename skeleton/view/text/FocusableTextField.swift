@@ -13,6 +13,7 @@ struct FocusableTextField: UIViewRepresentable{
     var keyboardType: UIKeyboardType = .default
     var returnVal: UIReturnKeyType = .default
     var placeholder: String = ""
+    var placeholderModifier:TextModifier? = nil
     var placeholderColor:Color = Color.app.indigoExtra
     var textAlignment:NSTextAlignment = .center
     var maxLength: Int = -1
@@ -49,7 +50,10 @@ struct FocusableTextField: UIViewRepresentable{
         textField.autoresizingMask = .flexibleWidth
         textField.defaultTextAttributes.updateValue(self.kern, forKey: .kern)
         textField.font = font
-        let fontPlaceholder =  UIFont(name: Font.family.medium, size: Font.size.lightExtra)
+        var fontPlaceholder =  UIFont(name: Font.family.medium, size: Font.size.lightExtra)
+        if let placeholderModifier = placeholderModifier {
+            fontPlaceholder =  UIFont(name: placeholderModifier.family, size: placeholderModifier.size)
+        }
         textField.attributedPlaceholder = NSAttributedString(
             string: self.placeholder ,
             attributes: [

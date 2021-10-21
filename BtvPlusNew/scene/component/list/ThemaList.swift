@@ -148,6 +148,7 @@ struct ThemaList: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     var banners:[BannerData]? = nil
+    var blockData: BlockData? = nil
     var datas:[ThemaData]
     var useTracking:Bool = false
     var margin:CGFloat = Dimen.margin.thin
@@ -172,11 +173,11 @@ struct ThemaList: PageComponent{
                 .accessibility(label: Text(data.title ?? ""))
                 .onTapGesture {
                     var actionBody = MenuNaviActionBodyItem()
-                    actionBody.menu_id = data.menuId
-                    actionBody.menu_name = data.menuNm
+                    actionBody.menu_id = blockData?.menuId ?? ""
+                    actionBody.menu_name = blockData?.name ?? ""
                     actionBody.position = data.logPosition
-                    
-                    self.naviLogManager.actionLog(.clickBannerBanner,
+                    actionBody.config = ""
+                    self.naviLogManager.actionLog(.clickContentsView,
                                                   actionBody: actionBody, contentBody:data.contentLog)
                     
                     if let action = self.action {

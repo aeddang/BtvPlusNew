@@ -20,6 +20,7 @@ extension PageSynopsis {
     }
     
     func onEventInside(streamEvent:PlayerStreamEvent){
+        if !self.isPlayAble {return}
         switch streamEvent {
         case .completed : self.playCompleted()
         default : break

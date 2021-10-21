@@ -12,16 +12,16 @@ import SwiftUI
 protocol BlockProtocol {
     var data:BlockData { get set }
   
-    func getRequestApi(pairing:PairingStatus) -> ApiQ?
+    func getRequestApi(pairing:PairingStatus, isReset:Bool) -> ApiQ?
     func onBlank()
     func onError(_ err:ApiResultError?)
     
 }
 extension BlockProtocol {
 
-    func getRequestApi(pairing:PairingStatus) -> ApiQ? {
+    func getRequestApi(pairing:PairingStatus, isReset:Bool = false) -> ApiQ? {
         ComponentLog.d("getRequestApi " + data.status.rawValue , tag: "BlockProtocol")
-        if data.status != .initate  { return nil }
+        if data.status != .initate && !isReset  { return nil }
         return data.getRequestApi(pairing: pairing)
     }
     

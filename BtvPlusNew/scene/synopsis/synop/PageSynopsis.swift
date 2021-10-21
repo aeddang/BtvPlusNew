@@ -596,7 +596,7 @@ struct PageSynopsis: PageView {
         self.summaryViewerData = nil
         self.purchaseWebviewModel = nil
         self.isRedirectPage = isRedirectPage
-        
+        self.isPlayAble = false
         self.playerData = nil
         self.title = nil
         self.imgBg = nil

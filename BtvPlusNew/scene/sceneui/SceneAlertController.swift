@@ -114,7 +114,6 @@ struct SceneAlertController: PageComponent{
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.reset()
             }
-        
         }
         .onReceive(self.appSceneObserver.$alert){ alert in
             self.reset()
@@ -160,6 +159,7 @@ struct SceneAlertController: PageComponent{
                 self.isShow = true
             }
         }
+        .accessibility(hidden: !self.isShow )
     }//body
     
     func reset(){
@@ -423,7 +423,6 @@ struct SceneAlertController: PageComponent{
     
     func selectedNeedPairing(_ idx:Int, move:PageObject? = nil, cancelHandler: @escaping () -> Void) {
         if idx == 1 {
-            
             self.appSceneObserver.pairingCompletedMovePage = move
             let  pairingInType = "mob-com-popup"
             if SystemEnvironment.currentPageType == .kids {

@@ -29,6 +29,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
         let newList = ThemaList(
             viewModel:self.viewModel,
             banners: self.data.leadingBanners,
+            blockData: self.data,
             datas: self.datas,
             useTracking:self.useTracking)
             

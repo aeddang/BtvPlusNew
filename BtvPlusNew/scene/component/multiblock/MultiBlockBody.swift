@@ -175,6 +175,7 @@ struct MultiBlockBody: PageComponent {
                         progress: self.$reloadDegree,
                         progressMax: self.reloadDegreeMax
                     )
+                    .accessibility(hidden: true )
                     .padding(.top, self.topDatas != nil
                                 ? isHorizontal
                                     ? (TopBanner.heightHorizontal + self.marginHeader)

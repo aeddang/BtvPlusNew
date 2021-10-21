@@ -62,13 +62,14 @@ struct PageKidsSearch: PageView {
                                 
                             } else if let searchDatas = self.searchDatas {
                                 if !searchDatas.isEmpty {
-                                    SearchResultKids(
+                                    let extractedExpr: SearchResultKids = SearchResultKids(
                                         infinityScrollModel: self.resultScrollModel,
                                         pageObservable: self.pageObservable,
                                         pageDragingModel: self.pageDragingModel,
                                         datas: searchDatas,
                                         useTracking:true
-                                        )
+                                    )
+                                    extractedExpr
                                         .modifier(MatchParent())
                                         .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                                             guard let evt = evt else {return}

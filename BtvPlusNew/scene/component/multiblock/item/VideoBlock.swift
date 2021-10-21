@@ -32,6 +32,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
     @State var listId:String = ""
     @State var isListUpdated:Bool = true
     @State var isWatchedBlock:Bool = false
+    @State var watchedCount:String? = nil
     private func getList() -> some View {
         let key = (self.datas.first?.epsdId ?? "") + self.datas.count.description
         if key == self.listId,  let list = self.list {
@@ -199,7 +200,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 guard let blocks = resData.watchList else {return onBlank()}
                 let addDatas = blocks.map{ d in
                     VideoData().setData(data: d, cardType: data.cardType)
-                }
+                }.filter{$0.isContinueWatch}.filter{$0.progress != 1}
+                self.watchedCount = addDatas.count.description
                 allDatas.append(contentsOf: addDatas)
             default: break
             }

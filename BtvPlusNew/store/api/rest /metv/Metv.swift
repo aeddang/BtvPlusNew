@@ -84,6 +84,12 @@ class Metv: Rest{
         params["stb_id"] = stbId
         params["epsd_id"] = epsdId ?? ""
         params["hash_id"] = ApiUtil.getHashId(stbId)
+        
+        params["app_typ_cd"] = "1"
+        params["profile_id"] = NpsNetwork.pairingId
+        params["profile_typ_cd"] = "01"
+        params["dvc_typ_cd"] = "02"
+        
         fetch(route: MetvPlayTime(query: params), completion: completion, error:error)
     }
     

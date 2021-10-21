@@ -216,6 +216,8 @@
 "btnTicket" = "이용권";
 "btnExit" = "나가기";
 
+"btnScrollTop" = "최상단이동";
+
 /*
  Sort
 */

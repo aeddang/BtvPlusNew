@@ -191,6 +191,8 @@ struct ScrollLazeStack<Content>: PageView where Content: View {
                                 }
                                 .padding(.bottom,  self.onTopButtonMarginBottom ?? self.marginBottom)
                                 .padding(.trailing,  self.onTopButtonMargin)
+                                .accessibility(label:Text(
+                                    String.button.scrollTop))
                             }
                             
                         }

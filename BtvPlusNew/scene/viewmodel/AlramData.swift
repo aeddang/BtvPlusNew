@@ -457,7 +457,7 @@ class AlramData:InfinityData,ObservableObject{
         case .point:
             self.move = .myBenefits
             var param = [PageParam:Any]()
-            param[.id] = PageMyBenefits.MenuType.point.rawValue
+            param[.id] = PageMyBenefits.MenuType.cash.rawValue
             self.moveData = param
             
         case .newpoint:

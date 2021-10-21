@@ -593,7 +593,7 @@
 "titleModifyProfile" = "프로필 변경";
 "titleWatchedKids" = "키즈 시청 목록";
 "titleWatched" = "최근 시청 목록";
-"titleWatchHabit" = "시청 습관 관리";
+"titleWatchHabit" = "B tv 시청 습관 관리";
 "titleBookmarkList" = "찜 목록";
 "titlePurchaseList" = "구매 목록";
 "titlePurchaseTicketList" = "이용권";
@@ -880,7 +880,7 @@
 "setupCertificationKidsExitText" = "자녀 보호를 위해 ZEM 키즈 종료 시 성인인증을 진행합니다.";
 
 "setupChildren" = "자녀 안심 설정";
-"setupChildrenHabit" = "시청 습관 관리";
+"setupChildrenHabit" = "B tv 시청 습관 관리";
 "setupChildrenHabitText" = "B tv의 유해 콘텐츠 시청 및 시청 시간을 제어할 수 있습니다.";
 
 "setupHappySenior" = "B tv 해피시니어 설정";

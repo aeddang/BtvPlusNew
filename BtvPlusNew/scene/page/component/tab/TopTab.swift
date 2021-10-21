@@ -38,8 +38,10 @@ struct TopTab: PageComponent{
                         .scaledToFit()
                         .frame(width: Dimen.icon.regular,
                                height: Dimen.icon.regular)
+                    
                     if self.showAlram && self.isPairing{
                         Text(self.newCountStr)
+                            .kerning(Font.kern.thin)
                             .modifier(BoldTextStyle(
                                 size: SystemEnvironment.isTablet ? Font.size.microExtra : Font.size.micro,
                                 color: Color.app.white

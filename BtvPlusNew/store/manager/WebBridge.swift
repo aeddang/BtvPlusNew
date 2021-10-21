@@ -112,8 +112,8 @@ class WebBridge :PageProtocol{
         info["networkState"] = self.networkObserver.status == .wifi ? 1 : 0
         info["pairingState"] = pairing.status == .pairing ? 0 : 1
         info["pairingType"] = 0
-        info["stbId"] = AppUtil.getSafeString(pairing.stbId, defaultValue: "null")
-        info["hashId"] = ApiUtil.getHashId(pairing.stbId)
+        info["stbId"] = AppUtil.getSafeString(NpsNetwork.hostDeviceId, defaultValue: "null")
+        info["hashId"] = ApiUtil.getHashId(NpsNetwork.hostDeviceId)
         info["stbName"] = nil
         info["macAddress"] = AppUtil.getSafeString(pairing.hostDevice?.convertMacAdress, defaultValue: "null")
         //var adultMenuLimit = false
@@ -208,7 +208,7 @@ class WebBridge :PageProtocol{
         info["stb_onead_id"] = nil
         info["pcid"] = self.namedStorage?.getPcid()
         info["session_id"] = self.namedStorage?.getSessionId()
-        info["stbId"] = pairing.stbId
+        info["stbId"] = NpsNetwork.hostDeviceId
         info["stb_mac"] = pairing.hostDevice?.convertMacAdress ?? ""
         info["app_release_version"] = SystemEnvironment.bundleVersion
         info["app_build_version"] = SystemEnvironment.buildNumber

@@ -74,6 +74,7 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
         }
         
         actionData.menu_name = "회차"
+        actionData.category = nil
         let block = BlockData(pageType: .kids)
             .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, max:30)
             .setNaviLog(pageShowActionLog: actionData)

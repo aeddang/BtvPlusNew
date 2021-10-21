@@ -126,12 +126,12 @@ class NaviLogManager : ObservableObject, PageProtocol {
         contentsItem.genre_text = ""  // 장르, ex)영화
         contentsItem.genre_code = synop.originData?.package?.meta_typ_cd ?? ""     // 장르, ex)MG0000000001 --> 드라마
         contentsItem.episode_id = ""      // episode_id, btv plus 는 episode_id 없음, 5.0
-        contentsItem.paid = synop.originData?.package?.sale_prc != 0 // 유료 여부 ex)true (유료인 경우)
+        contentsItem.paid = synop.originData?.package?.sale_prc?.number != 0 // 유료 여부 ex)true (유료인 경우)
         contentsItem.purchase = synop.hasAuthority         // 구매 여부 ex)true (구매한 경우)
         contentsItem.episode_resolution_id = ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         contentsItem.product_id = synop.originData?.package?.prd_prc_id          // 패키지상품 ID(Btv plus) or 시리즈상품 ID(Btv)
         contentsItem.list_price = synop.originData?.package?.prd_prc?.description
-        contentsItem.payment_price = synop.originData?.package?.sale_prc?.description
+        contentsItem.payment_price = synop.originData?.package?.sale_prc?.number?.description
  
         self.currentSysnopsisContentsItem = contentsItem
         self.currentPlayStartTime = nil

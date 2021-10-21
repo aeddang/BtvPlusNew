@@ -230,7 +230,10 @@ class Scs: Rest{
         completion: @escaping (ConfirmPassword) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        let macAdress = hostDevice?.apiMacAdress ?? ""
+        var macAdress = hostDevice?.playMacAdress ?? ""
+        if !macAdress.isEmpty {
+            macAdress = hostDevice?.apiMacAdress ?? ""
+        }
         var params = [String:String]()
         params["if"] = "IF-SCS-GWSVC-UI5-002"
         params["ver"] = ScsNetwork.VERSION
@@ -253,7 +256,7 @@ class Scs: Rest{
         completion: @escaping (StbInfo) -> Void, error: ((_ e:Error) -> Void)? = nil){
         
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        let macAdress = hostDevice?.apiMacAdress ?? ""
+        let macAdress = hostDevice?.playMacAdress ?? ""
         
         var params = [String:Any]()
         params["if"] = "IF-SCS-STB-UI5-003"

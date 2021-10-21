@@ -105,7 +105,7 @@ struct BannerList: PageComponent{
                     actionBody.menu_id = blockData?.menuId
                     actionBody.menu_name = blockData?.name
                     actionBody.position = data.logPosition
-                    actionBody.config = "banner"
+                    actionBody.config = data.logConfig
                     self.naviLogManager.actionLog(.clickContentsView, actionBody: actionBody)
                 }
             }

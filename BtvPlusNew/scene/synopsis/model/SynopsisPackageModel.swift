@@ -40,10 +40,10 @@ class SynopsisPackageModel : PageProtocol {
         } else {
             self.image = ImagePath.thumbImagePath(filePath:  contents.mbtv_bg_img_path_h, size: CGSize(width: 0, height: TopViewerKids.height)) ?? image
         }
-        if let price = contents.sale_prc_vat {
+        if let price = contents.sale_prc_vat?.number {
             self.salePrice = price.formatted(style: .decimal) + String.app.cash
         }
-        if let price = contents.prd_prc_vat {
+        if let price = contents.prd_prc_vat?.number {
             self.price = price.formatted(style: .decimal) + String.app.cash
             //(self.type == .btv ? price.currency : price.formatted(style: .decimal)) + String.app.cash
         }

@@ -185,6 +185,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
             VideoData(usePrice: true).setData(data: $0, searchType:.vodSeq).setNaviLog(action: actionData)
         }
         actionData.menu_name = "회차"
+        actionData.category = nil
         let block = BlockData()
             .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, usePrice: true)
             .setNaviLog(pageShowActionLog: actionData)

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 extension PageSynopsis {
     func onResetPageLog(isAllReset:Bool = false, isRedirectPage:Bool = false){
-        self.playNaviLog(action: .clickVodStop, watchType: .watchPause)
+        self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
         if self.naviLogManager.currentPlayStartTime != nil {
             self.naviLogManager.contentsWatch(isPlay: false)
         }
@@ -200,7 +200,7 @@ extension PageSynopsis {
     }
     
     func onDisappearLog(){
-        self.playNaviLog(action: .clickVodStop, watchType: .watchPause)
+        self.playNaviLog(action: .clickVodStop, watchType: .watchStop)
         if self.naviLogManager.currentPlayStartTime != nil {
             self.naviLogManager.contentsWatch(isPlay: false)
         }
@@ -335,11 +335,14 @@ extension PageSynopsis {
                 contentsItem.payment_price = curSynopsisItem.sale_prc_vat.description
             }
             
-        
             if self.type == .btv {  //동일한 케이스인데 키즈와  비티비가 다름 이런일 한두번도 아니고....
                 
                 var actionBody = MenuNaviActionBodyItem()
-                actionBody.config = self.episodeViewerData?.subTitle ?? ""
+                if let count = self.episodeViewerData?.count {
+                    actionBody.config = count + String.app.broCount + " " + (self.episodeViewerData?.subTitle ?? "")
+                } else {
+                    actionBody.config = self.episodeViewerData?.subTitle ?? ""
+                }
                 actionBody.result = insideChangeViewId
                 actionBody.menu_name = synopsisModel.title
                 actionBody.menu_id = synopsisModel.srisId

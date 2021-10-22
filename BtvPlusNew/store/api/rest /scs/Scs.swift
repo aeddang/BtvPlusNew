@@ -127,7 +127,7 @@ class Scs: Rest{
         params["if"] = "IF-SCS-PRODUCT-UI520-013"
         params["ver"] = ScsNetwork.VERSION
         params["stb_id"] = stbId
-        params["mac_address"] = macAdress
+       
         params["cid"] = epsdRsluId
         params["eag_protocol"] = "NONE"
         params["userAgent"] = "NONE"
@@ -140,6 +140,7 @@ class Scs: Rest{
         params["method"] = "get"
         params["m_drm"] = "fairplay"
         params["use_subtitle_yn"] = "n"
+        params["mac_address"] = macAdress
         params["mac_exclude_check_yn"] = macAdress.isEmpty == false ? "N" : "Y"
         fetch(route: ScsPreview(query: params), completion: completion, error:error)
     }

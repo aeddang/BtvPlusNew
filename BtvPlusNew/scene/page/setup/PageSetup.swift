@@ -21,7 +21,7 @@ struct PageSetup: PageView {
     
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var pairingStbType:PairingDeviceType = .btv
-    
+    @State var isQAMode:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -118,9 +118,12 @@ struct PageSetup: PageView {
                                 }
                                 //SetupOksusu(isInitate:self.isInitate)
                                 SetupGuideNVersion()
+                                    
                                 //#if DEBUG
+                                if self.isQAMode {
                                     SetupQA()
                                     SetupLaboratory()
+                                }
                                 //#endif
                                 
                             }

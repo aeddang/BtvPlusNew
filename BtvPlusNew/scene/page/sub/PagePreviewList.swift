@@ -207,7 +207,7 @@ struct PagePreviewList: PageView {
                     
                 }
                 self.title = obj.getParamValue(key: .title) as? String ?? self.title
-                self.naviLogManager.actionLog(.pageShow, pageId:.clipViewAll)
+                //self.naviLogManager.actionLog(.pageShow, pageId:.clipViewAll)
                 
             }
             .onDisappear{

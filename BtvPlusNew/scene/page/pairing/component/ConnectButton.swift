@@ -75,8 +75,10 @@ struct ConnectButtonTablet: View {
                        
                     Spacer().modifier(MatchHorizontal(height: Dimen.margin.thin))
                     HStack(spacing:Dimen.margin.tinyExtra){
-                        Text(self.title)
+                        Text(self.title.replace("\n", with:""))
+                            .lineLimit(1)
                             .modifier(BoldTextStyle(size: Font.size.tiny, color: Color.app.white))
+                            .fixedSize()
                         Image( Asset.icon.more )
                             .renderingMode(.original).resizable()
                             .scaledToFit()
@@ -97,6 +99,8 @@ struct ConnectButtonTablet: View {
             )
             if let tip = self.tip {
                 Text(tip)
+                    .kerning(Font.kern.thin)
+                    .fixedSize()
                     .multilineTextAlignment(.leading)
                     .modifier(MediumTextStyle(size: Font.size.microExtra, color: Color.app.grey))
                     .padding(.top,  Dimen.margin.tinyExtra)

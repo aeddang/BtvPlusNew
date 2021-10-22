@@ -32,19 +32,24 @@ class HostDevice {
     }
     
     var isRemoteSearchAble :Bool {
-        if self.modelViewName == "HD/SMART1" {
-            return false
+        
+        if self.modelViewName == "HD/SMART1" { return false }
+        guard let patchVersion = self.patchVersion else {return true}
+        let pA = patchVersion.split(separator: ".")
+        if pA.count >= 2 {
+            if String(pA[1]).toInt() <= 531 {return false}
         }
         return true
     }
     
     var playMacAdress :String{
+       
         if  self.macAdress == "00:00:00:00:00:00" ||
             self.macAdress == ApiConst.defaultMacAdress ||
             self.macAdress == nil {
             return ""
         }
-        return self.macAdress!
+        return self.convertMacAdress
     }
     
     func setData(deviceData:HostDeviceData) -> HostDevice{

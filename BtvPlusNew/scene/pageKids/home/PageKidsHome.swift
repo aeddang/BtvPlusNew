@@ -74,9 +74,8 @@ struct PageKidsHome: PageView {
                     }
                 }
                 if !self.isUiInit { return }
-                DispatchQueue.main.async {
-                    self.reload()
-                }
+                self.reset()
+                
             }
             .onReceive(self.sceneObserver.$isUpdated){ updated in
                 if updated {
@@ -157,6 +156,22 @@ struct PageKidsHome: PageView {
             }
         }//geo
     }//body
+    
+    private func reset(){
+        
+        guard let obj = self.pageObject  else { return }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            self.pagePresenter.changePage(
+                PageKidsProvider
+                    .getPageObject(.kidsHome)
+                    .addParam(key: .id, value: obj.getParamValue(key:.id))
+                    .addParam(key: UUID().uuidString , value: ""),
+                isCloseAllPopup: false
+            )
+        }
+    }
+    
     @State var isUiInit:Bool = false
     @State var menuId:String = ""
     @State var openId:String? = nil

@@ -89,7 +89,7 @@ class User {
     }
     func setTvProvider(isAgree:Bool, savedUser:User?) -> User{
         self.isAutoPairing = true
-        self.nickName = savedUser?.nickName ?? "Apple Tv provider"
+        self.nickName = savedUser?.nickName ?? "TV Provider"
         self.characterIdx = savedUser?.characterIdx ?? 0
         self.gender = savedUser?.gender ?? .femail
         self.birth = savedUser?.birth ?? "2021"

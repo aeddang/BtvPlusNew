@@ -64,12 +64,12 @@ struct PagePairingBtv: PageView {
                             text:self.$input,
                             keyboardType: .numberPad, returnVal: .done,
                             placeholder: String.app.certificationNumberHolder,
+                            placeholderModifier: BoldTextStyle(size: Font.size.black ).textModifier,
                             placeholderColor: Color.app.blackLight,
+                        
                             maxLength: 6,
                             kern: 8,
-                            textModifier: BoldTextStyle(
-                                size: Font.size.black )
-                                .textModifier,
+                            textModifier: BoldTextStyle(size: Font.size.black ).textModifier,
                             isfocus: self.isFocus,
                             inputChanged: { _ in
                                 if self.msg != nil {

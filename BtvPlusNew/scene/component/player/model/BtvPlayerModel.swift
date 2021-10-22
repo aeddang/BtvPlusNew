@@ -127,7 +127,7 @@ class BtvPlayerModel:PlayerModel{
         self.endingTime = 0
         self.seeking = 0
         self.qualitys = []
-        
+        self.isLock = false
         //self.initPlay = nil
         self.playData = nil
         self.btvPlayType = nil

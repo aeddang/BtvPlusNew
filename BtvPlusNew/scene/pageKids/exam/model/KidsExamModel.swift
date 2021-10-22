@@ -119,7 +119,7 @@ class KidsExamModel:ObservableObject, PageProtocol{
         }
     }
     
-    private func next(_ diff:Int = 1){
+    func next(_ diff:Int = 1){
         self.holdCancel()
         let nextStep = self.step + diff
         if nextStep > self.stepComplete {
@@ -142,7 +142,7 @@ class KidsExamModel:ObservableObject, PageProtocol{
             self.status = .hold
         }
         holdSubscription = Timer.publish(
-            every: 0.2, on: .main, in: .common)
+            every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink() {_ in
                 if self.holdCount == self.holdComplete {

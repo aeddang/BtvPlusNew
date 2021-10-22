@@ -284,12 +284,15 @@ class SynopsisModel : PageProtocol {
                                             
                 ){
                     //핑크퐁 바다동물동요(product 없음, purchase pps만 있음)
-                    if !model.epsd_rslu_id.isEmpty , rsluItem.epsd_rslu_id != nil && model.epsd_rslu_id != rsluItem.epsd_rslu_id {
+                    if !model.epsd_rslu_id.isEmpty , rsluItem.epsd_rslu_id != nil
+                        && model.epsd_rslu_id.caseInsensitiveCompare(rsluItem.epsd_rslu_id ?? "") != .orderedSame
+                    {
                         //"해상도 아이디, epsd_rslu_info 동일한 타입과 다름. 재적용.")
                         model.forceModifyEpsdRsluId(rsluItem.epsd_rslu_id!)
                     }
                     if self.srisTypCd == .season {
-                        if self.epsdId != nil && model.epsdId != self.epsdId {
+                        if self.epsdId?.isEmpty == false
+                        && model.epsdId.caseInsensitiveCompare(self.epsdId ?? "") != .orderedSame {
                             //"에피소드 아이디와 시놉시스 에피소드가 다름. 재적용.")
                             model.forceModifyEpsdId(self.epsdId!)
                         }
@@ -298,7 +301,8 @@ class SynopsisModel : PageProtocol {
                 } else if self.srisTypCd == .season, self.isEmptyProducts , let rsluItem = list.first {
                     //해상도 목록의 아이템과 같은 타입 못찾았을 때.
                     //플레이송스 productrs 없음, Purchase pps / pps 커머스 상품만 있음.
-                    if !model.epsd_rslu_id.isEmpty, rsluItem.epsd_rslu_id != nil && model.epsd_rslu_id != rsluItem.epsd_rslu_id {
+                    if !model.epsd_rslu_id.isEmpty, rsluItem.epsd_rslu_id != nil
+                        && model.epsd_rslu_id.caseInsensitiveCompare(rsluItem.epsd_rslu_id ?? "") != .orderedSame {
                         //"products 없음. 해상도 아이디, epsd_rslu_info 첫번째 아이템과 다름. 재적용."
                         model.forceModifyEpsdRsluId(rsluItem.epsd_rslu_id!)
                     }

@@ -118,8 +118,11 @@ struct MonthlyBlock: PageComponent {
                 guard let data = res.data as? MonthlyInfoData else { return }
                 if let monthly = self.monthlyDatas.first(where: {$0.prdPrcId == prcPrdId}) {
                     monthly.setData(data: data)
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
-                        self.viewModel.uiEvent = .scrollTo(monthly.hashId, .center)
+                    if self.isInitFocus {
+                        self.isInitFocus = false
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                            self.viewModel.uiEvent = .scrollTo(monthly.hashId, .center)
+                        }
                     }
                 }
             default : break
@@ -131,7 +134,7 @@ struct MonthlyBlock: PageComponent {
             self.anyCancellable.removeAll()
         }
     }
-    
+    @State var isInitFocus:Bool = true
     @State var list: MonthlyList?
     @State var listId:String = ""
     
@@ -244,7 +247,7 @@ struct MonthlyBlock: PageComponent {
                 self.tipTrailing = String.monthly.textFirstFreeTrailing
             } else {
                 self.tipLeading = currentData.prodTypeCd == .omnipack
-                    ? String.monthly.textRecommand :String.monthly.textRecommandOmnipack
+                    ? String.monthly.textRecommandOmnipack : String.monthly.textRecommand
                 
                 if currentData.isFirstFree == nil && self.pairing.status == .pairing {
                     self.dataProvider.requestData(q: .init(type: .getMonthlyData(currentData.prdPrcId, isDetail: false), isOptional:true))

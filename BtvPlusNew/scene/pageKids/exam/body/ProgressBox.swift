@@ -89,6 +89,10 @@ struct ProgressBox: PageComponent{
                             .frame(
                                 width: DimenKids.icon.mediumExtra,
                                 height: DimenKids.icon.mediumExtra)
+                            .onTapGesture{
+                                self.viewModel.logEvent = .next
+                                self.viewModel.next()
+                            }
                     } else {
                         Spacer()
                             .frame(

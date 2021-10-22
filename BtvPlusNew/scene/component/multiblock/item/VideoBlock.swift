@@ -156,7 +156,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 if !self.isWatchedBlock {return}
                 if self.pairing.status != .pairing {return}
                 if let apiQ = self.getRequestApi(pairing: self.pairing.status, isReset: true) {
-                    DispatchQueue.main.asyncAfter(deadline: .now()+0.1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
                         self.dataProvider.requestData(q: apiQ)
                     }
                 }

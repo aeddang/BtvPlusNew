@@ -1388,7 +1388,7 @@
 /*
  Vs
  */
-"vsAccount" = "Apple TV 연결 안내";
+"vsAccount" = "B tv 연결 안내";
 "vsAccountExpirationDate" = "인증기간이 만료되었습니다.\nApple TV의 TV 제공업체 설정으로\n이동해서 TV 제공업체 B tv에 대해서\n 다시 로그인 해주세요.";
 "vsAccountAutoPairing" = "TV프로바이더와\n동기화 실행중 입니다";
 "vsAccountUnPairing" = "TV프로바이더와 동기화를 위해\n페어링을 해재합니다";
@@ -1400,9 +1400,9 @@
 "vsAccountSynchronizationFailExistPairing" = "TV프로바이더 사용함으로 설정되어있습니다.\nTV프로바이더를 사용안함으로 설정해주세요";
 
 
-"vsUnpairing" = "Apple TV 연결 해제 안내";
+"vsUnpairing" = "B tv 연결 해제 안내";
 "vsAccountForbiddenUnpairing" = "TV Provider를 통해 연결하신 경우\n[기기 설정 > TV > TV Provider]\n메뉴에서 계정 로그아웃하여\n연결 해제 가능합니다.\n해당 메뉴로 이동하시겠습니까?";
-"vsAccountNoMetadata" = "Apple TV의 TV 제공업체 설정으로\n이동해서 TV 제공업체 B tv에 대해서\n로그인 해주세요.";
+"vsAccountNoMetadata" = "TV Provider를 통해 B tv와 연결하시려면\n[설정 > TV Provider] 메뉴에서 현재 로그인 중인 다른 서비스에서 로그아웃 후 B tv 서비스에 로그인해 주세요.\n해당 메뉴로 이동하시겠습니까?";
 
 "vsAccountProviderPairing" = "TV프로바이더 에서\n로그인 하셔야 합니다.";
 "vsAccountProviderPairingTip" = "TV프로바이더를 사용으로 설정해둔경우\nTV프로바이더에서 로그인하셔야합니다";

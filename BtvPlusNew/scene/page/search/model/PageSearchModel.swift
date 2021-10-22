@@ -86,6 +86,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         self.popularityKeywords = datas.filter{$0.keyword != nil}.map{$0.keyword!}
         self.updateSearchKeyword()
     }
+    
     func updateCompleteKeywords (_ data:CompleteKeyword? = nil){
         guard let result = data?.data else {return}
         guard let datas = result.results else {return}

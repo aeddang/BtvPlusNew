@@ -77,6 +77,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     
     func setupSysnopsis(_ synop:SynopsisModel?, type:String? = nil , title:String? = nil ){
+        self.finalRunTime = -1
         guard let synop = synop else {
             self.currentSysnopsisContentsItem = nil
             self.currentPlayStartTime = nil
@@ -112,11 +113,13 @@ class NaviLogManager : ObservableObject, PageProtocol {
     }
     
     func setupSysnopsis(_ synop:SynopsisPackageModel?, type:String? = nil  ){
+        self.finalRunTime = -1
         guard let synop = synop else {
             self.currentSysnopsisContentsItem = nil
             self.currentPlayStartTime = nil
             return
         }
+       
         var contentsItem = MenuNaviContentsBodyItem()
         contentsItem.type = type ?? "vod"   // VOD/실시간 구분 ex)vod | live
         contentsItem.series_id = synop.srisId
@@ -140,8 +143,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
 
     }
     
+    private var finalRunTime:Int = -1
     func contentsWatch(isPlay:Bool){
         if isPlay {
+            self.finalRunTime = -1
             self.currentPlayStartTime = Date().timeIntervalSince1970
             DataLog.d(" contentsWatch : " + (self.currentPlayStartTime?.description ?? "") , tag: self.tag )
         } else {
@@ -153,15 +158,17 @@ class NaviLogManager : ObservableObject, PageProtocol {
     func getContentsWatchTime()->String?{
         if let playStartTime = self.currentPlayStartTime {
             let runTime = Int(round((Date().timeIntervalSince1970 - playStartTime)))
+            self.finalRunTime = runTime
             return runTime.description
         } else {
-            return nil
+            return self.finalRunTime != -1 ? self.finalRunTime.description : nil
         }
     }
     func contentsLog(pageId:NaviLog.PageId? = nil, action:NaviLog.Action,
                    actionBody:MenuNaviActionBodyItem? = nil,
                      watchType:NaviLog.watchType? = nil, actorId:String? = nil){
         
+       
         let fixedPageId:String? = pageId?.rawValue.isEmpty == true
             ? nil
             : pageId?.rawValue
@@ -286,7 +293,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
             }
             if data.vod_watch_type == NaviLog.watchType.watchStart.rawValue {
                 modifyContentBody.running_time = nil
+            } else if data.vod_watch_type == NaviLog.watchType.watchStop.rawValue {
+                modifyContentBody.running_time = modifyContentBody.running_time ?? "0"
             }
+            
             modifyData.contents_body = modifyContentBody
         }
         #if DEBUG
@@ -344,10 +354,10 @@ class NaviLogManager : ObservableObject, PageProtocol {
         naviLogData:NaviLogData? = nil
         ) -> MenuNaviItem? {
             
-        if naviLogData?.contentsBody != nil,  let playStartTime = self.currentPlayStartTime {
-            let runTime = Int(round((Date().timeIntervalSince1970 - playStartTime)))
-            DataLog.d(" contentsWatch : runTime " + runTime.description , tag: self.tag )
-            naviLogData?.contentsBody?.running_time = runTime.description
+        if naviLogData?.contentsBody != nil {
+            //let runTime = Int(round((Date().timeIntervalSince1970 - playStartTime)))
+            //DataLog.d(" contentsWatch : runTime " + runTime.description , tag: self.tag )
+            naviLogData?.contentsBody?.running_time = self.getContentsWatchTime()
         }
         guard var menuNaviItem = self.getMenuNaviItem(
                 page: page, pageId: pageID , action: action, watchType: watchType, contentBody: naviLogData?.contentsBody) else {

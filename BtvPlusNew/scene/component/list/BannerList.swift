@@ -102,10 +102,11 @@ struct BannerList: PageComponent{
             ForEach(self.datas) { data in
                 BannerItem( data:data ){
                     var actionBody = MenuNaviActionBodyItem()
-                    actionBody.menu_id = blockData?.menuId
-                    actionBody.menu_name = blockData?.name
+                    actionBody.menu_id = data.menuId
+                    actionBody.menu_name = data.menuNm
                     actionBody.position = data.logPosition
                     actionBody.config = data.logConfig
+                    actionBody.target = "banner"
                     self.naviLogManager.actionLog(.clickContentsView, actionBody: actionBody)
                 }
             }

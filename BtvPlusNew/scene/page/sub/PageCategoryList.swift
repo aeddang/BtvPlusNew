@@ -103,7 +103,7 @@ struct PageCategoryList: PageView {
                 self.listType = obj.getParamValue(key: .type) as? CateBlock.ListType ?? .poster
                 self.cardType = obj.getParamValue(key: .subType) as? BlockData.CardType
                 if let action = self.blockData?.pageShowActionLog {
-                    self.naviLogManager.actionLog(.pageShow, actionBody: action)
+                    //self.naviLogManager.actionLog(.pageShow, actionBody: action)
                 }
             }
             .onDisappear{

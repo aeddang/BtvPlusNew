@@ -43,13 +43,13 @@ struct PlayerBottomBody: PageComponent{
         VStack(alignment :.trailing, spacing:0){
             Spacer()
             HStack(spacing:self.isFullScreen ? PlayerUI.fullScreenSpacing : PlayerUI.spacing){
-                
+                /*
                 RectButton(
                     text: "endpoint"
                     ){_ in
                    
                     self.viewModel.event = .seekTime(self.endingTime, true, isUser: true)
-                }
+                }*/
                 Spacer()
                 if self.showDirectview {
                     RectButton(

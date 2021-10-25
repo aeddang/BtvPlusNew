@@ -64,16 +64,19 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             
         } else if !synopsisModel.isNScreen {
             if isPosson {
-                serviceInfo = String.pageText.synopsisOnlyBtvFree
+                serviceInfo = String.pageText.synopsisTerminationBtv
+                isPlayAble = false
+                isPlayAbleBtv = false
             } else {
                 let fullPlayAbe = purchasAuthority || isFree ||  synopsisModel.holdbackType == .holdOut
                 if isPairing == true {
                     serviceInfo = fullPlayAbe ? String.pageText.synopsisOnlyBtvFree : String.pageText.synopsisOnlyBtv
                 }
                 playerInfo = fullPlayAbe ? String.pageText.synopsisDisableNScreenFree : String.pageText.synopsisDisableNScreen
+                isPlayAble = false
+                isPlayAbleBtv = true
             }
-            isPlayAble = false
-            isPlayAbleBtv = true
+            
             
         } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority {
             /*

@@ -241,11 +241,11 @@ struct PickerBoxKids: PageComponent{
                 .mask(
                     ZStack(alignment: .center){
                         if let eage = self.eage {
-                            RoundedRectangle(cornerRadius:DimenKids.radius.heavy)
-                                .modifier(MatchHorizontal(height:DimenKids.tab.light))
+                            RoundedRectangle(cornerRadius:  DimenKids.radius.heavy)
+                                .modifier(MatchHorizontal( height:DimenKids.tab.light))
                             Rectangle()
-                                .modifier(MatchVertical(width:size - DimenKids.radius.regular))
-                                .padding(eage, DimenKids.radius.regular)
+                                .modifier(MatchVertical(width:size - DimenKids.radius.heavy))
+                                .padding(eage, DimenKids.radius.heavy)
                         } else {
                             Rectangle()
                                 .modifier(MatchVertical(width:size))

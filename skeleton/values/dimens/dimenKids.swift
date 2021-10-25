@@ -84,6 +84,7 @@ struct DimenKids{
     }
 
     struct radius {
+        public static let heavyUltra:CGFloat = isPad ? 50 : 20//**
         public static let heavy:CGFloat = isPad ? 38 : 20//**
         public static let heavyExtra:CGFloat = isPad ? 33 : 18//*pad
         public static let medium:CGFloat = isPad ? 24 : 17//**

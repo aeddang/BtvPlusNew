@@ -526,6 +526,7 @@ struct PageSynopsis: PageView {
     @State var hasRelationVod:Bool? = nil
     @State var isFinalPlaying:Bool = false
     @State var isRedirectPage:Bool = false // 방영종료 시리즈진입시 시청가능한 페이지로 자동이동 여부
+    @State var isNoPreview:Bool = false
     @State var isPlayAble:Bool = false
     @State var isPlayViewActive = false
     @State var isPageUiReady = false
@@ -590,6 +591,7 @@ struct PageSynopsis: PageView {
         self.hasAuthority = nil
         self.progressError = false
         self.progressCompleted = false
+        self.isNoPreview = false
         self.isAllProgressCompleted = false
         self.episodeViewerData = nil
         self.purchaseViewerData = nil
@@ -675,7 +677,8 @@ struct PageSynopsis: PageView {
                         self.pageDataProviderModel.requestProgress(q: .init(type: .getPreview(item.epsd_rslu_id, self.pairing.hostDevice )))
                     }  else {
                         PageLog.d("no preview", tag: self.tag)
-                        self.errorProgress()
+                        self.isNoPreview = true
+                        self.pageDataProviderModel.requestProgressSkip()
                     }
                 
                 } else {
@@ -684,7 +687,8 @@ struct PageSynopsis: PageView {
                         self.pageDataProviderModel.requestProgress(q: .init(type: .getPreplay(self.epsdRsluId, true, self.pairing.hostDevice)))
                     } else {
                         PageLog.d("no preview", tag: self.tag)
-                        self.errorProgress()
+                        self.isNoPreview = true
+                        self.pageDataProviderModel.requestProgressSkip()
                     }
                 }
                 
@@ -833,8 +837,14 @@ struct PageSynopsis: PageView {
         if self.progressError {return}
         PageLog.d("completedProgress", tag: self.tag)
         withAnimation{
-            self.isPlayAble = self.purchaseViewerData?.isPlayAble ?? true
-            self.isPlayViewActive = true
+            if self.isNoPreview {
+                self.isPlayAble = false
+                self.isPlayViewActive = true
+            } else {
+                self.isPlayAble = self.purchaseViewerData?.isPlayAble ?? true
+                self.isPlayViewActive = true
+            }
+           
         }
         DispatchQueue.main.async {
             self.checkCornerPlay()

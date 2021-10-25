@@ -56,7 +56,7 @@ class ThemaData:InfinityData{
             product_id: data.prd_prc_id,
             purchase_type: nil,
             monthly_pay: nil,
-            list_price: data.prd_prc?.description ?? nil,
+            list_price: data.prd_prc?.number?.description ?? nil,
             payment_price: nil
         )
         return self

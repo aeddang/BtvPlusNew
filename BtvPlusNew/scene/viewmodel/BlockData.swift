@@ -529,6 +529,7 @@ class BlockData:InfinityData, ObservableObject{
             zip(posters, 0...posters.count).forEach{ data , idx in
                 data.setRank(idx)
             }
+            self.allPosters = posters.map{$0.copy()}
         }
         if let modifyTitle = modifyTitle { self.name = modifyTitle }
         self.openId = openId // 키즈홈에서 자동 메뉴이동

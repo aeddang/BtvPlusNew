@@ -158,7 +158,8 @@ class VideoData:InfinityData, Copying{
         } else {
             watchLv = data.wat_lvl_cd?.toInt() ?? 0
             isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
-            tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
+            tagData = TagData(pageType: self.pageType).setData(
+                data: data, isAdult: self.isAdult,  useCaptionFlag:self.isWatched)
         }
         
         index = idx
@@ -188,7 +189,7 @@ class VideoData:InfinityData, Copying{
             product_id: data.prd_prc_id,
             purchase_type: nil,
             monthly_pay: nil,
-            list_price: data.prd_prc?.description ?? nil,
+            list_price: data.prd_prc?.number?.description ?? nil,
             payment_price: nil
         )
         return self

@@ -19,7 +19,7 @@ struct CustomPicker: PageComponent{
     var selectBgColor:Color = Color.app.blueLight
     
     var tabHeight:CGFloat = Dimen.tab.regular
-    var spacing:CGFloat = Dimen.tab.light
+    var spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.tab.regularExtra : Dimen.tab.light
    
     let action: (Int) -> Void
 

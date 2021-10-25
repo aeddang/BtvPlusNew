@@ -104,6 +104,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                     .kerning(self.kern)
                     .font(.custom(textModifier.family, size: textModifier.size))
                     .lineLimit(1)
+                    .fixedSize()
                     .foregroundColor(self.isSelected ? textModifier.activeColor : textModifier.color)
             }
             if let strikeText = self.strikeText {
@@ -113,6 +114,7 @@ struct RectButtonKids: View, SelecterbleProtocol{
                     .lineLimit(1)
                     .foregroundColor(self.isSelected ? self.textModifier.activeColor : textModifier.color)
                     .opacity(0.7)
+                    .fixedSize()
                     .padding(.leading, DimenKids.margin.tiny)
             
             }

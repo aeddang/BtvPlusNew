@@ -18,6 +18,7 @@ class SynopsisPackageModel : PageProtocol {
     private(set) var prdPrcId:String? = nil
     private(set) var salePrice: String? = nil
     private(set) var price: String? = nil
+    private(set) var isFree:Bool = false
     private(set) var purchaseWebviewModel:PurchaseWebviewModel? = nil
     private(set) var contentMoreText:String = String.button.preview
     private(set) var originData:GatewaySynopsis? = nil
@@ -44,6 +45,7 @@ class SynopsisPackageModel : PageProtocol {
             self.salePrice = price.formatted(style: .decimal) + String.app.cash
         }
         if let price = contents.prd_prc_vat?.number {
+            self.isFree = price == 0
             self.price = price.formatted(style: .decimal) + String.app.cash
             //(self.type == .btv ? price.currency : price.formatted(style: .decimal)) + String.app.cash
         }
@@ -71,13 +73,14 @@ class SynopsisPackageModel : PageProtocol {
     }
     
     func setData(data:DirectPackageView){
-        self.hasAuthority = data.resp_directList?.first?.resp_direct_result?.toBool() ?? false
+        
+        self.hasAuthority = data.resp_directList?.first?.resp_direct_result?.toBool() ?? self.isFree
         self.posters.forEach{
             $0.setNaviLog(action:.init(category:"시청하기" ))
         }
         
         self.contentMoreText = self.hasAuthority
-            ? String.button.directview
+            ? self.distStsCd == .synced ? String.button.directview : String.button.detail
             : self.prdPrcId?.isEmpty == false ? String.button.preview : String.button.detail 
     }
 

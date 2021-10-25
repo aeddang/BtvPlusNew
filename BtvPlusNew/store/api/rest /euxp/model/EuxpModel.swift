@@ -33,10 +33,10 @@ struct ContentItem : Codable {
     private(set) var epsd_dist_fir_svc_dt:String? = nil // 에피소드 동기화승인일
     private(set) var cacbro_yn:String? = nil // 결방여부
     private(set) var rslu_typ_cd:String? = nil // 상품해상도
-    private(set) var sale_prc:Double? = nil // 판매가격
-    private(set) var sale_prc_vat:Double? = nil // 판매가격 부가세 포함
-    private(set) var prd_prc:Double? = nil // 상품가격(원가격)
-    private(set) var prd_prc_vat:Double? = nil // 상품가격(원가격) 부가세 포함
+    private(set) var sale_prc:DynamicValue? = nil // 판매가격
+    private(set) var sale_prc_vat:DynamicValue? = nil // 판매가격 부가세 포함
+    private(set) var prd_prc:DynamicValue? = nil // 상품가격(원가격)
+    private(set) var prd_prc_vat:DynamicValue? = nil // 상품가격(원가격) 부가세 포함
     private(set) var prd_prc_id:String? = nil // 상품가격ID(현재콘텐츠가 속한 월정액 PID[우선순위 정해서 하나만])
     private(set) var ppm_grid_icon_img_path:String? = nil
     private(set) var sris_cmpt_yn:String? = nil // 시리즈 완료 여부

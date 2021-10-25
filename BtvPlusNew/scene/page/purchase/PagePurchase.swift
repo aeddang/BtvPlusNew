@@ -110,6 +110,7 @@ struct PagePurchase: PageView {
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     guard let obj = self.pageObject  else { return }
+                    
                     if let data = obj.getParamValue(key: .data) as? PurchaseWebviewModel {
                         self.purchaseWebviewModel = data
                         self.purchaseLink = ApiPath.getRestApiPath(.WEB) + BtvWebView.purchase + (data.gurry)
@@ -142,6 +143,7 @@ struct PagePurchase: PageView {
                                 type: .getGridEvent(menuId , .popularity , 1, 1)))
                     }
                 }
+                    
             }
             .onAppear{
                

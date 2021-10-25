@@ -41,7 +41,7 @@ struct InputNumberField: PageComponent {
     
     func getTextSpacing()-> CGFloat {
         if #available(iOS 15.0, *) {
-            return DimenKids.item.inputNum.width + Dimen.margin.microUltra
+            return DimenKids.item.inputNum.width + Dimen.margin.micro
         }
         return DimenKids.item.inputNum.width - Dimen.margin.microUltra
     }
@@ -100,13 +100,19 @@ struct InputNumberField: PageComponent {
                                                 inputCopmpleted: { text in
                                                     
                                                 })
-                                                .frame( height: DimenKids.item.inputNum.height)
-                                                .padding(.leading, self.getTextLeading() )
+                                                .frame(
+                                                    width: (DimenKids.item.inputNum.width * CGFloat(self.inputSize))
+                                                            + (DimenKids.margin.lightExtra * CGFloat(self.inputSize-1))
+                                                    ,
+                                                    height: DimenKids.item.inputNum.height)
                                                 .fixedSize()
+                                                .padding(.leading, self.getTextLeading() )
+                                                
                                         }
                                         .frame(
                                             width: (DimenKids.item.inputNum.width * CGFloat(self.inputSize))
-                                                    + (DimenKids.margin.lightExtra * CGFloat(self.inputSize-1)),
+                                                    + (DimenKids.margin.lightExtra * CGFloat(self.inputSize-1))
+                                            ,
                                             height: DimenKids.item.inputNum.height)
                                         .clipped()
                                     }

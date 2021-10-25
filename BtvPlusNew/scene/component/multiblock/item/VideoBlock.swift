@@ -206,7 +206,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                 allDatas.append(contentsOf: addDatas)
             default: break
             }
-            if allDatas.isEmpty { return onBlank() }
+            if allDatas.isEmpty && !self.isWatchedBlock { return onBlank() }
             self.datas = allDatas
             self.updateListSize()
             self.data.videos = allDatas

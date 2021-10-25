@@ -119,6 +119,7 @@ struct PageKidsTab: PageComponent{
     }
     
     func moveSetupCheck() {
+        
         if !SystemEnvironment.isAdultAuth {
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.adultCertification, animationType: .opacity)

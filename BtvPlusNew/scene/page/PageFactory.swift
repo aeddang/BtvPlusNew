@@ -136,10 +136,10 @@ struct PageProvider {
              .myPurchaseTicketList, .remotecon, .playerTest,
              .myRecommand, .myRegistCard, .picker, .myBenefits:
             return  .vertical
-        case .fullPlayer, .synopsisPlayer :
+        case .fullPlayer :
             return .none
         case .confirmNumber, .privacyAndAgree, .cashChargeGuide, .cashChargePrivacyAndAgree,
-             .recommand, .recommandReceive, .snsShare, .pairingAppleTv, .pairingFamilyInvite:
+             .recommand, .recommandReceive, .snsShare, .pairingAppleTv, .pairingFamilyInvite, .synopsisPlayer:
             return .opacity
         default : return  .horizontal
         }

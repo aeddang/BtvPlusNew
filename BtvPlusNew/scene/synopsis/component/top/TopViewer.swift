@@ -17,6 +17,7 @@ extension TopViewer {
 struct TopViewer: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var vsManager:VSManager
     var componentViewModel:SynopsisViewModel?
@@ -84,13 +85,15 @@ struct TopViewer: PageComponent{
                         VStack(alignment: .leading, spacing:0){
                             if self.isPairing == false {
                                 FillButton(
-                                    text: String.button.connectBtv
+                                    text: String.button.purchas
                                 ){_ in
                                 
+                                    self.appSceneObserver.alert = .needPairing()
+                                    /*
                                     self.pagePresenter.openPopup(
                                         PageProvider.getPageObject(.pairing)
                                             .addParam(key: PageParam.subType, value: "mob-com-popup")
-                                    )
+                                    )*/
                                 }
                                 .buttonStyle(BorderlessButtonStyle())
                                 

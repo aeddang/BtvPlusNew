@@ -574,7 +574,7 @@ class BlockData:InfinityData, ObservableObject{
             }
             count = leadingCount + count
             zip(leadingCount...count, datas).forEach{idx, data in
-                if pageType == .kids && logType == .list {
+                if pageType == .kids && logType != .home {
                     action.position = (idx+1).description + "@" + count.description
                     action.category = data.synopsisType.logCategory
                     action.result = data.synopsisType.logResult
@@ -594,7 +594,7 @@ class BlockData:InfinityData, ObservableObject{
                     switch self.logType {
                     case .home :
                         data.setNaviLogHome(action: action)
-                    case .list :
+                    default :
                         action.category = data.synopsisType.logCategory
                         action.result = data.synopsisType.logResult
                         data.setNaviLog(action: action)
@@ -629,7 +629,7 @@ class BlockData:InfinityData, ObservableObject{
             }
             count = leadingCount + count
             zip(leadingCount...count, datas).forEach{idx, data in
-                if pageType == .kids && logType == .list{
+                if pageType == .kids && logType != .home{
                     action.position = (idx+1).description + "@" + count.description
                     action.category = data.synopsisType.logCategory
                     action.result = data.synopsisType.logResult
@@ -652,7 +652,7 @@ class BlockData:InfinityData, ObservableObject{
                             action.category = data.clipTitle ?? ""
                         }
                         data.setNaviLogHome(action: action)
-                    case .list :
+                    default :
                         if data.isClip {
                             action.target = data.clipTitle ?? ""
                         }
@@ -706,7 +706,7 @@ class BlockData:InfinityData, ObservableObject{
             return action
         }
         var actionBody = MenuNaviActionBodyItem()
-        actionBody.menu_name = self.name.replace(" ", with: "")
+        actionBody.menu_name = self.name
         actionBody.menu_id = self.cwCallId ?? self.menuId
         if let keyword = self.keyword { actionBody.search_keyword = keyword }
         if let logPageTitle = self.logPageTitle {

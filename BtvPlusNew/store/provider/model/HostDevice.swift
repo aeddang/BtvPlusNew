@@ -37,7 +37,7 @@ class HostDevice {
         guard let patchVersion = self.patchVersion else {return true}
         let pA = patchVersion.split(separator: ".")
         if pA.count >= 2 {
-            if String(pA[1]).toInt() <= 531 {return false}
+            if String(pA[1]).toInt() < 531 {return false}
         }
         return true
     }

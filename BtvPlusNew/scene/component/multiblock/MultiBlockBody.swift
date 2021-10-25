@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 enum MultiBlockLogType{
-    case home, list
+    case home, list, search
 }
 
 class MultiBlockModel: PageDataProviderModel {

@@ -133,7 +133,7 @@ class NaviLogManager : ObservableObject, PageProtocol {
         contentsItem.purchase = synop.hasAuthority         // 구매 여부 ex)true (구매한 경우)
         contentsItem.episode_resolution_id = ""      // episode_id, btv plus 는 episode_id 없음, 5.0
         contentsItem.product_id = synop.originData?.package?.prd_prc_id          // 패키지상품 ID(Btv plus) or 시리즈상품 ID(Btv)
-        contentsItem.list_price = synop.originData?.package?.prd_prc?.description
+        contentsItem.list_price = synop.originData?.package?.prd_prc?.number?.description
         contentsItem.payment_price = synop.originData?.package?.sale_prc?.number?.description
  
         self.currentSysnopsisContentsItem = contentsItem

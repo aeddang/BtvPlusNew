@@ -111,7 +111,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
                         spacing:Dimen.margin.tiny,
                         size:self.skeletonSize
                     )
-                    Spacer()
+                    .modifier(MatchParent())
+                    //Spacer()
                 }
             }
         }
@@ -131,7 +132,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
                     self.hasMore = false
                 }
                 if let size = datas.first?.type.size {
-                    self.skeletonSize = size
+                    self.skeletonSize = CGSize(width: size.width, height: size.height + ListItem.video.type01)
                 }
                 ComponentLog.d("ExistData " + data.name, tag: "BlockProtocol")
                 self.creatDataBinding()
@@ -163,7 +164,7 @@ struct VideoBlock:BlockProtocol, PageComponent {
             }
         }
         .onReceive(dataProvider.$result) { res in
-            self.checkModifyWatchedItem(res)
+            //self.checkModifyWatchedItem(res)
             if res?.id != data.id { return }
             var allDatas:[VideoData] = []
             switch data.dataType {

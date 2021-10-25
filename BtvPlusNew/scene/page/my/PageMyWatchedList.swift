@@ -134,7 +134,8 @@ struct PageMyWatchedList: PageView {
                 withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
-                
+                self.naviLogManager.actionLog(.pageShow, pageId: .recentContents ,
+                                              actionBody: .init(category:WatchedBlockType.mobile.category))
             }
             .onDisappear{
                

@@ -457,6 +457,8 @@ struct PageSynopsisPlayer: PageView {
     private func vodCompleted(){
         PageLog.d("vodCompleted", tag: self.tag)
         self.pagePresenter.closePopup(self.pageObject?.id)
+        
+        
     }
     
     func changeVod(epsdId:String?){
@@ -491,13 +493,14 @@ struct PageSynopsisPlayer: PageView {
             
         case .close :
             self.onContinuousPlay()
-            self.playerModel.event = .stop(isUser: false)
+            self.playerModel.event = .pause(isUser: false)
             /*
             self.pagePresenter.fullScreenExit(
                 isLock: false,
                 changeOrientation: nil)
             */
             self.pagePresenter.closePopup(self.pageObject?.id)
+            
             
         default: break
         }

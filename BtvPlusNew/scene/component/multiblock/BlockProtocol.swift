@@ -41,8 +41,8 @@ extension BlockProtocol {
     }
     
     func sendLog(_ naviLogManager:NaviLogManager){
-        if self.data.logType == .list {
-            naviLogManager.actionLog(.clickContentsViewAll, actionBody: self.data.getActionLog())
+        if self.data.logType == .search {
+            naviLogManager.actionLog( .clickContentsViewAll, actionBody: self.data.getActionLog())
         } else {
             naviLogManager.actionLog(.clickViewMore, actionBody: self.data.getActionLog())
         }

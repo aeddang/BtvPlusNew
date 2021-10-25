@@ -219,10 +219,10 @@ extension PageSynopsis {
         //self.synopsisData?.ppmIds = model.purchasedPPMItems.first(where: {$0.prdTypCd == .cbvodppm})?.prdPrcId
             //?? model.purchasedPPMItem?.prdPrcId ?? ""
         let purchaseModels = model.purchasedPPMItems.filter({$0.isPurchase})
-        self.synopsisData?.ppmIds = purchaseModels.isEmpty
+        let ppmIds = purchaseModels.isEmpty
             ? ""
             : purchaseModels.dropFirst().reduce(purchaseModels.first!.prdPrcId, {$0 + " " + $1.prdPrcId})
-        
+        self.synopsisData?.ppmIds = ppmIds
     }
     
     //page log

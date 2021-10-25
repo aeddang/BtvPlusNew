@@ -106,7 +106,7 @@ class SynopsisModel : PageProtocol {
             self.cpId = contents.contrp_id
             self.epsdId = contents.epsd_id
             if let watchAble = contents.smtn_wat_abl_yn?.toBool() {
-                self.isLimitedWatch = !watchAble
+                self.isLimitedWatch = watchAble
             }
             self.useCaption = contents.lag_capt_typ_exps_yn?.toBool() ?? false
             self.nextSrisId = contents.next_sris_id

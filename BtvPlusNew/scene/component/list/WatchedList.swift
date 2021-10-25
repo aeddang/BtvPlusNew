@@ -367,6 +367,14 @@ struct WatchedItem: PageView {
     @State var purchaseViewerData:PurchaseViewerData? = nil
     @State var purchaseWebviewModel:PurchaseWebviewModel? = nil
     private func checkWatchBtv(){
+        
+        let msg:NpsMessage = NpsMessage().setPlayVodMessage(
+            contentId: self.data.synopsisData?.epsdRsluId ?? "" ,
+            playTime: self.data.watchTime ?? 0)
+        self.dataProvider
+            .requestData( q: .init(id:self.data.id, type: .sendMessage( msg), isOptional: true))
+        
+        /*
         if let purchaseViewerData = self.purchaseViewerData {
             self.watchBtv(purchaseViewerData: purchaseViewerData)
             return
@@ -374,6 +382,7 @@ struct WatchedItem: PageView {
         
         guard let synop = data.synopsisData else {return}
         self.dataProvider.requestData( q: .init(id:self.data.id, type: .getSynopsis(synop), isOptional: true))
+         */
     }
     
     private func checkWatchBtvAuth(synop:Synopsis){

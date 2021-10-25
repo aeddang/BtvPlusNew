@@ -24,6 +24,7 @@ struct ConnectButton: View {
                     .scaledToFit()
                     .frame(width: Dimen.icon.medium, height: Dimen.icon.medium)
                     .padding(.leading, Dimen.margin.lightExtra)
+               
                 VStack(alignment: .leading, spacing:Dimen.margin.tiny){
                     Text(self.title)
                         .modifier(BoldTextStyle(size: Font.size.light, color: Color.app.white))
@@ -39,7 +40,7 @@ struct ConnectButton: View {
                             .padding(.top,  Dimen.margin.tinyExtra)
                     }
                 }
-                .padding(.horizontal, Dimen.margin.lightExtra)
+                .padding(.leading, Dimen.margin.lightExtra)
                 Spacer()
                 Image( Asset.icon.more )
                     .renderingMode(.original).resizable()

@@ -144,7 +144,10 @@ class VideoData:InfinityData, Copying{
             }
         }
         originImage = data.poster_filename_h
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.poster_filename_h,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
         /*
         if let rt = data.kes?.watching_progress?.toInt() {
             self.progress = Float(rt) / 100.0 
@@ -204,7 +207,10 @@ class VideoData:InfinityData, Copying{
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         originImage = data.poster_filename_v
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_v, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.poster_filename_v,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -242,7 +248,10 @@ class VideoData:InfinityData, Copying{
         isAdult = data.adult?.toBool() ?? false
         tagData = TagData().setData(data: data, isAdult: self.isAdult)
         originImage = data.poster
-        image = ImagePath.thumbImagePath(filePath: data.poster, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.poster,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -293,7 +302,10 @@ class VideoData:InfinityData, Copying{
         }
         title = data.title
         originImage = data.thumbnail
-        image = ImagePath.thumbImagePath(filePath: data.thumbnail , size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.thumbnail ,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
         index = idx
         epsdId = data.epsd_id
         srisId = data.sris_id
@@ -340,7 +352,10 @@ class VideoData:InfinityData, Copying{
         watchLv = data.level?.toInt() ?? 0
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         originImage = data.thumb
-        image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.thumb,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
             srisId: nil, searchType: EuxpNetwork.SearchType.prd,
@@ -358,7 +373,10 @@ class VideoData:InfinityData, Copying{
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         
         originImage = data.poster_tseq
-        image = ImagePath.thumbImagePath(filePath: data.poster_tseq, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.poster_tseq,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
     
         synopsisType = SynopsisType(value: data.synon_typ_cd)
         synopsisData = .init(
@@ -375,7 +393,10 @@ class VideoData:InfinityData, Copying{
         epsdId = data.epsd_id
         watchLv = data.level?.toInt() ?? 0
         originImage = data.thumb
-        image = ImagePath.thumbImagePath(filePath: data.thumb, size: ListItem.video.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(
+            filePath: data.thumb,
+            size: CGSize(width: ListItem.video.size.width, height: 0),
+            isAdult: self.isAdult)
       
         tagData = TagData(pageType: self.pageType).setData(data: data, isAdult: self.isAdult)
         
@@ -729,7 +750,7 @@ struct VideoItemBody: PageView {
     var isSelected:Bool = false
     var body: some View {
         ZStack{
-            ImageView(url: self.data.image,contentMode: .fill, noImg: Asset.noImg16_9)
+            ImageView(url: self.data.image,isFull: true, noImg: Asset.noImg16_9)
                 .modifier(MatchParent())
             
             Image(Asset.shape.listGradientH)
@@ -822,7 +843,7 @@ struct VideoItemBodyKids: PageView {
     var body: some View {
         VStack(alignment: .leading, spacing:0){
             ZStack{
-                ImageView(url: self.data.image,contentMode: .fit, noImg: AssetKids.noImg16_9)
+                ImageView(url: self.data.image, isFull: true, noImg: AssetKids.noImg16_9)
                     .modifier(MatchParent())
                 Image(Asset.shape.listGradientH)
                     .resizable()

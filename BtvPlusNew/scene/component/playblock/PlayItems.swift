@@ -49,7 +49,6 @@ struct PlayItemScreen: PageView {
                                 .resizable()
                         }
                         .cancelOnDisappear(true)
-                        .aspectRatio(contentMode: .fill)
                         .modifier(MatchParent())
                 }
                 

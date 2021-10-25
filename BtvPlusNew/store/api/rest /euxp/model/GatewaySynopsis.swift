@@ -20,7 +20,7 @@ struct PackageInfo : Codable {
     private(set) var svc_fr_dt:String? = nil  // 서비스 시작일
     private(set) var svc_to_dt:String? = nil  // 서비스 종료일
     private(set) var sris_id:String? = nil    // 시리즈ID
-    private(set) var prd_prc:Double? = nil    // 상품가격(원가격)
+    private(set) var prd_prc:DynamicValue? = nil    // 상품가격(원가격)
     private(set) var poster_filename_h:String? = nil  // (패키지)가로 포스터
     private(set) var poster_filename_v:String? = nil  // (패키지)세로 포스터
     private(set) var contents:[PackageContentsItem]? = nil    // 메뉴 ID(콘텐츠 블럭을 가진 메뉴ID)

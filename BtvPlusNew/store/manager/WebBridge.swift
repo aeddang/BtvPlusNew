@@ -208,7 +208,9 @@ class WebBridge :PageProtocol{
         info["stb_onead_id"] = nil
         info["pcid"] = self.namedStorage?.getPcid()
         info["session_id"] = self.namedStorage?.getSessionId()
-        info["stb_id"] = NpsNetwork.hostDeviceId ?? "{00000000-0000-0000-0000-000000000000}"
+        info["stb_id"] = NpsNetwork.hostDeviceId?
+            .replace("{", with: "")
+            .replace("}", with: "") ?? "00000000-0000-0000-0000-000000000000"
         info["stb_mac"] = pairing.hostDevice?.convertMacAdress ?? ""
         info["app_release_version"] = SystemEnvironment.bundleVersion
         info["app_build_version"] = SystemEnvironment.buildNumber

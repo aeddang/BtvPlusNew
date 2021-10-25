@@ -53,12 +53,12 @@ struct SummaryViewer: PageComponent{
             Spacer().frame( height: Dimen.margin.regularExtra)
             
             if self.data.peoples != nil && self.data.peoples?.isEmpty == false {
-                if !self.isSimple {
+                //if !self.isSimple {
                     Text(String.pageText.synopsisSummry)
                         .modifier(BoldTextStyle( size: Font.size.regular ))
                         .padding(.bottom, Dimen.margin.regularExtra )
                         .modifier(ContentHorizontalEdges())
-                }
+                //}
                 
                 PeopleList(
                     componentViewModel:self.componentViewModel, 

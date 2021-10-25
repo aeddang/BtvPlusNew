@@ -74,7 +74,10 @@ class PlayData:InfinityData,ObservableObject{
         if isAdult { watchLv = Setup.WatchLv.lv4.rawValue }
         restrictAgeIcon = Asset.age.getListIcon(age: data.wat_lvl_cd) 
         if let poster = data.poster_filename_h {
-            image = ImagePath.thumbImagePath(filePath: poster, size: ListItem.play.size)
+            image = ImagePath.thumbImagePath(filePath: poster,
+                                             size: CGSize(width: ListItem.play.size.width, height: 0),
+                                             convType: .extension
+            )
         }
         if data.ppm_grid_icon_img_path?.isEmpty == false, let icon = data.ppm_grid_icon_img_path {
             self.ppmIcon = ImagePath.thumbImagePath(filePath: icon,
@@ -123,7 +126,10 @@ class PlayData:InfinityData,ObservableObject{
         durationTime = data.play_tms_hms?.toHMS()
         title = data.title
         subTitle = data.keywrd_val
-        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h, size: ListItem.play.size, isAdult: self.isAdult)
+        image = ImagePath.thumbImagePath(filePath: data.poster_filename_h,
+                                         size: CGSize(width: ListItem.play.size.width, height: 0),
+                                         isAdult: self.isAdult,
+                                         convType: .extension)
         watchLv = data.wat_lvl_cd?.toInt() ?? 0
         isAdult = EuxpNetwork.adultCodes.contains(data.adlt_lvl_cd)
         index = idx

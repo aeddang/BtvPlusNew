@@ -59,7 +59,7 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
         }
         
         actionData.menu_name = "VOD"
-        let block = BlockData(pageType: .kids)
+        let block = BlockData(pageType: .kids, logType:.search)
             .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
@@ -75,7 +75,7 @@ class PageKidsSearchModel :ObservableObject, PageProtocol {
         
         actionData.menu_name = "회차"
         actionData.category = nil
-        let block = BlockData(pageType: .kids)
+        let block = BlockData(pageType: .kids, logType:.search)
             .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, max:30)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)

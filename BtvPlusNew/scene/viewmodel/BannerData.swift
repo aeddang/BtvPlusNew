@@ -184,7 +184,6 @@ class BannerData:InfinityData, PageProtocol{
                 self.logConfig = "인링크웹"
                 return
             }
-            
             self.move = PageProvider.getPageId(skimlink: url)
             self.logConfig = PageProvider.getPageLog(skimlink: url)
             if move == .snsShare {

@@ -76,7 +76,7 @@ struct PageSetup: PageView {
                                         //SetupHappySenior()
                                     }
                                     //SetupOksusu(isInitate:self.isInitate)
-                                    SetupGuideNVersion()
+                                    SetupGuideNVersion(isQAMode: self.$isQAMode)
                                    
                                 }
                             }
@@ -117,7 +117,7 @@ struct PageSetup: PageView {
                                     //SetupHappySenior()
                                 }
                                 //SetupOksusu(isInitate:self.isInitate)
-                                SetupGuideNVersion()
+                                SetupGuideNVersion(isQAMode: self.$isQAMode)
                                     
                                 //#if DEBUG
                                 if self.isQAMode {

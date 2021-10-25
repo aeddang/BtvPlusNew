@@ -26,7 +26,7 @@ struct InputNumberField: PageComponent {
     let placeholder:String = "●●●●"
    
     
-    func getTextStype()-> TextModifier {
+    func getTextStyle()-> TextModifier {
         if #available(iOS 15.0, *) {
             return TextModifier(
                 family: Font.familyKids.bold,
@@ -85,12 +85,13 @@ struct InputNumberField: PageComponent {
                                                 text: self.$input,
                                                 keyboardType: .numberPad,
                                                 placeholder: self.placeholder,
+                                                placeholderModifier : self.getTextStyle(),
                                                 placeholderColor : Color.app.grey,
                                                 textAlignment : .left,
                                                 maxLength: self.inputSize,
                                                 kern: self.getTextSpacing(),
                                                 kernHolder: self.getHolderSpacing(),
-                                                textModifier: self.getTextStype(),
+                                                textModifier: self.getTextStyle(),
                                                 isfocus: self.isFocus,
                                                 isSecureTextEntry:true,
                                                 inputChanged: { text in
@@ -101,6 +102,7 @@ struct InputNumberField: PageComponent {
                                                 })
                                                 .frame( height: DimenKids.item.inputNum.height)
                                                 .padding(.leading, self.getTextLeading() )
+                                                .fixedSize()
                                         }
                                         .frame(
                                             width: (DimenKids.item.inputNum.width * CGFloat(self.inputSize))

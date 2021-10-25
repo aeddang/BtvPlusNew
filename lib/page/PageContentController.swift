@@ -167,32 +167,39 @@ struct PageContentController: View{
     
     func removePopup(_ key:String){
         guard let findIdx = pageControllerObservable.popups.firstIndex(where: { $0.id == key }) else { return }
-        let pop = pageControllerObservable.popups.remove(at: findIdx)
-        pageControllerObservable.pages.forEach({ $0.pageRemoved( pop.pageObject )})
-        pageControllerObservable.popups.forEach({ $0.pageRemoved( pop.pageObject )})
-        pageControllerObservable.overlayView?.pageRemoved( pop.pageObject )
-        pageControllerObservable.updatePageIndex()
+        DispatchQueue.main.async {
+            let pop = pageControllerObservable.popups.remove(at: findIdx)
+            pageControllerObservable.pages.forEach({ $0.pageRemoved( pop.pageObject )})
+            pageControllerObservable.popups.forEach({ $0.pageRemoved( pop.pageObject )})
+            pageControllerObservable.overlayView?.pageRemoved( pop.pageObject )
+            pageControllerObservable.updatePageIndex()
+        }
+        
     }
     func removeAllPopup(removePops:[String]){
-        pageControllerObservable.popups.removeAll( where: { pop in
-           return removePops.first(where: { pop.id == $0 }) != nil
-        })
-        pageControllerObservable.pages.forEach({ $0.pageRemoved( nil )})
-        pageControllerObservable.overlayView?.pageRemoved(nil)
-        pageControllerObservable.updatePageIndex()
+        DispatchQueue.main.async {
+            pageControllerObservable.popups.removeAll( where: { pop in
+               return removePops.first(where: { pop.id == $0 }) != nil
+            })
+            pageControllerObservable.pages.forEach({ $0.pageRemoved( nil )})
+            pageControllerObservable.overlayView?.pageRemoved(nil)
+            pageControllerObservable.updatePageIndex()
+        }
     }
     func removeAllPopup(_ pageKey:String = "", exceptions:[PageID]? = nil){
-        pageControllerObservable.popups.removeAll( where: { pop in
-            var remove = true
-            if pop.id == pageKey { remove = false }
-            if let exps = exceptions {
-                if let _ = exps.first(where: { pop.pageID == $0 }) { remove = false }
-            }
-            return remove
-        })
-        pageControllerObservable.pages.forEach({ $0.pageRemoved( nil )})
-        pageControllerObservable.overlayView?.pageRemoved(nil)
-        pageControllerObservable.updatePageIndex()
+        DispatchQueue.main.async {
+            pageControllerObservable.popups.removeAll( where: { pop in
+                var remove = true
+                if pop.id == pageKey { remove = false }
+                if let exps = exceptions {
+                    if let _ = exps.first(where: { pop.pageID == $0 }) { remove = false }
+                }
+                return remove
+            })
+            pageControllerObservable.pages.forEach({ $0.pageRemoved( nil )})
+            pageControllerObservable.overlayView?.pageRemoved(nil)
+            pageControllerObservable.updatePageIndex()
+        }
     }
     
     func sceneDidBecomeActive(_ scene: UIScene){

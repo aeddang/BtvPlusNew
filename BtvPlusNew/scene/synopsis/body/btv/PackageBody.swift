@@ -83,8 +83,14 @@ struct PackageBody: PageComponent{
                 .modifier(ListRowInset(spacing:  Self.spacing))
             }
             
-            if self.episodeViewerData != nil {
-                EpisodeViewer(data:self.episodeViewerData!)
+            if let episodeViewerData = self.episodeViewerData  {
+                Text(episodeViewerData.episodeTitle)
+                    .modifier(BoldTextStyle( size: Font.size.boldExtra ))
+                    .lineLimit(2)
+                    .modifier(ContentHorizontalEdges())
+                    .modifier(ListRowInset(spacing: SystemEnvironment.isTablet ? Dimen.margin.thinExtra : Dimen.margin.lightExtra))
+                
+                EpisodeViewer(data:episodeViewerData)
                     .modifier(ListRowInset(spacing:  Self.spacing))
             }
                 

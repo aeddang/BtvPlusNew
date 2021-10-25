@@ -159,6 +159,7 @@ class AccountManager : PageProtocol{
                     self.dataProvider.requestData(q: .init(type: .postGuestInfo(user), isOptional: true))
                     
                 }else{
+                    if SystemEnvironment.firstLaunch {return}
                     if savedUser == nil {
                         self.pairing.syncError()
                     } else {
@@ -364,7 +365,8 @@ class AccountManager : PageProtocol{
                  .rePairing, .postPairingByToken :
                 self.pairing.connectError()
             case .getDevicePairingInfo(_, _, let prevResult) : self.pairing.connectError(header: prevResult)
-            case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement: self.pairing.syncError()
+            case .getHostDeviceInfo, .postGuestInfo, .postGuestAgreement, .getGuestAgreement:
+                self.pairing.syncError()
             case .getDevicePairingStatus :
                 self.pairing.checkCompleted(isSuccess: self.pairing.status == .pairing)
             case .getMonthly(let lowLevelPpm , _ , _) :  self.pairing.authority.updatedPurchaseTicket([], lowLevelPpm: lowLevelPpm)

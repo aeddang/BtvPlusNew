@@ -6,9 +6,12 @@
 //
 import Foundation
 import SwiftUI
+import Combine
 struct SetupGuideNVersion: PageView {
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var naviLogManager:NaviLogManager
+    @Binding var isQAMode:Bool
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
             Text(String.pageText.setupGuideNVersion).modifier(ContentTitle())
@@ -32,7 +35,7 @@ struct SetupGuideNVersion: PageView {
                     title: SystemEnvironment.bundleVersion + "(" + SystemEnvironment.buildNumber + ")",
                     statusText: SystemEnvironment.needUpdate ? nil : String.pageText.setupVersionLatest,
                     more:{
-                        
+                        self.delayQaModeCount()
                     }
                 )
                 Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
@@ -57,13 +60,39 @@ struct SetupGuideNVersion: PageView {
         let actionBody = MenuNaviActionBodyItem( config: "", category: category)
         self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
     }
+    
+    @State var qaModeCount:Int = 0
+    @State var qaModeReset:AnyCancellable?
+    func delayQaModeCount(){
+        self.qaModeCount += 1
+        if self.qaModeCount > 5 {
+            self.isQAMode.toggle()
+            self.appSceneObserver.event = .toast(self.isQAMode ? "테스트모드 시작" : "테스트모드 종료")
+            return
+        }
+        self.qaModeReset?.cancel()
+        self.qaModeReset = Timer.publish(
+            every: 2.0, on: .current, in: .common)
+            .autoconnect()
+            .sink() {_ in
+                
+                self.clearQaMode()
+            }
+    }
+    func clearQaMode() {
+        self.qaModeCount = 0
+        self.qaModeReset?.cancel()
+        self.qaModeReset = nil
+    }
 }
 
 #if DEBUG
 struct SetupGuideNVersion_Previews: PreviewProvider {
     static var previews: some View {
         Form{
-            SetupGuideNVersion()
+            SetupGuideNVersion(
+                isQAMode: .constant(true)
+            )
             .frame(width: 375, height: 640, alignment: .center)
         }
     }

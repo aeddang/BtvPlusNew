@@ -172,7 +172,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
             PosterData( usePrice: true).setData(data: $0, searchType:.vod).setNaviLog(action: actionData)
         }
         actionData.menu_name = "VOD" 
-        let block = BlockData()
+        let block = BlockData(logType:.search)
             .setData(title: String.app.vod, datas: allPosters, searchType:.vod, keyword: keyword, usePrice: true)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
@@ -187,7 +187,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         }
         actionData.menu_name = "회차"
         actionData.category = nil
-        let block = BlockData()
+        let block = BlockData(logType:.search)
             .setData(title: String.app.sris, datas: allPosters, searchType:.vodSeq, keyword: keyword, usePrice: true)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
@@ -202,7 +202,8 @@ class PageSearchModel :ObservableObject, PageProtocol {
             return VideoData(usePrice:true).setData(data: $0, searchType:.clip).setNaviLog(action: actionData)
         }
         actionData.menu_name = "클립"
-        let block = BlockData()
+        actionData.target = nil
+        let block = BlockData(logType:.search)
             .setData(title: String.app.clip, datas: allPosters, searchType:.clip, keyword: keyword, usePrice: true)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
@@ -215,7 +216,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
             VideoData(usePrice: true).setData(data: $0, searchType:.demand).setNaviLog(action: actionData)
         }
         actionData.menu_name = "장면/코너"
-        let block = BlockData()
+        let block = BlockData(logType:.search)
             .setData(title: String.app.corner, datas: allPosters, searchType:.demand, keyword: keyword, usePrice: true)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
@@ -228,7 +229,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         let allPosters:[PosterData] = datas.map{ PosterData(usePrice:true).setData(data: $0, searchType:.none).setNaviLog(action: actionData)}
         
         actionData.menu_name = "인물"
-        let block = BlockData()
+        let block = BlockData(logType:.search)
             .setData(title: String.app.people, datas: allPosters, searchType:.none, keyword: keyword, usePrice:true)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)
@@ -241,7 +242,7 @@ class PageSearchModel :ObservableObject, PageProtocol {
         let allTvs:[TvData] = datas.map{ TvData().setData(data: $0, searchType: .live).setNaviLog(action: actionData)}
         
         actionData.menu_name = "실시간방송"
-        let block = BlockData()
+        let block = BlockData(logType:.search)
             .setData(title: String.app.liveTv, datas: allTvs, searchType:.live, keyword: keyword)
             .setNaviLog(pageShowActionLog: actionData)
             .setNaviLog(pageCloseActionLog: actionData)

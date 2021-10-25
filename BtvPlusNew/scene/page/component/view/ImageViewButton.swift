@@ -24,6 +24,76 @@ struct ImageViewButton: PageView{
     let action: () -> Void
     
     var body: some View {
+        ZStack{
+            if self.axis == .vertical {
+                VStack(spacing:Dimen.margin.tiny){
+                    if self.isSelected {
+                        KFImage(URL(string: self.activeImage))
+                            .renderingMode(.original)
+                            .resizable()
+                            .placeholder {
+                                Image(self.noImgAc)
+                                    .resizable()
+                            }
+                            .frame(width: size.width, height: size.height)
+                    }else{
+                        KFImage(URL(string: self.defaultImage))
+                            .renderingMode(.original)
+                            .resizable()
+                            .placeholder {
+                                Image(self.noImg)
+                                    .resizable()
+                            }
+                            .frame(width: size.width, height: size.height)
+                    }
+                    
+                    if self.text != nil {
+                        Text(self.text!)
+                            .modifier(BoldTextStyle(
+                                size: self.textSize,
+                                color: self.isSelected ?
+                                    self.activeTextColor : self.defaultTextColor
+                            ))
+                    }
+                }
+            } else {
+                HStack(spacing:Dimen.margin.tiny){
+                    if self.isSelected {
+                        KFImage(URL(string: self.activeImage))
+                            .renderingMode(.original)
+                            .resizable()
+                            .placeholder {
+                                Image(self.noImgAc)
+                                    .resizable()
+                            }
+                            .frame(width: size.width, height: size.height)
+                    }else{
+                        KFImage(URL(string: self.defaultImage))
+                            .renderingMode(.original)
+                            .resizable()
+                            .placeholder {
+                                Image(self.noImg)
+                                    .resizable()
+                            }
+                            .frame(width: size.width, height: size.height)
+                    }
+                    
+                    if self.text != nil {
+                        Text(self.text!)
+                            .modifier(BoldTextStyle(
+                                size: self.textSize,
+                                color: self.isSelected ?
+                                    self.activeTextColor : self.defaultTextColor
+                            ))
+                    }
+                }
+            }
+        }
+        .accessibility(label:Text(self.text ?? ""))
+        .onTapGesture{
+            self.action()
+        }
+        /*
         Button(action: {
             self.action()
         }) {
@@ -93,6 +163,7 @@ struct ImageViewButton: PageView{
         }
         .accessibility(label:Text(self.text ?? ""))
         .buttonStyle(PlainButtonStyle())
+         */
     }
 }
 

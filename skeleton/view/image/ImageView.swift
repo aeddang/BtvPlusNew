@@ -17,28 +17,48 @@ struct ImageView : View, PageProtocol {
     @ObservedObject var imageLoader: ImageLoader = ImageLoader()
     let url:String?
     var contentMode:ContentMode  = .fill
+    var isFull:Bool = false
     var noImg:String? = nil
     @State var image:UIImage? = nil
     @State var opacity:Double =  0.3
     
     var body: some View {
-       
-        Image(uiImage: self.image ?? self.getNoImage())
-            .renderingMode(.original)
-            .resizable()
-            .aspectRatio(contentMode: self.contentMode)
-            .opacity( self.opacity )
-            .onReceive(self.imageLoader.$event) { evt in
-                self.onImageEvent(evt: evt)
-            }
-            .onAppear(){
-                self.creatAutoReload()
-                self.imageLoader.cash(url: self.url)
-            }
-            .onDisappear(){
-                self.clearAutoReload()
-                self.imageLoader.cancel()
-            }
+        if isFull {
+            Image(uiImage: self.image ?? self.getNoImage())
+                .renderingMode(.original)
+                .resizable()
+                .opacity( self.opacity )
+                .onReceive(self.imageLoader.$event) { evt in
+                    self.onImageEvent(evt: evt)
+                }
+                .onAppear(){
+                    self.creatAutoReload()
+                    self.imageLoader.cash(url: self.url)
+                }
+                .onDisappear(){
+                    self.clearAutoReload()
+                    self.imageLoader.cancel()
+                }
+        } else {
+            Image(uiImage: self.image ?? self.getNoImage())
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: self.contentMode)
+                .opacity( self.opacity )
+                .onReceive(self.imageLoader.$event) { evt in
+                    self.onImageEvent(evt: evt)
+                }
+                .onAppear(){
+                    if self.image != nil {return}
+                    self.creatAutoReload()
+                    self.imageLoader.cash(url: self.url)
+                }
+                .onDisappear(){
+                    self.clearAutoReload()
+                    self.imageLoader.cancel()
+                }
+        }
+        
         
     }
     
@@ -86,7 +106,7 @@ struct ImageView : View, PageProtocol {
             .autoconnect()
             .sink() {_ in
                 count += 1
-                self.imageLoader.reload(url: self.url)
+                self.imageLoader.load(url: self.url)
                 if count == 5 {
                     DataLog.d("autoReload fail " + (self.url ?? " nil") , tag:self.tag)
                     self.resetImage()

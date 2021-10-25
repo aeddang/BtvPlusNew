@@ -41,7 +41,7 @@ struct ScenePickerController: PageComponent{
                 }
             default: return
             }
-            withAnimation{
+            withAnimation(.easeIn(duration: 0.2)){
                 self.isShow = false
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -56,7 +56,7 @@ struct ScenePickerController: PageComponent{
             case .multiPicker(let data, let idxs, _): self.setupPicker(data:data, idxs:idxs)
             default: return
             }
-            withAnimation{
+            withAnimation(.easeOut(duration: 0.2)){
                 self.isShow = true
             }
         }

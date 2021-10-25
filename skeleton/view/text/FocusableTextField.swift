@@ -34,15 +34,15 @@ struct FocusableTextField: UIViewRepresentable{
     func makeUIView(context: Context) -> UITextField {
         let textField = UITextField(frame: .zero)
         let font =  UIFont(name: self.textModifier.family, size: self.textModifier.size)
-        
         textField.text = self.text
+        
         textField.keyboardType = self.keyboardType
         textField.returnKeyType = self.returnVal
         textField.delegate = context.coordinator
         textField.placeholder = self.placeholder
         textField.autocorrectionType = .no
         //textField.clearButtonMode = .whileEditing
-        textField.adjustsFontSizeToFitWidth = true
+        //textField.adjustsFontSizeToFitWidth = true
         textField.textAlignment = self.textAlignment
         let color = textModifier.color == Color.app.white ? UIColor.white : textModifier.color.uiColor()
         textField.textColor = color

@@ -72,25 +72,7 @@ struct PageKidsConfirmNumber: PageView {
             .onTapGesture {
                 AppUtil.hideKeyboard()
             }
-            /*
-            InputNumberBox(
-                isInit:self.isFocus,
-                title: self.title,
-                text: self.text,
-                tip: self.tip,
-                msg: self.msg
-              
-            ){ input in
-                guard let input = input else {
-                    self.closePage()
-                    return
-                }
-                switch self.type {
-                default : self.confirmPassword(input)
-                }
-            }
-            .modifier(MatchParent())
-            */
+            
         }
         .modifier(MatchParent())
         .onReceive(self.pairing.$event){ evt in
@@ -111,7 +93,7 @@ struct PageKidsConfirmNumber: PageView {
             case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.initPage() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.pageObservable.$status){status in
@@ -152,12 +134,20 @@ struct PageKidsConfirmNumber: PageView {
             
             PageLog.d("updatekeyboardStatus " + on.description, tag:self.tag)
             PageLog.d("updatekeyboardStatus isFocus " + isFocus.description, tag:self.tag)
-            if self.isFocus != on { self.isFocus = on }
+            if self.isFocus != on {
+                withAnimation{
+                    self.isFocus = on
+                }
+            }
             
         }
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-            self.isFocus = true
-            if ani { self.isInit = true }
+            if ani {
+                self.isInit = true
+                DispatchQueue.main.async {
+                    withAnimation{self.isFocus = true}
+                }
+            }
         }
        
         .onAppear{

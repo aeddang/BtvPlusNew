@@ -54,9 +54,6 @@ struct InputNumberField: PageComponent {
         return (DimenKids.item.inputNum.width)/2 + Font.sizeKids.regular
     }
     
-    
-    
-  
     var body: some View {
         ZStack(alignment: .center) {
             Spacer().modifier(MatchParent())
@@ -102,7 +99,7 @@ struct InputNumberField: PageComponent {
                                                 })
                                                 .frame(
                                                     width: (DimenKids.item.inputNum.width * CGFloat(self.inputSize))
-                                                            + (DimenKids.margin.lightExtra * CGFloat(self.inputSize-1))
+                                                            + (DimenKids.margin.lightExtra * CGFloat(self.inputSize))
                                                     ,
                                                     height: DimenKids.item.inputNum.height)
                                                 .fixedSize()

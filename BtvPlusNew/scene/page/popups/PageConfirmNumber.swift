@@ -64,7 +64,7 @@ struct PageConfirmNumber: PageView {
     @State var inputSizeMin:Int? = nil
     @State var tip:String? = nil
     @State var msg:String? = nil // String.alert.watchLvInfoError
-    @State var safeAreaBottom:CGFloat = Dimen.app.keyboard
+    @State var safeAreaBottom:CGFloat = 0
     @State var isFocus:Bool = false
     @State var isSecure:Bool = false
     @State var isComplete:Bool = false
@@ -192,7 +192,11 @@ struct PageConfirmNumber: PageView {
         }
         
         .onReceive(self.pageObservable.$isAnimationComplete){ ani in
-            if ani { self.isFocus = true }
+            if ani {
+                DispatchQueue.main.async {
+                    withAnimation{self.isFocus = true}
+                }
+            }
         }
         .onReceive(self.sceneObserver.$safeAreaBottom){ pos in
             withAnimation{

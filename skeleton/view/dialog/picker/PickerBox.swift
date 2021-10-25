@@ -47,7 +47,7 @@ struct PickerBox: PageComponent{
                                 .onAppear(){
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                         let select = set.datas[self.selectedA]
-                                        self.infinityScrollModelA.uiEvent = .scrollTo(select.hashId, .center)
+                                        self.infinityScrollModelA.uiEvent = .scrollMove(select.hashId, .center)
                                     }
                                 }
                             } else {
@@ -77,7 +77,7 @@ struct PickerBox: PageComponent{
                                     .onAppear(){
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                             let select = set.datas[self.selectedB]
-                                            self.infinityScrollModelB.uiEvent = .scrollTo(select.hashId, .center)
+                                            self.infinityScrollModelB.uiEvent = .scrollMove(select.hashId, .center)
                                         }
                                     }
                             } else {
@@ -106,7 +106,7 @@ struct PickerBox: PageComponent{
                                     .onAppear(){
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                             let select = set.datas[self.selectedC]
-                                            self.infinityScrollModelC.uiEvent = .scrollTo(select.hashId, .center)
+                                            self.infinityScrollModelC.uiEvent = .scrollMove(select.hashId, .center)
                                         }
                                     }
                             } else {
@@ -135,7 +135,7 @@ struct PickerBox: PageComponent{
                                     .onAppear(){
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                             let select = set.datas[self.selectedD]
-                                            self.infinityScrollModelD.uiEvent = .scrollTo(select.hashId, .center)
+                                            self.infinityScrollModelD.uiEvent = .scrollMove(select.hashId, .center)
                                         }
                                     }
                             } else {

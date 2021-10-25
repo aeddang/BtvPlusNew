@@ -273,6 +273,7 @@ struct PlayItem: PageView {
                                 )
                                 .lineLimit(1)
                         }
+                        Spacer().modifier(MatchHorizontal(height: 0))
                         PlayItemInfo(data: self.data)
                         if !self.data.isClip {
                             HStack(spacing:SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.thin){

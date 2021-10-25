@@ -155,7 +155,7 @@ struct SceneAlertController: PageComponent{
             case .disableAppleTv : self.setupDisableAppleTv()
             default: return
             }
-            withAnimation{
+            withAnimation(.easeIn(duration: 0.2)){
                 self.isShow = true
             }
         }

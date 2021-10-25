@@ -77,5 +77,7 @@ extension String {
         public static let schedule = "btnSchedule".loaalized()
         public static let ticket = "btnTicket".loaalized()
         public static let exit = "btnExit".loaalized()
+        
+        public static let scrollTop = "btnScrollTop".loaalized()
     }
 }

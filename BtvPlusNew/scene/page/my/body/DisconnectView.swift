@@ -53,7 +53,7 @@ struct DisconnectView: PageComponent{
                     text: String.button.connectBtv
                 ){_ in
                     self.naviLogManager.actionLog(.clickConnectionButton)
-                
+                    self.appSceneObserver.pairingCompletedMovePage = nil
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
                     )

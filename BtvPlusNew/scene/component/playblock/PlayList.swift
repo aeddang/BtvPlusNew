@@ -241,6 +241,7 @@ struct PlayItem: PageView {
     var data:PlayData
     var range:CGFloat = 0
     var onPlay:(PlayData)->Void
+    var onSelect:(PlayData)->Void
     @State var isSelected:Bool = false
     @State var isForcePlay:Bool = false
     @State var isPlay:Bool = false
@@ -289,6 +290,10 @@ struct PlayItem: PageView {
                     }
                     .padding(.all, Dimen.margin.thin)
                     .modifier(MatchParent())
+                    .background( Color.transparent.clearUi)
+                    .onTapGesture {
+                        self.onSelect(self.data)
+                    }
                 }
             } else {
                 
@@ -344,6 +349,10 @@ struct PlayItem: PageView {
                     .padding(.top, (SystemEnvironment.isTablet || self.data.isClip) ? 0 : Dimen.margin.lightExtra)
                     .padding(.all, (SystemEnvironment.isTablet || self.data.isClip) ? Dimen.margin.thin : 0)
                     .frame(height:self.data.isClip ? Self.bottomSizeClip : Self.bottomSize)
+                    .background( Color.transparent.clearUi)
+                    .onTapGesture {
+                        self.onSelect(self.data)
+                    }
                 }
             }
             

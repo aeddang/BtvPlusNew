@@ -21,7 +21,7 @@ struct PageSetup: PageView {
     
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var pairingStbType:PairingDeviceType = .btv
-    @State var isQAMode:Bool = true
+    @State var isQAMode:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(

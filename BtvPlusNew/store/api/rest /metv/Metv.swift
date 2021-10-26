@@ -540,6 +540,25 @@ class Metv: Rest{
     }
     
     
+    /**
+    * STB 닉네임 업데이트 (IF-ME-052)
+    * @param changeNickname 대상 STB(stb_id)의 변경할 닉네임 정보
+    */
+    func updateStbNickName(
+        name:String,
+        completion: @escaping (UpdateMetv) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-052"
+       
+        params["stb_id"] = stbId
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["change_nickname"] = name
+        fetch(route: MetvUpdateHostNickname(body: params), completion: completion, error:error)
+    }
+    
 }
 struct MetvPlayTime:NetworkRoute{
     var method: HTTPMethod = .get
@@ -651,5 +670,10 @@ struct MetvGetHostNickname:NetworkRoute{
     
 }
 
+struct MetvUpdateHostNickname:NetworkRoute{
+   var method: HTTPMethod = .post
+   var path: String = "/metv/v5/setting/stbnickname/change"
+   var body:[String: Any]? = nil
+}
 
 

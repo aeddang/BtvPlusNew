@@ -47,7 +47,7 @@ struct PageKidsMultiBlock: PageView {
                         useBodyTracking:  self.useTracking,
                         useTracking:self.useTracking,
                         marginTop: DimenKids.app.pageTop + self.marginTop + DimenKids.margin.regular + self.sceneObserver.safeAreaTop,
-                        marginBottom: self.sceneObserver.safeAreaIgnoreKeyboardBottom,
+                        marginBottom: max(self.sceneObserver.safeAreaIgnoreKeyboardBottom, DimenKids.margin.thin),
                         header: self.monthlyPurchaseTicket ?? self.monthlyGuide,
                         headerSize: self.monthlyHeaderSize
                     )

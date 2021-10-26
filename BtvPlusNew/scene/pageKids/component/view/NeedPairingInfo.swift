@@ -40,7 +40,7 @@ struct NeedPairingInfo: PageView {
                 text: String.button.connectBtv,  isFixSize: true
             ){ _ in
                 self.naviLogManager.actionLog(.clickConnectStbButton)
-                
+                self.appSceneObserver.pairingCompletedMovePage = nil
                 self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                     self.pagePresenter.openPopup(

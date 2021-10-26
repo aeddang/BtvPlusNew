@@ -86,11 +86,13 @@ struct PageKidsMonthly: PageView {
                 }
             }
             .onAppear{
+                
                 if let obj = self.pageObject {
                     self.openId = obj.getParamValue(key: .subId) as? String
                 }
             }
             .onDisappear{
+                
                 //self.appSceneObserver.useGnb = true
             }
         }//geo

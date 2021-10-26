@@ -40,6 +40,7 @@ class TextTabData:InfinityData{
     
     var useAble:Bool {
         get{
+            if SystemEnvironment.isEvaluation && isAdult {return false}
             if self.blocks != nil {return true}
             if self.listType != nil && self.menuId != nil {return true}
             return false

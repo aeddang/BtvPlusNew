@@ -589,18 +589,17 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         let changeOrientation:UIInterfaceOrientation? = getChangeDeviceOrientation(mask: mask)
         if isForce {
             PageLog.d("requestDeviceOrientation mask force" , tag: "PageScene")
-            DispatchQueue.main.async {
-                UINavigationController.attemptRotationToDeviceOrientation()
-            }
+            UINavigationController.attemptRotationToDeviceOrientation()
             return
         }
         
         guard let change = changeOrientation else { return }
         DispatchQueue.main.async {
             UIDevice.current.setValue(change.rawValue, forKey: "orientation")
-            PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
             UINavigationController.attemptRotationToDeviceOrientation()
+            PageLog.d("requestDeviceOrientation mask" , tag: "PageScene")
         }
+        
        
     }
 

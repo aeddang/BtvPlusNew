@@ -265,9 +265,7 @@ struct AppLayout: PageComponent{
             .autoconnect()
             .sink() {_ in
                 self.cancelSyncOrientation()
-                DispatchQueue.main.async {
-                    self.pagePresenter.syncOrientation()
-                }
+                self.pagePresenter.syncOrientation()
             }
     }
     func cancelSyncOrientation(){
@@ -277,10 +275,15 @@ struct AppLayout: PageComponent{
     
     func onUpdateAlram(flag:UpdateFlag, msg:String? = nil){
         if flag == .force {
-            self.appSceneObserver.alert = .alert(
-                String.alert.update, msg ?? flag.defaultMessage){
-                AppUtil.goAppStore()
-                self.suspand()
+            self.appSceneObserver.alert = .confirm(
+                String.alert.update, msg ?? flag.defaultMessage,
+                cancelText: String.alert.updateAfter){ isOk in
+                if isOk {
+                    AppUtil.goAppStore()
+                    self.suspand()
+                } else {
+                    self.suspand()
+                }
             }
         } else {
             self.appSceneObserver.alert = .confirm(

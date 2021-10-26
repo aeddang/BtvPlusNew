@@ -217,12 +217,14 @@ extension PageSynopsis {
     }
     
     func purchase(){
-        self.onDefaultViewMode()
-        guard  let model = self.purchaseWebviewModel else { return }
-        self.pagePresenter.openPopup(
-            PageProvider.getPageObject(.purchase, animationType: self.type == .btv ? nil : .opacity)
-                .addParam(key: .data, value: model)
-        )
+        DispatchQueue.main.async {
+            self.onDefaultViewMode()
+            guard  let model = self.purchaseWebviewModel else { return }
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.purchase, animationType: self.type == .btv ? nil : .opacity)
+                    .addParam(key: .data, value: model)
+            )
+        }
     }
     
     func watchBtv(){

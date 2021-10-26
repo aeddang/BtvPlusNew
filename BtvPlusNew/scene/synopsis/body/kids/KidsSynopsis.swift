@@ -10,6 +10,7 @@ import SwiftUI
 extension KidsSynopsis {
     static let topHeight:CGFloat = SystemEnvironment.isTablet ? 192 : 40
     static let bottomHeight:CGFloat = SystemEnvironment.isTablet ? 74 : 38
+    static let bottomMargin:CGFloat = DimenKids.margin.light
     static let listWidth:CGFloat = SystemEnvironment.isTablet ? 260 : 150
     //static let playerAreaWidth:CGFloat = SystemEnvironment.isTablet ? 705 : 440
     //static let playerSize:CGSize = SystemEnvironment.isTablet ? CGSize(width: 705, height: 394) : CGSize(width: 368, height: 206)
@@ -17,7 +18,7 @@ extension KidsSynopsis {
     func getPlayerAreaWidth(sceneObserver:PageSceneObserver) -> CGFloat {
         let h = sceneObserver.screenSize.height
             - Self.topHeight - Self.bottomHeight
-            - (DimenKids.margin.regularExtra * 2) - DimenKids.margin.thin
+        - (DimenKids.margin.regularExtra * 2) - Self.bottomMargin
             - (sceneObserver.safeAreaTop + sceneObserver.safeAreaIgnoreKeyboardBottom)
         
         let limitW = sceneObserver.screenSize.width
@@ -104,20 +105,23 @@ struct KidsSynopsis: PageComponent{
                     Button(action: {
                         self.pagePresenter.goBack()
                     }) {
-                        Image(AssetKids.icon.back)
-                            .renderingMode(.original)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: DimenKids.icon.regularExtra,
-                                   height: DimenKids.icon.regularExtra)
+                        ZStack{
+                            Image(AssetKids.icon.back)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: DimenKids.icon.regularExtra,
+                                       height: DimenKids.icon.regularExtra)
+                        }
+                        .padding(.trailing, DimenKids.margin.light)
+                        .background(Color.transparent.clearUi)
                     }
-                    .padding(.trailing, DimenKids.margin.light)
                     .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
                     .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 }
                 
                 ZStack(alignment: .topLeading){
-                    VStack{
+                    VStack(spacing:0){
                         HStack(alignment: .center){
                             ZStack (alignment: .topLeading){
                                 ZStack {
@@ -198,7 +202,7 @@ struct KidsSynopsis: PageComponent{
                                     data: purchaseViewerData,
                                     synopsisModel: self.synopsisModel,
                                     isPairing: self.isPairing)
-                                    .padding(.top, DimenKids.margin.light)
+                                    .padding(.top, KidsSynopsis.bottomMargin)
                                     .frame(width:
                                             SystemEnvironment.isTablet
                                             ? self.playerWidth
@@ -212,6 +216,7 @@ struct KidsSynopsis: PageComponent{
                             }
                         }
                     }// vstack
+                    
                     if !self.isFullScreen {
                         VStack(alignment: .leading,spacing:0){
                             Spacer().modifier(MatchHorizontal(height: 0))
@@ -243,7 +248,7 @@ struct KidsSynopsis: PageComponent{
                 }// zstack
                 .padding(.top,self.isFullScreen ? 0 : DimenKids.margin.mediumExtra)
                 
-                if self.sceneOrientation == .landscape && !self.isFullScreen {
+                if !self.isFullScreen {
                     HStack(alignment: .top, spacing:0){
                         Spacer().modifier(MatchParent())
                         if let hasRelationVod = self.hasRelationVod {
@@ -285,8 +290,9 @@ struct KidsSynopsis: PageComponent{
     }//body
     
     private func updatePlayerSize(){
-        self.playerWidth = self.getPlayerAreaWidth(sceneObserver: self.sceneObserver)
+        self.playerWidth = max(100,self.getPlayerAreaWidth(sceneObserver: self.sceneObserver))
         self.castleHeight = self.playerWidth * 80/368
+        
     }
 }
 

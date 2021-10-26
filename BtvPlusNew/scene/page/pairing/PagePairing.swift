@@ -324,7 +324,7 @@ struct PagePairing: PageView {
                 }
             }
             .onReceive(self.vsManager.$isGranted){ isGranted in
-                if isGranted == false {
+                if isGranted == false && self.isbtvPairing {
                     self.onBtvPairing()
                 }
             }
@@ -341,6 +341,7 @@ struct PagePairing: PageView {
         }//geo
     }//body
     
+    @State var isbtvPairing:Bool = false
     private func requestPairing(type:PairingRequest){
         switch type {
         case .wifi:
@@ -360,6 +361,7 @@ struct PagePairing: PageView {
             self.naviLogManager.actionLog(
                 .clickConnectSelection, actionBody: .init(config:PairingType.btv.logPageConfig))
             if self.vsManager.isGranted != false {
+                self.isbtvPairing = true
                 self.vsManager.checkAccessStatus(isInterruptionAllowed:true)
                 return
             }
@@ -381,6 +383,7 @@ struct PagePairing: PageView {
     }
     
     private func onBtvPairing(){
+        self.isbtvPairing = false
         self.pagePresenter.openPopup(
             PageProvider.getPageObject(.pairingSetupUser)
                 .addParam(key: PageParam.type, value: PairingRequest.btv)

@@ -85,7 +85,9 @@ struct TopViewer: PageComponent{
                         VStack(alignment: .leading, spacing:0){
                             if self.isPairing == false {
                                 FillButton(
-                                    text: String.button.purchas
+                                    text: String.button.purchas,
+                                    trailText: self.data.salePrice ?? self.data.price,
+                                    strikeText: self.data.salePrice == nil ? nil : self.data.price
                                 ){_ in
                                 
                                     self.appSceneObserver.alert = .needPairing()

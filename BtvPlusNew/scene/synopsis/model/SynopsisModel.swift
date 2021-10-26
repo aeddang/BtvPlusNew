@@ -180,6 +180,8 @@ class SynopsisModel : PageProtocol {
         }
         
         switch self.synopsisType {
+        case .title :
+            self.ppvProducts = purchasPpv
         case .seasonFirst :
             self.ppvProducts = productsPpv
             self.ppsProducts = purchasPpv
@@ -194,11 +196,10 @@ class SynopsisModel : PageProtocol {
             if self.ppvProducts.count == 0 { self.ppvProducts.append(defaultSet) }
             if self.ppsProducts.count == 0 { self.ppsProducts.append(defaultSet) }
         case .seriesChange :
-           self.ppvProducts = productsPpv
-        case .title :
-            self.ppvProducts = purchasPpv
-        case .none: do{}
+            self.ppvProducts = productsPpv
+        case .none : break
         }
+        
         
         self.isRecommandAble = !self.isCancelProgram && self.distStsCd == .synced //공유가능
         self.isRecommand = self.isRecommandAble //추천가능
@@ -278,13 +279,13 @@ class SynopsisModel : PageProtocol {
                     let rsluTypCd = RsluTypCd(value: rsluItem.rslu_typ_cd ?? "")
                     return model.isPossn == rsluItem.possn_yn?.toBool()
                         && model.lag_capt_typ_cd == rsluItem.lag_capt_typ_cd
-                        && model.prd_prc_fr_dt_raw == rsluItem.prd_prc_fr_dt
+                        //&& model.prd_prc_fr_dt_raw == rsluItem.prd_prc_fr_dt
                         && model.prd_prc_to_dt_raw == rsluItem.prd_prc_to_dt
                         && model.rsluTypCd == rsluTypCd}
                                             
                 ){
                     //핑크퐁 바다동물동요(product 없음, purchase pps만 있음)
-                    if !model.epsd_rslu_id.isEmpty , rsluItem.epsd_rslu_id != nil
+                    if !model.epsd_rslu_id.isEmpty , rsluItem.epsd_rslu_id?.isEmpty == false
                         && model.epsd_rslu_id.caseInsensitiveCompare(rsluItem.epsd_rslu_id ?? "") != .orderedSame
                     {
                         //"해상도 아이디, epsd_rslu_info 동일한 타입과 다름. 재적용.")
@@ -464,7 +465,7 @@ class SynopsisModel : PageProtocol {
                 if let temp = $1.min(by: {
                     var result = false
                     //pps ppm은 대여 노출해야됨.
-                    if isDirectview && !isSeasonWatchAll && !isPurchasedPPM {
+                    if isDirectview && !self.metvSeasonWatchAll && !isPurchasedPPM {
                         result = $0.purchaseProductRank < $1.purchaseProductRank
                     } else {
                         result = $0.purchaseProductRank > $1.purchaseProductRank

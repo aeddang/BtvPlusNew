@@ -79,7 +79,8 @@ enum ApiType{
          deleteBookMark(SynopsisData),
          
          getPossessionPurchase(anotherStbId:String, Int? = nil , Int? = nil),
-         getHostNickname(isAll:Bool = false, anotherStbId:String? = nil)
+         getHostNickname(isAll:Bool = false, anotherStbId:String? = nil),
+         updateStbNickName(String?)
     //METV event
     case postAttendance(pcid:String,callback:String? = nil),
          getAttendance(pcid:String,callback:String? = nil)

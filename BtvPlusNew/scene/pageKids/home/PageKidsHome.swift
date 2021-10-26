@@ -114,6 +114,7 @@ struct PageKidsHome: PageView {
                 }
             }
             .onAppear{
+                PageSynopsis.isMonthly = false
                 self.marginTop = KidsTop.height + DimenKids.margin.regular + self.sceneObserver.safeAreaTop
                 self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
                 if let obj = self.pageObject {

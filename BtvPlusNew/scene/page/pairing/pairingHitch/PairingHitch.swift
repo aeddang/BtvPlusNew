@@ -79,7 +79,9 @@ struct PairingHitch: PageComponent {
                                         self.selectePairingDevice(stb: select)
                                     }
                                 } else {
-                                    SelectPairingType()
+                                    SelectPairingType(
+                                        isHitching: self.isHitching
+                                    )
                                 }
                                 Button(action: {
                                     self.closeHitch()
@@ -107,7 +109,9 @@ struct PairingHitch: PageComponent {
                                         self.selectePairingDevice(stb: select)
                                     }
                                 } else {
-                                    SelectPairingType()
+                                    SelectPairingType(
+                                        isHitching: self.isHitching
+                                    )
                                 }
                                 Button(action: {
                                     self.closeHitch(sendLog: true)

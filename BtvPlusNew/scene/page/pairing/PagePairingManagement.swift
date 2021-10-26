@@ -94,6 +94,7 @@ struct PagePairingManagement: PageView {
                                         
                                         self.pagePresenter.openPopup(
                                             PageProvider.getPageObject(.confirmNumber)
+                                                .addParam(key: .id, value: self.tag)
                                                 .addParam(key: .type, value: PageConfirmNumber.InputType.nickname)
                                         )
                                     }
@@ -167,6 +168,17 @@ struct PagePairingManagement: PageView {
                 case .disConnected :
                     // self.pagePresenter.closePopup(self.pageObject?.id)
                     self.pagePresenter.closeAllPopup()
+                default : break
+                }
+            }
+            .onReceive(self.pagePresenter.$event){ evt in
+                guard let evt = evt else {return}
+                if evt.id != self.tag {return}
+                switch evt.type {
+                case .completed :
+                    guard let modifyNickName = evt.data as? String  else { return }
+                    self.modelNickName = modifyNickName
+                    
                 default : break
                 }
             }

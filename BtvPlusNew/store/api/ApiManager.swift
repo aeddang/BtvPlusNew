@@ -318,6 +318,9 @@ class ApiManager :PageProtocol, ObservableObject{
             isAll: isAll, anotherStbId:anotherStbId,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
+        case .updateStbNickName(let nickName) : self.metv.updateStbNickName(name: nickName ?? "",
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
             
         //ME_AUTH
         case .getPurchaseMonthly(let page, let count) : self.metvAuth.getPurchaseMonthly(

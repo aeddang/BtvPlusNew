@@ -678,6 +678,12 @@
 "pairingSetupUserAgreement2" = "모바일 B tv 개인정보 수집 이용 동의(필수)";
 "pairingSetupUserAgreement3" = "인기, 무료 콘텐츠 소식/혜택 및 업데이트 알림을 받고,\n이를 위한 개인정보 수집/이용에 동의(선택)";
 
+"pairingSetupUserNickName" = "닉네임 확인 안내";
+"pairingSetupUserNickNameConfirm" = "닉네임 확인 후 다시 시도해 주세요.\n8자 이내 한글/영문/숫자만\n입력 가능합니다.";
+"pairingSetupUserNickNameConfirmTip" = "※ 단, 숫자는 한글 또는 영문과\n조합하여 입력해 주세요.";
+"pairingSetupUserCheckAgree" = "필수 이용 동의 안내";
+"pairingSetupUserCheckAgreeConfirm" = "모바일 B tv 서비스 이용을 위해\n필수 이용 약관에 동의해 주세요.";
+
 "pairingDeviceText1" = "연결할 B tv를 선택해 주세요.";
 "pairingDeviceText2" = "연결된 Wi-Fi 공유기: ";
 "pairingDeviceText3" = "이용 중 B tv";
@@ -742,6 +748,7 @@
 "myWatchedKids" = "키즈 콘텐츠 시청 목록은\nZEM 키즈 메뉴에서 확인하실 수 있습니다.";
 "myWatchedKidsButton" = "ZEM 키즈 시청 목록 보러 가기";
 "myPurchaseEmpty" = "구매 내역이 없습니다.";
+"myPurchaseDeleted" = "선택하신 구매 내역이 삭제되었습니다.";
 "myCollectedEmpty" = "구매하신 소장 VOD가 없습니다.";
 "myAlramEmpty" = "수신한 알림 메시지가 없습니다.";
 "myAlramEmptyPushOn" = "알림 메시지 수신을 설정하시면\n신작 업데이트나 이벤트 정보를\n빠르게 받으실 수 있어요.";

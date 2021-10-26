@@ -78,9 +78,7 @@ struct KidsPlayerBody: PageComponent{
                                     isActive: self.isPlayViewActive
                                 )
                                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
-                                
                             }
-                            
                         }
                         .modifier(Ratio16_9(
                                     geometry: self.isFullScreen ? geometry : nil,
@@ -128,7 +126,7 @@ struct KidsPlayerBody: PageComponent{
                             data: purchaseViewerData,
                             synopsisModel : self.synopsisModel,
                             isPairing: self.isPairing)
-                            .padding(.top, DimenKids.margin.light)
+                            .padding(.top, KidsSynopsis.bottomMargin)
                             //.padding(.trailing, DimenKids.margin.regular)
                             .frame(width:self.playerWidth + DimenKids.icon.light + DimenKids.margin.regular)
                             .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))

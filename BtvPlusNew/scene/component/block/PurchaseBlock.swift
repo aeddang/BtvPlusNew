@@ -375,6 +375,8 @@ struct PurchaseBlock: PageComponent, Identifiable{
             self.appSceneObserver.event = .toast(String.alert.apiErrorServer)
             return
         }
+        self.appSceneObserver.event = .toast(String.pageText.myPurchaseDeleted)
+       
         ComponentLog.d("deleted count " + (result.result_infos?.count.description ?? "0"), tag: self.tag)
         self.reload()
     }

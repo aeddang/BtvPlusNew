@@ -98,7 +98,8 @@ struct WatchedBlock: PageComponent, Identifiable{
                             self.delete(data:data)
                         },
                         onBottom: { _ in
-                            self.load()
+                            //if self.pagePresenter.currentTopPage != self.pageObservable.pageObject {return}
+                            //self.load()
                         }
                     )
                 }
@@ -137,6 +138,7 @@ struct WatchedBlock: PageComponent, Identifiable{
             guard let evt = evt else { return }
             switch evt {
             case .onResult(_, let res, _):
+                if res.id != self.tag {return}
                 switch res.type {
                 case .getWatch : if self.watchedType == .btv { self.loaded(res) }
                 case .getWatchMobile : if self.watchedType == .mobile { self.loaded(res) }
@@ -165,13 +167,11 @@ struct WatchedBlock: PageComponent, Identifiable{
             }
         }
         .onReceive(self.pairing.$event){evt in
+            if self.pageObject != self.pagePresenter.currentTopPage {return}
             guard let _ = evt else {return}
             switch evt {
             case .pairingCompleted : self.reload()
             case .disConnected : self.reload()
-            case .pairingCheckCompleted(let isSuccess, _) :
-                if isSuccess { self.reload() }
-                else { self.appSceneObserver.alert = .pairingCheckFail }
             default : break
             }
         }
@@ -191,7 +191,6 @@ struct WatchedBlock: PageComponent, Identifiable{
         }
         self.isError = nil
         self.datas = []
-        
         self.infinityScrollModel.reload()
         self.load()
     }

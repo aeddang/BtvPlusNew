@@ -206,7 +206,7 @@ struct PagePairingSetupUser: PageView {
                     .background(Color.app.blueLight)
                     FillButton(
                         text: String.button.next,
-                        isSelected: self.isInputCompleted()
+                        isSelected: true
                     ){_ in
                         
                         self.inputCompleted()
@@ -293,11 +293,19 @@ struct PagePairingSetupUser: PageView {
     
     func inputCompleted() {
         if self.nickName.isEmpty {
-            self.appSceneObserver.event = .toast(String.alert.needNickName)
+           //self.appSceneObserver.event = .toast(String.alert.needNickName)
+            self.appSceneObserver.alert = .alert(
+                String.pageText.pairingSetupUserNickName,
+                String.pageText.pairingSetupUserNickNameConfirm,
+                String.pageText.pairingSetupUserNickNameConfirmTip)
+           
             return
         }
         if !self.isAgree1 {
-            self.appSceneObserver.event = .toast(String.alert.needAgreeTermsOfService)
+            //self.appSceneObserver.event = .toast(String.alert.needAgreeTermsOfService)
+            self.appSceneObserver.alert = .alert(
+                String.pageText.pairingSetupUserCheckAgree,
+                String.pageText.pairingSetupUserCheckAgreeConfirm)
             return
         }
         if !self.isAgree2 {

@@ -290,13 +290,15 @@ struct PageSearch: PageView {
                 self.marginBottom = self.sceneObserver.safeAreaIgnoreKeyboardBottom
             }
             .onAppear{
-                
+                self.prevSynopsisMonthly = PageSynopsis.isMonthly
+                PageSynopsis.isMonthly = false
             }
             .onDisappear{
-               
+                PageSynopsis.isMonthly = self.prevSynopsisMonthly 
             }
         }//geo
     }//body
+    @State var prevSynopsisMonthly:Bool = false
     @State var isInit:Bool = false
     @State var keyword:String = ""
     @State var resultKeyword:String = ""

@@ -122,7 +122,7 @@ struct PageContentController: View{
     func delaySafeAreaUpdate(geometry:GeometryProxy) {
         self.safeAreaUpdateSubscription?.cancel()
         self.safeAreaUpdateSubscription = Timer.publish(
-            every: 0.01, on: .current, in: .common)
+            every: 0.02, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 self.safeAreaUpdateSubscription?.cancel()
@@ -152,12 +152,14 @@ struct PageContentController: View{
     }
     
     func addPopup(_ page:PageViewProtocol){
-        pageControllerObservable.popups.append(page)
-        pageControllerObservable.popups.sort{$0.zIndex < $1.zIndex} 
-        pageControllerObservable.pages.forEach({ $0.pageAdded( page.pageObject )})
-        pageControllerObservable.popups.forEach({ $0.pageAdded( page.pageObject )})
-        pageControllerObservable.overlayView?.pageAdded(page.pageObject)
-        pageControllerObservable.updatePageIndex()
+        DispatchQueue.main.async {
+            pageControllerObservable.popups.append(page)
+            pageControllerObservable.popups.sort{$0.zIndex < $1.zIndex} 
+            pageControllerObservable.pages.forEach({ $0.pageAdded( page.pageObject )})
+            pageControllerObservable.popups.forEach({ $0.pageAdded( page.pageObject )})
+            pageControllerObservable.overlayView?.pageAdded(page.pageObject)
+            pageControllerObservable.updatePageIndex()
+        }
     }
     
     func getPopup(_ key:String) -> PageViewProtocol? {

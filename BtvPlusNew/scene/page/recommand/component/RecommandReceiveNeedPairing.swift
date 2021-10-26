@@ -73,7 +73,7 @@ struct RecommandReceiveNeedPairing: PageComponent {
                     bgColor:Color.brand.primary
                 ){_ in
                     
-                    
+                    self.appSceneObserver.pairingCompletedMovePage = nil
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.pairing)
                             .addParam(key: PageParam.subType, value: "mob-com-popup")

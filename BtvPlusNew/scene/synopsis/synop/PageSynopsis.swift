@@ -15,6 +15,7 @@ extension PageSynopsis {
     static let getPlay:Int = 2
     static let getContinuous:Int = 3
     static let shortcutType = "com.skb.episode.search"
+    static var isMonthly:Bool = false
 }
 
 struct PageSynopsis: PageView {
@@ -497,6 +498,7 @@ struct PageSynopsis: PageView {
     }
     @State var originHistorys:[SynopsisData] = []
     @State var historys:[SynopsisData] = []
+   
     @State var isInitPage = false
     @State var isAutoPlay:Bool? = nil
     @State var isCheckdPairing:Bool? = nil
@@ -935,6 +937,7 @@ struct PageSynopsis: PageView {
                     self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
                     
                 } else { //회차변경    // if self.episodeViewerData?.count != self.srisCount
+                    
                     if prev.metvSeasonWatchAll {
                         self.prevDirectView = prev.directViewData
                         self.synopsisModel = SynopsisModel(type: .seriesChange).setData(data: data)
@@ -942,6 +945,8 @@ struct PageSynopsis: PageView {
                         self.prevDirectView = nil
                         self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
                     }
+                    //self.prevDirectView = nil
+                    //self.synopsisModel = SynopsisModel(type: .seasonFirst).setData(data: data)
                 }
             } else { //최초진입
                 self.prevSrisId = self.synopsisData?.srisId
@@ -980,7 +985,8 @@ struct PageSynopsis: PageView {
     private func setupDirectView (_ data:DirectView?, isSeasonWatchAll:Bool = false){
         PageLog.d("setupDirectView", tag: self.tag)
         self.synopsisModel?.setData(directViewData: data, isSeasonWatchAll: isSeasonWatchAll)
-        self.purchaseWebviewModel?.setParam(directView: data, monthlyPid: self.synopsisModel?.salePPMItem?.prdPrcId)
+        let mpid = Self.isMonthly ? self.synopsisModel?.salePPMItem?.prdPrcId : nil
+        self.purchaseWebviewModel?.setParam(directView: data, monthlyPid:mpid)
         
         self.relationContentsModel.setData(synopsis: self.synopsisModel)
         self.isBookmark = self.synopsisModel?.isBookmark

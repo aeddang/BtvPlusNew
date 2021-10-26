@@ -16,6 +16,7 @@ extension TopViewerKids {
 struct TopViewerKids: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var vsManager:VSManager
     var componentViewModel:SynopsisViewModel?
@@ -59,6 +60,7 @@ struct TopViewerKids: PageComponent{
                                 isFixSize : false
                             ){_ in
                             
+                                self.appSceneObserver.pairingCompletedMovePage = nil
                                 self.pagePresenter.openPopup(
                                     PageProvider.getPageObject(.pairing)
                                         .addParam(key: PageParam.subType, value: "mob-com-popup")

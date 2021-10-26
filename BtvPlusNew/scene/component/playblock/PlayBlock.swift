@@ -118,12 +118,23 @@ struct PlayBlock: PageComponent{
                                         playerModel: self.playerModel,
                                         viewModel: self.viewModel,
                                         data: data,
-                                        range: self.getRange()
-                                        ){ data in
+                                        range: self.getRange(),
+                                        onPlay:{ data in
                                         
                                             self.viewModel.logEvent = .play(data)
                                             self.forcePlay(data: data)
-                                    }
+                                        },
+                                        onSelect:{ data in
+                                            self.viewModel.logEvent = .select(data)
+                                            if self.focusIndex != data.index {
+                                                self.onFocusChange(willFocus: data.index)
+                                            }
+                                            if !data.isClip {
+                                                self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
+                                            } else {
+                                                self.playerModel.event = .fullScreen(true, isUser: true)
+                                            }
+                                        })
                                     .id(data.hashId)
                                     .modifier(
                                         ListRowInset(
@@ -141,15 +152,7 @@ struct PlayBlock: PageComponent{
                                     .onDisappear{
                                         self.onDisappear(idx: data.index)
                                     }
-                                    .onTapGesture {
-                                        self.viewModel.logEvent = .select(data)
-                                        if self.focusIndex != data.index {
-                                            self.onFocusChange(willFocus: data.index)
-                                        }
-                                        if !data.isClip {
-                                            self.appSceneObserver.event = .toast((data.openDate ?? "") + " " + String.alert.updateAlramRecommand)
-                                        }
-                                    }
+                                    
                                 }
                                 Spacer().modifier(MatchHorizontal(height: Dimen.margin.medium))
                                     .onAppear{

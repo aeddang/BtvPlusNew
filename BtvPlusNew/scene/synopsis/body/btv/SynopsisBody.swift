@@ -10,12 +10,12 @@ import SwiftUI
 
 extension SynopsisBody {
     static let spacing:CGFloat = SystemEnvironment.isTablet ? Dimen.margin.regularExtra : Dimen.margin.regular
-    
 }
 
 struct SynopsisBody: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var vsManager:VSManager
     var componentViewModel:SynopsisViewModel
     var infinityScrollModel: InfinityScrollModel
@@ -125,6 +125,7 @@ struct SynopsisBody: PageComponent{
                         text: String.button.connectBtv
                     ){_ in
                         
+                        self.appSceneObserver.pairingCompletedMovePage = nil
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.pairing)
                                 .addParam(key: PageParam.subType, value: "mob-uixp-synop")

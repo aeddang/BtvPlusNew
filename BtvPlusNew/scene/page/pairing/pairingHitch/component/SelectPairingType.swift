@@ -17,6 +17,8 @@ struct SelectPairingType: View {
     @EnvironmentObject var naviLogManager:NaviLogManager
     @EnvironmentObject var vsManager:VSManager
     @EnvironmentObject var pairing:Pairing
+    var isHitching:Bool
+    @State var selectedIdx:Int = 0
     var body: some View {
         VStack(spacing: 0){
             Image( Asset.image.pairingHitchText02 )
@@ -34,15 +36,15 @@ struct SelectPairingType: View {
                 .padding(.top, Dimen.margin.light)
            
             HStack( spacing: Dimen.margin.tiny){
-                HitchPairingItem(type: .wifi, isSelected: false)
+                HitchPairingItem(type: .wifi, isSelected: self.selectedIdx == 0)
                     .onTapGesture {
                         self.requestPairing(type: .wifi)
                     }
-                HitchPairingItem(type: .btv, isSelected: false)
+                HitchPairingItem(type: .btv, isSelected: self.selectedIdx == 1)
                     .onTapGesture {
                         self.requestPairing(type: .btv)
                     }
-                HitchPairingItem(type: .user, isSelected: false)
+                HitchPairingItem(type: .user, isSelected: self.selectedIdx == 2)
                     .onTapGesture {
                         self.requestPairing(type: .user)
                     }
@@ -63,6 +65,8 @@ struct SelectPairingType: View {
                     : self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.margin.thin)
         
         .onReceive(self.vsManager.$isGranted){ isGranted in
+            if !self.isHitching {return}
+            if self.selectedIdx != 1 {return}
             if isGranted == false {
                 self.onBtvPairing()
             }
@@ -75,6 +79,7 @@ struct SelectPairingType: View {
         switch type {
         case .wifi:
             self.sendLog(menuName: "wifi연결")
+            self.selectedIdx = 0
             if self.networkObserver.status != .wifi {
                 self.appSceneObserver.alert = .connectWifi
                 return
@@ -85,6 +90,7 @@ struct SelectPairingType: View {
                     .addParam(key: PageParam.subType, value: "mob-home-popup")
             )
         case .btv:
+            self.selectedIdx = 1
             self.sendLog(menuName: "인증번호연결")
             if self.vsManager.isGranted != false {
                 self.vsManager.checkAccessStatus(isInterruptionAllowed:true)
@@ -92,8 +98,9 @@ struct SelectPairingType: View {
             }
             onBtvPairing()
         case .user:
+            self.selectedIdx = 2
             self.sendLog(menuName: "가입자인증")
-           self.pagePresenter.openPopup(
+            self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.pairingSetupUser)
                     .addParam(key: PageParam.type, value: PairingRequest.user(nil))
                     .addParam(key: PageParam.subType, value: "mob-home-popup")
@@ -127,7 +134,7 @@ struct SelectPairingType_Previews: PreviewProvider {
     static var previews: some View {
         Form{
             SelectPairingType(
-               
+                isHitching:true
             )
             .environmentObject(PagePresenter())
             .environmentObject(PageSceneObserver())

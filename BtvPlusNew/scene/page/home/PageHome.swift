@@ -235,7 +235,6 @@ struct PageHome: PageView {
     }
     
     private func reset(){
-        
         if self.pairing.status != .pairing {
             Self.finalSelectedMonthlyId = nil //마지막 보고있던 월정액 페이지 유지로 넣어두었으나 무조건 리셋하래서 사용안함
         }
@@ -309,18 +308,23 @@ struct PageHome: PageView {
         self.currentBand = band
         switch band.gnbTypCd {
         case EuxpNetwork.GnbTypeCode.GNB_HOME.rawValue :
+            PageSynopsis.isMonthly = false
             self.isFree = false
             self.useFooter = true
             self.useQuickMenu = true
             self.setupBlocks()
+            
         case EuxpNetwork.GnbTypeCode.GNB_OCEAN.rawValue:
+            PageSynopsis.isMonthly = true
             self.isFree = true
             self.setupOcean()
             self.setupBlocks()
         case EuxpNetwork.GnbTypeCode.GNB_MONTHLY.rawValue :
+            PageSynopsis.isMonthly = true
             self.isFree = true
             self.setupOriginMonthly()
         case EuxpNetwork.GnbTypeCode.GNB_FREE.rawValue :
+            PageSynopsis.isMonthly = false
             self.isFree = true
             self.setupBlocks()
         default: self.setupBlocks()

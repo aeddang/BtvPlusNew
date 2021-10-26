@@ -81,6 +81,12 @@ extension String{
         public static let pairingSetupUserAgreement2 = "pairingSetupUserAgreement2".loaalized()
         public static let pairingSetupUserAgreement3 = "pairingSetupUserAgreement3".loaalized()
         
+        public static let pairingSetupUserNickName = "pairingSetupUserNickName".loaalized()
+        public static let pairingSetupUserNickNameConfirm = "pairingSetupUserNickNameConfirm".loaalized()
+        public static let pairingSetupUserNickNameConfirmTip = "pairingSetupUserNickNameConfirmTip".loaalized()
+        public static let pairingSetupUserCheckAgree = "pairingSetupUserCheckAgree".loaalized()
+        public static let pairingSetupUserCheckAgreeConfirm = "pairingSetupUserCheckAgreeConfirm".loaalized()
+        
         public static let pairingGuideText1Horizontal = "pairingGuideText1Horizontal".loaalized()
         public static let pairingGuideTitle2Horizontal = "pairingGuideTitle2Horizontal".loaalized()
         public static let pairingGuideTip2Horizontal = "pairingGuideTip2Horizontal".loaalized()
@@ -205,6 +211,7 @@ extension String{
         public static let myWatchedKids = "myWatchedKids".loaalized()
         public static let myWatchedKidsButton = "myWatchedKidsButton".loaalized()
         public static let myPurchaseEmpty = "myPurchaseEmpty".loaalized()
+        public static let myPurchaseDeleted = "myPurchaseDeleted".loaalized()
         public static let myCollectedEmpty = "myCollectedEmpty".loaalized()
         public static let myBookMarkedEmpty =  "myBookMarkedEmpty".loaalized()
         public static let myBookMarkedInfo = "myBookMarkedInfo".loaalized()

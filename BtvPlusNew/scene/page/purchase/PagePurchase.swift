@@ -25,6 +25,7 @@ struct PagePurchase: PageView {
     @State var marginBottom:CGFloat = 0
     @State var purchaseLink:String = ""
     @State var isRetryPurchase:Bool = false
+    @State var isTop:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -33,18 +34,21 @@ struct PagePurchase: PageView {
                 axis:.vertical
             ) {
                 VStack(spacing:0){
-                    PageTab(
-                        title: String.pageTitle.purchase,
-                        isClose: true,
-                        style: .white
-                    ){
-                        self.sendLog(action: .clickOrderCompletedConfirm)
-                        self.pagePresenter.goBack()
+                    if isTop {
+                        PageTab(
+                            title: String.pageTitle.purchase,
+                            isClose: true,
+                            style: .white
+                        ){
+                            self.sendLog(action: .clickOrderCompletedConfirm)
+                            self.pagePresenter.goBack()
+                        }
+                        
                     }
-                    .padding(.top, self.sceneObserver.safeAreaTop)
                     BtvWebView( viewModel: self.webViewModel)
                         .modifier(MatchParent())
                 }
+                .padding(.top, self.sceneObserver.safeAreaTop)
                 .padding(.bottom, self.marginBottom)
                 .modifier(PageFull(style:.white))
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -69,6 +73,14 @@ struct PagePurchase: PageView {
                             self.pairing.authority.reset()
                             self.appSceneObserver.event =
                                 .update(.purchase(pid, listPrice:listPrice, paymentPrice:paymentPrice))
+                        }
+                        
+                        break
+                    case WebviewMethod.bpn_changeTopBar.rawValue :
+                        guard let json = json else { return }
+                        guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
+                        if let isTopVisible = param["isTopVisible"] as? Bool {
+                            self.isTop = isTopVisible
                         }
                         
                         break

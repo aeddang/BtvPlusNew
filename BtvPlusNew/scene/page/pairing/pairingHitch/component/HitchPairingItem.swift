@@ -69,7 +69,7 @@ struct HitchPairingItem: PageView {
         .clipShape(RoundedRectangle(cornerRadius: Dimen.radius.regularExtra))
         .overlay(
             RoundedRectangle(cornerRadius: Dimen.radius.regularExtra)
-                .stroke( Color.brand.primary.opacity(0.3)  ,lineWidth: self.isSelected ? 3 : 1 )
+                .stroke( Color.brand.primary.opacity(self.isSelected ? 1.0 : 0.3)  ,lineWidth: self.isSelected ? 3 : 1 )
         )
     }
 }

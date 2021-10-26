@@ -28,6 +28,7 @@ struct PageWebview: PageView {
     @State var title:String? = nil
     @State var marginBottom:CGFloat = Dimen.app.bottom
     @State var marginOffSet:CGFloat = 0
+    @State var isTop:Bool = true
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -36,17 +37,17 @@ struct PageWebview: PageView {
                 axis:.vertical
             ) {
                 VStack(spacing:0){
-                    if self.title != nil {
+                    if self.title != nil && self.isTop {
                         PageTab(
                             title: self.title,
                             isClose: true
                         )
-                        .padding(.top, self.sceneObserver.safeAreaTop)
                     }
                     BtvWebView( viewModel: self.webViewModel)
                         .modifier(MatchParent())
                         
                 }
+                .padding(.top, self.sceneObserver.safeAreaTop)
                 .padding(.bottom, self.marginBottom - self.marginOffSet)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
@@ -54,10 +55,17 @@ struct PageWebview: PageView {
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
-                case .callFuncion(let method, _, _) :
+                case .callFuncion(let method, let json, _) :
                     switch method {
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.pagePresenter.goBack()
+                        break
+                    case WebviewMethod.bpn_changeTopBar.rawValue :
+                        guard let json = json else { return }
+                        guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
+                        if let isTopVisible = param["isTopVisible"] as? Bool {
+                            self.isTop = isTopVisible
+                        }
                         break
                     default : break
                     }

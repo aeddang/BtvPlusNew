@@ -12,6 +12,7 @@ import SwiftUI
 
 struct PageKidsTab: PageComponent{
     @EnvironmentObject var pagePresenter:PagePresenter
+    @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var naviLogManager:NaviLogManager
@@ -119,6 +120,10 @@ struct PageKidsTab: PageComponent{
     }
     
     func moveSetupCheck() {
+        if self.pairing.status != .pairing {
+            self.moveSetup()
+            return
+        }
         
         if !SystemEnvironment.isAdultAuth {
             self.pagePresenter.openPopup(

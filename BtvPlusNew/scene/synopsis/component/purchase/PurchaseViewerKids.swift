@@ -63,6 +63,7 @@ struct PurchaseViewerKids: PageComponent{
                     isFixSize: false
                 ){_ in
                     
+                    self.appSceneObserver.pairingCompletedMovePage = nil
                     self.appSceneObserver.event = .toast(String.alert.moveBtvPairing)
                     DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                         self.pagePresenter.openPopup(

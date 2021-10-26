@@ -75,10 +75,12 @@ struct BottomTab: PageComponent{
                 case .updated :
                     self.pages = self.dataProvider.bands.datas.map{ band in
                         let page:PageID = (band.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue) ? .category : .home
+                        let name = SystemEnvironment.isEvaluation && band.name == "무료" ? "VOD" : band.name
                         return PageSelecterble(
                             id: page,
                             on: band.activeIcon, off: band.defaultIcon,
-                            text: band.name, menuId: band.menuId,
+                            text: name,
+                            menuId: band.menuId,
                             noImg: band.defaultNoImg, noImgAc: band.activeNoImg)
                     }
                 default : do{}

@@ -167,8 +167,8 @@ struct PageConfirmNumber: PageView {
                 self.confirmPasswordRespond(res)
             case .postCoupon, .getStbInfo, .certificationCoupon, .postBPoint, .postBCash :
                 self.resigistCouponRespond(res)
-            case .updateUser (let user):
-                self.modifyNickNameRespond(res, updateData:user)
+            case .updateStbNickName (let name):
+                self.modifyNickNameRespond(res, updateData:name)
             case .getOkCashPoint :
                 self.confirmOkCashRespond(res)
             case .updateOkCashPoint :
@@ -180,7 +180,7 @@ struct PageConfirmNumber: PageView {
             guard let err = err else { return }
             if err.id != self.tag { return }
             switch err.type {
-            case .confirmPassword, .postCoupon, .updateUser,
+            case .confirmPassword, .postCoupon, .updateStbNickName,
                  .postBPoint, .postBCash, .updateOkCashPoint, .getStbInfo:
                 self.msg = String.alert.apiErrorClient
                 //self.input = ""
@@ -423,24 +423,21 @@ struct PageConfirmNumber: PageView {
             self.appSceneObserver.event = .toast(String.alert.checkConnectStatus)
             return
         }
-        let modifyData = ModifyUserData(nickName: name, characterIdx: self.pairing.user?.characterIdx)
-        self.dataProvider.requestData(q: .init(id:self.tag, type: .updateUser(modifyData)))
-        
+        //let modifyData = ModifyUserData(nickName: name, characterIdx: self.pairing.user?.characterIdx)
+        self.dataProvider.requestData(q: .init(id:self.tag, type: .updateStbNickName(name)))
     }
     
-    func modifyNickNameRespond(_ res:ApiResultResponds, updateData:ModifyUserData?){
-        guard let resData = res.data as? NpsResult else {return}
-        if resData.header?.result == ApiCode.success {
+    func modifyNickNameRespond(_ res:ApiResultResponds, updateData:String?){
+        guard let resData = res.data as? UpdateMetv else {return}
+        if resData.result == ApiCode.success {
             self.pagePresenter.onPageEvent(self.pageObject,
-                                           event: .init(id : self.eventId, type: .completed, data:self.type))
-            if let data = updateData {
-                self.repository.updateUser(data)
-            }
+                                           event: .init(id : self.eventId, type: .completed, data:updateData))
+    
             self.isComplete = true
             self.closePage()
         } else{
             self.input = ""
-            self.msg = resData.header?.reason ?? String.alert.apiErrorServer
+            self.msg = resData.reason ?? String.alert.apiErrorServer
         }
     }
    

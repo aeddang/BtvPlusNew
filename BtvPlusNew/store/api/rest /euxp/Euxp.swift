@@ -149,10 +149,13 @@ class Euxp: Rest{
     func getEventBanner(
         menuId:String?, bnrTypCd:EuxpNetwork.BannerType = .page , segId:String? = nil,
         completion: @escaping (EventBanner) -> Void, error: ((_ e:Error) -> Void)? = nil){
-
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-007"
         params["menu_id"] = menuId ?? ""
         params["seg_id"] = segId
@@ -176,7 +179,7 @@ class Euxp: Rest{
         params["IF"] = "IF-EUXP-010"
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
-        
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         
         var ynRecent = "Y"
         if data.epsdId?.isEmpty != false && data.epsdRsluId?.isEmpty == false {
@@ -223,6 +226,7 @@ class Euxp: Rest{
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-014"
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["sris_id"] = data.srisId ?? ""
         params["epsd_id"] = data.epsdId ?? ""
         params["prd_prc_id"] = data.prdPrcId ?? ""
@@ -245,9 +249,12 @@ class Euxp: Rest{
     func getRelationContents(
         data:SynopsisRelationData, anotherStbId:String? = nil,
         completion: @escaping (RelationContents) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-012"
         params["menu_id"] = data.menuId
         params["cw_call_id"] = data.cwCallId
@@ -255,6 +262,7 @@ class Euxp: Rest{
         params["epsd_rslu_id"] = data.epsdRsluId
         params["type"] = "all"
         params["app_typ_cd"] = "BTVPLUS"
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         var overrideHeaders:[String : String]? = nil
         if let another = anotherStbId {
             overrideHeaders = [String:String]()
@@ -274,6 +282,7 @@ class Euxp: Rest{
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["IF"] = "IF-EUXP-019"
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["epsd_id"] = epsdId
         fetch(route: EuxpInsideInfo(query: params), completion: completion, error:error)
     }
@@ -284,11 +293,15 @@ class Euxp: Rest{
     func getGnbBlock(
         isKids:Bool = false,
         completion: @escaping (GnbBlock) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["app_typ_cd"] = isKids ? EuxpNetwork.APP_TYPE_CD_KIDS : EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-030"
+        
         fetch(route: EuxpGnbBlock(query: params), completion: completion, error:error)
     }
     
@@ -302,9 +315,13 @@ class Euxp: Rest{
     func getGridPreview(
         menuId:String?, page:Int?, pageCnt:Int?, version:String?,
         completion: @escaping (GridPreview) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["IF"] = "IF-EUXP-031"
         params["menu_id"] = menuId ?? ""
         params["page_no"] = page?.description ?? "1"
@@ -323,9 +340,13 @@ class Euxp: Rest{
     func getGridEvent(
         menuId:String?, sortType:EuxpNetwork.SortType?, page:Int?, pageCnt:Int?, version:String?,
         completion: @escaping (GridEvent) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
+        params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["IF"] = "IF-EUXP-024"
         params["menu_id"] = menuId ?? ""
         params["page_no"] = page?.description ?? "1"
@@ -345,12 +366,14 @@ class Euxp: Rest{
     func getCWGrid(
         menuId:String?, cwCallId:String?, isKids:Bool = false,
         completion: @escaping (CWGrid) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["app_typ_cd"] = isKids ? EuxpNetwork.APP_TYPE_CD_KIDS : EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-009"
-        
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["menu_id"] = menuId ?? ""
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         params["sort_typ_cd"] = ""
@@ -368,12 +391,14 @@ class Euxp: Rest{
     func getCWGridKids(
         kid:Kid? , cwCallId:String?, sortType:EuxpNetwork.SortType?, type:String? = "all",
         completion: @escaping (CWGridKids) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        let stbId = NpsNetwork.hostDeviceId ?? SystemEnvironment.deviceId
         var params = [String:String]()
+        params["stb_id"] = stbId
         params["response_format"] = EuxpNetwork.RESPONSE_FORMET
         params["menu_stb_svc_id"] = EuxpNetwork.MENU_STB_SVC_ID
         params["app_typ_cd"] = EuxpNetwork.APP_TYPE_CD
         params["IF"] = "IF-EUXP-091"
-        
+        //params["inspect_yn"] = SystemEnvironment.isEvaluation ? "Y" : "N"
         params["stb_id"] = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         
         params["profile_id"] = kid?.id ?? "0"

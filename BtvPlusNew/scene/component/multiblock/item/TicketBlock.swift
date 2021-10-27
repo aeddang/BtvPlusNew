@@ -20,7 +20,7 @@ struct TicketBlock:BlockProtocol, PageComponent {
     @State var isUiActive:Bool = true
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.isUiActive {
+            //if self.isUiActive {
                 Text(data.name).modifier(BlockTitle())
                     .frame(height:Dimen.tab.thin)
                     .modifier(ContentHorizontalEdges())
@@ -30,7 +30,7 @@ struct TicketBlock:BlockProtocol, PageComponent {
                     data:self.data,
                     datas: self.data.tickets ?? [],
                     useTracking:self.useTracking)
-            }
+            //}
         }
         .modifier(
             ContentScrollPull(

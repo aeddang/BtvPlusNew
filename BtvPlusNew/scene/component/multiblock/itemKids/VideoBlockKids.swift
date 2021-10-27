@@ -58,7 +58,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
     
     var body :some View {
         VStack(alignment: .leading , spacing: DimenKids.margin.thinExtra) {
-            if self.isUiActive {
+            //if self.isUiActive {
                 HStack(alignment: .center, spacing:DimenKids.margin.thin){
                     VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
@@ -118,7 +118,7 @@ struct VideoBlockKids:BlockProtocol, PageComponent {
                     )
                     .modifier(MatchParent())
                 }
-            }
+            //}
         }
         .modifier(MatchParent())
         .modifier(

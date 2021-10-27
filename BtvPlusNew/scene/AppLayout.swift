@@ -59,15 +59,6 @@ struct AppLayout: PageComponent{
                     SceneLoading(loadingInfo:loadingInfo)
                 }
                 CircularSpinner(resorce: Asset.ani.loading)
-                /*
-                if SystemEnvironment.currentPageType == .btv {
-                    
-                    //ActivityIndicator(isAnimating: self.$isLoading, style: .large)
-                } else {
-                    AnimateSpinner(isAnimating: self.$isLoading).frame(
-                        width: DimenKids.loading.large.width,
-                        height: DimenKids.loading.large.height)
-                }*/
             }
             
         }

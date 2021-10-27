@@ -43,7 +43,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
     }
     var body :some View {
         ZStack() {
-            if self.isUiActive {
+            //if self.isUiActive {
                 if !self.datas.isEmpty {
                     self.getList()
 
@@ -56,7 +56,7 @@ struct BannerListBlock:BlockProtocol, PageComponent {
                     )
                     .modifier(MatchParent())
                 }
-            }
+            //}
         }
         .modifier(MatchParent())
         .modifier(

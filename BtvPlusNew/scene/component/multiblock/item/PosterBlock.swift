@@ -48,7 +48,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
     
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.isUiActive {
+            //if self.isUiActive {
                 HStack(alignment: .center, spacing:Dimen.margin.thin){
                     VStack(alignment: .leading , spacing:0){
                         Spacer().modifier(MatchHorizontal(height: 0))
@@ -93,7 +93,7 @@ struct PosterBlock:PageComponent, BlockProtocol {
                     )
                     .modifier(MatchParent())
                 }
-            }
+            //}
         }
         .modifier(MatchParent())
         .modifier(

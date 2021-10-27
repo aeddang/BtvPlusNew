@@ -40,7 +40,7 @@ struct TvBlock:PageComponent, BlockProtocol {
     
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.isUiActive {
+            //if self.isUiActive {
                 HStack(alignment: .bottom, spacing:Dimen.margin.thin){
                     VStack(alignment: .leading , spacing:Dimen.margin.tiny){
                         Spacer().modifier(MatchHorizontal(height: 0))
@@ -82,7 +82,7 @@ struct TvBlock:PageComponent, BlockProtocol {
                     )
                     .modifier(MatchParent())
                 }
-            }
+            //}
         }
         .modifier(MatchParent())
         .modifier(

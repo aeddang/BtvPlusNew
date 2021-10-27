@@ -42,7 +42,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
     
     var body :some View {
         VStack(alignment: .leading , spacing: Dimen.margin.thinExtra) {
-            if self.isUiActive {
+            //if self.isUiActive {
                 Text(data.name).modifier(BlockTitle())
                     .frame(height:Dimen.tab.thin)
                     .modifier(ContentHorizontalEdges())
@@ -55,7 +55,7 @@ struct ThemaBlock:BlockProtocol, PageComponent {
                         size:self.skeletonSize
                     )
                 }
-            }
+            //}
         }
         .modifier(MatchParent())
         .modifier(

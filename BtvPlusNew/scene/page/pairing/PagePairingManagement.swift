@@ -177,6 +177,7 @@ struct PagePairingManagement: PageView {
                 switch evt.type {
                 case .completed :
                     guard let modifyNickName = evt.data as? String  else { return }
+                    self.pairing.requestPairing(.hostNickNameInfo())
                     self.modelNickName = modifyNickName
                     
                 default : break

@@ -19,7 +19,7 @@ extension BtvWebView {
     static let searchMore = "/view/v3.0/search/more_info"
     static let schedule = "/view/v3.0/epg"
     static let watchHabit = "/view/v3.0/child/parentalctrls"
-    static let opensrcLicense = "/view/v3.0/opensrclicense"
+    static let opensrcLicense = "/view/v3.0/opensrclicense?type=ios"
     static let faq = "/view/v3.0/customer/helpfaq"
     static let notice = "/view/v3.0/customer/notice"
     static let event = "/view/v3.0/event/all"

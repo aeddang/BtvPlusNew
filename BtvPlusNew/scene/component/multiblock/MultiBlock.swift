@@ -62,13 +62,27 @@ struct MultiBlock:PageComponent {
             viewModel:self.viewPagerModel,
             infinityScrollModel:self.infinityScrollModel,
             datas: self.topDatas ?? [],
-            useQuickMenu: self.useQuickMenu
+            useQuickMenu: self.useQuickMenu,
+            height:self.topBannerHeight
         )
         ComponentLog.d("New Top" , tag: self.tag + "Top")
         DispatchQueue.main.async {
             self.topBanner = newTop
         }
         return newTop
+    }
+    
+    private var topBannerHeight : CGFloat {
+        return (isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange)
+        + (self.useQuickMenu ?  (TopBanner.quickMenuHeight + TopBanner.quickMenuTopMargin) : 0 )
+        - self.sceneObserver.safeAreaTop
+    }
+    
+    private var topBannerSpacing : CGFloat {
+        return (isHorizontal
+                ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
+                : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange)
+                + self.sceneObserver.safeAreaTop
     }
     
     @State var headerBlock:HeaderBlockCell?
@@ -110,8 +124,8 @@ struct MultiBlock:PageComponent {
             axes: .vertical,
             scrollType : .reload(isDragEnd: false),
             contentNum: self.datas.count,
-            header : self.header,
-            headerSize : self.headerSize,
+            header :  self.topDatas?.isEmpty == false ? self.getTopBanner() : self.header,
+            headerSize : self.topDatas?.isEmpty == false ? (self.topBannerHeight + self.topBannerSpacing) : self.headerSize,
             marginTop : self.marginTop,
             marginBottom : 0,
             marginHorizontal: self.marginHorizontal,
@@ -121,22 +135,13 @@ struct MultiBlock:PageComponent {
             onTopButtonMarginBottom:self.marginBottom
         ){
             
+            /*
             if let topDatas = self.topDatas ,!topDatas.isEmpty {
-                
                 self.getTopBanner()
-                    .modifier(MatchHorizontal(height:
-                                                (isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange)
-                                                + (self.useQuickMenu ?  (TopBanner.quickMenuHeight + TopBanner.quickMenuTopMargin) : 0 )
-                                                - self.sceneObserver.safeAreaTop
-                                             ))
-                    //.background(Color.app.white.opacity(0.3))
-                    .modifier(ListRowInset(spacing: (isHorizontal
-                                        ? TopBanner.heightHorizontal - self.marginTop + self.marginHeader - TopBanner.uiRangeHorizontal
-                                        : TopBanner.height - self.marginTop + self.marginHeader - TopBanner.uiRange)
-                                        + self.sceneObserver.safeAreaTop
-                                            
-                ))
-            }
+                    .modifier(MatchHorizontal(height:self.topBannerHeight))
+                    .modifier(ListRowInset(spacing: self.topBannerSpacing))
+                
+            }*/
            
             if !self.datas.isEmpty {
                 if #available(iOS 15.0, *) {

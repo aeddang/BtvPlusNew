@@ -595,7 +595,7 @@
 "titleModifyProfile" = "프로필 변경";
 "titleWatchedKids" = "키즈 시청 목록";
 "titleWatched" = "최근 시청 목록";
-"titleWatchHabit" = "B tv 시청 습관 관리";
+"titleWatchHabit" = "시청 습관 관리";
 "titleBookmarkList" = "찜 목록";
 "titlePurchaseList" = "구매 목록";
 "titlePurchaseTicketList" = "이용권";
@@ -889,7 +889,7 @@
 "setupCertificationKidsExitText" = "자녀 보호를 위해 ZEM 키즈 종료 시 성인인증을 진행합니다.";
 
 "setupChildren" = "자녀 안심 설정";
-"setupChildrenHabit" = "B tv 시청 습관 관리";
+"setupChildrenHabit" = "시청 습관 관리";
 "setupChildrenHabitText" = "B tv의 유해 콘텐츠 시청 및 시청 시간을 제어할 수 있습니다.";
 
 "setupHappySenior" = "B tv 해피시니어 설정";
@@ -980,8 +980,8 @@
 "introText2" = "모바일과 태블릿에서도 B tv 콘텐츠를\n감상하실 수 있어요. 모바일 B tv에서\n온 가족 각자 취향대로 즐기세요.";
 "introTitle3" = "복잡한 가입 절차 없이\n간편하게 지금 모바일 B tv를 이용해 보세요.";
 "introText3" = "ID, Password 필요 없이\n나의 프로필을 만들고 간편하게 1~3번만 클릭하면\n바로 이용하실 수 있습니다.";
-"introTitle4" = "새로워진 ZEM 키즈와\n콘텐츠 추천 혜택을 만나보세요!";
-"introText4" = "키즈 전용 메뉴에서 우리 아이\n맞춤 콘텐츠로 유익하게 즐기세요!\n친구에게 VOD를 추천하면 친구는 할인쿠폰을!\n나는 B포인트를 받을 수 있어요!";
+"introTitle4" = "나만의 시청 프라이버시를\n지키면서 보고 싶은\n콘텐츠 마음껏 즐겨요!";
+"introText4" = "모바일 B tv에서 시청한 콘텐츠 목록은\nB tv에 공개되지 않고 내가 가진 휴대폰 혹은\n태블릿에서만 확인할 수 있어요.";
 
 "introTitleHorizontal1" = "모바일과 태블릿으로\n즐기는 모바일 B tv";
 "introTextHorizontal1" = "B tv의 VOD 16만편과 모든 월정액 콘텐츠를\n모바일과 태블릿으로 시청해 보세요.\nB tv에서 보시던 VOD 이어보기는 물론,\n모바일 리모컨까지 이용하실 수 있습니다.";
@@ -989,8 +989,8 @@
 "introTextHorizontal2" = "모바일과 태블릿에서도 B tv 콘텐츠를\n감상하실 수 있어요. 모바일 B tv에서\n온 가족 각자 취향대로 즐기세요.";
 "introTitleHorizontal3" = "복잡한 가입 절차 없이\n간편하게 지금 모바일 B tv를\n이용해 보세요.";
 "introTextHorizontal3" = "ID, Password 필요 없이\n나의 프로필 만들고 간편하게 1~3번만\n클릭하면 바로 이용하실 수 있습니다.";
-"introTitleHorizontal4" = "새로워진 ZEM 키즈와\n콘텐츠 추천 혜택을\n만나보세요!";
-"introTextHorizontal4" = "키즈 전용 메뉴에서 우리 아이\n맞춤 콘텐츠로 유익하게 즐기세요!\n친구에게 VOD를 추천하면 친구는 할인쿠폰을!\n나는 B포인트를 받을 수 있어요!";
+"introTitleHorizontal4" = "나만의 시청 프라이버시를\n지키면서 보고 싶은\n콘텐츠 마음껏 즐겨요!";
+"introTextHorizontal4" = "모바일 B tv에서 시청한 콘텐츠 목록은\nB tv에 공개되지 않고 내가 가진 휴대폰 혹은\n태블릿에서만 확인할 수 있어요.";
 
 /*
  PageSearch

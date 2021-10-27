@@ -67,6 +67,7 @@ struct SetupGuideNVersion: PageView {
         self.qaModeCount += 1
         if self.qaModeCount > 5 {
             self.isQAMode.toggle()
+            self.qaModeCount = 0
             self.appSceneObserver.event = .toast(self.isQAMode ? "테스트모드 시작" : "테스트모드 종료")
             return
         }

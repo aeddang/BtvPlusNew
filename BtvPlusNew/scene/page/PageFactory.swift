@@ -57,6 +57,7 @@ extension PageID{
     static let fullPlayer:PageID = "fullPlayer"
     
     static let webview:PageID = "webview"
+    static let webviewLayer:PageID = "webviewLayer"
     static let webviewList:PageID = "webviewList"
     static let person:PageID = "person"
     static let search:PageID = "search"
@@ -131,7 +132,7 @@ struct PageProvider {
         switch pageID {
         case .pairingSetupUser, .pairingBtv,
              .pairingDevice, .pairingUser, .pairingManagement, .pairingEmptyDevice, .pairingGuide,
-             .purchase , .webview, .webviewList, .schedule, .modifyProile, .pairingHappySeniorPicture,
+             .purchase , .webview, .webviewLayer, .webviewList, .schedule, .modifyProile, .pairingHappySeniorPicture,
              .adultCertification, .userCertification, .terminateStb,
              .myPurchaseTicketList, .remotecon, .playerTest,
              .myRecommand, .myRegistCard, .picker, .myBenefits:
@@ -150,7 +151,7 @@ struct PageProvider {
             return PageSynopsis.useLayer
         }
         switch pageID{
-        case .pairingAppleTv : return true
+        case .pairingAppleTv, .webviewLayer : return true
         default : return  false
         }
     }
@@ -226,6 +227,7 @@ struct PageFactory{
         case .clipPreviewList : return PagePreviewList()
         case .fullPlayer : return PageFullPlayer()
         case .webview : return PageWebview()
+        case .webviewLayer : return PageWebview()
         case .webviewList : return PageWebview()
         case .person : return PagePerson()
         case .search : return PageSearch()

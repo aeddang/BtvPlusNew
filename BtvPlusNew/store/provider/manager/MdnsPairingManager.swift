@@ -36,14 +36,22 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     private var delayComplete:AnyCancellable? = nil
     
     private func removeClient(){
+        if client == nil {return}
         self.searchingTimer?.cancel()
         self.searchingTimer = nil
         self.delayComplete?.cancel()
         self.delayComplete = nil
-        self.client?.stopSearching()
-        self.client?.delegate = nil
-        self.client = nil
-        self.find = []
+        do{
+            self.client?.delegate = nil
+            self.client?.stopSearching()
+            self.client = nil
+            self.find = []
+           
+        } catch {
+            
+        }
+       
+       
     }
     
     func mdnsServiceFound(_ serviceJsonString: UnsafeMutablePointer<Int8>) {
@@ -74,7 +82,7 @@ class MdnsPairingManager : NSObject, MDNSServiceProxyClientDelegate, PageProtoco
     private func delayFound() {
         self.delayComplete?.cancel()
         self.delayComplete = Timer.publish(
-            every: 0.5, on: .current, in: .common)
+            every: 1.0, on: .current, in: .common)
             .autoconnect()
             .sink() {_ in
                 if self.find.isEmpty {

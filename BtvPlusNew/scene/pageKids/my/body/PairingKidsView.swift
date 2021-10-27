@@ -235,7 +235,10 @@ struct PairingKidsView: PageComponent {
             
         } else {
             let data = tabDatas[tabIdx]
-            if data.scn_mthd_cd == PageKidsMy.recentlyWatchCode {
+            if data.menu_id ==
+                (SystemEnvironment.isStage
+                 ? EuxpNetwork.MenuTypeCode.MENU_KIDS_MY_WATCH_STAGE.rawValue
+                 : EuxpNetwork.MenuTypeCode.MENU_KIDS_MY_WATCH.rawValue) {
                 let watcheBlockData:BlockData = BlockData(pageType: .kids).setDataKids(data)
                 self.cateBlockModel = CateBlockModel(pageType: .kids)
                 self.cateSize = self.sceneObserver.screenSize.width

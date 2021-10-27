@@ -59,10 +59,12 @@ class PurchaseData:InfinityData,ObservableObject{
         }
         if !self.isPosson {
             if data.period == "-1" {
-                period = String.app.purchasePeriod + " : " + String.app.expirePeriod
+                if let prd = data.period_detail {
+                    period = String.app.purchasePeriod + " : " + prd
+                }else {
+                    period = String.app.purchasePeriod + " : " + String.app.expirePeriod
+                }
                 isUseable = false
-            } else if let prd = data.period_detail {
-                period = String.app.purchasePeriod + " : " + prd
             }
             isImminent = data.period == "0"
         }

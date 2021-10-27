@@ -18,7 +18,7 @@ class HostDevice {
     private(set) var major:Int = 0
     private(set) var minor:Int = 0
     private(set) var revision:Int = 0
-    private(set) var modelViewName:String? = nil
+    var modelViewName:String? = nil
     var modelName:String? = nil // mdns
     
     var isAppleTv:Bool {

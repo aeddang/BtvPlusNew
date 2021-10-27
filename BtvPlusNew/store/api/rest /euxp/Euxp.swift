@@ -77,6 +77,9 @@ extension EuxpNetwork{
         case MENU_KIDS_MY = "NM2000031458"
         case MENU_KIDS_MY_STAGE = "NM2000038375"
         case MENU_KIDS_MONTHLY = "NM2000032813"
+        
+        case MENU_KIDS_MY_WATCH = "NM2000033072"
+        case MENU_KIDS_MY_WATCH_STAGE = "NM2000038381"
     }
     
     enum KidsGnbCd: String, Codable {

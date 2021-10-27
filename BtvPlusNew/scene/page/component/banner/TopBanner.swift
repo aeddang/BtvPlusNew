@@ -38,6 +38,7 @@ struct TopBanner: PageComponent {
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
     var datas: [BannerData]
     var useQuickMenu:Bool = false
+    var height:CGFloat
     @State var pages: [PageViewProtocol] = []
     @State var isHorizontal:Bool = false
     var action:((_ idx:Int) -> Void)? = nil
@@ -58,20 +59,24 @@ struct TopBanner: PageComponent {
                   isLast: true)
     ]
     var body: some View {
-        VStack(alignment: SystemEnvironment.isTablet ? .leading : .center, spacing: Self.quickMenuTopMargin){
-            LoopSwipperView(
-                pageObservable: self.pageObservable,
-                viewModel : self.viewModel,
-                pages: self.pages
-            ).modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
-            if self.useQuickMenu {
-                QuickTab(
+        ZStack(alignment: .top){
+            VStack(alignment: SystemEnvironment.isTablet ? .leading : .center, spacing: Self.quickMenuTopMargin){
+                LoopSwipperView(
                     pageObservable: self.pageObservable,
-                    menus:self.menus
+                    viewModel : self.viewModel,
+                    pages: self.pages
                 )
+                .modifier(MatchHorizontal(height: isHorizontal ? TopBanner.uiRangeHorizontal : TopBanner.uiRange))
+               
+                if self.useQuickMenu {
+                    QuickTab(
+                        pageObservable: self.pageObservable,
+                        menus:self.menus
+                    )
+                }
             }
+            .modifier(MatchHorizontal(height: self.height))
         }
-        
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isTop = self.pageObservable.pageObject?.id == page?.id
             self.isTop ? self.autoChange() : self.autoChangeCancel()

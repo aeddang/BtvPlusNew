@@ -388,7 +388,9 @@ struct AppLayout: PageComponent{
             if let alram = self.appObserver.alram  {
                 self.moveAlram(alram)
             }
-            self.vsManager.checkAccess()
+            if self.vsManager.isGranted != false {
+                self.vsManager.checkAccess()
+            }
         }
        
     }

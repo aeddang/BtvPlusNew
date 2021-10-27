@@ -36,6 +36,7 @@ struct IntroItem: PageComponent, Identifiable {
                         .renderingMode(.original)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .modifier(MatchParent())
                 }
             } else {
                 HStack(alignment: .top, spacing: 0){
@@ -59,6 +60,7 @@ struct IntroItem: PageComponent, Identifiable {
                
             }
         }
+        .background(Color.transparent.clearUi)
         .onReceive(self.sceneObserver.$isUpdated){ _ in
             self.sceneOrientation = self.sceneObserver.sceneOrientation
         }

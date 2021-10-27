@@ -8,7 +8,7 @@ import Foundation
 import SwiftUI
 
 extension PageKidsMy {
-    static let recentlyWatchCode:String = "514"
+    static let recentlyWatchCode:String = "501"
 }
 
 struct PageKidsMy: PageView {

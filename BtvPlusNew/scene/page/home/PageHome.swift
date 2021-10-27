@@ -111,10 +111,12 @@ struct PageHome: PageView {
             }
             
             .onReceive(self.pairing.authority.$purchaseLowLevelTicketList){ list in
+                if self.pagePresenter.currentTopPage != self.pageObject {return}
                 guard let list = list else { return }
                 self.updatedMonthly(purchases: list, lowLevelPpm: true)
             }
             .onReceive(self.pairing.authority.$purchaseTicketList){ list in
+                if self.pagePresenter.currentTopPage != self.pageObject {return}
                 guard let list = list else { return }
                 self.updatedMonthly(purchases: list, lowLevelPpm: false)
             }

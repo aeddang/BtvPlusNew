@@ -385,7 +385,7 @@ struct PageKidsMultiBlock: PageView {
             DispatchQueue.main.async {
                 let title = self.tabs.count > 1 ?  self.tabs[self.selectedTabIdx] : nil
                 self.multiBlockViewModel.updateKids(
-                    datas: self.originDatas, openId: self.openId, title: title)
+                    datas: self.originDatas, openId: self.openId, kid:self.pairing.kid, title: title)
                 self.openId = nil
             }
         }

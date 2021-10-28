@@ -260,7 +260,7 @@ class Scs: Rest{
         let macAdress = hostDevice?.playMacAdress ?? ""
         
         var params = [String:Any]()
-        params["if"] = "IF-SCS-STB-UI5-001"
+        params["if"] = "IF-SCS-STB-UI5-003"
         params["ver"] = ScsNetwork.VERSION
         params["stb_id"] = stbId
         params["mac_address"] = macAdress

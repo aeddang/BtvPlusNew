@@ -33,7 +33,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     var drmData:FairPlayDrm? = nil
     var playerController : UIViewController? = nil
     var playerLayer:AVPlayerLayer? = nil
-    
+    private var observer: NSKeyValueObservation?
     private(set) var player:AVPlayer? = nil
     {
         didSet{
@@ -50,7 +50,8 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     private var isAutoPlay:Bool = false
     private var initTime:Double = 0
     private var recoveryTime:Double = -1
-    
+    private var waterMark = WaterMark()
+    private var isInitWaterMark = false
     override init(frame: CGRect) {
         super.init(frame: frame)
         ComponentLog.d("init " + id, tag: self.tag)
@@ -75,6 +76,7 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     }
     private func destoryPlayer(){
         guard let player = self.player else {return}
+        self.stopWatermark()
         player.pause()
         player.replaceCurrentItem(with: nil)
         playerLayer?.player = nil
@@ -85,16 +87,26 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
         NotificationCenter.default.removeObserver(self)
         self.playerDelegate?.onPlayerDestory()
         self.player = nil
+        self.observer?.invalidate()
+        self.observer = nil
         ComponentLog.d("destoryPlayer " + id, tag: self.tag)
     }
     
     private func createdPlayer(){
+        self.isInitWaterMark = true
         self.playerDelegate?.onPlayerReady()
         let center = NotificationCenter.default
         //center.addObserver(self, selector:#selector(newErrorLogEntry), name: .AVPlayerItemNewErrorLogEntry, object: nil)
         center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerItemDidReachEnd), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         center.addObserver(self, selector: #selector(playerDidBecomeActive), name: UIApplication.didBecomeActiveNotification , object: nil)
+        
+        self.observer = self.layer.observe(\.bounds) { object, _ in
+            guard let layer = self.playerLayer else {return}
+            DispatchQueue.main.async {
+                self.waterMark.screenRotationCB(layer)
+            }
+        }
         /*
         center.addObserver(self, selector: #selector(systemVolumeChange), name: NSNotification.Name(rawValue: Self.VOLUME_NOTIFY_KEY) , object: nil)*/
         //center.addObserver(self, selector: #selector(playerItemBitrateChange), name: .AVPlayerItemNewAccessLogEntry , object: nil)
@@ -315,13 +327,35 @@ class PlayerScreenView: UIView, PageProtocol, CustomAssetPlayerDelegate , Identi
     func resume() -> Bool {
         guard let currentPlayer = player else { return false }
         currentPlayer.play()
+        self.startWatermark()
         return true
+    }
+    
+    private func startWatermark(){
+        guard let currentPlayer = player else { return }
+        if let stbId = NpsNetwork.hostDeviceId, let layer = self.playerLayer {
+            DispatchQueue.main.async {
+                self.waterMark.startWatermark(self.isInitWaterMark, parent: self,
+                                         player: currentPlayer,
+                                         playerLayer: layer,
+                                         size: layer.preferredFrameSize(),
+                                         stbId: stbId)
+                self.isInitWaterMark = false
+            }
+            
+        }
+    }
+    private func stopWatermark(){
+        DispatchQueue.main.async {
+            self.waterMark.stopWatermark(true)
+        }
     }
     
     @discardableResult
     func pause() -> Bool {
         guard let currentPlayer = player else { return false }
         currentPlayer.pause()
+        self.stopWatermark()
         return true
     }
     

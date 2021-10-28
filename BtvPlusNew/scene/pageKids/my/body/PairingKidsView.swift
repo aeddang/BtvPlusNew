@@ -239,7 +239,8 @@ struct PairingKidsView: PageComponent {
                 (SystemEnvironment.isStage
                  ? EuxpNetwork.MenuTypeCode.MENU_KIDS_MY_WATCH_STAGE.rawValue
                  : EuxpNetwork.MenuTypeCode.MENU_KIDS_MY_WATCH.rawValue) {
-                let watcheBlockData:BlockData = BlockData(pageType: .kids).setDataKids(data)
+                let watcheBlockData:BlockData = BlockData(pageType: .kids).setDataKids(data, kid: self.pairing.kid)
+                   
                 self.cateBlockModel = CateBlockModel(pageType: .kids)
                 self.cateSize = self.sceneObserver.screenSize.width
                     - DimenKids.item.profileBox.width //프로필

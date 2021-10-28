@@ -1,0 +1,6 @@
+framework module FPInserter {
+  umbrella header "FPInserter.h"
+
+  export *
+  module * { export * }
+}

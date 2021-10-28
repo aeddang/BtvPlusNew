@@ -281,8 +281,8 @@ class ApiManager :PageProtocol, ObservableObject{
             prdPrcId: prcPrdId, isDetail: isDetail,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getWatch(let isPpm, let page, let count) : self.metv.getWatch(
-            isPpm:isPpm, page: page, pageCnt: count,
+        case .getWatch(let isPpm, let isKid, let page, let count) : self.metv.getWatch(
+            isPpm:isPpm, isKids: isKid, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .deleteWatch(let list, let isAll) : self.metv.deleteWatch(

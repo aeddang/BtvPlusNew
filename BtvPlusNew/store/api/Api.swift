@@ -70,7 +70,7 @@ enum ApiType{
          getPeriodPurchaseMonthly(Int? = nil , Int? = nil),
          getMonthly(Bool = false, Int? = nil , Int? = nil),
          getMonthlyData(String?, isDetail:Bool = false),
-         getWatch(isPpm:Bool = false, Int? = nil , Int? = nil),
+         getWatch(isPpm:Bool = false, isKids:Bool = false,  Int? = nil , Int? = nil),
          deleteWatch([String]? = nil, isAll:Bool = false),
          getWatchMobile(isPpm:Bool = false, Int? = nil , Int? = nil),
          deleteWatchMobile([String]? = nil, isAll:Bool = false),

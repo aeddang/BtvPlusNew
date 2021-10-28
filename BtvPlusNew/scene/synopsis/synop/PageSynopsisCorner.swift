@@ -27,6 +27,10 @@ extension PageSynopsis {
                     if self.synopsisModel?.isOnlyPurchasedBtv == true {
                         self.appSceneObserver.alert = .alert(nil, String.pageText.synopsisCornerPlayOnlyPurchasedBtv)
                     } else {
+                        if progressTime == 0 {
+                            self.onFullScreenViewMode()
+                            return
+                        }
                         guard  let model = self.purchaseWebviewModel else { return }
                         self.appSceneObserver.alert = .confirm( String.alert.purchase, String.pageText.synopsisCornerPlayNeedPurchased){ isOk in
                             if isOk {

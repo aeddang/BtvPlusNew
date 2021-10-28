@@ -110,7 +110,7 @@ extension MultiBlockBody {
             default: break
             }
            
-        case .watched:
+        case .watched, .watchedKids:
             guard let resData = res.data as? Watch else {return data.setBlank()}
             guard let originWatchBlocks = resData.watchList else {return data.setBlank()}
             var watchBlocks:[WatchItem] = originWatchBlocks
@@ -139,13 +139,16 @@ extension MultiBlockBody {
                 let videos = watchBlocks.map{ d in
                     VideoData(pageType: self.pageType, usePrice:usePrice).setData(data: d, cardType: data.cardType)
                 }
-                .filter{$0.isContinueWatch}.filter{$0.progress != 1}
+                .filter{$0.isContinueWatch}
                 if  videos.isEmpty == true { return data.setBlank() }
                 let count = videos.count
                 if count > MetvNetwork.maxWatchedCount {
                     data.videos = videos[ 0..<MetvNetwork.maxWatchedCount ].map{$0}
                 } else {
                     data.videos = videos
+                }
+                if data.dataType == .watchedKids {
+                    total = data.videos?.count ?? total
                 }
                 
             default: break

@@ -213,7 +213,7 @@ struct KidsGnbItem: PageView {
                 self.subTitle = age.description + String.app.ageCount
             }
         } else {
-            self.profileImg = Asset.gnbTop.zemkids
+            self.profileImg = nil
             self.subTitle = nil
             self.title = nil
         }

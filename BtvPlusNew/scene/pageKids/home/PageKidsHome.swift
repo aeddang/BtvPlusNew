@@ -16,6 +16,7 @@ struct PageKidsHome: PageView {
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
     
     @ObservedObject var viewModel:MultiBlockModel = MultiBlockModel(logType: .home)
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -191,7 +192,7 @@ struct PageKidsHome: PageView {
         self.appSceneObserver.kidsGnbMenuTitle = blockData.title
         self.appSceneObserver.kidsGnbMenuId = self.menuId
         if blockData.isHome {
-            self.viewModel.updateKids(datas: blockData.blocks ?? [] , openId: self.openId)
+            self.viewModel.updateKids(datas: blockData.blocks ?? [] , openId: self.openId, kid: self.pairing.kid)
         } else {
             self.viewModel.updateKids(data: blockData , openId: self.openId)
         }
@@ -203,6 +204,7 @@ struct PageKidsHome: PageView {
     //Block init
     
     private func checkProfileStatus(evt:PairingEvent){
+        if self.setup.isRegistUnvisibleDate() {return}
         if self.pagePresenter.currentTopPage != self.pageObject {return}
         if self.pairing.status != .pairing {return}
         if self.pairing.kid == nil {

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		310442EB272A8362008C18A9 /* FPInserter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 310442EA272A8362008C18A9 /* FPInserter.framework */; };
+		310442EF272A8A4B008C18A9 /* WaterMark.m in Sources */ = {isa = PBXBuildFile; fileRef = 310442EE272A8A4B008C18A9 /* WaterMark.m */; };
 		31061E6625C8CF5800543FC0 /* BtvWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31061E6525C8CF5800543FC0 /* BtvWebView.swift */; };
 		31061E7725C934B600543FC0 /* PlayerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31061E7625C934B600543FC0 /* PlayerEffect.swift */; };
 		310755DE26F6F325000228D2 /* PlayTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310755DD26F6F325000228D2 /* PlayTime.swift */; };
@@ -785,6 +787,9 @@
 
 /* Begin PBXFileReference section */
 		01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BtvPlusNew.release.xcconfig"; path = "Target Support Files/Pods-BtvPlusNew/Pods-BtvPlusNew.release.xcconfig"; sourceTree = "<group>"; };
+		310442EA272A8362008C18A9 /* FPInserter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FPInserter.framework; sourceTree = "<group>"; };
+		310442ED272A8A4B008C18A9 /* WaterMark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterMark.h; sourceTree = "<group>"; };
+		310442EE272A8A4B008C18A9 /* WaterMark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterMark.m; sourceTree = "<group>"; };
 		31061E6525C8CF5800543FC0 /* BtvWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtvWebView.swift; sourceTree = "<group>"; };
 		31061E7625C934B600543FC0 /* PlayerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEffect.swift; sourceTree = "<group>"; };
 		310755DD26F6F325000228D2 /* PlayTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayTime.swift; sourceTree = "<group>"; };
@@ -1553,6 +1558,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				310442EB272A8362008C18A9 /* FPInserter.framework in Frameworks */,
 				317628B026EE5D6D00144A8A /* VideoSubscriberAccount.framework in Frameworks */,
 				312D2D7626D5E946002EE783 /* Foundation.framework in Frameworks */,
 				316C45E32653303000A8D7F5 /* libopus.a in Frameworks */,
@@ -1601,6 +1607,16 @@
 				314F765526F37EA20039E7ED /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		310442EC272A89E2008C18A9 /* watermark */ = {
+			isa = PBXGroup;
+			children = (
+				310442ED272A8A4B008C18A9 /* WaterMark.h */,
+				310442EE272A8A4B008C18A9 /* WaterMark.m */,
+				310442EA272A8362008C18A9 /* FPInserter.framework */,
+			);
+			path = watermark;
 			sourceTree = "<group>";
 		};
 		31061E6A25C8D21A00543FC0 /* player */ = {
@@ -3936,6 +3952,7 @@
 				312D2D7126D5E8C7002EE783 /* keychain */,
 				31CABAF926C2021200B4B3C3 /* log */,
 				48A4A31B270EFA470062323B /* zeroconf */,
+				310442EC272A89E2008C18A9 /* watermark */,
 				D56C6B21257DACD800CF9AB8 /* api */,
 				D50AB8EC257F311800649C4A /* SystemEnvironment.swift */,
 				D56C6B1E257DACD800CF9AB8 /* Repository.swift */,
@@ -5104,6 +5121,7 @@
 				31422D5027041D3C00FF24C8 /* EmptyMyData.swift in Sources */,
 				31AC66D426BA23B100766995 /* ScrollList.swift in Sources */,
 				D56C699D257DA09E00CF9AB8 /* PageSceneDelegate.swift in Sources */,
+				310442EF272A8A4B008C18A9 /* WaterMark.m in Sources */,
 				310F6FBF25C167EC005718B0 /* ScsModel.swift in Sources */,
 				319D7BAD26DC442F00DFAA69 /* LocalNamedStorage.swift in Sources */,
 				D50AB8ED257F311800649C4A /* SystemEnvironment.swift in Sources */,
@@ -5210,7 +5228,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7560;
+				CURRENT_PROJECT_VERSION = 7565;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5235,7 +5253,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7560;
+				CURRENT_PROJECT_VERSION = 7565;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5425,7 +5443,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7560;
+				CURRENT_PROJECT_VERSION = 7565;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5434,6 +5452,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)/BtvPlusNew/store/watermark",
 				);
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
@@ -5509,7 +5528,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7560;
+				CURRENT_PROJECT_VERSION = 7565;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5518,6 +5537,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)/BtvPlusNew/store/watermark",
 				);
 				INFOPLIST_FILE = BtvPlusNew/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;

@@ -58,6 +58,17 @@ class HostDevice {
             self.convertMacAdress = ApiUtil.getDecyptedData(
                 forNps: ma,
                 npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+            /*
+            let convertMacAdress = ApiUtil.getDecyptedData(
+                forNps: ma,
+                npsKey: NpsNetwork.AES_KEY, npsIv: NpsNetwork.AES_IV)
+            
+            if !ma.isEmpty && convertMacAdress?.isEmpty == true {
+                self.convertMacAdress = ma
+            } else {
+                self.convertMacAdress = convertMacAdress
+            }*/
+            
             let ipA = self.convertMacAdress.split(separator: ":")
             if ipA.count > 0 {
                 self.apiMacAdress = ipA.dropFirst()

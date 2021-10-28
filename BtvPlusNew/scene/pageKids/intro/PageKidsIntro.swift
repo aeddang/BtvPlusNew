@@ -49,7 +49,12 @@ struct PageKidsIntro: PageView {
                     DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + duration) {
                         DispatchQueue.main.async {
                             self.isAnimationCompleted = true
-                            self.completed()
+                            if !self.isFirst {
+                                self.completed(isForce: true)
+                            } else {
+                                self.completed()
+                            }
+                            
                         }
                     }
                 }
@@ -96,11 +101,11 @@ struct PageKidsIntro: PageView {
         }
         
         .onAppear{
-            
             self.isFirst = Self.isFirst
             if Self.isFirst {
                 Self.isFirst = false
             } else {
+                
                 self.isAnimationCompleted = true
             }
            
@@ -109,12 +114,15 @@ struct PageKidsIntro: PageView {
                     self.movePage = data
                 }
             }
-            self.dataProvider.requestData(q: .init(id:self.tag, type: .getGnbKids))
             if self.pairing.status == .pairing {
                 self.pairing.requestPairing(.updateKids)
             } else {
                 self.isKidsProfileCompleted = true
             }
+            DispatchQueue.main.async {
+                self.dataProvider.requestData(q: .init(id:self.tag, type: .getGnbKids))
+            }
+            
         }
     }//body
     @State var isAnimationCompleted:Bool = false
@@ -123,11 +131,13 @@ struct PageKidsIntro: PageView {
     @State var kidsProfileEvent:PairingEvent? = nil
     
     @State var isCompleted:Bool = false
-    func completed() {
-        if !self.isAnimationCompleted {return}
-        if !self.isDataCompleted {return}
-        if !self.isKidsProfileCompleted {return}
-        if self.isCompleted {return}
+    func completed(isForce:Bool = false) {
+        if !isForce {
+            if !self.isAnimationCompleted {return}
+            if !self.isDataCompleted {return}
+            if !self.isKidsProfileCompleted {return}
+            if self.isCompleted {return}
+        }
         self.isCompleted = true
         DispatchQueue.main.async {
             KidProfile.isOverAgeInfo = false

@@ -291,7 +291,9 @@ struct PageMultiBlock: PageView {
                     }
                     let isAdult = self.tabDatas?[selectedTabIdx].isAdult ?? false
                     self.multiBlockViewModel.update(
-                        datas: self.originDatas, openId: openId,
+                        datas: self.originDatas,
+                        openId: openId,
+                        kid: self.pairing.kid,
                         themaType: self.themaType, isAdult:isAdult, title: title, isFree: self.isFree)
                 }
                 if let tabs = self.tabDatas {

@@ -142,6 +142,7 @@ class VideoData:InfinityData, Copying{
             } else {
                 self.progress = 0
             }
+           
         }
         originImage = data.poster_filename_h
         image = ImagePath.thumbImagePath(

@@ -389,6 +389,7 @@ struct PageSynopsisPlayer: PageView {
                     srisId: self.synopsisData?.srisId,
                     searchType: .prd,
                     epsdId: fullVod,
+                    progressTime: 0,
                     synopType: self.synopsisData?.synopType ?? .none
                 ))
             } else {
@@ -483,6 +484,7 @@ struct PageSynopsisPlayer: PageView {
         case .nextView(let isAuto) :
             self.nextVod(auto: isAuto)
         case .fullVod (let synopsisData):
+            
             self.onContinuousPlay()
             self.pagePresenter.openPopup(
                 PageProvider.getPageObject(.synopsis)

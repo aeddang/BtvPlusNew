@@ -588,6 +588,7 @@ struct CateBlock: PageComponent{
                     allDatas.append(contentsOf: blocks)
                 }
             }
+           
             self.totalCount = allDatas.count
             if self.viewModel.listType == .poster {
                 setPosterSets(datas: allDatas)
@@ -631,7 +632,7 @@ struct CateBlock: PageComponent{
                 setVideoSets(datas: blocks)
             }
             
-        case .watched:
+        case .watched, .watchedKids:
             guard let resData = res.data as? Watch else { return self.onError() }
             guard let blocks = resData.watchList else { return self.onError() }
             self.totalCount = blocks.count
@@ -668,6 +669,7 @@ struct CateBlock: PageComponent{
             return VideoData(pageType: type, usePrice: !self.viewModel.isFree)
                 .setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
+        
         setVideoSets(loadedDatas: loadedDatas)
     }
     
@@ -691,9 +693,13 @@ struct CateBlock: PageComponent{
             return
         }
         let type = self.viewModel.type
-        let loadedDatas:[VideoData] = datas.map{ d in
+        var loadedDatas:[VideoData] = datas.map{ d in
             return VideoData(pageType: type, usePrice: !self.viewModel.isFree)
                 .setData(data: d, cardType: self.viewModel.cardType ?? .watchedVideo)
+        }
+        if loadedDatas.first?.pageType == .kids {
+            loadedDatas = loadedDatas.filter{$0.isContinueWatch}
+            self.totalCount = loadedDatas.count
         }
         setVideoSets(loadedDatas: loadedDatas)
     }
@@ -721,6 +727,7 @@ struct CateBlock: PageComponent{
             return VideoData(pageType: type, usePrice: !self.viewModel.isFree)
                 .setData(data: d, cardType: self.viewModel.cardType ?? .video)
         }
+        self.totalCount = loadedDatas.count
         setVideoSets(loadedDatas: loadedDatas)
     }
     

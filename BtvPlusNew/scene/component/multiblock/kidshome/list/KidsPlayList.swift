@@ -253,11 +253,11 @@ struct KidsPlayListItem:PageView  {
                     self.poster = poster
                 }
             } else {
-                if let kid = self.pairing.kid {
+                if self.pairing.status == .pairing {
                     self.dataProvider.requestData(
                         q: .init(id: self.data.id,
                                  type: .getCWGridKids(
-                                    kid,
+                                    self.pairing.kid,
                                     self.data.firstCwCallId,
                                     nil),
                                 isOptional: true))

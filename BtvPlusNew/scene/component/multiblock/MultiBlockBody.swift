@@ -44,14 +44,14 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func update(datas:[BlockItem], openId:String?, selectedTicketId:String? = nil,
+    func update(datas:[BlockItem], openId:String?, kid:Kid? , selectedTicketId:String? = nil,
                 themaType:BlockData.ThemaType = .category, isAdult:Bool = false, title:String? = nil, isFree:Bool = false) {
         self.type = .btv
         self.isFree = isFree
         let total = datas.count
         self.datas = zip(0...total, datas).map{idx,  block in
             BlockData(logType: self.logType, idx: idx, totalBlockNum: total)
-                .setData(block, themaType:themaType)
+                .setData(block, themaType:themaType, kid: kid)
                 .setupActionLog(pageTitle: self.pageTitle, tabTitle: self.tabTitle)
         }
         .filter{ block in
@@ -68,13 +68,13 @@ class MultiBlockModel: PageDataProviderModel {
         self.isUpdate = true
     }
     
-    func updateKids(datas:[BlockItem], openId:String? = nil, title:String? = nil) {
+    func updateKids(datas:[BlockItem], openId:String? = nil, kid:Kid?, title:String? = nil) {
         self.type = .kids
         self.title = title
         let total = datas.count
         self.datas = zip(0...total,datas).map{idx, block in
             BlockData(pageType: .kids, logType: self.logType, idx: idx, totalBlockNum: total)
-                .setDataKids(block)
+                .setDataKids(block, kid:kid)
                 .setupActionLog(pageTitle: self.pageTitle, tabTitle: self.tabTitle)
         }
         .filter{ block in

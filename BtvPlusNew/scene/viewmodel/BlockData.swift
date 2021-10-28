@@ -277,19 +277,28 @@ class BlockData:InfinityData, ObservableObject{
     
 
             
-    func setData(_ data:BlockItem, themaType:ThemaType = .category) -> BlockData{
+    func setData(_ data:BlockItem, themaType:ThemaType = .category, kid:Kid? = nil) -> BlockData{
         name = data.menu_nm ?? ""
         menuId = data.menu_id
         cwCallId = data.cw_call_id_val
         isAdult = data.lim_lvl_yn?.toBool() ?? false
         cardType = findType(data)
         dataType = findDataType(data)
+        
+        
         blocks = data.blocks
         if isAdult {
             if blocks?.first(where: {($0.lim_lvl_yn?.toBool() ?? false) == false}) != nil {
                 isAdult = false
             }
         }
+        if data.cw_call_id_val == "ZEM_KIDS_530_HOME_RECENT.RACE" && kid == nil {
+            cardType = .watchedVideo
+            dataType = .watchedKids
+            uiType = .video
+            return self
+        }
+        
         switch dataType {
         case .banner : self.originData = data
         default: break
@@ -298,7 +307,7 @@ class BlockData:InfinityData, ObservableObject{
         return self
     }
     
-    func setDataKids(_ data:BlockItem, usePrice:Bool = true)-> BlockData{
+    func setDataKids(_ data:BlockItem, usePrice:Bool = true, kid:Kid? = nil)-> BlockData{
         self.name = data.menu_nm ?? ""
         self.menuId = data.menu_id
         self.usePrice = usePrice
@@ -310,18 +319,19 @@ class BlockData:InfinityData, ObservableObject{
             self.blocks = data.blocks
         
         }  else {
-            switch data.scn_mthd_cd {
-            case  PageKidsMy.recentlyWatchCode:
+            if data.cw_call_id_val == "ZEM_KIDS_530_HOME_RECENT.RACE" && kid != nil {
                 self.uiType = .video
                 self.dataType = .cwGridKids
                 self.cardType = .watchedVideo
-
-            case  "522", "516":
-                self.uiType = .poster
-                self.dataType = .cwGridKids
-                self.cardType = .smallPoster
-            default :
-                return self.setData(data)
+            } else {
+                switch data.scn_mthd_cd {
+                case  "522", "516":
+                    self.uiType = .poster
+                    self.dataType = .cwGridKids
+                    self.cardType = .smallPoster
+                default :
+                    return self.setData(data, kid:kid)
+                }
             }
         }
         return self
@@ -364,12 +374,14 @@ class BlockData:InfinityData, ObservableObject{
         case .cwGridKids:
             DataLog.d("Request cwGridKids " + self.name, tag: "BlockProtocol")
             return .init(
-                id: apiId ?? self.id,
-                type: .getCWGridKids(
-                    kid,
-                    self.cwCallId,
-                    sortType ?? (self.cardType == .watchedVideo ? .latest : .popularity)),
-                isOptional: isOption)
+                    id: apiId ?? self.id,
+                    type: .getCWGridKids(
+                        kid,
+                        self.cwCallId,
+                        sortType ?? (self.cardType == .watchedVideo ? .latest : .popularity)),
+                    isOptional: isOption)
+            
+           
         case .grid:
             DataLog.d("Request grid " + self.name, tag: "BlockProtocol")
             return .init(
@@ -396,6 +408,16 @@ class BlockData:InfinityData, ObservableObject{
             return .init(
                 id: apiId ?? self.id,
                 type: .getWatchMobile(),
+                isOptional: isOption)
+        case .watchedKids:
+            if pairing != .pairing {
+                DataLog.d("Request watche not pairing " + self.name, tag: "BlockProtocol")
+                return nil
+            }
+            DataLog.d("Request watched kid " + self.name, tag: "BlockProtocol")
+            return .init(
+                id: apiId ?? self.id,
+                type: .getWatch(isPpm: false, isKids: true),
                 isOptional: isOption)
         case .banner:
             DataLog.d("Request banner " + self.name, tag: "BlockProtocol")
@@ -428,6 +450,7 @@ class BlockData:InfinityData, ObservableObject{
     }
     
     private func findType(_ data:BlockItem) -> CardType {
+        
         if data.scn_mthd_cd == "504" { return .watchedVideo }
         else if data.svc_prop_cd == "501" { return .bookmarkedPoster }
         else if data.scn_mthd_cd == "501" || data.scn_mthd_cd == "507" { // block>scn_mthd_cd(상영 방식 코드)가 "501" or
@@ -754,6 +777,7 @@ class BlockData:InfinityData, ObservableObject{
         bookMark,
         grid,
         watched,
+        watchedKids,
         cwGrid,
         cwGridKids,
         theme,

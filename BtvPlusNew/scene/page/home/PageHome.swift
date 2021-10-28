@@ -585,6 +585,7 @@ struct PageHome: PageView {
     private func requestBlocks(blocksData:[BlockItem]){
         self.viewModel.update(datas: blocksData ,
                               openId: self.openId,
+                              kid: self.pairing.kid,
                               selectedTicketId:self.selectedMonthlyId,
                               isFree: self.isFree)
         self.openId = nil

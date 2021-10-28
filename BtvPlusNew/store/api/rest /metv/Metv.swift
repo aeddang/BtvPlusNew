@@ -253,7 +253,7 @@ class Metv: Rest{
     * @param isPPM 최근시청VOD조회시 MyBtv/월정액 구분 필수 Y : 월정액 N : My Btv
     */
     func getWatch(
-        isPpm:Bool = false , page:Int?, pageCnt:Int?,
+        isPpm:Bool = false , isKids:Bool = false, page:Int?, pageCnt:Int?,
         completion: @escaping (Watch) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
         var params = [String:String]()
@@ -273,7 +273,10 @@ class Metv: Rest{
         params["profile_typ_cd"] = nil
         params["dvc_typ_cd"] = nil
         params["watch_share_view_typ"] = "Y"
-            
+        if isKids {
+            params["yn_filter_adult"] = "Y"
+            params["svc_code"] = "KZONE"
+        }
         fetch(route: MetvWatch(query: params), completion: completion, error:error)
     }
     

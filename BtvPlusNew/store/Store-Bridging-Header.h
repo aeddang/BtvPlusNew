@@ -9,7 +9,7 @@
 #import "SKBNewAdSdk/OneAdSdk.h"
 #import "AudioMirrorServiceProxyClientIOS.h"
 #import "SkbKeychainItemWrapper.h"
+#import "WaterMark.h"
 //buzzbill
 #import "CarouselView.h"
 #import "SDWebImageCompat.h"
-

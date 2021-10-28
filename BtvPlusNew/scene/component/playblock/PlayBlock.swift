@@ -507,6 +507,7 @@ struct PlayBlock: PageComponent{
 
     @State var delayUpdateSubscription:AnyCancellable?
     func delayUpdate(){
+        if self.isHold { return }
         self.delayUpdateSubscription?.cancel()
         self.delayUpdateSubscription = Timer.publish(
             every: 0.3, on: .current, in: .common)
@@ -559,7 +560,7 @@ struct PlayBlock: PageComponent{
                     self.infinityScrollModel.uiEvent = .scrollMove(self.datas[focus].hashId, .center)
                 }
                 self.initFocus = nil
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.onFocusChange(willFocus:focus)
                 }
             } else {
@@ -567,9 +568,18 @@ struct PlayBlock: PageComponent{
             }
             return
         }
-        if cPos < -100 && self.maxCount == 2 {
-            self.onResetFocusChange(willFocus: 1)
-            return
+        if cPos < -100 {
+            if self.maxCount == 2 {
+                self.onResetFocusChange(willFocus: 1)
+                return
+            }
+            if self.focusIndex == 0 {
+                let fullRange = self.getRange()
+                if cPos > -(fullRange + 50) {
+                    self.onResetFocusChange(willFocus: 1)
+                    return
+                }
+            }
         }
         if self.focusPos == cPos {return}
         

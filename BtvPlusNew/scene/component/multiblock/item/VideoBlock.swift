@@ -262,8 +262,8 @@ struct VideoBlock:BlockProtocol, PageComponent {
             .sink() {_ in
                 self.clearDataBinding()
                 if let datas = data.videos {
-                    self.isWatchedBlock = datas.first?.isWatched ?? false
                     withAnimation{ self.datas = datas }
+                    self.isWatchedBlock = datas.first?.isWatched ?? false
                 }
             }
     }

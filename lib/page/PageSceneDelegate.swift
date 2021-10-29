@@ -673,6 +673,7 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
     func sceneDidDisconnect(_ scene: UIScene) {
         contentController?.sceneDidDisconnect(scene)
     }
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
         contentController?.sceneDidBecomeActive(scene)
     }

@@ -462,7 +462,9 @@ struct AppLayout: PageComponent{
     @discardableResult
     func deepLinkMove(_ link:URL? = nil)  -> Bool {
         guard let link = link else { return false }
-        self.appObserver.resetDeeplink()
+        DispatchQueue.main.async {
+            self.appObserver.resetDeeplink()
+        }
         return self.repository.webBridge.parseUrl(link.absoluteString) != nil
     }
 }

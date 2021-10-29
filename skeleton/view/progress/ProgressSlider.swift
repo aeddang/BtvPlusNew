@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct ProgressSlider: PageView {
+    @ObservedObject var pageObservable:PageObservable = PageObservable()
     var progress: Float // or some value binded
     var useGesture:Bool = true
     var progressHeight:CGFloat = Dimen.stroke.regular
@@ -69,17 +70,31 @@ struct ProgressSlider: PageView {
                         change(self.drag)
                     }
                 })
-            
                 .onEnded({ value in
                     if !useGesture { return }
-                    self.isThumbDrag = false
-                    if let changed = self.onChanged {
-                        changed(self.drag)
-                    }
-                    self.dragOpacity = 0.0
+                    self.onProgressCompleted()
                 }))
         }
+        .onReceive(pageObservable.$status){ status in
+            switch status {
+            case .resignActive :
+                if self.isThumbDrag {
+                    onProgressCompleted()
+                }
+            default : break
+            }
+            
+        }
     }
+    
+    private func onProgressCompleted(){
+        self.isThumbDrag = false
+        if let changed = self.onChanged {
+            changed(self.drag)
+        }
+        self.dragOpacity = 0.0
+    }
+    
     func getThumbPosition(geometry:GeometryProxy)->CGFloat{
         if self.isThumbDrag {
             return geometry.size.width * CGFloat(self.drag) - (self.thumbSize/2)

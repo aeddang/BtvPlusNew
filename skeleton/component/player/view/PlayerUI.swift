@@ -83,6 +83,7 @@ struct PlayerUI: PageComponent {
                         .fixedSize(horizontal: true, vertical: false)
                     
                     ProgressSlider(
+                        pageObservable: self.pageObservable, 
                         progress: self.progress,
                         thumbSize: self.isFullScreen ? Dimen.icon.thinExtra : Dimen.icon.tiny,
                         onChange: { pct in

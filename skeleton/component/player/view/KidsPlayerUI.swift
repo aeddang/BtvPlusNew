@@ -120,6 +120,7 @@ struct KidsPlayerUI: PageComponent {
 
                         }
                         ProgressSlider(
+                            pageObservable: self.pageObservable, 
                             progress: self.progress,
                             progressHeight: self.isFullScreen ? DimenKids.stroke.heavy: DimenKids.stroke.medium,
                             thumbSize: self.isFullScreen ? DimenKids.icon.tinyExtra : DimenKids.icon.microExtra,

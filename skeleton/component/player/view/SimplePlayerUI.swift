@@ -73,6 +73,7 @@ struct SimplePlayerUI: PageComponent {
                 HStack(alignment:.center, spacing:Dimen.margin.thin){
                     if self.isFullScreen {
                         ProgressSlider(
+                            pageObservable: self.pageObservable, 
                             progress: self.progress,
                             thumbSize: 0,
                                 

@@ -231,6 +231,7 @@ struct PageContentController: View{
         pageControllerObservable.overlayView?.sceneWillEnterForeground(scene)
     }
     
+    
     func sceneDidEnterBackground(_ scene: UIScene){
         pageObservable.status = PageStatus.enterBackground
         pageControllerObservable.pages.forEach({$0.sceneDidEnterBackground(scene)})

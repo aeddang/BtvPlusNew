@@ -72,7 +72,7 @@ class AppObserver: ObservableObject, PageProtocol {
     @discardableResult
     func handleDynamicLink(_ deepLink: URL?)-> Bool{
         guard let url =  deepLink else { return false }
-        PageLog.t("handleDynamicLink " + url.absoluteString)
+        PageLog.d("handleDynamicLink " + url.absoluteString)
         if let dynamiclink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url) {
             if let query = dynamiclink.url?.query{
                 PageLog.d("Deeplink dynamiclink : \(query)", tag: self.tag)

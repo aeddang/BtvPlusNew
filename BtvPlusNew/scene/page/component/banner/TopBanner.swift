@@ -106,7 +106,6 @@ struct TopBanner: PageComponent {
         }
     
         .onReceive(self.pageObservable.$status){status in
-            
             switch status {
             case .enterBackground : self.autoChangeCancel()
             case .enterForeground : self.autoChange()

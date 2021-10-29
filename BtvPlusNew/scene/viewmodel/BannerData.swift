@@ -103,7 +103,7 @@ class BannerData:InfinityData, PageProtocol{
         switch type {
         case .list:
             if  cardType == .bigPoster {
-                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: ListItem.banner.type03)  ?? image
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: ListItem.banner.type03.width, height: 0) )  ?? image
             } else {
                 self.type = cardType == .bannerList
                     ? .horizontalList

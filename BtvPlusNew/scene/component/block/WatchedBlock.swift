@@ -138,10 +138,14 @@ struct WatchedBlock: PageComponent, Identifiable{
             guard let evt = evt else { return }
             switch evt {
             case .onResult(_, let res, _):
-                if res.id != self.tag {return}
+                
                 switch res.type {
-                case .getWatch : if self.watchedType == .btv { self.loaded(res) }
-                case .getWatchMobile : if self.watchedType == .mobile { self.loaded(res) }
+                case .getWatch :
+                    if res.id != self.tag {return}
+                    if self.watchedType == .btv { self.loaded(res) }
+                case .getWatchMobile :
+                    if res.id != self.tag {return}
+                    if self.watchedType == .mobile { self.loaded(res) }
                 case .deleteWatch:
                     if res.id == self.currentDeleteId && self.watchedType == .btv{
                         self.deleted(res)

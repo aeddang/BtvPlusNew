@@ -129,6 +129,7 @@ struct BannerItem: PageView {
                 ImageView(
                     url: self.data.image,
                     contentMode:  SystemEnvironment.isTablet ? .fit : .fill,
+                    isFull: true,
                     noImg: self.data.type.noImage)
                     .frame(width: size.width, height: size.height)
                

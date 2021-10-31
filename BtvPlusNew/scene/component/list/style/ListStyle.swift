@@ -41,6 +41,7 @@ struct ListItem{
         static let type02:CGSize = CGSize(width: 320, height: 120)
         static let type03:CGSize = CGSize(width: 224, height: 154)
         static let type04:CGSize = isPad ? CGSize(width: 243, height: 230) : CGSize(width: 166, height: 154)
+        static let type05:CGSize = isPad ? CGSize(width: 158, height: 224) : CGSize(width: 108, height: 154)
     }
     
     struct character {

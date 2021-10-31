@@ -198,7 +198,7 @@ extension MultiBlockBody {
         }
         if blockHeight != 0 {
             if let banner = leadingBanners {
-                let ratio = ListItem.banner.type03
+                let ratio = banner.first?.originSize ?? ListItem.banner.type03
                 let w = round(listHeight * ratio.width/ratio.height)
                 banner.forEach{ $0.setBannerSize(width: w , height: listHeight, padding: padding) }
                 data.leadingBanners = banner

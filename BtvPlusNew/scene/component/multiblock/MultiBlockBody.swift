@@ -443,7 +443,7 @@ struct MultiBlockBody: PageComponent {
                 PageLog.d("addLoadedBlocks open " + find.name, tag: self.tag + self.checkID)
                 PageLog.d("addLoadedBlocks open " + find.menuId!, tag: self.tag + self.checkID)
                 DispatchQueue.main.async {
-                    if self.openPage(opneBlock: find, openId: openId) {
+                    if self.openPage(openBlock: find, openId: openId) {
                         self.currentOpenId = nil
                     }
                 }
@@ -512,37 +512,47 @@ struct MultiBlockBody: PageComponent {
     }
     
     
-    private func openPage(opneBlock:BlockData, openId:String) -> Bool{
-        switch opneBlock.uiType {
+    private func openPage(openBlock:BlockData, openId:String) -> Bool{
+        switch openBlock.uiType {
         case .banner :
-            BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data:opneBlock.banners?.first)
+            BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data:openBlock.banners?.first)
             
         case .bannerList:
-            let data = opneBlock.banners?.filter{$0.menuId != nil}.first(where: { openId.contains($0.menuId!) })
+            let data = openBlock.banners?.filter{$0.menuId != nil}.first(where: { openId.contains($0.menuId!) })
             BannerData.move(pagePresenter: self.pagePresenter, dataProvider: self.dataProvider, data:data)
            
         case .poster, .video:
             if self.pageType == .btv {
-               self.pagePresenter.openPopup(
-                   PageProvider.getPageObject(.categoryList)
-                       .addParam(key: .data, value: opneBlock)
-                       .addParam(key: .type, value: opneBlock.uiType.listType ?? CateBlock.ListType.poster)
-                       .addParam(key: .subType, value:opneBlock.cardType)
-                       .addParam(key: .isFree, value:self.viewModel.isFree)
-               )
+                if openBlock.videos?.first?.isClip == true {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.clipPreviewList)
+                            .addParam(key: .data, value: openBlock)
+                        )
+                } else {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.categoryList)
+                            .addParam(key: .data, value: openBlock)
+                            .addParam(key: .type, value: openBlock.uiType.listType ?? CateBlock.ListType.poster)
+                            .addParam(key: .subType, value:openBlock.cardType)
+                            .addParam(key: .isFree, value:self.viewModel.isFree)
+                    )
+                }
+                
+                
+               
            } else {
                self.pagePresenter.openPopup(
                    PageKidsProvider.getPageObject(.kidsCategoryList)
-                       .addParam(key: .data, value: opneBlock)
-                       .addParam(key: .type, value: opneBlock.uiType.listType ?? CateBlock.ListType.poster)
-                       .addParam(key: .subType, value:opneBlock.cardType)
+                       .addParam(key: .data, value: openBlock)
+                       .addParam(key: .type, value: openBlock.uiType.listType ?? CateBlock.ListType.poster)
+                       .addParam(key: .subType, value:openBlock.cardType)
                        .addParam(key: .isFree, value:self.viewModel.isFree)
                )
            }
            
             
         case .theme:
-            guard let data = opneBlock.themas?.filter({$0.menuId != nil}).first(where: { openId.contains($0.menuId!) }) else {
+            guard let data = openBlock.themas?.filter({$0.menuId != nil}).first(where: { openId.contains($0.menuId!) }) else {
                 ComponentLog.e("not found data", tag: self.tag)
                 return true
             }

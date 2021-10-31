@@ -26,7 +26,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     private var anyCancellable = Set<AnyCancellable>()
     private var redirectFlag:VSFlag? = nil
     
-    @Published var isGranted:Bool? = false
+    @Published var isGranted:Bool? = nil
     private(set) var currentAccountId:String? = nil
     private(set) var currentAccountManagerPresent:UIViewController? = nil
     
@@ -97,7 +97,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         })
     }
     func checkAccess(){
-        if self.isGranted == false {return}// 사용안함으로 세팅 나중에 지워야함
+        //if self.isGranted == false {return}// 사용안함으로 세팅 나중에 지워야함
         if self.pairing.status == .pairing && self.pairing.pairingDeviceType == .btv {
             return
         }

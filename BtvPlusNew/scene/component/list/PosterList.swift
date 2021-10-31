@@ -535,7 +535,6 @@ struct PosterList: PageComponent{
                     PosterItem( data:data , isSelected: self.contentID == nil
                                     ? false
                                     : self.contentID == data.epsdId)
-                        //.modifier(HolizentalListRowInset(spacing: self.spacing))
                         .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
                         .onTapGesture {
                             self.onTap(data: data)
@@ -555,7 +554,6 @@ struct PosterList: PageComponent{
                                 data.pageType == .btv ? .clickContentsView : .clickContentsButton,
                                 actionBody: actionBody)
                         }
-                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
                     }
                     if let subDataSets = self.subDataSets {
                         ForEach(subDataSets) {sets in
@@ -568,7 +566,17 @@ struct PosterList: PageComponent{
                                         }
                                 }
                             }
-                            //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                        }
+                    } else {
+                        ForEach(self.datas) { data in
+                            PosterItem( data:data , isSelected: self.contentID == nil
+                                            ? false
+                                            : self.contentID == data.epsdId)
+                                //.modifier(HolizentalListRowInset(spacing: self.spacing))
+                                .accessibility(label: Text(data.title ?? data.subTitle ?? ""))
+                                .onTapGesture {
+                                    self.onTap(data: data)
+                                }
                         }
                     }
                 } else {
@@ -590,6 +598,7 @@ struct PosterList: PageComponent{
             if #available(iOS 15.0, *) {return}
             guard let banners = self.banners else {return}
             if banners.isEmpty {return}
+            if banners.first?.originSize == ListItem.banner.type05 {return}
             self.onBindingData(datas: self.datas)
         }
     }//body

@@ -40,12 +40,14 @@ extension Asset{
     struct gnbBottom {
         public static let categoryOn =  "icGnbFocCategory"
         public static let freeOn =  "icGnbFocFree"
+        public static let freeOnEv =  " icGnbFocFree_ev"
         public static let homeOn =  "icGnbFocHome"
         public static let paymentOn =  "icGnbFocPayment"
         public static let oceanOn =  "icGnbFocOcean"
         
         public static let categoryOff =  "icGnbNorCategory"
         public static let freeOff =  "icGnbNorFree"
+        public static let freeOffEv =  " icGnbNorFree_ev"
         public static let homeOff =  "icGnbNorHome"
         public static let paymentOff =  "icGnbNorPayment"
         public static let oceanOff =  "icGnbNorOcean"

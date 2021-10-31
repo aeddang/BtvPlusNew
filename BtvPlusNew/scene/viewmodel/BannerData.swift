@@ -66,6 +66,7 @@ class BannerData:InfinityData, PageProtocol{
     private(set) var menuId:String? = nil
     private(set) var menuNm:String? = nil
     private(set) var logConfig:String? = nil
+    private(set) var originSize:CGSize? = nil
     var logPosition:String? = nil
     
     
@@ -103,7 +104,9 @@ class BannerData:InfinityData, PageProtocol{
         switch type {
         case .list:
             if  cardType == .bigPoster {
-                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: ListItem.banner.type03.width, height: 0) )  ?? image
+                let size = data.exps_rslu_cd == "50" ?  ListItem.banner.type05 : ListItem.banner.type03
+                self.originSize = size
+                image = ImagePath.thumbImagePath(filePath: data.bnr_off_img_path, size: CGSize(width: size.width, height: 0) )  ?? image
             } else {
                 self.type = cardType == .bannerList
                     ? .horizontalList

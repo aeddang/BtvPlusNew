@@ -145,8 +145,9 @@ struct PageSceneModel: PageModel {
         }
     }
     
-    static func needTopTab(_ pageObject:PageObject) -> Bool{
+    static func needTopTab(_ pageObject:PageObject) -> Bool?{
         switch pageObject.pageID {
+        case .snsShare : return nil
         case .home, .category : return true
         case .kidsHome : return true
         default : return false

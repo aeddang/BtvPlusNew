@@ -54,7 +54,7 @@ struct PageSnsShare: PageView {
             if let type = obj.getParamValue(key: .type) as? ShareType {
                 self.type = type
             }
-            
+            self.pagePresenter.isLoading = true
             
             switch type {
             case .familyInvite(let type) :
@@ -66,7 +66,7 @@ struct PageSnsShare: PageView {
     }//body
     
     private func share(token :String){
-        
+        self.pagePresenter.closePopup(self.pageObject?.id)
         let link = ApiPath.getRestApiPath(.WEB)
             + SocialMediaSharingManage.familyInvite
             + "&pairing_token=" + token
@@ -84,7 +84,7 @@ struct PageSnsShare: PageView {
             self.appSceneObserver.event = .toast(isComplete ? String.share.shareFamilyInviteComplete : String.share.shareFamilyInviteFail)
             
         }
-        self.pagePresenter.closePopup(self.pageObject?.id)
+        
     }
 }
 

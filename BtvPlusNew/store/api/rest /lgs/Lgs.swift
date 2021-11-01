@@ -75,7 +75,7 @@ class Lgs: Rest{
         params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
-        params["profile_id"] = pairing.kid?.id //모름 기존 키즈 프로필아이디로 사용하던건데....
+        params["profile_id"] = pairing.kid?.id 
         params["pcid"] = pcId;
         params["meta_typ_cd"] = synopData.metaTypCd
         

@@ -62,6 +62,9 @@ class PageSearchModel :ObservableObject, PageProtocol {
         //DispatchQueue.global(qos: .background).async(){
             self.keywordCoreData.removeKeyword(keyword)
         //}
+        DispatchQueue.global(qos: .background).async(){
+            self.keywordCoreData.saveContext()
+        }
     }
     func removeAllSearchKeyword (){
         let removeKeywords = self.localKeywords

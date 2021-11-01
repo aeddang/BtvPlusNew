@@ -125,8 +125,9 @@ struct AppLayout: PageComponent{
             case .kids :
                 self.pagePresenter.bodyColor = Color.kids.bg
             }
-            if self.appSceneObserver.useTopFix != false {
-                self.appSceneObserver.useTop = PageSceneModel.needTopTab(cPage)
+            if self.appSceneObserver.useTopFix != false, let useTop = PageSceneModel.needTopTab(cPage){
+                
+                self.appSceneObserver.useTop = useTop
             }
             
             if !PageSceneModel.maintainBottomTab(cPage, sceneOrientation: self.sceneObserver.sceneOrientation) {

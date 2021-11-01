@@ -589,6 +589,7 @@ struct PageSynopsis: PageView {
             self.isCheckRecommand = true
         }
         self.playerModel.event = .pause()
+        self.playerModel.reset()
         self.isUIView = false
         self.hasAuthority = nil
         self.progressError = false
@@ -848,6 +849,8 @@ struct PageSynopsis: PageView {
             }
            
         }
+        
+        
         DispatchQueue.main.async {
             self.checkCornerPlay()
             self.playerModel.start()
@@ -889,6 +892,12 @@ struct PageSynopsis: PageView {
     }
     
     func onAllProgressCompleted(){
+        if !self.isPlayAble {
+            DispatchQueue.main.async {
+                self.playerModel.event = .stop()
+            }
+            
+        }
         if self.isAllProgressCompleted {return}
         self.isAllProgressCompleted = true
         PageLog.d("onAllProgressCompleted", tag: self.tag)

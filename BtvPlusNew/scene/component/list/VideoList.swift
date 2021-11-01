@@ -239,7 +239,7 @@ class VideoData:InfinityData, Copying{
             list_price: self.tagData?.price,
             payment_price: nil
         )
-        return self.setNaviLog(data: data)
+        return self
     }
     
     func setData(data:BookMarkItem, cardType:BlockData.CardType = .video, idx:Int = -1) -> VideoData {

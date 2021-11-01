@@ -136,8 +136,8 @@ struct PageKidsIntro: PageView {
             if !self.isAnimationCompleted {return}
             if !self.isDataCompleted {return}
             if !self.isKidsProfileCompleted {return}
-            if self.isCompleted {return}
         }
+        if self.isCompleted {return}
         self.isCompleted = true
         DispatchQueue.main.async {
             KidProfile.isOverAgeInfo = false
@@ -188,6 +188,7 @@ struct PageKidsIntro: PageView {
     
     func emptyKids(){
         if self.setup.isRegistUnvisibleDate() {return}
+        
         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.registKid))
     }
     

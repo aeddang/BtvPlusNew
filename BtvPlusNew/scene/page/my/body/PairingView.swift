@@ -236,6 +236,7 @@ struct PairingView: PageComponent{
                                 PageProvider.getPageObject(.myPurchase)
                             )
                         }
+                        /*
                         if self.isOksusu {
                             Spacer().modifier(LineHorizontal())
                             FillButton(
@@ -249,7 +250,7 @@ struct PairingView: PageComponent{
                                 )
                             }
                         }
-                        
+                        */
                     }
                     .modifier(ContentHorizontalEdgesTablet())
                     .padding(.top, Dimen.margin.medium)

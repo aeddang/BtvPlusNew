@@ -571,6 +571,7 @@
 "alertAppleTvDisableText" = "Apple TV 연결 상태에서는\n이용하실 수 없는 기능입니다.";
 "alertAppleTvDisableSub" = "Apple TV 서비스 제공 정책에 따라\n일부 기능 이용이 제한됩니다.";
 
+
 /*
  PageTitle
 */
@@ -702,9 +703,9 @@
 /*
  PagePairingAppletv
 */
-"pairingAppletvText1" = "반가워요, Apple TV 고객님!";
+"pairingAppletvText1" = "반가워요, B tv 고객님";
 "pairingAppletvText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
-
+"pairingAppletvTip" = "Apple TV 연결 시 일부 기능 이용이 제한될 수 있습니다.";
 /*
  PagePairingInvite
 */

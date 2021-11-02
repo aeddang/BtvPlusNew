@@ -13,6 +13,7 @@ import Combine
 
 extension BtvWebView {
     static let identity = "/view/v3.0/identityverification"
+    static let oksusuIdentity = "/view/v3.0/reqVerification"
     static let purchase = "/view/v3.0/purchase/list"
     static let person = "/view/v3.0/synopsis/person"
     static let search = "/view/v3.0/search/main"
@@ -26,10 +27,11 @@ extension BtvWebView {
     static let tip = "/view/v3.0/tip/all"
     static let serviceTerms = "/view/v3.0/terms"
     static let privacyAgreement = "/view/v3.0/agreement"
-
     static let happySeniorUseInfo = "/view/v3.0/setting/happyseniorUseInfo"
     static let happySenior = "/view/v3.0/setting/happysenior"
     static let callJsPrefix = "javascript:"
+    
+   
     
 }
 

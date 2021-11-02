@@ -150,12 +150,18 @@ struct SetupOksusu: PageView {
     @State var currentSelectedUser:UserData? = nil
     private func setupOksusu(){
         self.willOksusu = true
-        self.appSceneObserver.alert = .needCertification(
+        self.appSceneObserver.alert = .confirm(
             String.oksusu.certification,
             String.oksusu.setupCertification,
             String.oksusu.setupCertificationSub,
-            pageTitle:String.oksusu.certification){
-            self.setupOksusuCancel()
+            confirmText:String.button.certification){ isOk in
+                if isOk {
+                    self.pagePresenter.openPopup(
+                        PageProvider.getPageObject(.oksusuCertification)
+                    )
+                } else {
+                    self.setupOksusuCancel()
+                }
         }
     }
     

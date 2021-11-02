@@ -26,6 +26,7 @@ struct SynopsisBody: PageComponent{
     @Binding var isBookmark:Bool?
     @Binding var isLike:LikeStatus?
     var isPosson:Bool
+    var possonType:PossonType
     @Binding var seris:[SerisData]
     var synopsisData:SynopsisData? = nil
     var synopsisModel:SynopsisModel? = nil
@@ -116,7 +117,8 @@ struct SynopsisBody: PageComponent{
                     PurchaseViewer(
                         componentViewModel: self.componentViewModel,
                         data: purchaseViewerData,
-                        isPosson:self.isPosson
+                        isPosson:self.isPosson,
+                        possonType:self.possonType
                     )
                     .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                 }

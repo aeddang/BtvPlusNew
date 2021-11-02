@@ -97,6 +97,7 @@ struct PageSynopsis: PageView {
                             hasAuthority: self.hasAuthority,
                             isPlayAble: self.isPlayAble,
                             isPosson:self.isPosson,
+                            possonType:self.possonType,
                             progressError: self.progressError,
                             
                             isPairing: self.isPairing,
@@ -534,6 +535,7 @@ struct PageSynopsis: PageView {
     @State var isPageUiReady = false
     @State var isPosson:Bool = false
     @State var anotherStb:String? = nil
+    @State var possonType:PossonType = .btv
     @State var isPageDataReady = false
     @State var isUIView:Bool = false
 
@@ -555,6 +557,7 @@ struct PageSynopsis: PageView {
     /*extention params*/
     @State var firstPurchase:Bool = false
     @State var currentRedirectSris:String? = nil
+    
     @State var isProhibitionCheckComplete:Bool = false
     @State var isProhibitionChecking:Bool = false
     @State var isCheckRecommand:Bool = true
@@ -596,6 +599,7 @@ struct PageSynopsis: PageView {
         self.progressCompleted = false
         self.isNoPreview = false
         self.isAllProgressCompleted = false
+        
         self.episodeViewerData = nil
         self.purchaseViewerData = nil
         self.summaryViewerData = nil

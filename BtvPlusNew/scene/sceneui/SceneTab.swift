@@ -63,12 +63,7 @@ struct SceneTab: PageComponent{
                     }
                     .padding(.top, self.safeAreaTop)
                     .onReceive(self.repository.alram.$newCount){ count in
-                        if self.pairing.status != .pairing {return}
-                        let isShow = count>0
-                        withAnimation{self.showAlram = isShow}
-                        if !isShow {return}
-                        if self.setup.isAlramUnvisibleDate() {return}
-                        withAnimation{self.readShowAlram = false}
+                        self.onUpdateAlram()
                     }
                     .onReceive(self.repository.alram.$isChangeNotification) { isChange in
                         if isChange {
@@ -171,6 +166,19 @@ struct SceneTab: PageComponent{
         }
         
     }
+    
+    
+    func onUpdateAlram(){
+        if self.pairing.status != .pairing {return}
+        let count = self.repository.alram.newCount
+        let isShow = count>0
+        withAnimation{self.showAlram = isShow}
+        if !isShow {return}
+        if self.setup.isAlramUnvisibleDate() {return}
+        withAnimation{self.readShowAlram = false}
+    }
+    
+    
     func updateTopPos(){
         if SystemEnvironment.currentPageType != .btv {return}
         var headerHeight = self.headerBannerData == nil ? 0 : HeaderBanner.height

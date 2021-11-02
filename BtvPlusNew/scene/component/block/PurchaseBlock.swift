@@ -329,7 +329,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         case .oksusu:
             self.viewModel.request = .init(
                 id: self.tag,
-                type: .getPossessionPurchase( anotherStbId:self.setup.possession , self.infinityScrollModel.page + 1 )
+                type: .getPossessionPurchase( anotherStbId:self.setup.oksusu , self.infinityScrollModel.page + 1 )
             )
         }
 

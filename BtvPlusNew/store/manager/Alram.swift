@@ -8,11 +8,15 @@ class Alram : ObservableObject, PageProtocol{
     @Published private(set) var needUpdateNew:Bool = true
     @Published private(set) var isChangeNotification:Bool = false
     
-    @discardableResult
-    func updateNew() -> Int {
-        if !self.needUpdateNew {return self.newCount}
+    func updateNew(){
+        if !self.needUpdateNew {
+            let currentCount = self.newCount
+            self.newCount = 0
+            DispatchQueue.main.async {
+                self.newCount = currentCount
+            }
+        }
         self.updateBadge()
-        return self.newCount
     }
     func getHistorys() -> [NotificationEntity] {
         let historys = NotificationCoreData().getAllNotices()

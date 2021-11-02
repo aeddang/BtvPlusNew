@@ -49,6 +49,7 @@ struct BtvSynopsis: PageComponent{
     var hasAuthority:Bool?
     var isPlayAble:Bool
     var isPosson:Bool
+    var possonType:PossonType
     var progressError:Bool
     
     var isPairing:Bool?
@@ -125,6 +126,7 @@ struct BtvSynopsis: PageComponent{
                             isBookmark: self.$isBookmark,
                             isLike: self.$isLike,
                             isPosson:self.isPosson,
+                            possonType:self.possonType,
                             seris: self.$seris,
                             synopsisData: self.synopsisData,
                             synopsisModel: self.synopsisModel,

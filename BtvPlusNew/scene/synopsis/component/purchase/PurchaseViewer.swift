@@ -14,6 +14,7 @@ struct PurchaseViewer: PageComponent{
     var componentViewModel:SynopsisViewModel = SynopsisViewModel()
     var data:PurchaseViewerData
     var isPosson:Bool
+    var possonType:PossonType = .btv
     @State var option:String = ""
     @State var showInfo:Bool = false
     var body: some View {

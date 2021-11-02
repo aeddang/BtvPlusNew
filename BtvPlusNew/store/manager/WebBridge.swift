@@ -148,7 +148,7 @@ class WebBridge :PageProtocol{
         info["clientId"] = SystemEnvironment.deviceId
         info["expiredSTB"] = setup.possession.isEmpty == false ? 1 : 0
         info["pairingId"] = NpsNetwork.pairingId
-        
+        info["uuid"] = SystemEnvironment.originDeviceId //알람수신을 위한 디바이스 ID
         return info
     }
     

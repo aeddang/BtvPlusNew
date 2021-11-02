@@ -126,7 +126,7 @@ extension String{
         
         public static let pairingAppletvText1 = "pairingAppletvText1".loaalized()
         public static let pairingAppletvText2 = "pairingAppletvText2".loaalized()
-        
+        public static let pairingAppletvTip = "pairingAppletvTip".loaalized()
         public static let pairingFamilyInviteText1 = "pairingFamilyInviteText1".loaalized()
         public static let pairingFamilyInviteText2 = "pairingFamilyInviteText2".loaalized()
         public static let pairingFamilyInviteError = "pairingFamilyInviteError".loaalized()

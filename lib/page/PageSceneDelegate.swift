@@ -507,7 +507,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
               else { return }
         
         PageLog.d("willChangePage " + willChangePage.pageID, tag:self.tag)
-        
         if willChangePage.isPopup {
             pagePresenter.currentPopup = willChangePage
         }else{
@@ -519,7 +518,6 @@ class PageSceneDelegate: UIResponder, UIWindowSceneDelegate, PageProtocol {
         if let style = self.getPageModel().getUIStatusBarStyle(willChangePage) {
             self.updateUserInterfaceStyle(style: style)
         }
-        
         self.syncOrientation(willChangePage)
     }
     

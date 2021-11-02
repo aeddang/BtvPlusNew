@@ -348,7 +348,7 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         request.attributeNames = ["appLevelAuth"];
         request.supportedAuthenticationSchemes = [.api];
         request.isInterruptionAllowed = isInterruptionAllowed
-        request.supportedAccountProviderIdentifiers = [Bundle.main.bundleIdentifier ?? ""]
+        request.supportedAccountProviderIdentifiers = ["com.skbroadband.BtvOnA"]
         currentAccountManager.enqueue(request,completionHandler: completionHandler)
     }
     

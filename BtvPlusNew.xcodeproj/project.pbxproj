@@ -65,6 +65,7 @@
 		31373F6225C7E726004353DA /* YTPlayerView-iframe-player.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */; };
 		31373F6325C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html in Resources */ = {isa = PBXBuildFile; fileRef = 31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */; };
 		31373F6425C7E726004353DA /* YTPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31373F5F25C7E726004353DA /* YTPlayerView.swift */; };
+		313B68162730D2E000712633 /* PageOksusuCertification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313B68152730D2E000712633 /* PageOksusuCertification.swift */; };
 		313E64D026E999FB00EBDE31 /* PageSynopsisCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64CF26E999FB00EBDE31 /* PageSynopsisCorner.swift */; };
 		313E64D226E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64D126E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift */; };
 		313E64D426E9A1F300EBDE31 /* PageSynopsisWatchLv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E64D326E9A1F300EBDE31 /* PageSynopsisWatchLv.swift */; };
@@ -848,6 +849,7 @@
 		31373F5D25C7E726004353DA /* YTPlayerView-iframe-player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-player.html"; sourceTree = "<group>"; };
 		31373F5E25C7E726004353DA /* YTPlayerView-iframe-playerIPAD.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "YTPlayerView-iframe-playerIPAD.html"; sourceTree = "<group>"; };
 		31373F5F25C7E726004353DA /* YTPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlayerView.swift; sourceTree = "<group>"; };
+		313B68152730D2E000712633 /* PageOksusuCertification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageOksusuCertification.swift; sourceTree = "<group>"; };
 		313E64CF26E999FB00EBDE31 /* PageSynopsisCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisCorner.swift; sourceTree = "<group>"; };
 		313E64D126E99AAC00EBDE31 /* PageSynopsisProhibitionSimultaneous.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisProhibitionSimultaneous.swift; sourceTree = "<group>"; };
 		313E64D326E9A1F300EBDE31 /* PageSynopsisWatchLv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSynopsisWatchLv.swift; sourceTree = "<group>"; };
@@ -3251,6 +3253,7 @@
 				3177AB30263B6F550054BFA4 /* PagePrivacyAndAgree.swift */,
 				3183B37C26168F03004F5C0D /* PageAdultCertification.swift */,
 				318C36B3265F0805009B7EC3 /* PageCertification.swift */,
+				313B68152730D2E000712633 /* PageOksusuCertification.swift */,
 				314D0E3226DFA0EE00BDCD5B /* PagePicker.swift */,
 			);
 			path = popups;
@@ -4663,6 +4666,7 @@
 				314F75FB26F1C74E0039E7ED /* PageSynopsisSiri.swift in Sources */,
 				314D0E3326DFA0EE00BDCD5B /* PagePicker.swift in Sources */,
 				31E50C6C261AA05400D0762C /* PageWatchHabit.swift in Sources */,
+				313B68162730D2E000712633 /* PageOksusuCertification.swift in Sources */,
 				316A70A12670804A00A93B83 /* ListStyleKids.swift in Sources */,
 				D56C699E257DA09E00CF9AB8 /* PageContentController.swift in Sources */,
 				319C47E726A1743400C61EF8 /* PageKidsMultiBlock.swift in Sources */,
@@ -5228,7 +5232,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7572;
+				CURRENT_PROJECT_VERSION = 7576;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5253,7 +5257,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7572;
+				CURRENT_PROJECT_VERSION = 7576;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5443,7 +5447,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7572;
+				CURRENT_PROJECT_VERSION = 7576;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5528,7 +5532,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7572;
+				CURRENT_PROJECT_VERSION = 7576;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;

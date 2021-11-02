@@ -37,6 +37,10 @@ enum SynopsisType {
 
 }
 
+enum PossonType {
+    case oksusu, btv
+}
+
 struct SynopsisData{
     var srisId:String? = nil
     var searchType:EuxpNetwork.SearchType = .prd
@@ -46,6 +50,7 @@ struct SynopsisData{
     var kidZone:String? = nil
     var isRecent:Bool? = nil
     var isPosson:Bool = false
+    var possonType:PossonType = .btv
     var anotherStbId:String? = nil
     var pId:String? = nil
     var cpId:String? = nil

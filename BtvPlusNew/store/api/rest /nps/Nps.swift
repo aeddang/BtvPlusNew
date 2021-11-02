@@ -452,6 +452,8 @@ class Nps: Rest{
     func postUnPairing(
         customParam:[String: Any] = [String: Any](),
         completion: @escaping (NpsResult) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        if SystemEnvironment.currentPairingDeviceType == .apple {return}
+        
         let headers = NpsNetwork.getHeader(ifNo: "IF-NPS-534")
         var params = [String: Any]()
         params["service_type"] = NpsNetwork.SERVICE_TYPE

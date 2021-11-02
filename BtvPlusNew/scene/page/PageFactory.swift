@@ -64,6 +64,7 @@ extension PageID{
     static let schedule:PageID = "schedule"
     static let adultCertification:PageID = "adultCertification"
     static let userCertification:PageID = "userCertification"
+    static let oksusuCertification:PageID = "oksusuCertification"
     static let confirmNumber:PageID = "confirmNumber"
     static let watchHabit:PageID = "watchHabit"
     static let purchaseList:PageID = "purchaseList"
@@ -234,6 +235,7 @@ struct PageFactory{
         case .schedule : return PageSchedule()
         case .adultCertification : return PageAdultCertification()
         case .userCertification : return PageCertification()
+        case .oksusuCertification : return PageOksusuCertification()
         case .confirmNumber : return PageConfirmNumber()
         case .watchHabit : return PageWatchHabit()
         case .purchaseList : return PagePurchaseList()

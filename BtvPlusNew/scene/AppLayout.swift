@@ -20,7 +20,6 @@ struct AppLayout: PageComponent{
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var networkObserver:NetworkObserver
     @EnvironmentObject var keyboardObserver:KeyboardObserver
-    
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var pairing:Pairing
     @ObservedObject var pageObservable:PageObservable = PageObservable()
@@ -63,7 +62,6 @@ struct AppLayout: PageComponent{
             
         }
         .toast(isShowing: self.$isToastShowing , text: self.toastMsg)
-        
         .onReceive(self.pagePresenter.$isLoading){ loading in
             DispatchQueue.main.async {
                 withAnimation{
@@ -101,7 +99,8 @@ struct AppLayout: PageComponent{
                     }
                 #endif
                 break
-            case .floatingBanner(let datas): self.onFloatingBannerView(datas: datas)
+            case .floatingBanner(let datas):
+                self.onFloatingBannerView(datas: datas)
             default: break
             }
         }
@@ -264,6 +263,7 @@ struct AppLayout: PageComponent{
         self.delaySyncOrientation?.cancel()
         self.delaySyncOrientation = nil
     }
+    
     
     func onUpdateAlram(flag:UpdateFlag, msg:String? = nil){
         if flag == .force {

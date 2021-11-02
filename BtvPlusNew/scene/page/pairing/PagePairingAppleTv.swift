@@ -42,7 +42,7 @@ struct PagePairingAppleTv: PageView {
                     .modifier(MediumTextStyle(size: Font.size.lightExtra, color: Color.app.white))
                     .multilineTextAlignment(.center)
                     .padding(.top, Dimen.margin.regular)
-                Text(String.alert.notAvailableAppleTvTip)
+                Text(String.pageText.pairingAppletvTip)
                     .modifier(MediumTextStyle(size: Font.size.tiny, color: Color.brand.primary))
                     .multilineTextAlignment(.center)
                     .padding(.top, Dimen.margin.thin)

@@ -49,6 +49,7 @@ extension PageSynopsis {
         }
         self.synopsisData = synopsisData
         self.isPosson = synopsisData.isPosson
+        self.possonType = synopsisData.possonType
         self.anotherStb = self.isPosson ? synopsisData.anotherStbId : nil
         
     }

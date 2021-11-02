@@ -36,7 +36,6 @@ class AccountManager : PageProtocol{
         
         self.pairing.$request.sink(receiveValue: { req in
             guard let requestPairing = req else { return }
-            
             self.requestDevice = nil
             self.requestAuthcode = nil
         

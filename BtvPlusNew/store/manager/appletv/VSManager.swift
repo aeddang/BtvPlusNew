@@ -19,6 +19,11 @@ enum VSFlag {
 }
 
 class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDelegate{
+    static private func getSuported()->Bool{
+        if #available(iOS 14.5, *) {return true}
+        return false
+    }
+    
     private let pagePresenter:PagePresenter
     private let pairing:Pairing
     private let dataProvider:DataProvider
@@ -26,7 +31,8 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
     private var anyCancellable = Set<AnyCancellable>()
     private var redirectFlag:VSFlag? = nil
     
-    @Published var isGranted:Bool? = nil
+
+    @Published var isGranted:Bool? = VSManager.getSuported() ? nil : false
     private(set) var currentAccountId:String? = nil
     private(set) var currentAccountManagerPresent:UIViewController? = nil
     
@@ -97,7 +103,8 @@ class VSManager:NSObject, ObservableObject, PageProtocol,  VSAccountManagerDeleg
         })
     }
     func checkAccess(){
-        //if self.isGranted == false {return}// 사용안함으로 세팅 나중에 지워야함
+        if !VSManager.getSuported() {return}
+       
         if self.pairing.status == .pairing && self.pairing.pairingDeviceType == .btv {
             return
         }

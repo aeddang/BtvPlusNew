@@ -411,7 +411,7 @@ struct AppLayout: PageComponent{
     }
     
     func onPageReset(){
-        self.appSceneObserver.event = .toast("on PageReset " + (SystemEnvironment.isStage ? "stage" : "release"))
+        //self.appSceneObserver.event = .toast("on PageReset " + (SystemEnvironment.isStage ? "stage" : "release"))
         let initMenuId = self.dataProvider.bands.datas.first?.menuId
         self.pagePresenter.changePage(
             PageProvider.getPageObject(.home)

@@ -93,7 +93,7 @@ struct PageOksusuCertification: PageView {
             }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
-                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.oksusuIdentity
+                    let linkUrl = ApiPath.getRestApiPath(.WEB) + BtvWebView.oksusuIdentity + "?type=oksusu&reqWeb=false"
                     self.webViewModel.request = .link(linkUrl)
                 }
             }

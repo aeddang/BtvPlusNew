@@ -103,7 +103,7 @@ struct PagePairingManagement: PageView {
                                     self.naviLogManager.actionLog(
                                         .clickReleaseButton,actionBody: .init( config: "B tv 연결해제"))
                                     
-                                    if self.pairing.user?.pairingDeviceType == .apple {
+                                    if self.pairing.pairingDeviceType == .apple {
                                         self.vsManager.accountUnPairingAlert()
                                         return
                                     }

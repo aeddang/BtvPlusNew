@@ -111,11 +111,9 @@ struct PageContentBody: PageView  {
             
         }
         .onReceive(self.pageChanger.$dragOpercity){ opacity in
-            
             if !self.isReady  {return}
             if !self.isBelow {return}
             if self.isTop {return}
-            
             self.dragOpacity = opacity
             if !self.useBelowPageMove {return}
             //PageLog.log("pagePosition " + self.opacity.description + " " + self.pageID ,tag:self.pageID)
@@ -123,7 +121,7 @@ struct PageContentBody: PageView  {
             switch self.topPageType {
             case .horizontal :  self.pageOffsetX = amount
             case .vertical :  self.pageOffsetY = -amount
-            default : do{}
+            default :break
             }
         }
         

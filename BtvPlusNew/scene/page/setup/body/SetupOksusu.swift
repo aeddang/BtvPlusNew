@@ -9,6 +9,7 @@ import SwiftUI
 struct SetupOksusu: PageView {
     
     @EnvironmentObject var setup:Setup
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pairing:Pairing
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -20,6 +21,9 @@ struct SetupOksusu: PageView {
     @State var isOksusuPurchase:Bool = false
     @State var willOksusu:Bool? = nil
     @State var willOksusuPurchase:Bool? = nil
+     
+    @State var mergePurchaseCode:EpsNetwork.MergeOksusuCode? = nil
+
     var body: some View {
         VStack(alignment:.leading , spacing:Dimen.margin.thinExtra) {
             Text(String.pageText.setupOksusu).modifier(ContentTitle())
@@ -27,13 +31,25 @@ struct SetupOksusu: PageView {
                 SetupItem (
                     isOn: self.$isOksusu,
                     title: String.pageText.setupOksusuSet,
-                    subTitle: String.pageText.setupOksusuSetText
+                    subTitle: String.pageText.setupOksusuSetText,
+                    tips: [String.pageText.setupOksusuSetTip]
                 )
                 Spacer().modifier(LineHorizontal(margin:Dimen.margin.thin))
                 SetupItem (
                     isOn: self.$isOksusuPurchase,
                     title: String.pageText.setupOksusuPurchaseSet,
-                    subTitle: String.pageText.setupOksusuPurchaseSetText
+                    subTitle: self.mergePurchaseCode == .PROGRESS
+                        ?String.pageText.setupOksusuPurchaseProgresText
+                        :String.pageText.setupOksusuPurchaseSetText,
+                    tips: [String.pageText.setupOksusuPurchaseSetTip1,
+                           String.pageText.setupOksusuPurchaseSetTip2,
+                           String.pageText.setupOksusuPurchaseSetTip3
+                          ],
+                    toggleText: self.getMergeOksusuPurchaseText(),
+                    useToggleButton: false,
+                    reflash: self.mergePurchaseCode == .PROGRESS || self.mergePurchaseCode == .ERROR ? {
+                        self.checkOksusuPurchaseMerge()
+                    } : nil
                 )
                 .opacity(self.isOksusuPurchaseUseAble ? 1.0 : 0.5)
             }
@@ -41,7 +57,7 @@ struct SetupOksusu: PageView {
         }
         .onReceive( [self.isOksusu].publisher ) { value in
             if !self.isInitate { return }
-            let originValue = self.setup.oksusu.isEmpty == false
+            let originValue = self.repository.storage.oksusu.isEmpty == false
             if originValue == value { return }
             if self.willOksusu != nil { return }
             
@@ -57,13 +73,16 @@ struct SetupOksusu: PageView {
         }
         .onReceive( [self.isOksusuPurchase].publisher ) { value in
             if !self.isInitate { return }
-            let originValue = self.setup.oksusuPurchase.isEmpty == false
+            let originValue = self.repository.storage.oksusuPurchase.isEmpty == false
             if originValue == value { return }
             if self.willOksusuPurchase != nil { return }
             if !self.isOksusu {
                 if value {
                     self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseDiable)
                     self.isOksusuPurchase = !value
+                } else {
+                    self.willOksusuPurchase = nil
+                    self.isOksusuPurchase = true
                 }
                 return
             }
@@ -75,7 +94,7 @@ struct SetupOksusu: PageView {
             }
             if !value {
                 if originValue {
-                    self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseDeleteDiable)
+                    //self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseDeleteDiable)
                     self.isOksusuPurchase = true
                 }
             } else {
@@ -88,14 +107,8 @@ struct SetupOksusu: PageView {
             guard let evt = evt else {return}
             switch evt.type {
             case .certification :
-                if let cid = evt.data as? String {
-                    self.setupOksusuCertificationCompleted(cid:cid)
-                } else {
-                    self.setupOksusuCancel()
-                }
-            case .selected :
-                if let user = evt.data as? UserData {
-                    self.selectedOksusu(user)
+                if let stbId = evt.data as? String {
+                    self.setupOksusuCertificationCompleted(stbId:stbId)
                 } else {
                     self.setupOksusuCancel()
                 }
@@ -106,10 +119,8 @@ struct SetupOksusu: PageView {
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
             switch res.type {
-            case .getOksusuUser : self.checkGetOksusuAble(res:res)
-            case .getOksusuUserInfo : self.connectedUserInfo(res: res)
-            case .connectOksusuUser : self.connectedOksusu(res: res)
-            case .disconnectOksusuUser : self.deletedOksusu(res: res)
+            case .checkOksusu: self.setOksusuStatus(res: res)
+            case .checkOksusuPurchase: self.setOksusuPurchase(res: res)
             case .addOksusuUserToBtvPurchase : self.addedOksusuPurchase(res: res)
             default: break
             }
@@ -117,7 +128,10 @@ struct SetupOksusu: PageView {
         .onReceive(self.dataProvider.$error){ err in
             guard let err = err else { return }
             switch err.type {
-            case .getOksusuUser : break
+            case .checkOksusu: self.setOksusu()
+            case .checkOksusuPurchase:
+                self.mergePurchaseCode = .PROGRESS
+                self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
             default: break
             }
         }
@@ -125,7 +139,7 @@ struct SetupOksusu: PageView {
             guard let evt = evt else { return }
             switch evt {
             case .disConnected :
-                self.setup.oksusuPurchase = ""
+                self.repository.storage.oksusuPurchase = ""
                 self.isOksusuPurchase = false
                 self.setOksusuPurchaseAble()
             case .pairingCompleted : self.setOksusuPurchaseAble()
@@ -133,19 +147,71 @@ struct SetupOksusu: PageView {
             }
         }
         .onAppear(){
-            self.isOksusu = self.setup.oksusu.isEmpty == false
-            if self.pairing.status != .pairing {
-                self.setup.oksusuPurchase = ""
-            }
-            self.isOksusuPurchase = self.setup.oksusuPurchase.isEmpty == false
-            self.setOksusuPurchaseAble()
+            self.dataProvider.requestData(q: .init(id: self.tag, type: .checkOksusu, isOptional: true))
         }
     }//body
+    
+    private func setOksusuStatus(res:ApiResultResponds){
+        guard let status = res.data as? OksusuStatus else {
+            self.setOksusu()
+            return
+        }
+        let isConnect = status.body?.authYn?.toBool() ?? false
+        let isPurchaseConnect = status.body?.closeYn?.toBool() ?? false
+        if !isConnect {
+            self.repository.storage.oksusu = ""
+        } else {
+            //self.setup.oksusu = "sdsdsddsd"
+        }
+        if isPurchaseConnect {
+            self.repository.storage.oksusuPurchase = "Y"
+        } else {
+            self.repository.storage.oksusuPurchase = ""
+        }
+        self.setOksusu()
+    }
+    
+    private func setOksusu(){
+        self.isOksusu = self.repository.storage.oksusu.isEmpty == false
+        if self.pairing.status != .pairing {
+            self.repository.storage.oksusuPurchase = ""
+        }
+        self.isOksusuPurchase = self.repository.storage.oksusuPurchase.isEmpty == false
+        self.setOksusuPurchaseAble()
+        self.checkOksusuPurchaseMerge(isOption:true)
+    }
     
     private func setOksusuPurchaseAble(){
         self.isOksusuPurchaseUseAble = self.isOksusu && self.pairing.status == .pairing
     }
     
+    private func checkOksusuPurchaseMerge(isOption:Bool = false){
+        if self.isOksusuPurchase {
+            if  self.repository.storage.oksusu.isEmpty == true {
+                self.mergePurchaseCode = EpsNetwork.MergeOksusuCode.COMPLETED
+            } else {
+                self.dataProvider.requestData(
+                    q: .init(type: .checkOksusuPurchase(self.pairing.hostDevice,  self.repository.storage.oksusu), isOptional: isOption))
+            }
+        }
+    }
+    private func setOksusuPurchase(res:ApiResultResponds){
+        guard let data = res.data as? RegistEps else {
+            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
+            return
+        }
+        self.mergePurchaseCode = EpsNetwork.MergeOksusuCode.getType(data.result)
+        switch self.mergePurchaseCode {
+        case .FAIL:
+            let msg = data.reason ?? String.alert.apiErrorServer
+            self.appSceneObserver.alert = .alert(String.oksusu.setup, msg)
+            self.repository.storage.oksusuPurchase = ""
+            self.isOksusuPurchase = self.repository.storage.oksusuPurchase.isEmpty == false
+        case .ERROR:
+            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
+        default: break
+        }
+    }
     
     @State var currentSelectedUser:UserData? = nil
     private func setupOksusu(){
@@ -167,174 +233,73 @@ struct SetupOksusu: PageView {
     
     private func setupOksusuCancel(){
         self.willOksusu = nil
-        self.isOksusu = (self.setup.oksusu.isEmpty == false)
+        self.isOksusu = (self.repository.storage.oksusu.isEmpty == false)
     }
     
-    private func setupOksusuCertificationCompleted(cid:String){
-        let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-        self.dataProvider.requestData(q: .init(id: self.tag, type: .getOksusuUser(test)))
-    }
-    private func checkGetOksusuAble(res:ApiResultResponds){
-       
-        guard let data = res.data as? StbListItem  else {
-            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-            self.setupOksusuCancel()
-            return
-        }
-        guard let stbs = data.data?.stb_infos else {
-            self.appSceneObserver.alert = .alert(
-                String.oksusu.setupDiable,
-                String.oksusu.setupDiableText,
-                String.oksusu.setupDiableTip,
-                confirmText: String.app.close
-            )
-            self.setupOksusuCancel()
-            return
-        }
-        if stbs.isEmpty {
-            self.appSceneObserver.alert = .alert(
-                String.oksusu.setupDiable,
-                String.oksusu.setupDiableText,
-                String.oksusu.setupDiableTip,
-                confirmText: String.app.close
-            )
-            self.setupOksusuCancel()
-            return
-        }
-        self.pagePresenter.openPopup(
-            PageProvider
-                .getPageObject(.oksusuUser)
-                .addParam(key: .data, value: stbs)
-        )
-    }
-    
-    private func selectedOksusu(_ user:UserData){
-        self.currentSelectedUser = user
-        let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-        self.dataProvider.requestData(
-            q:.init(id: self.tag,
-                    type: .getOksusuUserInfo(test)))
-    }
-    private func connectedUserInfo(res:ApiResultResponds){
-        guard let data = res.data as? StbListItem  else {
-            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-            self.setupOksusuCancel()
-            return
-        }
-        let isAlreadyUser = true
-        if isAlreadyUser {
-            self.appSceneObserver.alert = .confirm(
-                String.oksusu.setupAlreadyUsed,
-                String.oksusu.setupAlreadyUsedSub,
-                confirmText: String.oksusu.setupButtonConnect
-            )
-            { isOk in
-                if isOk {
-                    let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-                    self.dataProvider.requestData(
-                        q:.init(id: self.tag,
-                                type: .disconnectOksusuUser(test)))
-                } else {
-                    self.setupOksusuCancel()
-                }
-            }
-        } else {
-            let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-            self.dataProvider.requestData(
-                q:.init(id: self.tag,
-                        type: .connectOksusuUser(test)))
-        }
-    }
-    private func connectedOksusu(res:ApiResultResponds){
-        guard let data = res.data as? StbListItem  else {
-            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-            self.setupOksusuCancel()
-            return
-        }
-        self.setupOksusuCompleted(res:res)
-    }
-    
-    private func setupOksusuCompleted(res:ApiResultResponds){
+    private func setupOksusuCertificationCompleted(stbId:String){
         self.willOksusu = nil
-        self.setup.oksusu = UUID().uuidString
+        self.repository.storage.oksusu = stbId
         self.appSceneObserver.event = .toast(String.oksusu.setupCompleted)
-        self.pagePresenter.closePopup(pageId: .oksusuUser)
         self.setOksusuPurchaseAble()
-        //self.sendLog(category: String.pageText.setupPossessionSet, config: true)
+        self.sendLog(category: "옥수수소장vod가져오기", config: true)
     }
     
     private func deleteOksusu(){
         self.willOksusu = false
-        self.appSceneObserver.alert = .confirm(
+        self.setupOksusuCancel()
+        /*
+        self.appSceneObserver.alert = .alert(
             String.oksusu.disconnect,
-            self.isOksusuPurchase ? String.oksusu.disconnectButPurchase : String.oksusu.disconnectText,
-            confirmText: String.oksusu.setupButtonDisConnect
-        )
-        { isOk in
-            if isOk {
-                let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-                self.dataProvider.requestData(
-                    q:.init(id: self.tag,
-                            type: .disconnectOksusuUser(test)))
-            } else {
-                self.setupOksusuCancel()
-            }
-        }
+            self.isOksusuPurchase ? String.oksusu.disconnectButPurchase : String.oksusu.disconnectText
+        ){
+            
+        }*/
     }
-    private func deletedOksusu(res:ApiResultResponds){
-        guard let data = res.data as? StbListItem  else {
-            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-            self.setupOksusuCancel()
-            return
-        }
-        if willOksusu == true {
-            let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-            self.dataProvider.requestData(
-                q:.init(id: self.tag,
-                        type: .connectOksusuUser(test)))
-        } else {
-            self.deletedOksusuCompleted()
-        }
-        //self.sendLog(category: String.pageText.setupPossessionSet, config: false)
-    }
-    
-    private func deletedOksusuCompleted(){
-        self.willOksusu = nil
-        self.currentSelectedUser = nil
-        self.setup.oksusu = ""
-        self.setup.oksusuPurchase = ""
-        self.setOksusuPurchaseAble()
-        self.appSceneObserver.event = .toast(
-            String.oksusu.disconnectCompleted
-        )
-        self.pagePresenter.closePopup(pageId: .oksusuUser)
-    }
-    
     
     private func setupOksusuPurchase(){
         self.willOksusuPurchase = true
-        let test = "5qDs1ydeLCB2M08k/JpZOMHa3rOdTUe3ZXJ7PawML/revc/e31zPHWYLJlgwxEOr2UDd0vnR5Am8oqv9bSVnzw=="
-        self.dataProvider.requestData(q: .init(id: self.tag, type: .addOksusuUserToBtvPurchase(test)))
+        self.dataProvider.requestData(q: .init(id: self.tag, type:.mergeOksusuPurchase(self.pairing.hostDevice, self.repository.storage.oksusu)))
     }
     private func setupOksusuPurchaseCancel(){
+        if self.mergePurchaseCode == .PROGRESS {
+            self.checkOksusuPurchaseMerge()
+        }
+        //해재불가
+        /*
         self.willOksusuPurchase = nil
         self.isOksusuPurchase = (self.setup.oksusuPurchase.isEmpty == false)
+        */
     }
     private func addedOksusuPurchase(res:ApiResultResponds){
-        guard let data = res.data as? StbListItem  else {
+        guard let data = res.data as? RegistEps else {
             self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
             self.setupOksusuCancel()
             return
         }
-        self.willOksusuPurchase = nil
-        self.setup.oksusuPurchase = UUID().uuidString
-        self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseCompleted)
+        if data.result == ApiCode.success {
+            self.willOksusuPurchase = nil
+            self.repository.storage.oksusuPurchase = "Y"
+            self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseCompleted)
+            self.checkOksusuPurchaseMerge(isOption:true)
+            self.sendLog(category: "옥수수구매내역보기", config: true)
+        } else {
+            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
+            self.setupOksusuCancel()
+        }
         //self.sendLog(category: String.pageText.setupPossessionSet, config: false)
+    }
+    
+    private func getMergeOksusuPurchaseText() -> String {
+        return self.isOksusuPurchase
+        ? self.mergePurchaseCode == .PROGRESS || self.mergePurchaseCode == .ERROR
+            ? String.pageText.setupOksusuPurchaseProgresButton
+            : self.mergePurchaseCode == .COMPLETED ? String.pageText.setupOksusuPurchaseCompletedButton : ""
+        : String.pageText.setupOksusuPurchaseSetButton
     }
     
     private func sendLog(category:String, config:Bool) {
         let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
-        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+        self.naviLogManager.actionLog(.clickConfigSelection, actionBody: actionBody)
     }
 }
 

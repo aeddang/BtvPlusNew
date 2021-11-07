@@ -140,8 +140,9 @@ class NotificationCoreData:PageProtocol {
             do {
                 try context.save()
             } catch {
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                DataLog.e(error.localizedDescription, tag: self.tag)
+                //let nserror = error as NSError
+                //fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }

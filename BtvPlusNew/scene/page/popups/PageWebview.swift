@@ -59,14 +59,12 @@ struct PageWebview: PageView {
                     switch method {
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.pagePresenter.goBack()
-                        break
                     case WebviewMethod.bpn_changeTopBar.rawValue :
                         guard let json = json else { return }
                         guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
                         if let isTopVisible = param["isTopVisible"] as? Bool {
                             self.isTop = isTopVisible
                         }
-                        break
                     default : break
                     }
                     

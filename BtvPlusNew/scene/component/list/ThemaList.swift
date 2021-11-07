@@ -23,6 +23,7 @@ class ThemaData:InfinityData{
     private(set) var cateType:CateBlock.ListType = .poster
     private(set) var contentLog:MenuNaviContentsBodyItem? = nil
     private(set) var menuNm:String? = nil
+    private(set) var blockData:BlockData? = nil
     var logPosition:String? = nil
     init(usePrice:Bool = true) {
         self.usePrice = usePrice
@@ -75,6 +76,9 @@ class ThemaData:InfinityData{
         blocks = data.blocks
         menuId = data.menu_id
         menuNm = data.menu_nm
+        
+        blockData = BlockData().setData(data)
+        
         return self
     }
     
@@ -192,13 +196,22 @@ struct ThemaList: PageComponent{
                                     .addParam(key: .isFree, value:!data.usePrice)
                             )
                         }else{
-                            self.pagePresenter.openPopup(
-                                PageProvider.getPageObject(.categoryList)
-                                    .addParam(key: .title, value: data.title)
-                                    .addParam(key: .id, value: data.menuId)
-                                    .addParam(key: .type, value: data.cateType)
-                                    .addParam(key: .isFree, value:!data.usePrice)
-                            )
+                            if data.blockData?.cardType == .clip {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.clipPreviewList)
+                                        .addParam(key: .data, value: data.blockData)
+                                )
+                            } else {
+                                self.pagePresenter.openPopup(
+                                    PageProvider.getPageObject(.categoryList)
+                                        .addParam(key: .title, value: data.title)
+                                        .addParam(key: .id, value: data.menuId)
+                                        .addParam(key: .type, value: data.cateType)
+                                        .addParam(key: .isFree, value:!data.usePrice)
+                                )
+                            }
+                            
+                            
                         }
                     }
                 }

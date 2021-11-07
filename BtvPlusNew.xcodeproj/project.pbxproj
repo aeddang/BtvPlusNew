@@ -135,6 +135,10 @@
 		3159B05E25B17C14008CA85B /* StbListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3159B05D25B17C14008CA85B /* StbListItem.swift */; };
 		315A8FC125AD114F00498B03 /* ApiUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FBF25AD114F00498B03 /* ApiUtil.m */; };
 		315A8FD425ADADD600498B03 /* GuestAgreementInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */; };
+		315AA66227336E6A0044D10A /* Idps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AA66127336E6A0044D10A /* Idps.swift */; };
+		315AA6652733704F0044D10A /* OksusuStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AA6642733704F0044D10A /* OksusuStatus.swift */; };
+		315AA6672733B54B0044D10A /* AGToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AA6662733B54B0044D10A /* AGToken.swift */; };
+		315AA66B2733BDE70044D10A /* Ag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315AA66A2733BDE70044D10A /* Ag.swift */; };
 		315B55D225A7E2DC00B5B351 /* Nps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D125A7E2DC00B5B351 /* Nps.swift */; };
 		315B55D725A8006B00B5B351 /* NpsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55D625A8006B00B5B351 /* NpsModel.swift */; };
 		315B55DC25A8026700B5B351 /* DevicePairingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315B55DB25A8026700B5B351 /* DevicePairingInfo.swift */; };
@@ -922,6 +926,10 @@
 		315A8FBF25AD114F00498B03 /* ApiUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiUtil.m; sourceTree = "<group>"; };
 		315A8FC025AD114F00498B03 /* ApiUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiUtil.h; sourceTree = "<group>"; };
 		315A8FD325ADADD600498B03 /* GuestAgreementInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuestAgreementInfo.swift; sourceTree = "<group>"; };
+		315AA66127336E6A0044D10A /* Idps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Idps.swift; sourceTree = "<group>"; };
+		315AA6642733704F0044D10A /* OksusuStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OksusuStatus.swift; sourceTree = "<group>"; };
+		315AA6662733B54B0044D10A /* AGToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AGToken.swift; sourceTree = "<group>"; };
+		315AA66A2733BDE70044D10A /* Ag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ag.swift; sourceTree = "<group>"; };
 		315B55C625A7C85900B5B351 /* BtvPlusNew.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BtvPlusNew.entitlements; sourceTree = "<group>"; };
 		315B55D125A7E2DC00B5B351 /* Nps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nps.swift; sourceTree = "<group>"; };
 		315B55D625A8006B00B5B351 /* NpsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NpsModel.swift; sourceTree = "<group>"; };
@@ -1968,6 +1976,40 @@
 				314E756926DB641200A8C924 /* CryptoUtil.swift */,
 			);
 			path = util;
+			sourceTree = "<group>";
+		};
+		315AA66027336E590044D10A /* idps */ = {
+			isa = PBXGroup;
+			children = (
+				315AA6632733702E0044D10A /* model */,
+				315AA66127336E6A0044D10A /* Idps.swift */,
+			);
+			path = idps;
+			sourceTree = "<group>";
+		};
+		315AA6632733702E0044D10A /* model */ = {
+			isa = PBXGroup;
+			children = (
+				315AA6642733704F0044D10A /* OksusuStatus.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		315AA6682733BDC90044D10A /* ag */ = {
+			isa = PBXGroup;
+			children = (
+				315AA6692733BDD30044D10A /* model */,
+				315AA66A2733BDE70044D10A /* Ag.swift */,
+			);
+			path = ag;
+			sourceTree = "<group>";
+		};
+		315AA6692733BDD30044D10A /* model */ = {
+			isa = PBXGroup;
+			children = (
+				315AA6662733B54B0044D10A /* AGToken.swift */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 		315B55D025A7E24700B5B351 /* nps */ = {
@@ -4038,6 +4080,8 @@
 		D56C6B25257DACD800CF9AB8 /* rest  */ = {
 			isa = PBXGroup;
 			children = (
+				315AA6682733BDC90044D10A /* ag */,
+				315AA66027336E590044D10A /* idps */,
 				314E756426DB562400A8C924 /* cbs */,
 				31EA0D8E26D705CA007BECAB /* push */,
 				312D2D7726D5F349002EE783 /* pucr */,
@@ -4514,6 +4558,7 @@
 				31D12E69270990FD0090820A /* SynopsisViewModel.swift in Sources */,
 				3166CBEA2611A52200282891 /* TotalPoint.swift in Sources */,
 				312825C726B0150700A58DB9 /* PageCashChargeGuide.swift in Sources */,
+				315AA66B2733BDE70044D10A /* Ag.swift in Sources */,
 				D56C6A59257DA0C700CF9AB8 /* TextButton.swift in Sources */,
 				319B378B26B1675C001501B1 /* MgmRps.swift in Sources */,
 				3190CB1C268C4B3B00ACB465 /* HorizontalGraph.swift in Sources */,
@@ -4576,6 +4621,7 @@
 				D56C6A4B257DA0C700CF9AB8 /* LoopSwipperView.swift in Sources */,
 				312825C426B014D400A58DB9 /* PageCashChargePrivacyAndAgree.swift in Sources */,
 				312D2D8526D64AB5002EE783 /* PushManager.swift in Sources */,
+				315AA66227336E6A0044D10A /* Idps.swift in Sources */,
 				314D589425B685B2007BCA34 /* PagePairingManagement.swift in Sources */,
 				312825C226AFF1F300A58DB9 /* RetryStbBox.swift in Sources */,
 				316C45DE2652160000A8D7F5 /* WepgModel.swift in Sources */,
@@ -4697,6 +4743,7 @@
 				3190CB11268AC34200ACB465 /* KidProfileListItem.swift in Sources */,
 				319CF67826970DE900159575 /* PageKidsExam.swift in Sources */,
 				319CF6732696ABE400159575 /* ResultReadingListView.swift in Sources */,
+				315AA6652733704F0044D10A /* OksusuStatus.swift in Sources */,
 				316ECDF6264B4274008D2544 /* BlankButton.swift in Sources */,
 				317F98FB26A6501400016C09 /* PageKidsSearch.swift in Sources */,
 				312825A826AE7E8100A58DB9 /* BuzzvilFeedHeaderV.swift in Sources */,
@@ -4988,6 +5035,7 @@
 				D51AA9F02599A2870035CD51 /* ConnectButton.swift in Sources */,
 				318D10032668418400B66977 /* AnimateSpinner.swift in Sources */,
 				319CF65E2695843A00159575 /* EmptyDiagnosticView.swift in Sources */,
+				315AA6672733B54B0044D10A /* AGToken.swift in Sources */,
 				313F8D11269C1A490055F775 /* PosterBlockKids.swift in Sources */,
 				3198CF8526D8B0BC00918217 /* KidsPlayerBody.swift in Sources */,
 				31631C6525D2516E00E501F7 /* SynopsisPrerollData.swift in Sources */,
@@ -5232,7 +5280,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7578;
+				CURRENT_PROJECT_VERSION = 7579;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5241,7 +5289,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 4.4.7;
+				MARKETING_VERSION = 4.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.notification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusNotification_development;
@@ -5257,7 +5305,7 @@
 				CODE_SIGN_ENTITLEMENTS = notification/notification.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7578;
+				CURRENT_PROJECT_VERSION = 7579;
 				DEVELOPMENT_TEAM = X2DM6728F2;
 				INFOPLIST_FILE = notification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -5266,7 +5314,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 4.4.7;
+				MARKETING_VERSION = 4.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus.notification;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusNotification_AppStore;
@@ -5404,6 +5452,7 @@
 			baseConfigurationReference = 82C464328C07082311FF19F2 /* Pods-BtvPlusNew.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				API_AG = "https://agw-stg.sk-iptv.com:8443";
 				API_CBS = "https://1.255.102.229:9090";
 				API_EMS = "https://ems.hanafostv.com:8443";
 				API_EPS = "https://agw-stg.sk-iptv.com:8443";
@@ -5447,7 +5496,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7578;
+				CURRENT_PROJECT_VERSION = 7579;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5473,7 +5522,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 4.4.7;
+				MARKETING_VERSION = 4.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDevelopment;
@@ -5489,6 +5538,7 @@
 			baseConfigurationReference = 01E5590AFE81BD86D6657D56 /* Pods-BtvPlusNew.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				API_AG = "https://agw.sk-iptv.com:8443";
 				API_CBS = "https://btvcpas.skbroadband.com:9090";
 				API_EMS = "https://ems.hanafostv.com:8443";
 				API_EPS = "https://agw.sk-iptv.com:8443";
@@ -5532,7 +5582,7 @@
 				CODE_SIGN_ENTITLEMENTS = BtvPlusNew/BtvPlusNew.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7578;
+				CURRENT_PROJECT_VERSION = 7579;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"BtvPlusNew/Preview Content\"";
 				DEVELOPMENT_TEAM = X2DM6728F2;
@@ -5553,7 +5603,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 4.4.7;
+				MARKETING_VERSION = 4.4.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.skb.btvplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = BtvplusDistribution;

@@ -185,7 +185,7 @@ class Scs: Rest{
      * @param epsdRsluId 에피소드 해상도 ID
      */
     func getPlay(
-        epsdRsluId:String?, anotherStbId:String? = nil, hostDevice:HostDevice?,
+        epsdRsluId:String?, anotherStbId:String? = nil, possonType:PossonType = .btv, hostDevice:HostDevice?,
         completion: @escaping (Play) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let date = Date()
         var params = [String:String]()
@@ -194,12 +194,23 @@ class Scs: Rest{
         var path = ""
         var overrideHeaders:[String : String]? = nil
         if let anotherStbId = anotherStbId {
-            stbId = anotherStbId
-            params["if"] = "IF-SCS-PRODUCT-UI512-018"
-            params["mbtv_key"] = SystemEnvironment.deviceId
-            overrideHeaders = [String:String]()
-            overrideHeaders?["Client_ID"] = anotherStbId
-            path = "/scs/v522/playcancelstb/mobilebtv"
+            switch possonType {
+            case .oksusu:
+                stbId =  anotherStbId //"{F-C9EF3812EAD-420A-B899-E8B55EB70644}"
+                params["ostb_id"] = anotherStbId
+                params["if"] = "IF-SCS-PRODUCT-UI532-019"
+                overrideHeaders = [String:String]()
+                overrideHeaders?["Client_ID"] = anotherStbId
+                path = "/scs/v532/playmyoksusu/mobilebtv"
+            case .btv:
+                stbId = anotherStbId
+                params["if"] = "IF-SCS-PRODUCT-UI512-018"
+                params["mbtv_key"] = SystemEnvironment.deviceId
+                overrideHeaders = [String:String]()
+                overrideHeaders?["Client_ID"] = anotherStbId
+                path = "/scs/v522/playcancelstb/mobilebtv"
+            }
+            
         } else {
             params["if"] = "IF-SCS-PRODUCT-UI512-007"
             stbId =  NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId

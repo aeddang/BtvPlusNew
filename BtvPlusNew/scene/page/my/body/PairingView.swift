@@ -20,12 +20,13 @@ struct PairingView: PageComponent{
     var pageDragingModel:PageDragingModel = PageDragingModel()
     var watchedScrollModel: InfinityScrollModel = InfinityScrollModel()
     var geometry:GeometryProxy
+    var isOksusu:Bool = false
     @State var safeAreaBottom:CGFloat = 0
     @State var character:String = Asset.characterList[0]
     @State var nick:String = ""
     @State var newAlramCount:Int = 0
     @State var pairingStbType:PairingDeviceType = .btv
-    @State var isOksusu:Bool = false
+    
     var body: some View {
         VStack (alignment: .center, spacing:0){
             VStack (alignment: .center, spacing: Dimen.margin.lightExtra){
@@ -236,7 +237,6 @@ struct PairingView: PageComponent{
                                 PageProvider.getPageObject(.myPurchase)
                             )
                         }
-                        /*
                         if self.isOksusu {
                             Spacer().modifier(LineHorizontal())
                             FillButton(
@@ -250,7 +250,6 @@ struct PairingView: PageComponent{
                                 )
                             }
                         }
-                        */
                     }
                     .modifier(ContentHorizontalEdgesTablet())
                     .padding(.top, Dimen.margin.medium)
@@ -305,11 +304,8 @@ struct PairingView: PageComponent{
                 self.dataProvider.requestData(q: .init(type: .getWatchMobile(isPpm:false, 1, 9999), isOptional: true))
             }
         }
-        .onReceive(self.pagePresenter.$currentTopPage){ page in
-            self.isOksusu = self.setup.oksusu.isEmpty == false
-        }
         .onAppear{
-            self.isOksusu = self.setup.oksusu.isEmpty == false
+          
         }
         
     }//body

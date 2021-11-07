@@ -77,8 +77,29 @@ struct SynopsisBody: PageComponent{
                                     .accessibility(hidden: true)
                                 Spacer()
                             }
+                            if self.possonType != .oksusu {
+                                HStack(spacing:0){
+                                    Spacer()
+                                    FunctionViewer(
+                                        componentViewModel: self.componentViewModel,
+                                        synopsisData :self.synopsisData,
+                                        synopsisModel:self.synopsisModel,
+                                        purchaseViewerData: self.purchaseViewerData,
+                                        funtionLayout:self.funtionLayout,
+                                        isBookmark: self.$isBookmark,
+                                        isLike: self.$isLike
+                                    )
+                                }
+                                .padding(.top, self.synopsisModel?.isRecommand == true ? -RecommandTip.height : 0)
+                            }
+                        }
+                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
+                    } else {
+                        EpisodeViewer(data:episodeViewerData)
+                            .modifier(ListRowInset(spacing: SynopsisBody.spacing))
+                            .accessibility(hidden: true)
+                        if self.possonType != .oksusu {
                             HStack(spacing:0){
-                                Spacer()
                                 FunctionViewer(
                                     componentViewModel: self.componentViewModel,
                                     synopsisData :self.synopsisData,
@@ -88,28 +109,10 @@ struct SynopsisBody: PageComponent{
                                     isBookmark: self.$isBookmark,
                                     isLike: self.$isLike
                                 )
+                                Spacer()
                             }
-                            .padding(.top, self.synopsisModel?.isRecommand == true ? -RecommandTip.height : 0)
-                        }
-                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                    } else {
-                        EpisodeViewer(data:episodeViewerData)
                             .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                            .accessibility(hidden: true)
-                        HStack(spacing:0){
-                            FunctionViewer(
-                                componentViewModel: self.componentViewModel,
-                                synopsisData :self.synopsisData,
-                                synopsisModel:self.synopsisModel,
-                                purchaseViewerData: self.purchaseViewerData,
-                                funtionLayout:self.funtionLayout,
-                                isBookmark: self.$isBookmark,
-                                isLike: self.$isLike
-                            )
-                            Spacer()
                         }
-                        .modifier(ListRowInset(spacing: SynopsisBody.spacing))
-                        
                     }
                 }
                 

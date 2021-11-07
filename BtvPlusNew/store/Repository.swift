@@ -215,6 +215,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pushManager.retryRegisterPushToken()
                 self.namedStorage?.tvUserId = nil
                 self.audioMirroring?.close()
+                SystemEnvironment.agToken = ""
                 //NotificationCoreData().removeAllNotice()
                 DataLog.d("disConnected", tag:"VSManager")
                
@@ -224,6 +225,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pairing.user?.pairingDate = self.userSetup.pairingDate
                 self.pairing.hostDevice?.modelName = self.userSetup.pairingModelName
                 self.dataProvider.requestData(q: .init(type: .getGnb))
+                self.apiManager.load(.getAGToken, isOptional: true)
                 self.pushManager.retryRegisterPushToken()
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
                 self.userSetup.isPurchaseAuth = true
@@ -383,6 +385,9 @@ class Repository:ObservableObject, PageProtocol{
         }
         
         switch res.type {
+        case .getAGToken :
+            guard let data = res.data as? AGToken  else { return }
+            SystemEnvironment.agToken = data.token ?? ""
         case .getGnb :
             guard let data = res.data as? GnbBlock  else { return }
             if data.gnbs == nil || data.gnbs!.isEmpty {

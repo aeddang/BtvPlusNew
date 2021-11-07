@@ -904,9 +904,19 @@
 "setupOksusu" = "My oksusu 소장 VOD 이용하기";
 "setupOksusuSet" = "My oksusu 소장 VOD 가져오기";
 "setupOksusuSetText" = "My oksusu에서 이용하던 oksusu 소장 VOD를\n모바일 B tv에서 시청하실 수 있습니다.";
-"setupOksusuPurchaseSet" = "B tv에서 oksusu 구매내역 보기";
+"setupOksusuSetTip" = "이용위치 : MY > My oksusu 소장 VOD목록";
+"setupOksusuPurchaseSet" = "B tv에서 oksusu 소장 VOD 보기";
 "setupOksusuPurchaseSetText" = "oksusu 소장 VOD 중 B tv에서 시청 가능한 VOD를\nB tv 구매내역으로 옮겨 TV에서도 시청하실 수 있습니다.";
+"setupOksusuPurchaseProgressText" = "oksusu 소장 VOD 중 B tv에서 시청 가능한 VOD를\nB tv 구매내역으로 옮겨 TV에서도 시청하실 수 있습니다.\n설정이 완료되지 않을 경우 이전 확인 버튼을 눌러 주세요.";
 
+"setupOksusuPurchaseSetTip1" = "이용위치";
+"setupOksusuPurchaseSetTip2" = "- 모바일 B tv : MY > My oksusu 소장 VOD목록";
+"setupOksusuPurchaseSetTip3" = "- B tv : MY > 구매내역 > 소장 VOD";
+"setupOksusuPurchaseSetButton" = "설정하기";
+"setupOksusuPurchaseProgressButton" = "이전 확인";
+"setupOksusuPurchaseCompletedButton" = "설정됨";
+
+"setupOksusuPurchaseSetButton" = "설정하기";
 "setupGuideNVersion" = "도움말 및 버전 정보";
 "setupGuide" = "도움말";
 "setupVersionLatest" = "최신 버전 이용 중";
@@ -1441,7 +1451,7 @@
 "myOksusuSetupCertification" = "oksusu 가입자 본인 확인 후 My oksusu에서 이용하던 소장 VOD를 모바일 Btv에서 이용하실 수 있습니다.";
 "myOksusuSetupCertificationSub" = "*가저온 스마트 기기 1대에서만 이용 가능합니다.";
 "myOksusuCertification" = "oksusu 가입자 본인 확인";
-
+"myOksusuNameTitle" = "oksusu 가입자명";
 "myOksusuSetupAlreadyUsed" = "선택하신 oksusu 가입자 정보는 다른 모바일 B tv 기기에서 이용 중입니다. 가져오기를 하실 경우 현재 사용중인 다른 기기의 연결은 해제됩니다.";
 "myOksusuSetupAlreadyUsedSub" = "My oksusu 소장 VOD 가져오기를\n진행하시겠습니까?";
 
@@ -1473,4 +1483,4 @@
 "myOksusuSetupPurchaseCompleted" = "oksusu소장 VOD가 Btv구매내역으로 이전되었습니다.";
 "myOksusuSetupButtonConnect" = "가져오기";
 "myOksusuSetupButtonDisConnect" = "해제";
-
+"myOksusuPlayable" = "oksusu 소장 VOD로 시청 가능";

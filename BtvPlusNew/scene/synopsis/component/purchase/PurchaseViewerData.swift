@@ -38,7 +38,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         
     }
     
-    func setData(synopsisModel:SynopsisModel?, isPairing:Bool? , isPosson:Bool = false) -> PurchaseViewerData? {
+    func setData(synopsisModel:SynopsisModel?, isPairing:Bool? , isPosson:Bool = false, possonType:PossonType = .btv) -> PurchaseViewerData? {
         guard let synopsisModel = synopsisModel else { return nil }
         let purchas = synopsisModel.curSynopsisItem
         
@@ -94,8 +94,6 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             switch synopsisModel.holdbackType {
                 /*
                 case .holdOut :
-                    
-                    
                     if purchas?.isDirectview == true{
                         self.setupBtvWatchInfo(synopsisModel: synopsisModel,
                                                isPairing: isPairing, isPosson: isPosson, purchas: purchas)
@@ -109,29 +107,30 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 */
             default :
                 self.setupBtvWatchInfo(synopsisModel: synopsisModel,
-                                       isPairing: isPairing, isPosson: isPosson, purchas: purchas)
+                                       isPairing: isPairing, isPosson: isPosson, possonType:possonType, purchas: purchas)
                 if isPairing == true {
                     self.setupOption(
                         synopsisModel:synopsisModel, purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
                 }
-                if purchas?.hasAuthority == true{
+                if purchas?.hasAuthority == true || possonType == .oksusu{
                     if synopsisModel.useCaption {
                         self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
                     }
                     self.hasAuthority = true
                 }
             }
-            
-            
         }
         return self
     }
     
     private func setupBtvWatchInfo(synopsisModel:SynopsisModel,
-                                   isPairing:Bool? , isPosson:Bool , purchas:PurchaseModel?){
+                                   isPairing:Bool? , isPosson:Bool , possonType:PossonType,
+                                   purchas:PurchaseModel?){
         if isPairing == true || isPosson {
-            
-            if (purchas?.isDirectview ?? false) {
+            if possonType == .oksusu {
+                infoTrailing =  String.oksusu.playable
+                isPlayAble = true
+            } else if (purchas?.isDirectview ?? false) {
                 if isPosson {
                     infoTrailing = String.pageText.synopsisPossonWatch
                 } else if let ppmItem = synopsisModel.purchasedPPMItem {

@@ -170,6 +170,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     
     @State var isDraging: Bool = false
     @State var isBottom = false
+    @State var isDragInit: Bool = false
     @State var isDragingCompleted = false
     
     private let minDiff:CGFloat = 1.0
@@ -221,6 +222,7 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
             .offset(
                 x:self.axis == .horizontal ? self.bodyOffset : 0,
                 y:self.axis == .vertical ? self.bodyOffset : 0)
+           
             .onReceive(self.viewModel.$uiEvent){evt in
                 switch evt {
                 case .pull(let geo, let value) :
@@ -295,12 +297,13 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
     }//body
     
     func onDragInit(offset:CGFloat = 0) {
-       // if offset < 0 {return}
+        if offset < 0 {return}
         self.isDragingCompleted = false
-        self.isDraging = true
         self.dragInitOffset = offset
         self.viewModel.event = .dragInit
         self.viewModel.status = .drag
+        self.isDragInit = true
+        self.isDraging = true
     }
     
     func onDragingAction(offset: CGFloat, dragOpacity: Double) {
@@ -312,9 +315,18 @@ struct PageDragingBody<Content>: PageDragingView  where Content: View{
         if abs(diff) < minDiff { return }
         let bodyOffset = max( 0, offset - self.dragInitOffset)
         //ComponentLog.d("bodyOffset " + bodyOffset.description , tag: "DIFF")
-        self.bodyOffset = ceil(bodyOffset)
+        if self.isDragInit {
+            self.isDragInit = false
+            withAnimation(.linear(duration: 0.01)){
+                self.bodyOffset = ceil(bodyOffset)
+                self.pagePresenter.dragOpercity = dragOpacity
+            }
+        } else {
+            self.bodyOffset = ceil(bodyOffset)
+            self.pagePresenter.dragOpercity = dragOpacity
+        }
         self.viewModel.event = .drag(offset, dragOpacity)
-        self.pagePresenter.dragOpercity = dragOpacity
+        
        
     }
 

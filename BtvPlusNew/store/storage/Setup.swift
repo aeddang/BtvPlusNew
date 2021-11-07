@@ -23,9 +23,6 @@ class Setup:ObservableObject, PageProtocol {
         static let isFirstMemberAuth = "isFirstAdultAuth"
         static let possession = "terminatedStbId"
         
-        static let oksusu = "oksusu"
-        static let oksusuPurchase = "oksusuPurchase"
-        
         static let floatingUnvisibleDate = "floatingUnvisibleDate" + VS
         static let kidsRegistUnvisibleDate = "kidsRegistUnvisibleDate" + VS
         static let alramUnvisibleDate = "alramUnvisibleDate1" + VS
@@ -254,24 +251,6 @@ class Setup:ObservableObject, PageProtocol {
         }
         get{
             return storage.string(forKey: Keys.possession) ?? ""
-        }
-    }
-    
-    var oksusu:String{
-        set(newVal){
-            storage.set(newVal, forKey: Keys.oksusu)
-        }
-        get{
-            return storage.string(forKey: Keys.oksusu) ?? ""
-        }
-    }
-    
-    var oksusuPurchase:String{
-        set(newVal){
-            storage.set(newVal, forKey: Keys.oksusuPurchase)
-        }
-        get{
-            return storage.string(forKey: Keys.oksusuPurchase) ?? ""
         }
     }
     

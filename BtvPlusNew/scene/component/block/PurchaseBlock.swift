@@ -42,6 +42,7 @@ extension PurchaseBlock{
 
 struct PurchaseBlock: PageComponent, Identifiable{
     let id:String = UUID().uuidString
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var sceneObserver:PageSceneObserver
@@ -60,7 +61,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     @State var isSelectAll:Bool = false
     @State var isDeletAble:Bool = false
     @State var reloadDegree:Double = 0
-    
+    @State var userName:String? = nil
     var body: some View {
         PageDataProviderContent(
             pageObservable:self.pageObservable,
@@ -95,6 +96,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                             purchaseBlockModel:self.viewModel,
                             viewModel:self.infinityScrollModel,
                             datas: self.datas,
+                            userName: self.userName,
                             useTracking:self.useTracking,
                             marginBottom: self.marginBottom,
                             type: self.type,
@@ -221,12 +223,13 @@ struct PurchaseBlock: PageComponent, Identifiable{
                 case .getPurchase : if self.type == .normal { self.loaded(res) }
                 case .getCollectiblePurchase : if self.type == .collection { self.loaded(res) }
                 case .getPossessionPurchase : if self.type == .possession { self.loaded(res) }
+                case .getOksusuPurchase : if self.type == .oksusu { self.loaded(res) }
                 case .deletePurchase : if self.type == .normal { self.deleted(res) }
                 default : break
                 }
             case .onError(_,  let err, _):
                 switch err.type {
-                case .getPurchase, .getCollectiblePurchase, .getPossessionPurchase : self.onError()
+                case .getPurchase, .getCollectiblePurchase, .getPossessionPurchase, .getOksusuPurchase : self.onError()
                 case .deletePurchase :
                     PageLog.d("delete error", tag:self.tag)
                     
@@ -245,7 +248,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
             case .pairingCheckCompleted(let isSuccess, _) :
                 if isSuccess { self.initLoad() }
                 else { self.appSceneObserver.alert = .pairingCheckFail }
-            default : do{}
+            default : break
             }
         }
         .onReceive(self.pagePresenter.$event){ evt in
@@ -285,12 +288,18 @@ struct PurchaseBlock: PageComponent, Identifiable{
         self.reload()
     }
     func reload(){
-        if self.type == .possession {
+        switch type {
+        case .possession:
             if self.setup.possession.isEmpty {
                 withAnimation{ self.isError = true}
                 return
             }
-        } else {
+        case .oksusu:
+            if self.repository.storage.oksusu.isEmpty {
+                withAnimation{ self.isError = true}
+                return
+            }
+        default :
             if self.pairing.status != .pairing {
                 withAnimation{ self.isError = true}
                 return
@@ -329,7 +338,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         case .oksusu:
             self.viewModel.request = .init(
                 id: self.tag,
-                type: .getPossessionPurchase( anotherStbId:self.setup.oksusu , self.infinityScrollModel.page + 1 )
+                type: .getOksusuPurchase( anotherStbId:self.repository.storage.oksusu , self.infinityScrollModel.page + 1 )
             )
         }
 
@@ -342,6 +351,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
     
     private func loaded(_ res:ApiResultResponds){
         guard let data = res.data as? Purchase else { return }
+        self.userName = data.oksusu_user_nm
         setDatas(datas: data.purchaseList)
     }
 
@@ -390,7 +400,11 @@ struct PurchaseBlock: PageComponent, Identifiable{
         if !datas.isEmpty {
             let start = self.datas.count
             let end = start + datas.count
-            let anotherStb = self.setup.possession 
+            
+            let anotherStb = self.type == .oksusu
+            ? self.repository.storage.oksusu
+            : self.type == .possession ? self.setup.possession : ""
+            
             let loadedDatas:[PurchaseData] = zip(start...end, datas).map { idx, d in
                 return PurchaseData().setData(data: d, idx: idx, type: self.type, anotherStb:anotherStb)
             }

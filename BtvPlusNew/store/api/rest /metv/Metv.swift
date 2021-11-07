@@ -68,6 +68,8 @@ extension MetvNetwork{
 }
 
 class Metv: Rest{
+    
+    
     /**
     * VOD 재생정보 조회(이어보기) (IF-ME-024)
     * @param epsdId 에피소드ID
@@ -509,6 +511,36 @@ class Metv: Rest{
         }
         fetch(route: MetvGetHostNickname(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
+    
+    /**
+    * My oksusu 소장용 구매내역 조회 (IF-ME-132)
+    * @param pageNo 요청할 페이지의 번호 (Default: 1)
+    * @param entryNo 요청한 페이지에 보여질 개수 (Default: 10)
+    */
+    func getOksusuPurchase(
+        stbId:String , page:Int?, pageCnt:Int?,
+        completion: @escaping (Purchase) -> Void, error: ((_ e:Error) -> Void)? = nil){
+        
+        var params = [String:String]()
+        params["response_format"] = MetvNetwork.RESPONSE_FORMET
+        params["ver"] = MetvNetwork.VERSION
+        params["IF"] = "IF-ME-132"
+        params["stb_id"] = stbId
+        params["page_no"] = page?.description ?? "1"
+        params["entry_no"] = pageCnt?.description ?? "999"
+        params["hash_id"] = ApiUtil.getHashId(stbId)
+        params["poc_code"] = "NXNEWUI"
+
+        var overrideHeaders = [String:String]()
+        overrideHeaders["Client_ID"] = stbId
+        //overrideHeaders["UUID"] = stbId
+        //overrideHeaders["Trace"] = "BtvPlus"
+         
+        fetch(route: MetvOksusuPurchase(query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
+    }
+    
+    
+    
     /**
     * 출석체크 저장 (IF-EVENT-001)
     */
@@ -563,6 +595,8 @@ class Metv: Rest{
     }
     
 }
+
+
 struct MetvPlayTime:NetworkRoute{
     var method: HTTPMethod = .get
     var path: String = "/metv/v5/watch/lastplaytime/mobilebtv"
@@ -647,6 +681,13 @@ struct MetvDelBookMark:NetworkRoute{
 struct MetvPossessionPurchase:NetworkRoute{
    var method: HTTPMethod = .get
    var path: String = "/metv/v5/purchase/closeduser-unlimited"
+   var query: [String : String]? = nil
+   var overrideHeaders: [String : String]? = nil
+}
+
+struct MetvOksusuPurchase:NetworkRoute{
+   var method: HTTPMethod = .get
+   var path: String = "/metv/v5/purchase/unlimited-oksusu/mobilebtv"
    var query: [String : String]? = nil
    var overrideHeaders: [String : String]? = nil
 }

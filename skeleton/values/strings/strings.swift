@@ -308,6 +308,7 @@ extension String {
         public static let setupCertification = "myOksusuSetupCertification".loaalized()
         public static let setupCertificationSub = "myOksusuSetupCertificationSub".loaalized()
         public static let certification = "myOksusuCertification".loaalized()
+        public static let nameTitle = "myOksusuNameTitle".loaalized()
         public static let setupAlreadyUsed = "myOksusuSetupAlreadyUsed".loaalized()
         public static let setupAlreadyUsedSub = "myOksusuSetupAlreadyUsedSub".loaalized()
         public static let setupCompleted = "myOksusuSetupCompleted".loaalized()
@@ -333,5 +334,6 @@ extension String {
         public static let setupPurchaseCompleted = "myOksusuSetupPurchaseCompleted".loaalized()
         public static let setupButtonConnect = "myOksusuSetupButtonConnect".loaalized()
         public static let setupButtonDisConnect = "myOksusuSetupButtonDisConnect".loaalized()
+        public static let playable = "myOksusuPlayable".loaalized()
     }
 }

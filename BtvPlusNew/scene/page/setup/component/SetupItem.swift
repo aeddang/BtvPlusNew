@@ -23,6 +23,9 @@ struct SetupItem: PageView {
     var selected: ((String) -> Void)? = nil
     
     var statusText:String? = nil
+    var toggleText:String? = nil
+    var useToggleButton:Bool = true
+    var reflash: (() -> Void)? = nil
     var more: (() -> Void)? = nil
     
     var body: some View {
@@ -63,7 +66,9 @@ struct SetupItem: PageView {
                     
                 } else if self.more == nil {
                     Toggle("", isOn: self.$isOn)
-                       .toggleStyle( ColoredToggleStyle() )
+                       .toggleStyle( ColoredToggleStyle(
+                        label: self.toggleText ?? "", useButton: self.useToggleButton
+                       ))
                        .frame(width: 52)
                         .padding(.trailing, Dimen.margin.tinyExtra)
                 } else{
@@ -76,21 +81,34 @@ struct SetupItem: PageView {
                         .frame(width: Dimen.icon.regular, height: Dimen.icon.regular)
                     }
                 }
+                if let reflash = self.reflash {
+                    Button(action: {
+                        reflash()
+                    }) {
+                        Image(Asset.shape.reflash)
+                        .renderingMode(.original).resizable()
+                        .scaledToFit()
+                        .frame(width: Dimen.icon.tinyExtra, height: Dimen.icon.tinyExtra)
+                    }
+                    .padding(.trailing, Dimen.margin.thin)
+                }
             }
             if self.tips != nil {
                 VStack(alignment: .leading, spacing: Dimen.margin.tinyExtra){
                     ForEach(self.tips!, id: \.self) { tip in
                         HStack(alignment: .top, spacing: 0){
-                            Text("・ ")
-                            .modifier(MediumTextStyle(
-                                size: Font.size.tinyExtra,
-                                color: Color.app.grey
-                            ))
+                            if !tip.hasPrefix("-") {
+                                Text("・ ")
+                                .modifier(MediumTextStyle(
+                                    size: Font.size.tinyExtra,
+                                    color: Color.app.greyMedium
+                                ))
+                            }
                             Text(tip)
                                 .truncationMode(.tail)
                                 .modifier(MediumTextStyle(
                                     size: Font.size.tinyExtra,
-                                    color: Color.app.grey
+                                    color: Color.app.greyMedium
                                 ))
                                 .fixedSize(horizontal: false, vertical: true)
                         }

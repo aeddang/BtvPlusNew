@@ -12,6 +12,7 @@ import UIKit
 
 struct ApiPath {
     static func getRestApiPath(_ server:ApiServer) -> String {
+        
         if server == .WEB && SystemEnvironment.FORCE_WEB?.isEmpty == false,
             let force = SystemEnvironment.FORCE_WEB {
             return force
@@ -26,6 +27,7 @@ struct ApiPath {
         if let isReleaseMode = SystemEnvironment.isReleaseMode {
             switch server {
             case .VMS: return isReleaseMode ? SystemEnvironment.VMS : SystemEnvironment.VMS_STG
+            case .AG: return isReleaseMode ? SystemEnvironment.AG : SystemEnvironment.AG_STG
             case .WEB: return isReleaseMode ? SystemEnvironment.WEB : SystemEnvironment.WEB_STG
             case .KMS: return isReleaseMode ? SystemEnvironment.KMS : SystemEnvironment.KMS_STG
             case .CBS: return isReleaseMode ? SystemEnvironment.CBS : SystemEnvironment.CBS_STG
@@ -49,25 +51,16 @@ struct ApiGateway{
     static let API_KEY = "l7xx851d12cc66dc4d2e86a461fb5a530f4a"
     static let DEBUG_API_KEY = "l7xx159a8ca72966400b886a93895ec9e2e3"
     
+    static let API_BEARER = "Bearer"
+    
     static func setGatewayheader( request:URLRequest) -> URLRequest{
         var authorizationRequest = request
        
         authorizationRequest.setValue("application/json", forHTTPHeaderField: "Accept")
         authorizationRequest.setValue(
             SystemEnvironment.isStage ?  Self.DEBUG_API_KEY : Self.API_KEY, forHTTPHeaderField: "Api_Key")
-        /*
-        if let isReleaseMode = SystemEnvironment.isReleaseMode {
-           
-        }else{
-            #if DEBUG
-            authorizationRequest.addValue(
-                Self.DEBUG_API_KEY, forHTTPHeaderField: "Api_Key")
-            #else
-            authorizationRequest.addValue(
-                Self.API_KEY, forHTTPHeaderField: "Api_Key")
-            #endif
-        }*/
-        let timestamp = Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
+        
+        let timestamp = SystemEnvironment.agToken + Date().toDateFormatter(dateFormat: "yyyyMMddHHmmss.SSS", local: "en_US_POSIX")
         authorizationRequest.setValue( timestamp, forHTTPHeaderField: "TimeStamp")
         authorizationRequest.setValue( ApiUtil.getAuthVal(timestamp), forHTTPHeaderField: "Auth_Val")
         authorizationRequest.setValue(
@@ -75,7 +68,9 @@ struct ApiGateway{
             forHTTPHeaderField: "Client_ID")
         
         authorizationRequest.setValue( AppUtil.getIPAddress() ?? "" , forHTTPHeaderField: "Client_IP")
-        
+        //authorizationRequest.setValue( SystemEnvironment.agToken , forHTTPHeaderField: "Token")
+        //authorizationRequest.setValue( Self.API_BEARER , forHTTPHeaderField: "Authorization")
+
         return authorizationRequest
     }
     
@@ -125,10 +120,10 @@ enum ApiValue:String{
 }
 
 enum ApiServer:String{
-    case WEB, NPS, NPS_V5, PSS, RVS, WEPG, VMS, STACM, SRCXPG,
+    case WEB, NPS, NPS_V5, PSS, RVS, WEPG, VMS, STACM, SRCXPG, AG,
     UPMC, ME, EVENT, EMS, LGS, METV, IMAGE, NAVILOG, NAVILOG_NPI, EUXP, SMD, CBS,
     IIP, METV2, SCS2, EPS, EPS2, NF, RVS2, VLS, KES, KMS, NSUTIL, PUCR, PUSH,
-    RPS, UORPS, MGMRPS, ZEROCONF
+    RPS, UORPS, MGMRPS, ZEROCONF, IDPS
     
     var configKey:String {
         get {
@@ -164,10 +159,11 @@ enum ApiServer:String{
             case .RPS:return "rps"
             case .UORPS:return "uorps"
             case .MGMRPS:return "mgmrps"
-            
+            case .IDPS:return "idps"
             // vms not define
             case .WEB: return "web"
             case .VMS: return "vms"
+            case .AG: return "ag"
             case .CBS:return "cbs"
             case .SRCXPG: return "srcxpg"
             case .SMD: return "smd"
@@ -212,9 +208,11 @@ enum ApiServer:String{
         case "rps": return .RPS
         case "uorps": return .UORPS
         case "mgmrps": return .MGMRPS
+        case "idps": return .IDPS
         // vms not define
         case "web": return .WEB
         case "vms": return .VMS
+        case "ag": return .AG
         case "srcxpg": return .SRCXPG
         case "smd": return .SMD
         case "kms": return .KMS

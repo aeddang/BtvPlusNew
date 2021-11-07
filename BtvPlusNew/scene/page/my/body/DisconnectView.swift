@@ -21,10 +21,12 @@ struct DisconnectView: PageComponent{
     @EnvironmentObject var vsManager:VSManager
     
     var pageObservable:PageObservable = PageObservable()
+    var isOksusu:Bool = false
+    
     @State var safeAreaBottom:CGFloat = 0
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var isPossession:Bool = false
-    @State var isOksusu:Bool = false
+    
     var body: some View {
         HStack ( spacing: Dimen.margin.regular ){
             VStack (alignment: .leading, spacing: Dimen.margin.lightExtra){
@@ -105,7 +107,7 @@ struct DisconnectView: PageComponent{
                         text: String.pageTitle.myOksusu,
                         isMore: true
                     ){_ in
-                        
+                        self.naviLogManager.actionLog(.clickMyOksusuPurchaseList)
                         self.pagePresenter.openPopup(
                             PageProvider.getPageObject(.myOksusuPurchase)
                         )
@@ -138,7 +140,7 @@ struct DisconnectView: PageComponent{
         }
         .onReceive(self.pagePresenter.$currentTopPage){ page in
             self.isPossession = self.setup.possession.isEmpty == false
-            self.isOksusu = self.setup.oksusu.isEmpty == false
+
         }
         .onReceive(self.dataProvider.$result){ res in
             guard let res = res else { return }
@@ -173,7 +175,7 @@ struct DisconnectView: PageComponent{
         }
         .onAppear{
             self.sceneOrientation  = self.sceneObserver.sceneOrientation
-            self.isOksusu = self.setup.oksusu.isEmpty == false
+            
             if self.setup.possession.isEmpty == false {
                 self.dataProvider.requestData(
                     q:.init(id: self.tag,

@@ -22,6 +22,9 @@ struct PageSetup: PageView {
     @State var sceneOrientation: SceneOrientation = .portrait
     @State var pairingStbType:PairingDeviceType = .btv
     @State var isQAMode:Bool = false
+    @State var isInit:Bool = false
+    
+    let focusOksusu:Int = UUID().hashValue
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -71,11 +74,10 @@ struct PageSetup: PageView {
                                     
                                     
                                     if self.pairingStbType == .btv && !self.isPairing{
-                                        //SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
                                         SetupPossession(isInitate:self.isInitate)
-                                        //SetupHappySenior()
                                     }
-                                    //SetupOksusu(isInitate:self.isInitate)
+                                    SetupOksusu(isInitate:self.isInitate)
+                                        .id(self.focusOksusu)
                                     SetupGuideNVersion(isQAMode: self.$isQAMode)
                                    
                                 }
@@ -112,20 +114,16 @@ struct PageSetup: PageView {
                                 
                                 
                                 if self.pairingStbType == .btv && !self.isPairing {
-                                    //SetupChildren(isInitate:self.isInitate, isPairing: self.isPairing)
                                     SetupPossession(isInitate:self.isInitate)
-                                    //SetupHappySenior()
                                 }
-                                //SetupOksusu(isInitate:self.isInitate)
+                                SetupOksusu(isInitate:self.isInitate)
+                                    .id(self.focusOksusu)
                                 SetupGuideNVersion(isQAMode: self.$isQAMode)
                                     
-                                //#if DEBUG
                                 if self.isQAMode {
                                     SetupQA()
                                     SetupLaboratory()
                                 }
-                                //#endif
-                                
                             }
                             .padding(.vertical, Dimen.margin.medium)
                         }
@@ -154,9 +152,28 @@ struct PageSetup: PageView {
             .onReceive(self.sceneObserver.$isUpdated){ _ in
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
             }
+            .onReceive(self.pageObservable.$isAnimationComplete){ ani in
+                if ani {
+                    if self.isInit {return}
+                    DispatchQueue.main.async {
+                        if let obj = self.pageObject  {
+                            if let focus = obj.getParamValue(key: .id) as? String {
+                                switch focus {
+                                case "oksusu" :
+                                    self.infinityScrollModel.uiEvent = .scrollTo(self.focusOksusu, .center)
+                                default : break
+                                }
+                                
+                            }
+                        }
+                        self.isInit = true
+                    }
+                }
+            }
             .onAppear{
                 self.sceneOrientation = self.sceneObserver.sceneOrientation
                 self.pairingStbType = self.pairing.pairingStbType
+                
             }
             
         }//geo
@@ -182,8 +199,8 @@ struct PageSetup: PageView {
         default : self.isPairing = false
         }
         self.isDataAlram = self.setup.dataAlram
-        self.isAutoRemocon = self.setup.autoRemocon  //self.isPairing ? self.setup.autoRemocon : false
-        self.isRemoconVibration = self.setup.remoconVibration //self.isPairing ? self.setup.remoconVibration : false
+        self.isAutoRemocon = self.setup.autoRemocon
+        self.isRemoconVibration = self.setup.remoconVibration
         self.isAutoPlay = self.setup.autoPlay
         self.isNextPlay = self.setup.nextPlay
         self.isKidsExitAuth = self.isPairing ? self.setup.isKidsExitAuth : false
@@ -192,15 +209,8 @@ struct PageSetup: PageView {
         self.watchLvs = Setup.WatchLv.allCases.map{$0.getName()}
         self.selectedWatchLv = Setup.WatchLv.getLv(SystemEnvironment.watchLv)?.getName()
         self.isPush = self.pairing.user?.isAgree3 ?? false
-        
         self.isInitate = true
     }
-    
-    
-    
-    
-
-    
 }
 
 #if DEBUG

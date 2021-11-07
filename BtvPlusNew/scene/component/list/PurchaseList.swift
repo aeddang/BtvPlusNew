@@ -26,6 +26,7 @@ class PurchaseData:InfinityData,ObservableObject{
     private(set) var isLock:Bool = false
     private(set) var isOksusu:Bool = false
     private(set) var isPosson:Bool = false
+    private(set) var isOksusuPurchase:Bool = false
     private(set) var watchLv:Int = 0
     private(set) var synopsisData:SynopsisData? = nil
     private(set) var synopsisType:SynopsisType = .title
@@ -38,13 +39,15 @@ class PurchaseData:InfinityData,ObservableObject{
         originData = data
         watchLv = data.level?.toInt() ?? 0
         isAdult = data.adult?.toBool() ?? false
-        isPosson = type == .possession
+        isPosson = type == .possession || type == .oksusu
         isLock = !SystemEnvironment.isImageLock ? false : isAdult
         restrictAgeIcon = Asset.age.getListIcon(age: data.level)
         originImage = data.poster
         image = ImagePath.thumbImagePath(filePath: data.poster, size: ListItem.purchase.size, isAdult:isAdult)
         originTitle = data.title
         title = data.title
+        isOksusuPurchase = data.purchase_typ_cd == "OKSUSU"
+       
         
         if data.omni_use_flag?.toBool() == true {
             price = String.app.purchasePrice + " : 0" + String.app.cash + " (" + String.app.useOmnipack + ")"
@@ -78,7 +81,9 @@ class PurchaseData:InfinityData,ObservableObject{
             srisId: data.sris_id,
             searchType: synopsisType == .package ? .sris : EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil,
-            isPosson:self.isPosson, anotherStbId: self.isPosson ? anotherStb : nil, synopType: synopsisType)
+            isPosson:self.isPosson, possonType: type == .oksusu ? .oksusu : .btv,
+            anotherStbId: self.isPosson ? anotherStb : nil,
+            synopType: synopsisType)
         return self
     }
     
@@ -106,12 +111,12 @@ struct PurchaseList: PageComponent{
     var viewModel: InfinityScrollModel = InfinityScrollModel()
     
     var datas:[PurchaseData]
+    var userName:String? = nil
     var useTracking:Bool = false
     var marginBottom:CGFloat = Dimen.margin.regular
     var type:PurchaseBlock.ListType? = nil
     var onBottom: ((_ data:PurchaseData) -> Void)? = nil
     @State var isEdit:Bool = false
-   
     var body: some View {
         InfinityScrollView(
             viewModel: self.viewModel,
@@ -124,6 +129,10 @@ struct PurchaseList: PageComponent{
         ){
             if type == .possession {
                 InfoAlert(text: String.pageText.myTerminatePurchaseInfo)
+                    .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
+            }
+            if type == .oksusu {
+                InfoAlert(icon:nil, title: String.oksusu.nameTitle, text:self.userName ?? "")
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
             }
             if !self.datas.isEmpty {
@@ -294,6 +303,15 @@ struct PurchaseItem: PageView {
                             .frame(height: Dimen.icon.tiny)
                             .padding(.bottom, Dimen.margin.tinyExtra)
                     }
+                    if self.data.isOksusuPurchase {
+                        Image(Asset.icon.oksusuPurchase)
+                            .renderingMode(.original)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: Dimen.icon.tiny)
+                            .padding(.bottom, Dimen.margin.tinyExtra)
+                    }
+                    
                     VStack(alignment: .leading, spacing:Dimen.margin.tinyExtra){
                         if let title = self.data.title {
                             Text(title)

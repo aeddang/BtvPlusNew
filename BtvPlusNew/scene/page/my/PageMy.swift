@@ -7,10 +7,13 @@
 import Foundation
 import SwiftUI
 struct PageMy: PageView {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
     @EnvironmentObject var pairing:Pairing
+    @EnvironmentObject var setup:Setup
+    @EnvironmentObject var dataProvider:DataProvider
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
     @ObservedObject var infinityScrollModel: InfinityScrollModel = InfinityScrollModel()
@@ -19,6 +22,7 @@ struct PageMy: PageView {
     
     @State var isPairing:Bool = false
     @State var marginBottom:CGFloat = 0
+    @State var isOksusu:Bool = false
     var body: some View {
         GeometryReader { geometry in
             PageDragingBody(
@@ -44,7 +48,8 @@ struct PageMy: PageView {
                                 pageObservable:self.pageObservable,
                                 pageDragingModel: self.pageDragingModel,
                                 watchedScrollModel:self.watchedScrollModel,
-                                geometry: geometry
+                                geometry: geometry,
+                                isOksusu: self.isOksusu
                             )
                             .onReceive(self.pageDragingModel.$nestedScrollEvent){evt in
                                 guard let evt = evt else {return}
@@ -61,7 +66,8 @@ struct PageMy: PageView {
                         }
                     } else {
                         DisconnectView(
-                            pageObservable:self.pageObservable
+                            pageObservable:self.pageObservable,
+                            isOksusu: self.isOksusu
                         )
                         .padding(.bottom,
                                  self.sceneObserver.safeAreaIgnoreKeyboardBottom + Dimen.app.bottom)
@@ -79,12 +85,36 @@ struct PageMy: PageView {
                     withAnimation{ self.marginBottom = bottom }
                 }
             }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                self.isOksusu = self.repository.storage.oksusu.isEmpty == false
+            }
+            .onReceive(self.dataProvider.$result){ res in
+                guard let res = res else { return }
+                switch res.type {
+                case .checkOksusu: self.setOksusuStatus(res: res)
+                default: break
+                }
+            }
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
+                self.isOksusu = self.repository.storage.oksusu.isEmpty == false
+                if self.isOksusu {
+                    self.dataProvider.requestData(q: .init(id: self.tag, type: .checkOksusu, isOptional: true))
+                }
             }
         }//geo
     }//body
     
+    private func setOksusuStatus(res:ApiResultResponds){
+        guard let status = res.data as? OksusuStatus else {
+            return
+        }
+        let isConnect = status.body?.authYn?.toBool() ?? false
+        self.isOksusu = isConnect
+        if !isConnect {
+            self.repository.storage.oksusu = ""
+        }
+    }
     
 
 }

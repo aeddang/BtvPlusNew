@@ -67,6 +67,8 @@ class ApiManager :PageProtocol, ObservableObject{
     private var anyCancellable = Set<AnyCancellable>()
     private var apiQ :[ ApiQ ] = []
     private lazy var vms:Vms = Vms(network: VmsNetwork())
+    private lazy var ag:Ag = Ag(network: AgNetwork())
+    
     private lazy var euxp:Euxp = Euxp(network: EuxpNetwork())
     private lazy var metv:Metv = Metv(network: MetvNetwork())
     private lazy var nps:Nps = Nps(network: NpsNetwork())
@@ -84,7 +86,7 @@ class ApiManager :PageProtocol, ObservableObject{
     private lazy var vls:Vls = Vls(network: VlsNetwork())
     private lazy var cbs:Cbs = Cbs(network: CbsNetwork())
     private lazy var uoRps:UoRps = UoRps(network: UoRpsNetwork())
-    
+    private lazy var idps:Idps = Idps(network: IdpsNetwork())
     // 로그 서버 || 권한등  페이지이동시 켄슬 안함
     private lazy var lgs:Lgs = Lgs(network: LgsNetwork())
     private(set) lazy var navilog:Navilog = Navilog(network: NavilogNetwork())
@@ -115,6 +117,7 @@ class ApiManager :PageProtocol, ObservableObject{
         self.vls.clear()
         self.cbs.clear()
         self.uoRps.clear()
+        self.idps.clear()
         self.apiQ.removeAll()
     }
     
@@ -215,6 +218,9 @@ class ApiManager :PageProtocol, ObservableObject{
         case .versionCheck : self.vms.versionCheck(
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
+        case .getAGToken : self.ag.getAGToken(
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         case .getGnb : self.euxp.getGnbBlock(
             isKids: false,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -260,6 +266,7 @@ class ApiManager :PageProtocol, ObservableObject{
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         //METV
+        
         case .getPlayTime(let epsdId) : self.metv.getPlayTime(
             epsdId: epsdId,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -309,7 +316,10 @@ class ApiManager :PageProtocol, ObservableObject{
             data: data,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        
+        case .getOksusuPurchase(let stbId ,let page, let count) : self.metv.getOksusuPurchase(
+            stbId:stbId, page: page, pageCnt: count,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
         case .getPossessionPurchase(let stbId ,let page, let count) : self.metv.getPossessionPurchase(
             stbId:stbId, page: page, pageCnt: count,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
@@ -422,17 +432,8 @@ class ApiManager :PageProtocol, ObservableObject{
         case .getTerminateStbInfo(let cid): self.kms.getTerminateStbList(ci: cid,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        //OKSUSU TEST
-        case .getOksusuUser(let cid): self.kms.getTerminateStbList(ci: cid,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
-        case .getOksusuUserInfo(let cid): self.kms.getTerminateStbList(ci: cid,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
-        case .connectOksusuUser(let cid) : self.kms.getTerminateStbList(ci: cid,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
-        case .disconnectOksusuUser(let cid) : self.kms.getTerminateStbList(ci: cid,
+        //OKSUSU
+        case .checkOksusu : self.idps.checkOksusu(
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .addOksusuUserToBtvPurchase(let cid) : self.kms.getTerminateStbList(ci: cid,
@@ -465,8 +466,8 @@ class ApiManager :PageProtocol, ObservableObject{
             epsdRsluId: epsdRsluId, isPreview: isPreview, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .getPlay(let epsdRsluId, let anotherStb, let device) : self.scs.getPlay(
-            epsdRsluId: epsdRsluId, anotherStbId: anotherStb, hostDevice: device,
+        case .getPlay(let epsdRsluId, let anotherStb, let possonType, let device) : self.scs.getPlay(
+            epsdRsluId: epsdRsluId, anotherStbId: anotherStb, possonType:possonType, hostDevice: device,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         case .confirmPassword(let pw, let device, let pwType) : self.scs.confirmPassword(
@@ -566,6 +567,14 @@ class ApiManager :PageProtocol, ObservableObject{
             error:error)
         case .deleteOkCashPoint(let device, let masterSequence) : self.eps.deleteOkCashPoint(
             hostDevice: device, masterSequence: masterSequence,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .checkOksusuPurchase(let device, let oksusuId) : self.eps.checkOksusuPurchase(
+            hostDevice: device, oksusuId: oksusuId,
+            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
+            error:error)
+        case .mergeOksusuPurchase(let device, let oksusuId) : self.eps.mergeOksusuPurchase(
+            hostDevice: device, oksusuId: oksusuId,
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
         //WEPG

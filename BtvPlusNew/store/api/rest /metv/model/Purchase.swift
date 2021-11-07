@@ -15,6 +15,7 @@ struct Purchase : Decodable {
     private(set) var page_no: String? = nil    // 현재 페이지 번호
     private(set) var purchase_tot: String? = nil   // 즐겨찾기의 전체 개수
     private(set) var purchase_no: String? = nil    // 현재 페이지의 즐겨찾기 개수
+    private(set) var oksusu_user_nm: String? = nil //옥수수 사용자 닉
     private(set) var purchaseList:[PurchaseListItem]? = nil   // 즐겨찾기 집합의 이름
 }
 
@@ -65,6 +66,8 @@ struct PurchaseListItem : Decodable {
     private(set) var omni_use_flag: String? = nil // 옵니팩 이용해서 구매한 컨텐츠 여부
     private(set) var omni_prod_nm: String? = nil // omni_use_flag = Y 일떄 필수(옵니팩 상품명)
     private(set) var omni_price: String? = nil // omni_use_flag = Y 일떄 필수(옵니팩 금액)
+    
+    private(set) var purchase_typ_cd: String? = nil // 옥수수에서 이관한지 확인 "OKSUSU"
 }
 
 

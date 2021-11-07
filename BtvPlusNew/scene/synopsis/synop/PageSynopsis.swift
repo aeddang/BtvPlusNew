@@ -708,7 +708,9 @@ struct PageSynopsis: PageView {
                     break
                 }
                 self.pageDataProviderModel.requestProgress( 
-                    q: .init(type: .getPlay(self.epsdRsluId, anotherStbId: self.anotherStb, self.pairing.hostDevice)))
+                    q: .init(type: .getPlay(self.epsdRsluId,
+                                            anotherStbId: self.anotherStb, possonType:self.possonType,
+                                            self.pairing.hostDevice)))
             }
             if self.hasAuthority == true  {
                 switch self.synopsisPlayType {
@@ -1007,7 +1009,8 @@ struct PageSynopsis: PageView {
         self.purchaseViewerData = PurchaseViewerData(type: self.type).setData(
                 synopsisModel: self.synopsisModel,
                 isPairing: self.isPairing,
-                isPosson:self.isPosson)
+                isPosson:self.isPosson,
+                possonType:self.possonType)
         withAnimation{
             self.textInfo = self.purchaseViewerData?.playerInfo ?? self.purchaseViewerData?.serviceInfo
         }

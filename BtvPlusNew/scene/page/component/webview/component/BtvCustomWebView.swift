@@ -59,7 +59,7 @@ struct BtvCustomWebView : UIViewRepresentable, WebViewProtocol, PageProtocol {
         uiView.scrollView.bounces = false
         uiView.autoresizesSubviews = true
         uiView.scrollView.alwaysBounceVertical = false
-        uiView.contentMode = .scaleAspectFit
+        uiView.contentMode = .scaleToFill
         uiView.scrollView.contentInsetAdjustmentBehavior = .never
         uiView.keyboardDisplayRequiresUserAction = false
         uiView.isOpaque = false

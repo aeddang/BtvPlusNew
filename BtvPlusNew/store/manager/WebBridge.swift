@@ -34,7 +34,8 @@ enum WebviewMethod:String {
          bpn_getNickName,
          bpn_getRecomCntNPoint,
          bpn_eventMonthlyPoint,
-         bpn_eventCommerce
+         bpn_eventCommerce,
+         bpn_setOssVerificationResult
     case pushBackState, popBackState
     
 }
@@ -652,6 +653,13 @@ class WebBridge :PageProtocol{
         case "showSettingMenu":
             self.pagePresenter?.openPopup(
                 PageProvider.getPageObject(.setup)
+            )
+            return true
+        case "settings":
+            let foscus:String? = param?.first(where: {$0.name == "focus"})?.value
+            self.pagePresenter?.openPopup(
+                PageProvider.getPageObject(.setup)
+                    .addParam(key: .id, value: foscus)
             )
             return true
         default: return false

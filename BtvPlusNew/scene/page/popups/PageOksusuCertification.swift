@@ -20,7 +20,7 @@ struct PageOksusuCertification: PageView {
     
     @State var webViewHeight:CGFloat = 0
   
-    @State var movePage:PageObject? = nil
+    @State var title:String? = nil
     @State var isCompleted:Bool = false
     @State var marginBottom:CGFloat = 0
    
@@ -33,51 +33,39 @@ struct PageOksusuCertification: PageView {
             ) {
                 VStack(spacing:0){
                     PageTab(
-                        title: String.oksusu.certification,
+                        title: self.title ?? String.oksusu.certification,
                         isClose: true
                     )
                     .padding(.top, self.sceneObserver.safeAreaTop)
-                    HStack(alignment: .top, spacing:0){
-                        BtvWebView( viewModel: self.webViewModel)
-                        Spacer().modifier(MatchVertical(width: 0))
-                    }
+                    BtvWebView( viewModel: self.webViewModel)
                     .modifier(MatchParent())
-                    .background(Color.app.white)
-    
                 }
                 .padding(.bottom, self.marginBottom)
                 .modifier(PageFull())
                 .modifier(PageDraging(geometry: geometry, pageDragingModel: self.pageDragingModel))
             }//draging
-            
             .onReceive(self.webViewModel.$event){ evt in
                 guard let evt = evt else {return}
                 switch evt {
                 case .callFuncion(let method, let json, _) :
-                    if method == WebviewMethod.bpn_setIdentityVerfResult.rawValue {
+                    switch method {
+                    case WebviewMethod.bpn_setOssVerificationResult.rawValue :
+                        if let jsonData = json?.parseJson() {
+                            if let stbid = jsonData["stbid"] as? String {
+                                self.pagePresenter.onPageEvent(
+                                    self.pageObject,
+                                    event:.init(type: .certification, data: stbid))
+                                self.pagePresenter.closePopup(self.pageObject?.id)
+                            }
+                        }else{
+                            self.appSceneObserver.alert = .alert(
+                                String.alert.identifyFail, String.alert.identifyFailMe, nil)
+                            
+                        }
+                    case WebviewMethod.bpn_setIdentityVerfResult.rawValue :
                         if let jsonData = json?.parseJson() {
                             if let ci = jsonData["ci"] as? String {
-                                /*
-                                self.isCompleted = true
-                                self.repository.updateFirstMemberAuth()
-                                self.appSceneObserver.alert = .alert(
-                                    String.alert.identifySuccess, String.alert.identifySuccessMe, nil){
-        
-                                    self.pagePresenter.onPageEvent(
-                                        self.pageObject,
-                                        event:.init(type: .certification, data: ci))
-                                    
-                                }
-                                
-                                if let page = self.movePage {
-                                    if page.isPopup {
-                                        self.pagePresenter.openPopup(page.addParam(key: .cid, value: ci))
-                                    } else {
-                                        self.pagePresenter.changePage(page.addParam(key: .cid, value: ci))
-                                    }
-                                }
-                                self.pagePresenter.closePopup(self.pageObject?.id)
-                               */
+                                // 
                             }else{
                                 self.appSceneObserver.alert = .alert(
                                     String.alert.identifyFail, String.alert.identifyFailMe, nil)
@@ -87,7 +75,17 @@ struct PageOksusuCertification: PageView {
                                 String.alert.identifyFail, String.alert.identifyFailMe, nil)
                             
                         }
+                    case WebviewMethod.bpn_closeWebView.rawValue :
+                        self.pagePresenter.closePopup(self.pageObject?.id)
+                    case WebviewMethod.bpn_showTopBar.rawValue :
+                        guard let json = json else { return }
+                        guard let param = AppUtil.getJsonParam(jsonString: json) else { return }
+                        if let title = param["title"] as? String {
+                            self.title = title
+                        }
+                    default : break
                     }
+                    
                 default : break
                 }
             }
@@ -102,10 +100,7 @@ struct PageOksusuCertification: PageView {
             }
             
             .onAppear{
-                guard let obj = self.pageObject  else { return }
-                if let data = obj.getParamValue(key: .data) as? PageObject {
-                    self.movePage = data
-                }
+                
             }
             .onDisappear{
                 if !self.isCompleted {

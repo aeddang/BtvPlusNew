@@ -200,7 +200,7 @@ extension Asset{
         public static let addCard = "btnMyAddCard"
         public static let lookupCard = "btnMyOkcashbagCheck"
         public static let searchOnlyBtv = "icTagSearchOnlybtv"
-        
+        public static let oksusuPurchase = "tagMyOksusu"
         public static let onTop = "icBtnTop"
     }
     
@@ -298,6 +298,7 @@ extension Asset{
         public static let checkBoxOff = "icCheckboxOff"
         public static let checkBoxOffWhite = "icCheckboxOffWhite"
         public static let spinner = "icSpinner"
+        public static let reflash = "icSettingReloadS"
         public static let tooltip = isPad ? "icSynopTooltipT" : "icSynopTooltip" 
         public static let topTooltip = "icTopTooltip"
         public static let bgGradientBottom = "bgGradientBottom"

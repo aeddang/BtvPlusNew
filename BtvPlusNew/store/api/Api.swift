@@ -47,6 +47,8 @@ struct ApiResultError :Identifiable{
 enum ApiType{
     // VMS
     case versionCheck
+    //AG
+    case getAGToken
     //EUXP
     case getGnb,
          getGnbKids,
@@ -77,7 +79,7 @@ enum ApiType{
          getBookMark(Int? = nil , Int? = nil),
          postBookMark(SynopsisData),
          deleteBookMark(SynopsisData),
-         
+         getOksusuPurchase(anotherStbId:String, Int? = nil , Int? = nil),
          getPossessionPurchase(anotherStbId:String, Int? = nil , Int? = nil),
          getHostNickname(isAll:Bool = false, anotherStbId:String? = nil),
          updateStbNickName(String?)
@@ -91,7 +93,7 @@ enum ApiType{
                               pidList:[String]? = nil,anotherStbId:String? = nil),
          getPreview(String?, HostDevice?),
          getPreplay(String?, Bool?, HostDevice?),
-         getPlay(String?, anotherStbId:String? = nil, HostDevice?),
+         getPlay(String?, anotherStbId:String? = nil, possonType:PossonType = .btv, HostDevice?),
          confirmPassword(String?, HostDevice?, ScsNetwork.ConfirmType),
          connectTerminateStb(ScsNetwork.ConnectType, String?),
          getStbInfo(HostDevice?)
@@ -148,8 +150,9 @@ enum ApiType{
          getOkCashPoint( HostDevice?, OcbItem?, String?),
          postOkCashPoint( HostDevice?, RegistCardData),
          updateOkCashPoint( HostDevice?, RegistCardData),
-         deleteOkCashPoint( HostDevice?, masterSequence:Int )
-    
+         deleteOkCashPoint( HostDevice?, masterSequence:Int ),
+         checkOksusuPurchase(HostDevice?, String?),
+         mergeOksusuPurchase(HostDevice?, String?)
     
     //WEPG
     case getAllChannels(String?),
@@ -215,11 +218,8 @@ enum ApiType{
     //UORPS
     case checkNuguPairing(String)
     
-    //OKSUSU TEST
-    case getOksusuUser(String),
-         getOksusuUserInfo(String),
-         connectOksusuUser(String),
-         disconnectOksusuUser(String),
+    //OKSUSU
+    case checkOksusu,
          addOksusuUserToBtvPurchase(String)
     
     func coreDataKey() -> String? {

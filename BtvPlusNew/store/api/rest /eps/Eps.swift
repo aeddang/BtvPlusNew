@@ -26,6 +26,20 @@ extension EpsNetwork{
         return value?.toAES256(key: "SK" + date, iv: "1161266980123456")
     }
     
+    enum MergeOksusuCode: String {
+        case PROGRESS = "0100"
+        case COMPLETED = "0000"
+        case FAIL = "2900"
+        case ERROR = "9999"
+        static func getType(_ value:String?)->MergeOksusuCode{
+            switch value {
+                case "0100": return .PROGRESS
+                case "0000": return .COMPLETED
+                case "2900": return .FAIL
+                default : return .ERROR
+            }
+        }
+    }
 }
 
 class Eps: Rest{
@@ -374,6 +388,49 @@ class Eps: Rest{
   
         fetch(route: EpsDeleteOKCashPoint(masterSequence: masterSequence , body: params), completion: completion, error:error)
     }
+    
+    
+    /**
+     * 옥수수 소장 상품의 이관 상태를 확인한다.(IF-EPS-901)
+     */
+    func checkOksusuPurchase(
+        hostDevice:HostDevice?, oksusuId:String?, 
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-901"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        params["ostb_id"] = oksusuId
+            fetch(route: EpsMergeOksusuPurchase(method : .get, body: params), completion: completion, error:error)
+    }
+    
+    /**
+     * My Oksusu 계정에 속해있는 소장 상품을 B tv로 이관 요청한다.(IF-EPS-910)
+     */
+    func mergeOksusuPurchase(
+        hostDevice:HostDevice?, oksusuId:String?,
+        completion: @escaping (RegistEps) -> Void, error: ((_ e:Error) -> Void)? = nil){
+
+        let macAdress = hostDevice?.apiMacAdress ?? ApiConst.defaultMacAdress
+        let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
+        var params = [String:Any]()
+        params["response_format"] = EpsNetwork.RESPONSE_FORMET
+        params["ver"] = EpsNetwork.VERSION
+        params["client_name"] = EpsNetwork.CLIENT_NAME
+        params["ui_name"] = EpsNetwork.UI_NAME
+        params["IF"] = "IF-EPS-910"
+        params["stb_id"] = stbId
+        params["mac"] = macAdress
+        params["ostb_id"] = oksusuId
+        fetch(route: EpsMergeOksusuPurchase(body: params), completion: completion, error:error)
+    }
 }
 
 struct EpsTotalPointInfo:NetworkRoute{
@@ -485,3 +542,8 @@ struct EpsDeleteOKCashPoint:NetworkRoute{
 }
 
 
+struct EpsMergeOksusuPurchase:NetworkRoute{
+    var method: HTTPMethod = .post
+    var path: String = "/eps/v5/migration/oksusu"
+    var body: [String : Any]? = nil
+}

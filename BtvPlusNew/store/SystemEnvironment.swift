@@ -15,6 +15,7 @@ struct SystemEnvironment {
     static let bundleVersion:String = AppUtil.version
     static let bundleVersionKey:String = AppUtil.version// 사용안함
     static let buildNumber:String = AppUtil.build
+    static var agToken:String = ""
     
     static let originDeviceId = Self.getDeviceId()
     static var tvUserId:String? = nil
@@ -64,6 +65,8 @@ struct SystemEnvironment {
     }
     static var FORCE_WEB:String? = nil
     
+
+    static let AG = "https://agw.sk-iptv.com:8443"
     static let VMS = "http://mobilebtv.com:9080"
     static let WEB = "http://mobilebtv.com:8080"
     static let CBS = "https://btvcpas.skbroadband.com:9090"
@@ -71,6 +74,7 @@ struct SystemEnvironment {
     static let KMS = "http://mobilebtv.com:8080"
     static let KES = "https://agw.sk-iptv.com:8443"
     
+    static let AG_STG = "https://agw-stg.sk-iptv.com:8443"
     static let VMS_STG = "http://58.123.205.82:9080"
     static let WEB_STG = "http://58.123.205.82:8080"
     static let CBS_STG = "https://1.255.102.229:9090"

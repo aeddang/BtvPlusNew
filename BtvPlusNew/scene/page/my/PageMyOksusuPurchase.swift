@@ -67,65 +67,8 @@ struct PageMyOksusuPurchase: PageView {
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
             }
-            
-            .onReceive(self.dataProvider.$result){ res in
-                guard let res = res else { return }
-                switch res.type {
-                
-                case .connectTerminateStb(let type, _) :
-                    if type == .delete {
-                        self.appSceneObserver.event = .toast( String.oksusu.disconnectCompleted )
-                        self.pagePresenter.closePopup(self.pageObject?.id)
-                    }
-                    
-                    guard let data = res.data as? ConnectTerminateStb  else {
-                        if type != .info {
-                            self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-                        }
-                        return
-                    }
-                    switch type {
-                    case .regist :
-                        self.appSceneObserver.event = .toast( String.oksusu.setupCompleted )
-                        self.collectionModel.update()
-                    case .info :
-                        if data.stb_id != self.setup.oksusu {
-                            self.appSceneObserver.alert = .alert(
-                                String.oksusu.disconnect,
-                                String.oksusu.disconnectAnotherUser,
-                                confirmText:String.app.close
-                            ){
-                                self.sendLog(action: .clickContentsRetrievePopup, actionBody: .init(menu_id:"옥수수 팝업 메뉴아이디"))
-                                self.setup.oksusu = ""
-                                self.dataProvider.requestData(
-                                    q:.init(id: self.tag,
-                                            type: .connectTerminateStb(.delete, self.setup.possession),
-                                            isOptional: true))
-                            }
-                        }
-                    default : break
-                    }
-                default: break
-                }
-            }
-            .onReceive(self.dataProvider.$error){ err in
-                guard let err = err else { return }
-                switch err.type {
-                case .connectTerminateStb(let type, _) :
-                    if type == .delete {
-                        self.pagePresenter.closePopup(self.pageObject?.id)
-                    }
-                default: break
-                }
-            }
             .onAppear{
-                if self.setup.oksusu.isEmpty == false {
-                    self.dataProvider.requestData(
-                        q:.init(id: self.tag,
-                                type: .connectTerminateStb(.info, self.setup.possession), isOptional: true))
-                } else {
-                    
-                }
+                
             }
             .onDisappear{
                

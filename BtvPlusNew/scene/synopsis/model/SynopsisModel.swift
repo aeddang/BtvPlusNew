@@ -389,14 +389,13 @@ class SynopsisModel : PageProtocol {
         
         let containIsFree = purchasItems.contains(where: { $0.isFree })
         var tempUsableItems = usableItems
-        if tempUsableItems.contains(where: {$0.prdTypCd == .ppv}) {
+        if !self.isPurchasedPPM && tempUsableItems.contains(where: {$0.prdTypCd == .ppv}) {
             tempUsableItems = tempUsableItems.filter { $0.prdTypCd == .ppv }
         }
         //pps/ppm 체크해서 권한 설정은 위에서 다 함. 시놉 에피가 아닌 것들 다지움.
         if self.srisTypCd == .season {
-            tempUsableItems = tempUsableItems.filter {  $0.epsdId == self.epsdId }
+            tempUsableItems = tempUsableItems.filter { $0.epsdId == self.epsdId }
         }
-
         if let ppsItem = ppsItems.first(where: {
             let pid = $0.prdPrcId
             return purchasedPPSItems.contains(where: { pid == $0.prdPrcId }) }) {
@@ -537,16 +536,16 @@ class SynopsisModel : PageProtocol {
                 .sorted()
             
         }
-        if let info = directViewData?.ppv_products?.first?.use_ppv_omni_ppm_info?.first {
-            DataLog.d("옴니팩 pid : " + (info.omni_m_pid ?? "") , tag: self.tag)
-            DataLog.d("옴니팩 pname : " + (info.omni_m_pname ?? "") , tag: self.tag)
-            DataLog.d("옴니팩 useCnt : " + (info.omni_m_use_count ?? ""), tag: self.tag)
-            DataLog.d("옴니팩 restCnt : " + (info.omni_m_rest_count ?? "") , tag: self.tag)
-            DataLog.d("옴니팩 totalCnt : " + (info.omni_m_total_count ?? "") , tag: self.tag)
-            DataLog.d("옴니팩 date : " + (info.omni_m_rest_count_valid_date ?? "") , tag: self.tag)
-        }
         
         #if DEBUG
+            if let info = directViewData?.ppv_products?.first?.use_ppv_omni_ppm_info?.first {
+                DataLog.d("옴니팩 pid : " + (info.omni_m_pid ?? "") , tag: self.tag)
+                DataLog.d("옴니팩 pname : " + (info.omni_m_pname ?? "") , tag: self.tag)
+                DataLog.d("옴니팩 useCnt : " + (info.omni_m_use_count ?? ""), tag: self.tag)
+                DataLog.d("옴니팩 restCnt : " + (info.omni_m_rest_count ?? "") , tag: self.tag)
+                DataLog.d("옴니팩 totalCnt : " + (info.omni_m_total_count ?? "") , tag: self.tag)
+                DataLog.d("옴니팩 date : " + (info.omni_m_rest_count_valid_date ?? "") , tag: self.tag)
+            }
             //log
             watchOptions.forEach({
                 DataLog.d("watchOption : " + $0.debugString, tag: self.tag)

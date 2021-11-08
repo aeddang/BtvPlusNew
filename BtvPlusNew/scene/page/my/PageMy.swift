@@ -86,37 +86,27 @@ struct PageMy: PageView {
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
-                self.isOksusu = self.repository.namedStorage?.oksusu.isEmpty == false
+                self.setOksusuStatus()
             }
-            .onReceive(self.dataProvider.$result){ res in
-                guard let res = res else { return }
-                switch res.type {
-                case .checkOksusu: self.setOksusuStatus(res: res)
-                default: break
-                }
-            }
+            
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
-               //self.repository.storage.oksusu = "{F-C9EF3812EAD-420A-B899-E8B55EB70644}"
-                self.isOksusu = self.repository.namedStorage?.oksusu.isEmpty == false
+                //self.repository.namedStorage?.oksusu = "{F-C9EF3812EAD-420A-B899-E8B55EB70644}"
+                self.setOksusuStatus()
+                /*
                 if self.isOksusu {
                     self.dataProvider.requestData(q: .init(id: self.tag, type: .checkOksusu, isOptional: true))
                 }
+                */
             }
         }//geo
     }//body
     
-    private func setOksusuStatus(res:ApiResultResponds){
-        guard let status = res.data as? OksusuStatus else {
-            return
-        }
-        let isConnect = status.body?.authYn?.toBool() ?? false
-        let isPurchaseConnect = status.body?.closeYn?.toBool() ?? false
-        if !isConnect {
-            self.repository.namedStorage?.oksusu = ""
-        } else {
-            
-        }
+    private func setOksusuStatus(){
+       
+        let isConnect = self.repository.namedStorage?.oksusu.isEmpty == false
+        let isPurchaseConnect = self.repository.namedStorage?.oksusuPurchase.isEmpty == false
+       
         if self.pairing.status == .pairing {
             self.isOksusu = isConnect && !isPurchaseConnect
         } else {

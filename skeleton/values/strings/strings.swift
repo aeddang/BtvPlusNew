@@ -321,6 +321,7 @@ extension String {
         public static let disconnectText = "myOksusuDisconnectText".loaalized()
         public static let disconnectButPurchase = "myOksusuDisconnectButPurchase".loaalized()
         public static let disconnectAnotherUser = "myOksusuDisconnectAnotherUser".loaalized()
+        public static let disconnectAnotherUserTip = "myOksusuDisconnectAnotherUserTip".loaalized()
         public static let disconnectCompleted = "myOksusuDisconnectCompleted".loaalized()
         public static let connect = "myOksusuConnect".loaalized()
         public static let connectText = "myOksusuConnectText".loaalized()

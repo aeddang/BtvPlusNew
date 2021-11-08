@@ -101,6 +101,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                             marginBottom: self.marginBottom,
                             type: self.type,
                             onBottom: { _ in
+                                if self.type == .oksusu {return} // okssusu 페이징 처리안됨...
                                 self.load()
                             }
                         )

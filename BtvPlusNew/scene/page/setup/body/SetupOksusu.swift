@@ -113,6 +113,7 @@ struct SetupOksusu: PageView {
                 if let stbId = evt.data as? String {
                     self.setupOksusuCertificationCompleted(stbId:stbId)
                 } else {
+                    //self.setupOksusuCertificationCompleted(stbId:"{F-C9EF3812EAD-420A-B899-E8B55EB70644}")
                     self.setupOksusuCancel()
                 }
             default : break
@@ -229,10 +230,12 @@ struct SetupOksusu: PageView {
             String.oksusu.setupCertificationSub,
             confirmText:String.button.certification){ isOk in
                 if isOk {
+                    self.sendLog(name: String.oksusu.setupCertification, result: "가져오기")
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.oksusuCertification)
                     )
                 } else {
+                    self.sendLog(name: String.oksusu.setupCertification, result: "취소")
                     self.setupOksusuCancel()
                 }
         }
@@ -249,17 +252,28 @@ struct SetupOksusu: PageView {
         self.appSceneObserver.event = .toast(String.oksusu.setupCompleted)
         self.setOksusuPurchaseAble()
         self.sendLog(category: "옥수수소장vod가져오기", config: true)
+        self.checkOksusuPurchaseMerge(isOption:true)
     }
     
     private func deleteOksusu(){
         self.willOksusu = false
-        self.appSceneObserver.alert = .alert(
+        self.sendLog(category: "옥수수소장vod가져오기", config: false)
+        let msg = self.isOksusuPurchase ? String.oksusu.disconnectButPurchase : String.oksusu.disconnectText
+        self.appSceneObserver.alert = .confirm(
             String.oksusu.disconnect,
-            self.isOksusuPurchase ? String.oksusu.disconnectButPurchase : String.oksusu.disconnectText
-        ){
-            self.sendLog(category: "옥수수소장vod가져오기", config: false)
-            self.repository.namedStorage?.oksusu = ""
-            self.setupOksusuCancel()
+            msg,
+            confirmText: String.oksusu.setupButtonDisConnect
+            
+        ){ isOk in
+            if isOk {
+                self.sendLog(name: msg, result: "해제")
+                self.repository.namedStorage?.oksusu = ""
+                self.appSceneObserver.event = .toast(String.oksusu.disconnectCompleted)
+                self.setupOksusuCancel()
+            } else {
+                self.sendLog(name: msg, result: "취소")
+                self.setupOksusuCancel()
+            }
         }
     }
     
@@ -300,6 +314,11 @@ struct SetupOksusu: PageView {
     
     private func sendLog(category:String, config:Bool) {
         let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
+        self.naviLogManager.actionLog(.clickConfigSelection, actionBody: actionBody)
+    }
+    
+    private func sendLog(name:String, result:String) {
+        let actionBody = MenuNaviActionBodyItem( menu_name:name, result: result)
         self.naviLogManager.actionLog(.clickConfigSelection, actionBody: actionBody)
     }
 }

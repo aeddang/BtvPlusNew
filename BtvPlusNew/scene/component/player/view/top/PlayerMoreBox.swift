@@ -44,7 +44,8 @@ struct PlayerMoreBox: PageView{
                     .modifier(
                         MediumTextStyle(size: self.isFullScreen ? Self.textSizeFull : Self.textSize))
             }
-            if self.viewModel.synopsisPlayerData?.type != .clip(){
+            if self.viewModel.synopsisPlayerData?.type != .clip()
+                && self.viewModel.synopsisPlayerData?.isPosson != true{
                 Button(action: {
                     self.viewModel.btvLogEvent = .clickConfigButton(.clickVodConfigEtc, config: "view_btv")
                     if self.pairing.pairingStbType == .apple {

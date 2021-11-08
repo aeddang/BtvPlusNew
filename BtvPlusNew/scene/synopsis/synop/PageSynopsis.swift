@@ -1053,7 +1053,8 @@ struct PageSynopsis: PageView {
             
             self.playerData = SynopsisPlayerData()
                 .setData(type: self.synopsisPlayType,
-                         synopsis: synopsis, relationContentsModel: self.relationContentsModel, isPairing:self.isPairing)
+                         synopsis: synopsis, isPosson:self.possonType == .oksusu,
+                         relationContentsModel: self.relationContentsModel, isPairing:self.isPairing)
             
             
             self.playerModel
@@ -1084,7 +1085,9 @@ struct PageSynopsis: PageView {
                 .setData(data: synopsis, playType: self.synopsisPlayType, epsdRsluId: self.epsdRsluId)
             
             self.playerData = SynopsisPlayerData()
-                .setData(type: self.synopsisPlayType, synopsis: synopsis, relationContentsModel:self.relationContentsModel)
+                .setData(type: self.synopsisPlayType,
+                         synopsis: synopsis, isPosson:self.possonType == .oksusu,
+                         relationContentsModel:self.relationContentsModel)
             
             self.playerModel
                 .setData(synopsisPrerollData: prerollData)

@@ -75,7 +75,7 @@ class Lgs: Rest{
         params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
-        params["profile_id"] = pairing.kid?.id 
+        params["profile_id"] = isKidZone ? pairing.kid?.id : ""
         params["pcid"] = pcId;
         params["meta_typ_cd"] = synopData.metaTypCd
         

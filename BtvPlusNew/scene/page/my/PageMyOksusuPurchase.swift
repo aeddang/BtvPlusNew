@@ -55,6 +55,13 @@ struct PageMyOksusuPurchase: PageView {
                 .modifier(PageDragingSecondPriority(geometry: geometry, pageDragingModel: self.pageDragingModel))
                 .clipped()
             }
+            .onReceive(self.dataProvider.$result){ res in
+                guard let res = res else { return }
+                switch res.type {
+                case .checkOksusu: self.setOksusuStatus(res: res)
+                default: break
+                }
+            }
             .onReceive(self.pageObservable.$isAnimationComplete){ ani in
                 if ani {
                     if self.isInit {return}
@@ -62,19 +69,43 @@ struct PageMyOksusuPurchase: PageView {
                         self.isInit = true
                         self.collectionModel.initUpdate()
                     }
+                    self.dataProvider.requestData(q: .init(id: self.tag, type: .checkOksusu, isOptional: true))
                 }
+            }
+            .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page != self.pageObject  {return}
+                if !self.isInit {return}
+                self.dataProvider.requestData(q: .init(id: self.tag, type: .checkOksusu, isOptional: true))
             }
             .onReceive(self.appSceneObserver.$safeBottomLayerHeight){ bottom in
                 withAnimation{ self.marginBottom = bottom }
             }
             .onAppear{
-                
+               
             }
             .onDisappear{
                
             }
         }//geo
     }//body
+    
+    private func setOksusuStatus(res:ApiResultResponds){
+        guard let status = res.data as? OksusuStatus else {
+            return
+        }
+        let isConnect = status.body?.authYn?.toBool() ?? false
+        if isConnect {return}
+        self.appSceneObserver.alert = .alert(
+            String.oksusu.disconnect,
+            String.oksusu.disconnectAnotherUser,
+            tip:String.oksusu.disconnectAnotherUserTip,
+            confirmText:String.app.close){
+                self.repository.namedStorage?.oksusu = ""
+                self.pagePresenter.closePopup(self.pageObject?.id)
+        }
+        
+    }
+    
     
     private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
         self.naviLogManager.actionLog(action, actionBody: actionBody)

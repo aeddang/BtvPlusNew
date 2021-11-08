@@ -910,7 +910,7 @@
 "setupOksusuPurchaseProgressText" = "oksusu 소장 VOD 중 B tv에서 시청 가능한 VOD를\nB tv 구매내역으로 옮겨 TV에서도 시청하실 수 있습니다.\n설정이 완료되지 않을 경우 이전 확인 버튼을 눌러 주세요.";
 
 "setupOksusuPurchaseSetTip1" = "이용위치";
-"setupOksusuPurchaseSetTip2" = "- 모바일 B tv : MY > My oksusu 소장 VOD목록";
+"setupOksusuPurchaseSetTip2" = "- 모바일 B tv : MY > 구매목록 > 소장 메뉴";
 "setupOksusuPurchaseSetTip3" = "- B tv : MY > 구매내역 > 소장 VOD";
 "setupOksusuPurchaseSetButton" = "설정하기";
 "setupOksusuPurchaseProgressButton" = "이전 확인";
@@ -1412,10 +1412,10 @@
 "vsAccount" = "B tv 연결 안내";
 "vsAccountExpirationDate" = "인증기간이 만료되었습니다.\nApple TV의 TV 제공업체 설정으로\n이동해서 TV 제공업체 B tv에 대해서\n 다시 로그인 해주세요.";
 "vsAccountAutoPairing" = "TV프로바이더와\n동기화 실행중 입니다";
-"vsAccountUnPairing" = "TV프로바이더와 동기화를 위해\n페어링을 해재합니다";
+"vsAccountUnPairing" = "TV프로바이더와 동기화를 위해\n페어링을 해제합니다";
 "vsAccountAutoPairingError" = "TV 제공업체와 동기화에 실패했습니다. TV 제공업체 설정을 확인하시고 다시 시도해주세요.";
 "vsAccountAutoPairingFail" = "TV 제공업체와 동기화에 실패했습니다. TV 제공업체 설정에서 다시 로그인 해주세요.";
-"vsAccountSynchronizationDenied" = "TV프로바이더와 연결된\n페어링이 해재됩니다.\nTV프로바이더와 다시 연결하시려면\nTV프로바이더 로그인을\n실행해주세요";
+"vsAccountSynchronizationDenied" = "TV프로바이더와 연결된\n페어링이 해제됩니다.\nTV프로바이더와 다시 연결하시려면\nTV프로바이더 로그인을\n실행해주세요";
 "vsAccountSynchronizationFail" = "TV프로바이더 로그인정보와\n현제 페어링 정보가 다릅니다.\nTV프로바이더에서 다시 로그인 해주세요";
 "vsAccountSynchronizationFailDifferentStb" = "TV프로바이더 로그인정보와\n현제 페어링 정보가 다릅니다.\nTV프로바이더에서 다시 로그인 하거나\nTV프로바이더와 동기화해주세요.";
 "vsAccountSynchronizationFailExistPairing" = "TV프로바이더 사용함으로 설정되어있습니다.\nTV프로바이더를 사용안함으로 설정해주세요";
@@ -1427,13 +1427,13 @@
 
 "vsAccountProviderPairing" = "TV프로바이더 에서\n로그인 하셔야 합니다.";
 "vsAccountProviderPairingTip" = "TV프로바이더를 사용으로 설정해둔경우\nTV프로바이더에서 로그인하셔야합니다";
-"vsAccountProviderPairingInfo" = "TV프로바이더를 사용하시려면\n현재 페어링해재 후 TV프로바이더로\n로그인하셔야합니다";
+"vsAccountProviderPairingInfo" = "TV프로바이더를 사용하시려면\n현재 페어링해제 후 TV프로바이더로\n로그인하셔야합니다";
 "vsAccountUnpairing" = "TV프로바이더 로그아웃후 다시 실행 해주세요.\nTV프로바이더 로그아웃이\n완료된 후 연결이 끊어집니다.";
 "vsAccountAutoPairingConfirm" = "TV프로바이더 로그인 되어있습니다. TV프로바이더 로그아웃후 재실행시 연결이 끊어집니다.";
 
 "vsPairingMaintain" = "TV프로바이더 정보로 변경";
 "vsPairingRequestTvProvider" = "설정";
-"vsPairingDisconnect" = "페어링 해재";
+"vsPairingDisconnect" = "페어링 해제";
 
 
 
@@ -1463,10 +1463,11 @@
 "myOksusuSetupDiableSub" = "B tv 구매내역으로 이전하신 경우,\n이전하신 B tv와 연결하여 MY > 구매\n목록 > 소장 메뉴에서 이용해주세요.";
 "myOksusuSetupDiableTip" = "*이용 문의 : 국번없이 106";
 
-"myOksusuDisconnect" = "My oksusu\n소장 VOD 가저오기 해재";
+"myOksusuDisconnect" = "My oksusu\n소장 VOD 가저오기 해제";
 "myOksusuDisconnectText" = "설정을 해제하시면 모바일 Btv에서\noksusu 소장 VOD를 이용하실 수\n없습니다. 해제하시겠습니까?";
 "myOksusuDisconnectButPurchase" = "oksusu소장 VOD가 Btv구매내역으로\n이전된 상태입니다.\n가저오기 해제후에도 Btv연결 해제전까지\nMY>구매목록>소장메뉴에서 oksusu\n소장VOD를 시청하실 수 있습니다.";
-"myOksusuDisconnectAnotherUser" = "현제 이용중인 oksusu가입자 정보가\n다른 모바일Btv 기기에 연결되어,\nMy oksusu 소장 VOD설정을\n해제합니다.\n\nMy oksusu 소장 VOD는 oksusu가입자당 1대의 모바일Btv 기기를 연결하여 시청하실 수 있습니다.";
+"myOksusuDisconnectAnotherUser" = "현제 이용중인 oksusu가입자\n정보가 다른 모바일Btv 기기에\n연결되어, My oksusu 소장 VOD\n가져오기 설정을 해제합니다.";
+"myOksusuDisconnectAnotherUserTip" = "My oksusu 소장 VOD는\noksusu가입자당 1대의 모바일Btv\n기기를 연결하여 시청하실 수 있습니다.";
 
 "myOksusuDisconnectCompleted" = "My oksusu 소장 VOD 해지를 완료했습니다.";
 
@@ -1480,7 +1481,7 @@
 "myOksusuConnectJoinFb" = "페이스북으로 가입";
 
 "myOksusuSetupPurchaseDiable" = "My oksusu 소장 VOD 가져오기 설정 후 사용 가능합니다.";
-"myOksusuSetupPurchaseDeleteDiable" = "My oksusu 소장 VOD 가져오기 를 해재해야 해재 가능합니다.";
+"myOksusuSetupPurchaseDeleteDiable" = "My oksusu 소장 VOD 가져오기 를 해제해야 해제 가능합니다.";
 "myOksusuSetupPurchaseCompleted" = "oksusu소장 VOD가 Btv구매내역으로 이전되었습니다.";
 "myOksusuSetupButtonConnect" = "가져오기";
 "myOksusuSetupButtonDisConnect" = "해제";

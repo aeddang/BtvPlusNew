@@ -63,13 +63,15 @@ class SynopsisPlayerData {
     private(set) var previews:[PreviewItem]? = nil
     private(set) var hasNext:Bool = false
     private(set) var isClip:Bool = false
+    private(set) var isPosson:Bool = false
     private(set) var nextEpisode:PlayerListData? = nil
     private(set) var nextSeason:SeasonData? = nil
     private(set) var openingTime:Double? = nil
     private(set) var endingTime:Double? = nil
-    func setData(type:SynopsisPlayType, synopsis:SynopsisModel, relationContentsModel:RelationContentsModel? = nil,
+    func setData(type:SynopsisPlayType, synopsis:SynopsisModel,isPosson:Bool, relationContentsModel:RelationContentsModel? = nil,
                  isPairing:Bool? = nil) -> SynopsisPlayerData {
         
+        self.isPosson = isPosson
         self.type = type
         switch type {
         case .preview:

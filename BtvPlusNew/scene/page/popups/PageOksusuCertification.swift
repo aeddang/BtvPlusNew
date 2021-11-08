@@ -52,9 +52,10 @@ struct PageOksusuCertification: PageView {
                     case WebviewMethod.bpn_setOssVerificationResult.rawValue :
                         if let jsonData = json?.parseJson() {
                             if let stbid = jsonData["stbid"] as? String {
+                                self.isCompleted = true
                                 self.pagePresenter.onPageEvent(
                                     self.pageObject,
-                                    event:.init(type: .certification, data: stbid))
+                                    event:.init(id:self.tag,  type: .certification, data: stbid))
                                 self.pagePresenter.closePopup(self.pageObject?.id)
                             }
                         }else{
@@ -106,7 +107,7 @@ struct PageOksusuCertification: PageView {
                 if !self.isCompleted {
                     self.pagePresenter.onPageEvent(
                         self.pageObject,
-                        event:.init(type: .certification, data: nil))
+                        event:.init(id:self.tag, type: .certification, data: nil))
                 }
             }
             

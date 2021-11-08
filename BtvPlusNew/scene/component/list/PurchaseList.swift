@@ -47,7 +47,7 @@ class PurchaseData:InfinityData,ObservableObject{
         originTitle = data.title
         title = data.title
         isOksusuPurchase = data.purchase_typ_cd == "OKSUSU"
-       
+        //isOksusuPurchase = true
         
         if data.omni_use_flag?.toBool() == true {
             price = String.app.purchasePrice + " : 0" + String.app.cash + " (" + String.app.useOmnipack + ")"
@@ -81,9 +81,12 @@ class PurchaseData:InfinityData,ObservableObject{
             srisId: data.sris_id,
             searchType: synopsisType == .package ? .sris : EuxpNetwork.SearchType.prd,
             epsdId: data.epsd_id, epsdRsluId: data.epsd_rslu_id, prdPrcId: "",  kidZone:nil,
-            isPosson:self.isPosson, possonType: type == .oksusu ? .oksusu : .btv,
+            isPosson:self.isPosson,
+            possonType: isOksusuPurchase
+                ? .oksusu
+                : type == .oksusu ? .oksusu : .btv,
             anotherStbId: self.isPosson ? anotherStb : nil,
-            synopType: synopsisType)
+            synopType: synopsisType, isOksusuPurchase:self.isOksusuPurchase)
         return self
     }
     
@@ -303,7 +306,7 @@ struct PurchaseItem: PageView {
                             .frame(height: Dimen.icon.tiny)
                             .padding(.bottom, Dimen.margin.tinyExtra)
                     }
-                    if self.data.isOksusuPurchase {
+                    if self.data.isOksusuPurchase && !self.data.isPosson {
                         Image(Asset.icon.oksusuPurchase)
                             .renderingMode(.original)
                             .resizable()

@@ -295,7 +295,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                 return
             }
         case .oksusu:
-            if self.repository.storage.oksusu.isEmpty {
+            if self.repository.namedStorage?.oksusu.isEmpty != false {
                 withAnimation{ self.isError = true}
                 return
             }
@@ -338,7 +338,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
         case .oksusu:
             self.viewModel.request = .init(
                 id: self.tag,
-                type: .getOksusuPurchase( anotherStbId:self.repository.storage.oksusu , self.infinityScrollModel.page + 1 )
+                type: .getOksusuPurchase( anotherStbId:self.repository.namedStorage?.oksusu ?? "" , self.infinityScrollModel.page + 1 )
             )
         }
 
@@ -402,7 +402,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
             let end = start + datas.count
             
             let anotherStb = self.type == .oksusu
-            ? self.repository.storage.oksusu
+            ? self.repository.namedStorage?.oksusu ?? ""
             : self.type == .possession ? self.setup.possession : ""
             
             let loadedDatas:[PurchaseData] = zip(start...end, datas).map { idx, d in

@@ -214,10 +214,13 @@ struct PageKidsHome: PageView {
                     self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound ,nil) {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
                     }
+                /*
                 case .updatedKids:
+                    
                     self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.editKid))
                     }
+                 */
                 default: break
                 }
             } else {
@@ -226,6 +229,7 @@ struct PageKidsHome: PageView {
                     self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileNotfound ,nil) {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))
                     }
+                    
                 case .updatedKids:
                     self.appSceneObserver.alert = .alert(nil, String.alert.kidsProfileSelect ,nil) {
                         self.pagePresenter.openPopup(PageKidsProvider.getPageObject(.kidsProfileManagement))

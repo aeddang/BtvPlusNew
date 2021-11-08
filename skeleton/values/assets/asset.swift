@@ -59,6 +59,7 @@ extension Asset{
         public static let icon3 =  "icQuickmenu03"
         public static let icon4 =  "icQuickmenu04"
         public static let icon5 =  "icQuickmenu05"
+        public static let icon6 =  "icQuickmenu06"
     }
     
     

@@ -181,6 +181,7 @@ class Repository:ObservableObject, PageProtocol{
             DataLog.d("tvUserId " + (tvUserId ?? ""), tag:"VSManager")
             SystemEnvironment.tvUserId = storage.tvUserId
         }
+        SystemEnvironment.oksusuDeviceId = self.namedStorage?.oksusu ?? ""
         let currentPush = self.namedStorage?.registPushUserAgreement
         self.storage.isPush = currentPush ?? true
         self.webBridge.namedStorage = storage

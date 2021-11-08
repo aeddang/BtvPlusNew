@@ -581,7 +581,7 @@
 "titleMy" = "MY";
 "titlePairingManagement" = "B tv 연결 관리";
 "titlePairingGuide" = "B tv 연결 안내";
-"titleMyTerminatePurchase" = "이전 B tv 구매/소장 목록";
+"titleMyTerminatePurchase" = "이전 B tv 소장 VOD 목록";
 "titleMyOksusu" = "My oksusu 소장 VOD 목록";
 "titleTerminateStb" = "소장 VOD 시청 B tv 선택";
 "titleSetup" = "설정";
@@ -612,7 +612,7 @@
 "titleMobileBtv" = "모바일 B tv";
 "titleBtv" = "B tv";
 "titlePerson" = "인물정보";
-"titleJoinCenter" = "가입#";
+"titleJoinCenter" = "B가입샵";
 /*
  PagePairing
 */
@@ -1164,7 +1164,8 @@
 "quickMenu2" = "이벤트";
 "quickMenu3" = "이용꿀팁";
 "quickMenu4" = "충전소";
-"quickMenu5" = "가입#";
+"quickMenu5" = "B가입샵";
+"quickMenu6" = "클립";
 
 /*
  Footer
@@ -1445,7 +1446,7 @@
  Oksusu
 */
 
-"myOksusuSetup" = "My oksusu\n소장 VOD 이용 안내";
+"myOksusuSetup" = "MY oksusu\n소장 VOD 가져오기 안내";
 "myOksusuSetupCertification" = "oksusu 가입자 본인 확인 후 My oksusu에서 이용하던 소장 VOD를 모바일 Btv에서 이용하실 수 있습니다.";
 "myOksusuSetupCertificationSub" = "*가저온 스마트 기기 1대에서만 이용 가능합니다.";
 "myOksusuCertification" = "oksusu 가입자 본인 확인";

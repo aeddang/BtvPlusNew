@@ -16,8 +16,7 @@ class LocalStorage {
         static let isReleaseMode = "isReleaseMode" + VS
         static let isPush = "isPush" + VS
         
-        static let oksusu = "oksusu"
-        static let oksusuPurchase = "oksusuPurchase"
+       
         
     }
     let defaults = UserDefaults.standard
@@ -58,24 +57,6 @@ class LocalStorage {
         }
         get{
             return defaults.bool(forKey: Keys.isPush)
-        }
-    }
-    
-    var oksusu:String{
-        set(newVal){
-            defaults.set(newVal, forKey: Keys.oksusu)
-        }
-        get{
-            return defaults.string(forKey: Keys.oksusu) ?? ""
-        }
-    }
-    
-    var oksusuPurchase:String{
-        set(newVal){
-            defaults.set(newVal, forKey: Keys.oksusuPurchase)
-        }
-        get{
-            return defaults.string(forKey: Keys.oksusuPurchase) ?? ""
         }
     }
     

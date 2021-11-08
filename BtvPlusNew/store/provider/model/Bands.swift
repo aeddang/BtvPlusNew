@@ -70,6 +70,14 @@ class Bands:ObservableObject, PageProtocol {
         )
     }
     
+    func getClipBlockData()->  BlockItem?  {
+        guard let band = self.datas.first(
+                where: { $0.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue }) else { return nil }
+        return band.blocks.first(
+            where: { CateSubType.getType(id:$0.gnb_sub_typ_cd) == .clip}
+        )
+    }
+    
     func getEventBlockData()->  BlockItem?  {
         guard let band = self.datas.first(
                 where: { $0.gnbTypCd == EuxpNetwork.GnbTypeCode.GNB_CATEGORY.rawValue }) else { return nil }

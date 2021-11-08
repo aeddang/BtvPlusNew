@@ -218,7 +218,7 @@ enum ApiType{
     //UORPS
     case checkNuguPairing(String)
     
-    //OKSUSU
+    //IDPS
     case checkOksusu,
          addOksusuUserToBtvPurchase(String)
     

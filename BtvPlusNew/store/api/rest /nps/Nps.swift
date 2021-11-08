@@ -284,7 +284,7 @@ class Nps: Rest{
         
         params["pairing_type"] = "wifi"
         params["pairing_subtype"] = user?.pairingInType ?? PagePairingSetupUser.pairingInType ?? "mob-my"
-        
+        params["my_oksusu_stbid"] = SystemEnvironment.oksusuDeviceId
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params
@@ -315,7 +315,7 @@ class Nps: Rest{
     
         params["pairing_type"] = "user"
         params["pairing_subtype"] = user?.pairingInType ?? PagePairingSetupUser.pairingInType ?? "mob-my"
-            
+            params["my_oksusu_stbid"] = SystemEnvironment.oksusuDeviceId
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params
@@ -340,7 +340,7 @@ class Nps: Rest{
             
         params["pairing_type"] = "authcode"
         params["pairing_subtype"] = user?.pairingInType ?? PagePairingSetupUser.pairingInType ?? "mob-my"
-        
+        params["my_oksusu_stbid"] = SystemEnvironment.oksusuDeviceId
         var body = [String: Any]()
         body["header"] = headers
         body["body"] = params

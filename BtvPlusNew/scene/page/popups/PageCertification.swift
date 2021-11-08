@@ -64,7 +64,7 @@ struct PageCertification: PageView {
         
                                     self.pagePresenter.onPageEvent(
                                         self.pageObject,
-                                        event:.init(type: .certification, data: ci))
+                                        event:.init(id:self.tag, type: .certification, data: ci))
                                     
                                 }
                                 
@@ -113,7 +113,7 @@ struct PageCertification: PageView {
                 if !self.isCompleted {
                     self.pagePresenter.onPageEvent(
                         self.pageObject,
-                        event:.init(type: .certification, data: nil))
+                        event:.init(id:self.tag, type: .certification, data: nil))
                 }
             }
             

@@ -19,8 +19,8 @@ struct SetupOksusu: PageView {
     @State var isOksusu:Bool = false
     @State var isOksusuPurchaseUseAble:Bool = false
     @State var isOksusuPurchase:Bool = false
-    @State var willOksusu:Bool? = nil
-    @State var willOksusuPurchase:Bool? = nil
+    @State var willOksusu:Bool? = false
+    @State var willOksusuPurchase:Bool? = false
      
     @State var mergePurchaseCode:EpsNetwork.MergeOksusuCode? = nil
 
@@ -57,7 +57,7 @@ struct SetupOksusu: PageView {
         }
         .onReceive( [self.isOksusu].publisher ) { value in
             if !self.isInitate { return }
-            let originValue = self.repository.storage.oksusu.isEmpty == false
+            let originValue = self.repository.namedStorage?.oksusu.isEmpty == false
             if originValue == value { return }
             if self.willOksusu != nil { return }
             
@@ -73,8 +73,10 @@ struct SetupOksusu: PageView {
         }
         .onReceive( [self.isOksusuPurchase].publisher ) { value in
             if !self.isInitate { return }
-            let originValue = self.repository.storage.oksusuPurchase.isEmpty == false
+            let originValue = self.repository.namedStorage?.oksusuPurchase.isEmpty == false
             if originValue == value { return }
+            //PageLog.d("isOksusuPurchase " + originValue.description + " " + value.description, tag:self.tag)
+            //PageLog.d("willOksusuPurchase " + (willOksusuPurchase?.description ?? "nil"), tag:self.tag)
             if self.willOksusuPurchase != nil { return }
             if !self.isOksusu {
                 if value {
@@ -107,6 +109,7 @@ struct SetupOksusu: PageView {
             guard let evt = evt else {return}
             switch evt.type {
             case .certification :
+                if evt.id != "PageOksusuCertification" {return}
                 if let stbId = evt.data as? String {
                     self.setupOksusuCertificationCompleted(stbId:stbId)
                 } else {
@@ -139,7 +142,7 @@ struct SetupOksusu: PageView {
             guard let evt = evt else { return }
             switch evt {
             case .disConnected :
-                self.repository.storage.oksusuPurchase = ""
+                self.repository.namedStorage?.oksusuPurchase = ""
                 self.isOksusuPurchase = false
                 self.setOksusuPurchaseAble()
             case .pairingCompleted : self.setOksusuPurchaseAble()
@@ -159,26 +162,30 @@ struct SetupOksusu: PageView {
         let isConnect = status.body?.authYn?.toBool() ?? false
         let isPurchaseConnect = status.body?.closeYn?.toBool() ?? false
         if !isConnect {
-            self.repository.storage.oksusu = ""
+            self.repository.namedStorage?.oksusu = ""
         } else {
-            //self.setup.oksusu = "sdsdsddsd"
+            //self.repository.storage.oksusu = "sdsdsddsd"
         }
         if isPurchaseConnect {
-            self.repository.storage.oksusuPurchase = "Y"
+            self.repository.namedStorage?.oksusuPurchase = "Y"
         } else {
-            self.repository.storage.oksusuPurchase = ""
+            self.repository.namedStorage?.oksusuPurchase = ""
         }
         self.setOksusu()
     }
     
     private func setOksusu(){
-        self.isOksusu = self.repository.storage.oksusu.isEmpty == false
+        let isOksusu = self.repository.namedStorage?.oksusu.isEmpty == false
+        self.willOksusu = isOksusu
+        self.isOksusu = isOksusu
         if self.pairing.status != .pairing {
-            self.repository.storage.oksusuPurchase = ""
+            self.repository.namedStorage?.oksusuPurchase = ""
         }
-        self.isOksusuPurchase = self.repository.storage.oksusuPurchase.isEmpty == false
+        self.isOksusuPurchase = self.repository.namedStorage?.oksusuPurchase.isEmpty == false
         self.setOksusuPurchaseAble()
         self.checkOksusuPurchaseMerge(isOption:true)
+        self.setupOksusuCancel()
+        self.setupOksusuPurchaseCancel()
     }
     
     private func setOksusuPurchaseAble(){
@@ -187,11 +194,11 @@ struct SetupOksusu: PageView {
     
     private func checkOksusuPurchaseMerge(isOption:Bool = false){
         if self.isOksusuPurchase {
-            if  self.repository.storage.oksusu.isEmpty == true {
+            if  self.repository.namedStorage?.oksusu.isEmpty == true {
                 self.mergePurchaseCode = EpsNetwork.MergeOksusuCode.COMPLETED
             } else {
                 self.dataProvider.requestData(
-                    q: .init(type: .checkOksusuPurchase(self.pairing.hostDevice,  self.repository.storage.oksusu), isOptional: isOption))
+                    q: .init(type: .checkOksusuPurchase(self.pairing.hostDevice,  self.repository.namedStorage?.oksusu), isOptional: isOption))
             }
         }
     }
@@ -205,8 +212,8 @@ struct SetupOksusu: PageView {
         case .FAIL:
             let msg = data.reason ?? String.alert.apiErrorServer
             self.appSceneObserver.alert = .alert(String.oksusu.setup, msg)
-            self.repository.storage.oksusuPurchase = ""
-            self.isOksusuPurchase = self.repository.storage.oksusuPurchase.isEmpty == false
+            self.repository.namedStorage?.oksusuPurchase = ""
+            self.isOksusuPurchase = self.repository.namedStorage?.oksusuPurchase.isEmpty == false
         case .ERROR:
             self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
         default: break
@@ -217,7 +224,7 @@ struct SetupOksusu: PageView {
     private func setupOksusu(){
         self.willOksusu = true
         self.appSceneObserver.alert = .confirm(
-            String.oksusu.certification,
+            String.oksusu.setup,
             String.oksusu.setupCertification,
             String.oksusu.setupCertificationSub,
             confirmText:String.button.certification){ isOk in
@@ -233,12 +240,12 @@ struct SetupOksusu: PageView {
     
     private func setupOksusuCancel(){
         self.willOksusu = nil
-        self.isOksusu = (self.repository.storage.oksusu.isEmpty == false)
+        self.isOksusu = (self.repository.namedStorage?.oksusu.isEmpty == false)
     }
     
     private func setupOksusuCertificationCompleted(stbId:String){
         self.willOksusu = nil
-        self.repository.storage.oksusu = stbId
+        self.repository.namedStorage?.oksusu = stbId
         self.appSceneObserver.event = .toast(String.oksusu.setupCompleted)
         self.setOksusuPurchaseAble()
         self.sendLog(category: "옥수수소장vod가져오기", config: true)
@@ -246,29 +253,23 @@ struct SetupOksusu: PageView {
     
     private func deleteOksusu(){
         self.willOksusu = false
-        self.setupOksusuCancel()
-        /*
         self.appSceneObserver.alert = .alert(
             String.oksusu.disconnect,
             self.isOksusuPurchase ? String.oksusu.disconnectButPurchase : String.oksusu.disconnectText
         ){
-            
-        }*/
+            self.sendLog(category: "옥수수소장vod가져오기", config: false)
+            self.repository.namedStorage?.oksusu = ""
+            self.setupOksusuCancel()
+        }
     }
     
     private func setupOksusuPurchase(){
         self.willOksusuPurchase = true
-        self.dataProvider.requestData(q: .init(id: self.tag, type:.mergeOksusuPurchase(self.pairing.hostDevice, self.repository.storage.oksusu)))
+        self.dataProvider.requestData(q: .init(id: self.tag, type:.mergeOksusuPurchase(self.pairing.hostDevice, self.repository.namedStorage?.oksusu)))
     }
     private func setupOksusuPurchaseCancel(){
-        if self.mergePurchaseCode == .PROGRESS {
-            self.checkOksusuPurchaseMerge()
-        }
-        //해재불가
-        /*
         self.willOksusuPurchase = nil
-        self.isOksusuPurchase = (self.setup.oksusuPurchase.isEmpty == false)
-        */
+        self.isOksusuPurchase = (self.repository.namedStorage?.oksusuPurchase.isEmpty == false)
     }
     private func addedOksusuPurchase(res:ApiResultResponds){
         guard let data = res.data as? RegistEps else {
@@ -278,7 +279,7 @@ struct SetupOksusu: PageView {
         }
         if data.result == ApiCode.success {
             self.willOksusuPurchase = nil
-            self.repository.storage.oksusuPurchase = "Y"
+            self.repository.namedStorage?.oksusuPurchase = "Y"
             self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseCompleted)
             self.checkOksusuPurchaseMerge(isOption:true)
             self.sendLog(category: "옥수수구매내역보기", config: true)

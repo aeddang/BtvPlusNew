@@ -64,6 +64,7 @@ struct QuickTab: PageComponent{
                 self.moveTip()
             }
         case .cashCharge : self.moveCashCharge()
+        case .category : self.moveCategory()
         default : self.moveJoinCenter()
         }
     }
@@ -81,6 +82,23 @@ struct QuickTab: PageComponent{
             
         } else {
             ComponentLog.e("previewList notfound", tag:self.tag)
+        }
+    }
+    
+    func moveCategory(){
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"클립"))
+        if let block = self.dataProvider.bands.getClipBlockData()  {
+            let data = CateData().setData(data: block)
+            self.pagePresenter.openPopup(
+                PageProvider.getPageObject(.multiBlock)
+                    .addParam(key: .title, value: data.title)
+                    .addParam(key: .id, value: data.menuId)
+                    .addParam(key: .data, value: data)
+
+            )
+            
+        } else {
+            ComponentLog.e("clipList notfound", tag:self.tag)
         }
     }
     
@@ -124,7 +142,7 @@ struct QuickTab: PageComponent{
     }
     
     func moveJoinCenter(){
-        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"가입#"))
+        self.naviLogManager.actionLog(.clickGnbQuickMenu, actionBody:.init(result:"B가입샵"))
         self.pagePresenter.openPopup(
             PageProvider
                 .getPageObject(.webview)

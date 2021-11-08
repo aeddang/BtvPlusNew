@@ -164,6 +164,7 @@ extension String {
         public static let menu3 = "quickMenu3".loaalized()
         public static let menu4 = "quickMenu4".loaalized()
         public static let menu5 = "quickMenu5".loaalized()
+        public static let menu6 = "quickMenu6".loaalized()
     }
     
     struct footer {

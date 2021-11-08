@@ -17,6 +17,7 @@ struct SystemEnvironment {
     static let buildNumber:String = AppUtil.build
     static var agToken:String = ""
     
+    static var oksusuDeviceId:String? = nil
     static let originDeviceId = Self.getDeviceId()
     static var tvUserId:String? = nil
     static var deviceId:String {

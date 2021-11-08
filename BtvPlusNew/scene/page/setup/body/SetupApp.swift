@@ -97,7 +97,7 @@ struct SetupApp: PageView {
     
     private func sendLog(category:String, config:Bool) {
         let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
-        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+        self.naviLogManager.actionLog(.clickConfigSelection, actionBody: actionBody)
     }
     
     

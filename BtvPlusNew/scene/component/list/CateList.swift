@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import struct Kingfisher.KFImage
 enum CateSubType:String{
-    case prevList, list, event, tip, webview, cashCharge, kids
+    case prevList, list, event, tip, webview, cashCharge, kids, clip
      
     static func getType(id:String?) -> CateSubType{
         switch id {
@@ -17,6 +17,7 @@ enum CateSubType:String{
         case "BP_03_09" : return .event
         case "BP_03_04" : return .webview
         case "BP_03_10" : return .prevList
+        case "BP_03_13" : return .clip
         default : return .list
         }
     }

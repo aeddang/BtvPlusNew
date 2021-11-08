@@ -47,6 +47,7 @@ struct SetupPossession: PageView {
             guard let evt = evt else {return}
             switch evt.type {
             case .certification :
+                if evt.id != "PageCertification" {return}
                 if let cid = evt.data as? String {
                     self.setupPossessionCertificationCompleted(cid:cid)
                 } else {
@@ -242,7 +243,7 @@ struct SetupPossession: PageView {
     
     private func sendLog(category:String, config:Bool) {
         let actionBody = MenuNaviActionBodyItem( config: config ? "on" : "off", category: category)
-        self.naviLogManager.actionLog(.clickCardRegister, actionBody: actionBody)
+        self.naviLogManager.actionLog(.clickConfigSelection, actionBody: actionBody)
     }
 }
 

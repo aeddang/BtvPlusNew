@@ -20,6 +20,8 @@ class LocalNamedStorage:PageProtocol {
         static let registPushUserAgreement = "registPushUserAgreement" + VS
         static let pushEndpoint = "pushEndpoint" + VS
         
+        static let oksusu = "oksusu"
+        static let oksusuPurchase = "oksusuPurchase"
         static let pcId = "pcId" + VS
     }
     let defaults:UserDefaults
@@ -96,5 +98,24 @@ class LocalNamedStorage:PageProtocol {
         let randNum = drand48() * 100000
         sessionId = self.getPcid() + randNum.description.toDigits(5)
         return sessionId!
+    }
+    
+    var oksusu:String{
+        set(newVal){
+            SystemEnvironment.oksusuDeviceId = newVal
+            defaults.set(newVal, forKey: Keys.oksusu)
+        }
+        get{
+            return defaults.string(forKey: Keys.oksusu) ?? ""
+        }
+    }
+    
+    var oksusuPurchase:String{
+        set(newVal){
+            defaults.set(newVal, forKey: Keys.oksusuPurchase)
+        }
+        get{
+            return defaults.string(forKey: Keys.oksusuPurchase) ?? ""
+        }
     }
 }

@@ -64,6 +64,7 @@ struct SynopsisData{
     var synopType:SynopsisType
     var isPreview:Bool = false
     var isDemand:Bool = false
+    var isOksusuPurchase:Bool = false
     /*
     SynopSvcTypCdNone = 0,
     SynopSvcTypCdVod = 30, //일반 VOD 시놉

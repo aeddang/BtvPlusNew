@@ -50,19 +50,19 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let holdbackType = synopsisModel.holdbackType
         let useCaption = synopsisModel.useCaption
         self.hasAuthority = false
-        if !synopsisModel.isDistProgram {
+        if !synopsisModel.isDistProgram && possonType != .oksusu {
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText // 서비스중지
             isPlayAble = false
            
            
-        } else if synopsisModel.isCancelProgram {
+        } else if synopsisModel.isCancelProgram && possonType != .oksusu {
             serviceInfo = String.alert.bc
             serviceInfoDescBottom = String.alert.bcText // 결방
             isPlayAble = false
             
             
-        } else if !synopsisModel.isNScreen {
+        } else if !synopsisModel.isNScreen && possonType != .oksusu {
             if isPosson {
                 serviceInfo = String.pageText.synopsisTerminationBtv
                 isPlayAble = false
@@ -78,7 +78,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             }
             
             
-        } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority {
+        } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority && possonType != .oksusu{
             /*
             serviceInfo = purchas?.isFree ?? false
                 ? String.pageText.synopsisOnlyBtv

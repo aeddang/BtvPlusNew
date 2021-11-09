@@ -134,7 +134,7 @@ struct PurchaseList: PageComponent{
                 InfoAlert(text: String.pageText.myTerminatePurchaseInfo)
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
             }
-            if type == .oksusu {
+            if type == .oksusu && self.userName?.isEmpty == false {
                 InfoAlert(icon:nil, title: String.oksusu.nameTitle, text:self.userName ?? "")
                     .modifier(ListRowInset(marginHorizontal:Dimen.margin.thin ,spacing: Dimen.margin.thin))
             }
@@ -226,7 +226,8 @@ struct PurchaseList: PageComponent{
             episode_resolution_id: data.originData?.epsd_rslu_id,
             series_id: data.originData?.sris_id
         )
-        self.naviLogManager.actionLog(.clickContentsList ,contentBody: content)
+        let action = MenuNaviActionBodyItem(category : "OKSUSU")
+        self.naviLogManager.actionLog(.clickContentsList ,actionBody: action, contentBody: content)
     }
     
 }

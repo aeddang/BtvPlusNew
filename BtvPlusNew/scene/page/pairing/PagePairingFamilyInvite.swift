@@ -33,7 +33,10 @@ struct PagePairingFamilyInvite: PageView {
                     .resizable()
                     .frame(
                         height: SystemEnvironment.isTablet ? 125 : 104)
-                Text(self.inviteNick + String.pageText.pairingFamilyInviteText1)
+                Text(self.inviteNick.isEmpty == false
+                     ? self.inviteNick + String.pageText.pairingFamilyInviteText1
+                     : String.pageText.pairingFamilyInviteNickEmpty
+                    )
                     .modifier(BoldTextStyle(size: Font.size.regular, color: Color.app.white))
                     .multilineTextAlignment(.center)
                     .padding(.top, Dimen.margin.microExtra)

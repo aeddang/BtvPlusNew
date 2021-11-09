@@ -252,7 +252,7 @@ struct SetupOksusu: PageView {
         self.appSceneObserver.event = .toast(String.oksusu.setupCompleted)
         self.setOksusuPurchaseAble()
         self.sendLog(category: "옥수수소장vod가져오기", config: true)
-        self.checkOksusuPurchaseMerge(isOption:true)
+        //self.checkOksusuPurchaseMerge(isOption:true)
     }
     
     private func deleteOksusu(){
@@ -319,7 +319,7 @@ struct SetupOksusu: PageView {
     
     private func sendLog(name:String, result:String) {
         let actionBody = MenuNaviActionBodyItem( menu_name:name, result: result)
-        self.naviLogManager.actionLog(.clickVodConfigDetail, actionBody: actionBody)
+        self.naviLogManager.actionLog(.clickConfigDetail, actionBody: actionBody)
     }
 }
 

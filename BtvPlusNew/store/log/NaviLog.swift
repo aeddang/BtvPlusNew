@@ -348,6 +348,7 @@ struct NaviLog {
         //////////////////////////////////////////////////////////////////////////////
         // /setup
         case clickConfigSelection = "click.config.selection"                         // 3. 설정 내 선택한 모든 설정의 텍스트
+        case clickConfigDetail = "click.config.detail"       
         // /synopsis, /play
         case clickContentsProductionActor = "click.contents.production_actor"        // 12. 제작/출연진 및 줄거리의 배우선택
         case clickAdButton = "click.ad.button"                                       // 13. 프리롤 광고 버튼 선택

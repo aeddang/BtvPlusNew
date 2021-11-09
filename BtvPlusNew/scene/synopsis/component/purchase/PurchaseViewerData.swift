@@ -114,7 +114,11 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 }
                 if purchas?.hasAuthority == true || possonType == .oksusu{
                     if synopsisModel.useCaption {
-                        self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                        if isPosson == true && possonType == .oksusu {
+                            //옥수수소장일경우 서버에서 권한연결 불가로인해 시청옵션 노출 안함
+                        } else {
+                            self.setupOption(watchItems: synopsisModel.watchOptionItems, purchas: purchas)
+                        }
                     }
                     self.hasAuthority = true
                 }

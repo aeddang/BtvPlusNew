@@ -134,8 +134,9 @@ class SceneDelegate: PageSceneDelegate {
             willPage.addParam(key: .watchLv, value: Setup.WatchLv.lv4.rawValue )
         }
         let watchLv = willPage.getParamValue(key: .watchLv) as? Int
+        let isAdultPairingPass = willPage.getParamValue(key: .isAdultPairingPass) as? Bool ?? false
         if (watchLv ?? 0) >= 19 {
-            if self.repository?.pairing.status != .pairing {
+            if self.repository?.pairing.status != .pairing && !isAdultPairingPass{
                 self.repository?.appSceneObserver?.alert = .needPairing()
                 return false
             }

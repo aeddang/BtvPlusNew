@@ -29,6 +29,7 @@ extension PageParam {
     static let isFree = "isFree"
     static let isAlert = "isAlert"
     static let value = "value"
+    static let isAdultPairingPass = "isAdultPairingPass"
 }
 
 extension PageEventType {

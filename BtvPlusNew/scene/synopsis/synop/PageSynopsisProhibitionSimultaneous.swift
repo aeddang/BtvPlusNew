@@ -127,14 +127,29 @@ extension PageSynopsis {
             position: self.playerModel.time.toTruncateDecimal(n: 0),
             rate: rate.toTruncateDecimal(n: 0))
         
-        self.dataProvider.requestData(
-            q: .init(type: .postWatchLog( type,
-                                          playData,
-                                          synopData: synopsisData,
-                                          self.pairing,
-                                          pcId: self.repository.namedStorage?.getPcid() ?? "",
-                                          isKidZone: self.type == .kids,
-                                          gubun: nil), isLog:true))
+        if self.isPosson {
+            if self.possonType == .oksusu {return}
+            self.dataProvider.requestData(
+                q: .init(type: .postWatchLogPossession( type,
+                                              playData,
+                                              synopData: synopsisData,
+                                              self.pairing,
+                                              mbtvKey:SystemEnvironment.deviceId,
+                                              pcId: self.repository.namedStorage?.getPcid() ?? "",
+                                              isKidZone: self.type == .kids,
+                                              gubun: nil), isLog:true))
+        } else {
+            self.dataProvider.requestData(
+                q: .init(type: .postWatchLog( type,
+                                              playData,
+                                              synopData: synopsisData,
+                                              self.pairing,
+                                              pcId: self.repository.namedStorage?.getPcid() ?? "",
+                                              isKidZone: self.type == .kids,
+                                              gubun: nil), isLog:true))
+        }
+        
+        
     
     }
 }

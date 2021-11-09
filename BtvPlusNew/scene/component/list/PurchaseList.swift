@@ -152,6 +152,7 @@ struct PurchaseList: PageComponent{
                                 PageProvider.getPageObject( data.synopsisType == .package ? .synopsisPackage : .synopsis)
                                     .addParam(key: .data, value: synopsisData)
                                     .addParam(key: .watchLv, value: data.watchLv)
+                                    .addParam(key: .isAdultPairingPass, value: data.isPosson)
                             )
                         }
                     }

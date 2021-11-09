@@ -25,8 +25,10 @@ extension PageSynopsis {
     }
     
     func checkWatchLvAuth() -> Bool{
+        if self.isPosson && self.possonType == .oksusu {return true}
         guard let model = self.synopsisModel else {return false}
         guard let episodeViewerData = self.episodeViewerData else { return false}
+        
         if self.isPairing == true {
             
             if episodeViewerData.isAdult == true && !SystemEnvironment.isAdultAuth{

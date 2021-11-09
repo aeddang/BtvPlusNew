@@ -230,12 +230,12 @@ struct SetupOksusu: PageView {
             String.oksusu.setupCertificationSub,
             confirmText:String.button.certification){ isOk in
                 if isOk {
-                    self.sendLog(name: String.oksusu.setupCertification, result: "가져오기")
+                    self.sendLog(name: String.oksusu.setup, result: "가져오기")
                     self.pagePresenter.openPopup(
                         PageProvider.getPageObject(.oksusuCertification)
                     )
                 } else {
-                    self.sendLog(name: String.oksusu.setupCertification, result: "취소")
+                    self.sendLog(name: String.oksusu.setup, result: "취소")
                     self.setupOksusuCancel()
                 }
         }
@@ -266,12 +266,12 @@ struct SetupOksusu: PageView {
             
         ){ isOk in
             if isOk {
-                self.sendLog(name: msg, result: "해제")
+                self.sendLog(name: String.oksusu.disconnect, result: "해제")
                 self.repository.namedStorage?.oksusu = ""
                 self.appSceneObserver.event = .toast(String.oksusu.disconnectCompleted)
                 self.setupOksusuCancel()
             } else {
-                self.sendLog(name: msg, result: "취소")
+                self.sendLog(name: String.oksusu.disconnect, result: "취소")
                 self.setupOksusuCancel()
             }
         }
@@ -319,7 +319,7 @@ struct SetupOksusu: PageView {
     
     private func sendLog(name:String, result:String) {
         let actionBody = MenuNaviActionBodyItem( menu_name:name, result: result)
-        self.naviLogManager.actionLog(.clickConfigSelection, actionBody: actionBody)
+        self.naviLogManager.actionLog(.clickVodConfigDetail, actionBody: actionBody)
     }
 }
 

@@ -72,7 +72,8 @@ class Lgs: Rest{
         params["play_start"] = playData.start ?? playData.eventTime
         params["play_end"] = playData.end ?? playData.eventTime
         params["play_position"] = playData.position
-        params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
+        params["end_rate"] = playData.rate
+        //params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"
         params["profile_id"] = isKidZone ? pairing.kid?.id : ""
@@ -123,7 +124,7 @@ class Lgs: Rest{
        
         params["limit_flag"] = synopData.isLimitedWatch ? "Y" : "N"
         params["event_type"] = evt.rawValue
-        params["mobile_id"] = mbtvKey
+        params["mobile_id"] = NpsNetwork.pairingId
         params["mbtv_key"] = mbtvKey
         params["g_gubun"] = gubun?.isEmpty == false ? gubun : LgsNetwork.GUBUN_ETC
         
@@ -131,7 +132,7 @@ class Lgs: Rest{
         params["play_start"] = playData.start ?? playData.eventTime
         params["play_end"] = playData.end ?? playData.eventTime
         params["play_position"] = playData.position
-        params["end_rate"] = playData.rate == "100" ? "0" : playData.rate
+        params["end_rate"] = playData.rate
         params["visionFactor"] = playData.rate
         params["trans_type"] = "3"
         params["yn_kzone"] = isKidZone ? "Y" : "N"

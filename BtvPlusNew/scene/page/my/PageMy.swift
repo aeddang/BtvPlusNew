@@ -88,7 +88,13 @@ struct PageMy: PageView {
             .onReceive(self.pagePresenter.$currentTopPage){ page in
                 self.setOksusuStatus()
             }
-            
+            .onReceive(self.dataProvider.$result){ res in
+                guard let res = res else { return }
+                switch res.type {
+                case .checkOksusu: self.setOksusuStatus(res: res)
+                default: break
+                }
+            }
             .onAppear{
                 self.marginBottom = self.appSceneObserver.safeBottomLayerHeight
                 //self.repository.namedStorage?.oksusu = "{F-C9EF3812EAD-420A-B899-E8B55EB70644}"
@@ -103,18 +109,30 @@ struct PageMy: PageView {
     }//body
     
     private func setOksusuStatus(){
-       
         let isConnect = self.repository.namedStorage?.oksusu.isEmpty == false
         let isPurchaseConnect = self.repository.namedStorage?.oksusuPurchase.isEmpty == false
-       
         if self.pairing.status == .pairing {
             self.isOksusu = isConnect && !isPurchaseConnect
+            if isConnect {
+                self.dataProvider.requestData(q: .init(id: self.tag, type: .checkOksusu, isOptional: true))
+            }
         } else {
             self.isOksusu = isConnect
         }
     }
     
-
+    private func setOksusuStatus(res:ApiResultResponds){
+        guard let status = res.data as? OksusuStatus else { return }
+        let isPurchaseConnect = status.body?.closeYn?.toBool() ?? false
+        if isPurchaseConnect {
+            self.repository.namedStorage?.oksusuPurchase = "Y"
+        } else {
+            self.repository.namedStorage?.oksusuPurchase = ""
+        }
+        self.setOksusuStatus()
+    }
+    
+    
 }
 
 #if DEBUG

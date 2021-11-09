@@ -111,7 +111,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                     .background(Color.brand.bg)
                     .onReceive(self.infinityScrollModel.$event){evt in
                         guard let evt = evt else {return}
-                        if self.type == .possession {return}
+                        if self.type == .possession || self.type == .oksusu {return}
                         switch evt {
                         case .pullCompleted :
                             if !self.infinityScrollModel.isLoading { self.reload() }
@@ -123,6 +123,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                         
                     }
                     .onReceive(self.infinityScrollModel.$pullPosition){ pos in
+                        if self.type == .possession || self.type == .oksusu {return}
                         if pos < InfinityScrollModel.PULL_RANGE { return }
                         self.reloadDegree = Double(pos - InfinityScrollModel.PULL_RANGE)
                     }

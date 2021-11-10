@@ -77,7 +77,7 @@ struct SynopsisBody: PageComponent{
                                     .accessibility(hidden: true)
                                 Spacer()
                             }
-                            if self.possonType != .oksusu {
+                            if !(self.possonType == .oksusu  && self.isPosson) {
                                 HStack(spacing:0){
                                     Spacer()
                                     FunctionViewer(
@@ -98,7 +98,7 @@ struct SynopsisBody: PageComponent{
                         EpisodeViewer(data:episodeViewerData)
                             .modifier(ListRowInset(spacing: SynopsisBody.spacing))
                             .accessibility(hidden: true)
-                        if self.possonType != .oksusu {
+                        if !(self.possonType == .oksusu  && self.isPosson) {
                             HStack(spacing:0){
                                 FunctionViewer(
                                     componentViewModel: self.componentViewModel,

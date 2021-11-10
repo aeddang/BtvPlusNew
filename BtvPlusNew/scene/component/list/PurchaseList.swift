@@ -47,7 +47,7 @@ class PurchaseData:InfinityData,ObservableObject{
         originTitle = data.title
         title = data.title
         isOksusuPurchase = data.purchase_typ_cd == "OKSUSU"
-        //isOksusuPurchase = true
+       // isOksusuPurchase = true
         
         if data.omni_use_flag?.toBool() == true {
             price = String.app.purchasePrice + " : 0" + String.app.cash + " (" + String.app.useOmnipack + ")"
@@ -212,7 +212,7 @@ struct PurchaseList: PageComponent{
             list_price: data.originData?.selling_price,
             payment_price: data.originData?.price)
         
-        let action = MenuNaviActionBodyItem(category : data.isOksusu ? "옥수수소장" : "")
+        let action = MenuNaviActionBodyItem(category : data.isOksusuPurchase ? "옥수수소장" : "")
         self.naviLogManager.actionLog(.clickPurchaseListList ,actionBody: action, contentBody: content)
     }
     

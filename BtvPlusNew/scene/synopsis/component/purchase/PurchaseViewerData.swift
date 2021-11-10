@@ -49,20 +49,21 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let isOnlyBtvPurchasable = synopsisModel.isOnlyBtvPurchasable
         let holdbackType = synopsisModel.holdbackType
         let useCaption = synopsisModel.useCaption
+        let isOksusuPosson = isPosson && possonType == .oksusu
         self.hasAuthority = false
-        if !synopsisModel.isDistProgram && possonType != .oksusu {
+        if !synopsisModel.isDistProgram && !isOksusuPosson {
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText // 서비스중지
             isPlayAble = false
            
            
-        } else if synopsisModel.isCancelProgram && possonType != .oksusu {
+        } else if synopsisModel.isCancelProgram && !isOksusuPosson {
             serviceInfo = String.alert.bc
             serviceInfoDescBottom = String.alert.bcText // 결방
             isPlayAble = false
             
             
-        } else if !synopsisModel.isNScreen && possonType != .oksusu {
+        } else if !synopsisModel.isNScreen && !isOksusuPosson {
             if isPosson {
                 serviceInfo = String.pageText.synopsisTerminationBtv
                 isPlayAble = false
@@ -78,7 +79,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             }
             
             
-        } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority && possonType != .oksusu{
+        } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority && !isOksusuPosson {
             /*
             serviceInfo = purchas?.isFree ?? false
                 ? String.pageText.synopsisOnlyBtv
@@ -112,7 +113,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                     self.setupOption(
                         synopsisModel:synopsisModel, purchasableItems: synopsisModel.purchasableItems, purchas: purchas)
                 }
-                if purchas?.hasAuthority == true || possonType == .oksusu{
+                if purchas?.hasAuthority == true || isOksusuPosson{
                     if synopsisModel.useCaption {
                         if isPosson == true && possonType == .oksusu {
                             //옥수수소장일경우 서버에서 권한연결 불가로인해 시청옵션 노출 안함
@@ -131,7 +132,7 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                                    isPairing:Bool? , isPosson:Bool , possonType:PossonType,
                                    purchas:PurchaseModel?){
         if isPairing == true || isPosson {
-            if possonType == .oksusu {
+            if possonType == .oksusu && isPosson {
                 infoTrailing =  String.oksusu.playable
                 isPlayAble = true
             } else if (purchas?.isDirectview ?? false) {

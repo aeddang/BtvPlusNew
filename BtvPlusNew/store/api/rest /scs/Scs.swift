@@ -121,7 +121,10 @@ class Scs: Rest{
         
         let date = Date()
         let stbId = NpsNetwork.hostDeviceId ?? ApiConst.defaultStbId
-        let macAdress = hostDevice?.playMacAdress ?? ""
+        var macAdress = hostDevice?.playMacAdress ?? ""
+        if !macAdress.isEmpty {
+            macAdress = hostDevice?.apiMacAdress ?? ""
+        }
         let plainText = ScsNetwork.getPlainText(stbId: stbId , macAdress: macAdress, epsdRsluId: epsdRsluId)
         var params = [String:String]()
         params["if"] = "IF-SCS-PRODUCT-UI520-013"
@@ -189,7 +192,10 @@ class Scs: Rest{
         completion: @escaping (Play) -> Void, error: ((_ e:Error) -> Void)? = nil){
         let date = Date()
         var params = [String:String]()
-        let macAdress = hostDevice?.playMacAdress ?? ""
+        var macAdress = hostDevice?.playMacAdress ?? ""
+        if !macAdress.isEmpty {
+            macAdress = hostDevice?.apiMacAdress ?? ""
+        }
         var stbId = ""
         var path = ""
         var overrideHeaders:[String : String]? = nil

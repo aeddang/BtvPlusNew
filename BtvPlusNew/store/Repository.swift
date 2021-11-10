@@ -230,6 +230,7 @@ class Repository:ObservableObject, PageProtocol{
                 self.pushManager.retryRegisterPushToken()
                 self.pushManager.updateUserAgreement(self.pairing.user?.isAgree3 ?? false)
                 self.userSetup.isPurchaseAuth = true
+                self.userSetup.possession = ""
                 let prevName = self.namedStorage?.tvUserId
                 let pairingDeviceType:PairingDeviceType = SystemEnvironment.currentPairingDeviceType
                 if pairingDeviceType == .apple {

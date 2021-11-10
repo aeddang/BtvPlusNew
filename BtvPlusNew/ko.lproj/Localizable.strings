@@ -708,6 +708,7 @@
 /*
  PagePairingInvite
 */
+"pairingFamilyInviteNickEmpty" = "모바일 B tv 초대를 받으셨네요!";
 "pairingFamilyInviteText1" = "님의\n초대를 받으셨네요!";
 "pairingFamilyInviteText2" = "아래 확인 버튼을 누르시면 바로\n모바일 B tv를 이용하실 수 있습니다.";
 "pairingFamilyInviteError" = "B tv 연결에 실패하였습니다.\n계속 연결 불가한 경우\n고객센터(국번 없이 106)로\n문의해 주세요.";
@@ -1464,9 +1465,9 @@
 "myOksusuDisconnect" = "My oksusu\n소장 VOD 가져오기 해제";
 "myOksusuDisconnectText" = "설정을 해제하시면 모바일 Btv에서\noksusu 소장 VOD를 이용하실 수\n없습니다. 해제하시겠습니까?";
 "myOksusuDisconnectButPurchase" = "oksusu소장 VOD가 Btv구매내역으로\n이전된 상태입니다.\n가져오기 해제후에도 Btv연결 해제전까지\nMY>구매목록>소장메뉴에서 oksusu\n소장VOD를 시청하실 수 있습니다.";
-"myOksusuDisconnectAnotherUser" = "현재 이용중인 oksusu가입자\n정보가 다른 모바일Btv 기기에\n연결되어, My oksusu 소장 VOD\n가져오기 설정을 해제합니다.";
-"myOksusuDisconnectAnotherUserTip" = "My oksusu 소장 VOD는\noksusu가입자당 1대의 모바일Btv\n기기를 연결하여 시청하실 수 있습니다.";
-
+"myOksusuDisconnectAnotherUser" = "현재 이용중인 oksusu가입자\n정보가 다른 모바일 B tv 기기에\n연결되어 My oksusu 소장 VOD\n가져오기 설정을 해제합니다.";
+"myOksusuDisconnectAnotherUserTip" = "My oksusu 소장 VOD는\noksusu가입자당 1대의 모바일 B tv\n기기를 연결하여 시청하실 수 있습니다.";
+                                    
 "myOksusuDisconnectCompleted" = "My oksusu 소장 VOD 해지를 완료했습니다.";
 
 "myOksusuConnect" = "My oksusu 소장 VOD 가져오기";

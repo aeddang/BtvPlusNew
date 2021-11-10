@@ -105,6 +105,7 @@ struct PurchaseBlock: PageComponent, Identifiable{
                                 self.load()
                             }
                         )
+                       // Text("QA 확인용 놀라지마세요 " + self.datas.count.description).modifier(BoldTextStyle(color:Color.app.white))
                         
                     }
                     .modifier(MatchParent())

@@ -60,7 +60,6 @@ struct SetupOksusu: PageView {
             let originValue = self.repository.namedStorage?.oksusu.isEmpty == false
             if originValue == value { return }
             if self.willOksusu != nil { return }
-            
             if !value {
                 if originValue {
                     self.deleteOksusu()
@@ -247,8 +246,8 @@ struct SetupOksusu: PageView {
     }
     
     private func setupOksusuCertificationCompleted(stbId:String){
-        self.willOksusu = nil
         self.repository.namedStorage?.oksusu = stbId
+        self.setupOksusuCancel()
         self.appSceneObserver.event = .toast(String.oksusu.setupCompleted)
         self.setOksusuPurchaseAble()
         self.sendLog(category: "옥수수소장vod가져오기", config: true)

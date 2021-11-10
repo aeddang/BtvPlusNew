@@ -208,6 +208,26 @@ struct PairingView: PageComponent{
                     )
                     .modifier(ContentHorizontalEdgesTablet())
                     .padding(.top, Dimen.margin.medium)
+                    
+                    if self.isOksusu {
+                        FillButton(
+                            text: String.pageTitle.myOksusu,
+                            image: nil,
+                            isNew: false,
+                            bgColor: Color.transparent.clearUi
+                        ){_ in
+                            self.naviLogManager.actionLog(.clickMyOksusuPurchaseList)
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myOksusuPurchase)
+                            )
+                        }
+                        .modifier(MatchHorizontal(height: Dimen.tab.regularExtra))
+                        .overlay(
+                            Rectangle().stroke( Color.app.blueLightExtra ,lineWidth: 1)
+                        )
+                        .modifier(ContentHorizontalEdgesTablet())
+                        .padding(.top, Dimen.margin.thin)
+                    }
                 } else {
                     VStack (alignment: .center, spacing: 0){
                         Spacer().modifier(LineHorizontal())

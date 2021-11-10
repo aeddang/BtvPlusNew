@@ -71,10 +71,12 @@ class HostDevice {
             
             let ipA = self.convertMacAdress.split(separator: ":")
             if ipA.count > 0 {
+                var first = ipA[0].description
+                first = (first.hasPrefix("0") && first.count==2) ? first.subString(1) : first
                 self.apiMacAdress = ipA.dropFirst()
-                    .reduce(ipA[0].description, {$0 + ":" + ( ($1.hasPrefix("0") && $1.count==2) ? $1.dropFirst() : $1 )})
+                    .reduce( first, {$0 + ":" + ( ($1.hasPrefix("0") && $1.count==2) ? $1.dropFirst() : $1 )})
             }
-            //DataLog.d("self.apiMacAdress " + self.apiMacAdress , tag: "HostDevice")
+            DataLog.d("self.apiMacAdress " + self.apiMacAdress , tag: "HostDevice")
            
         }
         self.modelViewName = deviceData.model_name

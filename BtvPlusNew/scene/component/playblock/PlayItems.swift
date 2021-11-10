@@ -147,7 +147,7 @@ struct PlayItemInfo: PageView {
                             color: Color.app.white)
                 )
                 .lineLimit(2)
-                .padding(.top, SystemEnvironment.isTablet ? Dimen.margin.tiny : Dimen.margin.light)
+               
             if let subTitle = self.data.subTitle {
                 Text(subTitle)
                     .modifier(MediumTextStyle(

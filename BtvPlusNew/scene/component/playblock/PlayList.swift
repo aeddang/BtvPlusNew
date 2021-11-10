@@ -315,7 +315,7 @@ struct PlayItem: PageView {
                         )
                     )
                     .clipped()
-                    HStack(alignment: .top, spacing:0){
+                    HStack(alignment: self.data.isClip ? .center : .top, spacing:0){
                         Spacer().modifier(MatchVertical(width: 0))
                         VStack(alignment: .leading, spacing:0){
                             if !self.data.isClip {

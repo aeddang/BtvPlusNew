@@ -86,9 +86,11 @@ struct PageMy: PageView {
                 }
             }
             .onReceive(self.pagePresenter.$currentTopPage){ page in
+                if page != self.pageObject  {return}
                 self.setOksusuStatus()
             }
             .onReceive(self.dataProvider.$result){ res in
+                if self.pagePresenter.currentTopPage != self.pageObject  {return}
                 guard let res = res else { return }
                 switch res.type {
                 case .checkOksusu: self.setOksusuStatus(res: res)
@@ -129,7 +131,12 @@ struct PageMy: PageView {
         } else {
             self.repository.namedStorage?.oksusuPurchase = ""
         }
-        self.setOksusuStatus()
+        let isConnect = self.repository.namedStorage?.oksusu.isEmpty == false
+        if self.pairing.status == .pairing {
+            self.isOksusu = isConnect && !isPurchaseConnect
+        } else {
+            self.isOksusu = isConnect
+        }
     }
     
     

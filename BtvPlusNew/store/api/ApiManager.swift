@@ -436,9 +436,7 @@ class ApiManager :PageProtocol, ObservableObject{
         case .checkOksusu : self.idps.checkOksusu(
             completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
             error:error)
-        case .addOksusuUserToBtvPurchase(let cid) : self.kms.getTerminateStbList(ci: cid,
-            completion: {res in self.complated(id: apiID, type: type, res: res, isOptional: isOptional, isLog: isLog)},
-            error:error)
+       
     
         //SMD
         case .getLike(let seriesId, let device, let isTotal) : self.smd.getLike(

@@ -269,7 +269,10 @@ struct AppLayout: PageComponent{
         if flag == .force {
             self.appSceneObserver.alert = .confirm(
                 String.alert.update, msg ?? flag.defaultMessage,
-                cancelText: String.alert.updateAfter){ isOk in
+                confirmText: String.alert.updateButton,
+                cancelText: String.alert.updateAfter
+                
+            ){ isOk in
                 if isOk {
                     AppUtil.goAppStore()
                     self.suspand()
@@ -281,7 +284,9 @@ struct AppLayout: PageComponent{
             self.appSceneObserver.alert = .confirm(
                 String.alert.update,
                 msg ?? flag.defaultMessage,
-                cancelText: String.alert.updateAfter){ isOk in
+                confirmText: String.alert.updateButton,
+                cancelText: String.alert.updateAfter
+            ){ isOk in
                 if isOk {
                     AppUtil.goAppStore()
                     self.suspand()

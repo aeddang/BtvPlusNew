@@ -124,7 +124,7 @@ struct SetupOksusu: PageView {
             switch res.type {
             case .checkOksusu: self.setOksusuStatus(res: res)
             case .checkOksusuPurchase: self.setOksusuPurchase(res: res)
-            case .addOksusuUserToBtvPurchase : self.addedOksusuPurchase(res: res)
+            case .mergeOksusuPurchase: self.addedOksusuPurchase(res: res)
             default: break
             }
         }
@@ -134,6 +134,8 @@ struct SetupOksusu: PageView {
             case .checkOksusu: self.setOksusu()
             case .checkOksusuPurchase:
                 self.mergePurchaseCode = .PROGRESS
+                self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
+            case .mergeOksusuPurchase :
                 self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
             default: break
             }
@@ -269,6 +271,7 @@ struct SetupOksusu: PageView {
                 self.repository.namedStorage?.oksusu = ""
                 self.appSceneObserver.event = .toast(String.oksusu.disconnectCompleted)
                 self.setupOksusuCancel()
+                self.setOksusuPurchaseAble()
             } else {
                 self.sendLog(name: String.oksusu.disconnect, result: "취소")
                 self.setupOksusuCancel()
@@ -278,27 +281,40 @@ struct SetupOksusu: PageView {
     
     private func setupOksusuPurchase(){
         self.willOksusuPurchase = true
-        self.dataProvider.requestData(q: .init(id: self.tag, type:.mergeOksusuPurchase(self.pairing.hostDevice, self.repository.namedStorage?.oksusu)))
+        self.appSceneObserver.alert = .confirm(
+            String.oksusu.setupPurchase,
+            String.oksusu.setupPurchaseText,
+            confirmText:String.oksusu.setupPurchaseButton){ isOk in
+                if isOk {
+                    self.sendLog(name: String.oksusu.setupPurchase, result: "B tv에서 이용")
+                    self.dataProvider.requestData(q: .init(id: self.tag, type:.mergeOksusuPurchase(self.pairing.hostDevice, self.repository.namedStorage?.oksusu)))
+                } else {
+                    self.sendLog(name: String.oksusu.setupPurchase, result: "취소")
+                    self.setupOksusuPurchaseCancel()
+                }
+        }
     }
+    
     private func setupOksusuPurchaseCancel(){
         self.willOksusuPurchase = nil
         self.isOksusuPurchase = (self.repository.namedStorage?.oksusuPurchase.isEmpty == false)
     }
+    
     private func addedOksusuPurchase(res:ApiResultResponds){
         guard let data = res.data as? RegistEps else {
             self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-            self.setupOksusuCancel()
+            self.setupOksusuPurchaseCancel()
             return
         }
         if data.result == ApiCode.success {
-            self.willOksusuPurchase = nil
             self.repository.namedStorage?.oksusuPurchase = "Y"
-            self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseCompleted)
+            self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseInfo)
+            self.setupOksusuPurchaseCancel()
             self.checkOksusuPurchaseMerge(isOption:true)
             self.sendLog(category: "옥수수구매내역보기", config: true)
         } else {
             self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
-            self.setupOksusuCancel()
+            self.setupOksusuPurchaseCancel()
         }
         //self.sendLog(category: String.pageText.setupPossessionSet, config: false)
     }

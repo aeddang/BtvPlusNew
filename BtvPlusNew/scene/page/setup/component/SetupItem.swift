@@ -70,7 +70,7 @@ struct SetupItem: PageView {
                         label: self.toggleText ?? "", useButton: self.useToggleButton
                        ))
                        .frame(width: 52)
-                        .padding(.trailing, Dimen.margin.tinyExtra)
+                       .padding(.trailing, SystemEnvironment.isTablet ? Dimen.margin.light : Dimen.margin.tinyExtra)
                 } else{
                     Button(action: {
                         self.more?()

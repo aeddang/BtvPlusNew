@@ -106,7 +106,6 @@ struct PageMyOksusuPurchase: PageView {
         
     }
     
-    
     private func sendLog(action:NaviLog.Action, actionBody:MenuNaviActionBodyItem? = nil) {
         self.naviLogManager.actionLog(action, actionBody: actionBody)
     }

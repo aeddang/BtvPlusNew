@@ -898,7 +898,6 @@ struct PosterViewItem: PageView {
                     VStack(alignment: .leading){
                         Text(episodeViewerData.episodeTitleKids)
                             .modifier(BoldTextStyleKids(size: Font.sizeKids.thinExtra, color:Color.app.white))
-                            .fixedSize()
                         Spacer().modifier(MatchParent())
                         Text(episodeViewerData.info)
                             .modifier(BoldTextStyleKids(size: Font.sizeKids.tinyExtra, color:Color.app.white))

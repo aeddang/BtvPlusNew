@@ -219,8 +219,7 @@ enum ApiType{
     case checkNuguPairing(String)
     
     //IDPS
-    case checkOksusu,
-         addOksusuUserToBtvPurchase(String)
+    case checkOksusu
     
     func coreDataKey() -> String? {
         switch self {

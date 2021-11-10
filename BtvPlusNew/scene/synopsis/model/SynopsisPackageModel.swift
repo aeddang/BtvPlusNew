@@ -52,6 +52,11 @@ class SynopsisPackageModel : PageProtocol {
         if let dist = DistStsCd(rawValue: contents.dist_sts_cd ?? "") {
             self.distStsCd = dist
         }
+        //let sale_tgt_fg_yn = contents.sale_tgt_fg_yn?.toBool()
+        //let contain = contents.poc_det_typ_cd_list?.contains("102")
+        
+        
+        
         self.posters = zip(0...self.packages.count, self.packages).map{ idx, d in
             let poster = PosterData(pageType: self.type).setData(data: d, prdPrcId: self.prdPrcId ?? "",
                                                     isPosson: isPosson, anotherStb : anotherStb,
@@ -85,4 +90,5 @@ class SynopsisPackageModel : PageProtocol {
     }
 
 
+    
 }

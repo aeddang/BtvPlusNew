@@ -29,6 +29,7 @@ extension String {
         public static var updateForce = "alertUpdateForce".loaalized()
         public static var updateRecommend = "alertUpdateRecommend".loaalized()
         public static var updateAfter = "alertUpdateAfter".loaalized()
+        public static var updateButton = "alertUpdateButton".loaalized()
         public static var dataAlram = "alertDataAlram".loaalized()
         public static var api = "alertApi".loaalized()
         public static var apiErrorServer = "alertApiErrorServer".loaalized()

@@ -28,11 +28,12 @@ class Idps: Rest{
         completion: @escaping (OksusuStatus) -> Void, error: ((_ e:Error) -> Void)? = nil){
 
         var params = [String:String]()
-        params["did"] = SystemEnvironment.deviceId
+        params["did"] = "I294AA08A-BD05-4C6A-9957-B7C45E973A71" //SystemEnvironment.deviceId
         var overrideHeaders = [String:String]()
         overrideHeaders["Trace"] = ""
-        overrideHeaders["Token"] = SystemEnvironment.agToken
-        overrideHeaders["Authorization"] = "Bearer"
+        //overrideHeaders["Token"] = SystemEnvironment.agToken
+        //overrideHeaders["Authorization"] = "Bearer"
+        //overrideHeaders["Client_ID"] = "I294AA08A-BD05-4C6A-9957-B7C45E973A71"
         fetch(route: IdpsCheckOksusu( query: params, overrideHeaders:overrideHeaders), completion: completion, error:error)
     }
 }

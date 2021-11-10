@@ -331,6 +331,12 @@ extension String {
         public static let connectJoinDate = "myOksusuConnectJoinDate".loaalized()
         public static let connectJoinTid = "myOksusuConnectJoinTid".loaalized()
         public static let connectJoinFb = "myOksusuConnectJoinFb".loaalized()
+        
+        public static let setupPurchase = "myOksusuSetupPurchase".loaalized()
+        public static let setupPurchaseText = "myOksusuSetupPurchaseText".loaalized()
+        public static let setupPurchaseInfo = "myOksusuSetupPurchaseInfo".loaalized()
+        public static let setupPurchaseButton = "myOksusuSetupPurchaseButton".loaalized()
+        
         public static let setupPurchaseDiable = "myOksusuSetupPurchaseDiable".loaalized()
         public static let setupPurchaseDeleteDiable = "myOksusuSetupPurchaseDeleteDiable".loaalized()
         public static let setupPurchaseCompleted = "myOksusuSetupPurchaseCompleted".loaalized()

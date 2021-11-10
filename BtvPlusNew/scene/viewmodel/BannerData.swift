@@ -249,7 +249,7 @@ class BannerData:InfinityData, PageProtocol{
             self.move = (type == .package) ? PageID.synopsisPackage : PageID.synopsis
             let synopsisData = SynopsisData(
                 srisId: data.shcut_sris_id,
-                searchType: .sris,
+                searchType: .prd,
                 epsdId: data.shcut_epsd_id,
                 synopType: type
             )

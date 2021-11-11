@@ -79,7 +79,7 @@ struct SetupOksusu: PageView {
             if self.willOksusuPurchase != nil { return }
             if !self.isOksusu {
                 if value {
-                    self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseDiable)
+                    //self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseDiable)
                     self.isOksusuPurchase = !value
                 } else {
                     self.willOksusuPurchase = nil
@@ -89,7 +89,7 @@ struct SetupOksusu: PageView {
             }
             
             if self.pairing.status != .pairing {
-                self.appSceneObserver.alert = .needPairing()
+                //self.appSceneObserver.alert = .needPairing()
                 self.isOksusuPurchase = !value
                 return
             }
@@ -97,6 +97,9 @@ struct SetupOksusu: PageView {
                 if originValue {
                     //self.appSceneObserver.event = .toast(String.oksusu.setupPurchaseDeleteDiable)
                     self.isOksusuPurchase = true
+                    if self.mergePurchaseCode == .PROGRESS || self.mergePurchaseCode == .ERROR {
+                        self.checkOksusuPurchaseMerge()
+                    }
                 }
             } else {
                 if !originValue {
@@ -216,8 +219,13 @@ struct SetupOksusu: PageView {
             self.appSceneObserver.alert = .alert(String.oksusu.setup, msg)
             self.repository.namedStorage?.oksusuPurchase = ""
             self.isOksusuPurchase = self.repository.namedStorage?.oksusuPurchase.isEmpty == false
+            self.setupOksusuPurchaseCancel()
         case .ERROR:
             self.appSceneObserver.event = .toast( String.alert.apiErrorServer )
+        case .PROGRESS:
+            self.appSceneObserver.event = .toast( String.oksusu.setupPurchaseInfo )
+        case .COMPLETED:
+            self.appSceneObserver.event = .toast( String.oksusu.setupPurchaseCompleted )
         default: break
         }
     }

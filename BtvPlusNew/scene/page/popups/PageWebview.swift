@@ -14,6 +14,7 @@ struct WebviewJson :Codable{
 }
 
 struct PageWebview: PageView {
+    @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver
     @EnvironmentObject var appSceneObserver:AppSceneObserver
@@ -65,8 +66,32 @@ struct PageWebview: PageView {
                         if let isTopVisible = param["isTopVisible"] as? Bool {
                             self.isTop = isTopVisible
                         }
+                    case WebviewMethod.bpn_setIdentityVerfResult.rawValue :
+                        if let jsonData = json?.parseJson() {
+                            var isFail = true
+                            if let cid = (jsonData["ci"] as? String) {
+                                if let isAdult = jsonData["adult"] as? Bool {
+                                    isFail = !isAdult
+                                }
+                                if isFail { return }
+                                self.repository.updateAdultAuth(able:true)
+                                self.appSceneObserver.alert = .alert(
+                                    String.alert.identifySuccess, String.alert.identifySuccessAdult, nil)
+                                
+                                
+                            }else{
+                                self.appSceneObserver.alert = .alert(
+                                    String.alert.identifyFail, String.alert.identifyFailMe, nil)
+                            }
+                        }else{
+                            self.appSceneObserver.alert = .alert(
+                                String.alert.identifyFail, String.alert.identifyFailMe, nil)
+                            
+                        }
                     default : break
                     }
+                    
+                    
                     
                 default : break
                 }

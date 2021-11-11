@@ -22,7 +22,7 @@ extension PageSynopsis {
     func onFullScreenViewMode(){
         if self.isFullScreen {return}
         DispatchQueue.main.async {
-            self.pagePresenter.fullScreenEnter(isLock: false, changeOrientation: .landscape)
+            self.pagePresenter.fullScreenEnter(isLock: SystemEnvironment.isTablet , changeOrientation: .landscape)
         }
     }
     func onDefaultViewMode(){

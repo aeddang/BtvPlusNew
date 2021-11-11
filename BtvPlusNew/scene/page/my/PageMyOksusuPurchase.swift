@@ -14,13 +14,10 @@ struct PageMyOksusuPurchase: PageView {
     @EnvironmentObject var setup:Setup
     @EnvironmentObject var dataProvider:DataProvider
     @EnvironmentObject var naviLogManager:NaviLogManager
-    
     @ObservedObject var pageObservable:PageObservable = PageObservable()
     @ObservedObject var pageDragingModel:PageDragingModel = PageDragingModel()
-    
     @ObservedObject var collectionScrollModel: InfinityScrollModel = InfinityScrollModel()
     @ObservedObject var collectionModel:PurchaseBlockModel = PurchaseBlockModel()
-   
     @State var pages: [PageViewProtocol] = []
     @State var marginBottom:CGFloat = 0
     @State var isInit:Bool = false

@@ -8,8 +8,6 @@ import Foundation
 import SwiftUI
 
 struct PageAdultCertification: PageView {
-    
-    
     @EnvironmentObject var repository:Repository
     @EnvironmentObject var pagePresenter:PagePresenter
     @EnvironmentObject var sceneObserver:PageSceneObserver

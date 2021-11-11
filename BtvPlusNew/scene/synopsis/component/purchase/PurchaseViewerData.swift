@@ -51,19 +51,19 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
         let useCaption = synopsisModel.useCaption
         let isOksusuPosson = isPosson && possonType == .oksusu
         self.hasAuthority = false
-        if !synopsisModel.isDistProgram && !isOksusuPosson {
+        if !synopsisModel.isDistProgram {
             serviceInfo = String.alert.bs
             serviceInfoDesc = String.alert.bsText // 서비스중지
             isPlayAble = false
            
            
-        } else if synopsisModel.isCancelProgram && !isOksusuPosson {
+        } else if synopsisModel.isCancelProgram {
             serviceInfo = String.alert.bc
             serviceInfoDescBottom = String.alert.bcText // 결방
             isPlayAble = false
             
             
-        } else if !synopsisModel.isNScreen && !isOksusuPosson {
+        } else if !synopsisModel.isNScreen {
             if isPosson {
                 serviceInfo = String.pageText.synopsisTerminationBtv
                 isPlayAble = false
@@ -77,7 +77,6 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
                 isPlayAble = false
                 isPlayAbleBtv = true
             }
-            
             
         } else if synopsisModel.isOnlyPurchasedBtv && !purchasAuthority && !isOksusuPosson {
             /*
@@ -161,7 +160,14 @@ class PurchaseViewerData:ObservableObject, PageProtocol{
             
             else{
                 if isPosson {
-                    infoTrailing = String.pageText.synopsisTerminationBtv
+                    if purchas?.isPossn == true {
+                        infoTrailing = String.pageText.synopsisPossonWatch
+                        isPlayAble = true
+                        hasAuthority = true
+                    } else {
+                        infoTrailing = String.pageText.synopsisTerminationBtv
+                    }
+                    
                 }else{
                     if synopsisModel.isContainPPM {
                         infoIcon = self.type == .btv ? Asset.icon.tip : AssetKids.icon.tip

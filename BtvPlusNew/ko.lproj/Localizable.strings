@@ -1485,9 +1485,11 @@
 "myOksusuSetupPurchaseInfo" = "oksusu 소장 VOD 목록을 현재 연결된 B tv의 구매내역으로 이전하고 있습니다.\n이전에는 최대 1분의 시간이 소요될 수 있으며,\n이전이 완료되면 설정이 '설정됨' 상태로 변경됩니다.\n이후 MY > 구매 목록 > 소장 메뉴에서\noksusu 소장 VOD를 이용해 주세요.";
 "myOksusuSetupPurchaseButton" = "B tv에서 이용";
 
+
+
 "myOksusuSetupPurchaseDiable" = "My oksusu 소장 VOD 가져오기 설정 후 사용 가능합니다.";
 "myOksusuSetupPurchaseDeleteDiable" = "My oksusu 소장 VOD 가져오기 를 해제해야 해제 가능합니다.";
-"myOksusuSetupPurchaseCompleted" = "oksusu소장 VOD가 Btv구매내역으로 이전되었습니다.";
+"myOksusuSetupPurchaseCompleted" = "My okusu의 소장 VOD 가져오기를 완료했습니다.\n가져온 소장 VOD는 MY > My oksusu\n소장 VOD 목록에서 이용하실 수 있습니다.";
 "myOksusuSetupButtonConnect" = "가져오기";
 "myOksusuSetupButtonDisConnect" = "해제";
 "myOksusuPlayable" = "oksusu 소장 VOD로 시청 가능";

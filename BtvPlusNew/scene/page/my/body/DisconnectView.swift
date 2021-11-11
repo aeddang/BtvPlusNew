@@ -34,10 +34,11 @@ struct DisconnectView: PageComponent{
                     Text(String.pageText.myText1)
                         .kerning(Font.kern.thin)
                         .modifier(MediumTextStyle(size: Font.size.boldExtra, color: Color.app.white))
-                        
+                        .fixedSize()
                     Text(String.pageText.myText2)
                         .modifier(MediumTextStyle(size: Font.size.light, color: Color.app.greyLight))
                         .padding(.top, Dimen.margin.lightExtra)
+                        .fixedSize()
                     if self.sceneOrientation == .portrait {
                         Image(Asset.image.myConnectIos)
                             .renderingMode(.original)
@@ -89,30 +90,60 @@ struct DisconnectView: PageComponent{
                     }
                 }
                 .background(Color.app.blueLight)
-                if self.isPossession {
-                    FillButton(
-                        text: String.pageTitle.myTerminatePurchase,
-                        isMore: true
-                    ){_ in
-                        
-                        self.naviLogManager.actionLog(.clickBasketContentsButton)
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.myPossessionPurchase)
-                        )
+                if SystemEnvironment.isTablet {
+                    if self.isPossession {
+                        FillButton(
+                            text: String.pageTitle.myTerminatePurchase,
+                            bgColor: Color.transparent.clearUi,
+                            strokeWidth: 1
+                        ){_ in
+                            self.naviLogManager.actionLog(.clickBasketContentsButton)
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myPossessionPurchase)
+                            )
+                        }
+                    }
+                
+                    if self.isOksusu {
+                        FillButton(
+                            text: String.pageTitle.myOksusu,
+                            bgColor: Color.transparent.clearUi,
+                            strokeWidth: 1
+                        ){_ in
+                            self.naviLogManager.actionLog(.clickMyOksusuPurchaseList)
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myOksusuPurchase)
+                            )
+                        }
+                    }
+                } else {
+                    if self.isPossession {
+                       
+                        FillButton(
+                            text: String.pageTitle.myTerminatePurchase,
+                            isMore: true
+                        ){_ in
+                            
+                            self.naviLogManager.actionLog(.clickBasketContentsButton)
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myPossessionPurchase)
+                            )
+                        }
+                    }
+                
+                    if self.isOksusu {
+                        FillButton(
+                            text: String.pageTitle.myOksusu,
+                            isMore: true
+                        ){_ in
+                            self.naviLogManager.actionLog(.clickMyOksusuPurchaseList)
+                            self.pagePresenter.openPopup(
+                                PageProvider.getPageObject(.myOksusuPurchase)
+                            )
+                        }
                     }
                 }
-            
-                if self.isOksusu {
-                    FillButton(
-                        text: String.pageTitle.myOksusu,
-                        isMore: true
-                    ){_ in
-                        self.naviLogManager.actionLog(.clickMyOksusuPurchaseList)
-                        self.pagePresenter.openPopup(
-                            PageProvider.getPageObject(.myOksusuPurchase)
-                        )
-                    }
-                }
+                
             }
             if self.sceneOrientation == .landscape {
                 Image(Asset.image.myConnectIos)

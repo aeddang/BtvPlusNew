@@ -61,10 +61,11 @@ struct PagePerson: PageView {
                     case WebviewMethod.bpn_closeWebView.rawValue :
                         self.pagePresenter.goBack()
                         break
+                    
                     default : break
                     }
                     
-                default : do{}
+                default : break
                 }
             }
             

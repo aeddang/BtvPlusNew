@@ -61,11 +61,9 @@ struct PageCertification: PageView {
                                 self.repository.updateFirstMemberAuth()
                                 self.appSceneObserver.alert = .alert(
                                     String.alert.identifySuccess, String.alert.identifySuccessMe, nil){
-        
                                     self.pagePresenter.onPageEvent(
                                         self.pageObject,
                                         event:.init(id:self.tag, type: .certification, data: ci))
-                                    
                                 }
                                 
                                 if let page = self.movePage {

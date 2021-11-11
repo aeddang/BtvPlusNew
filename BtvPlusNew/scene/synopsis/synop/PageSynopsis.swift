@@ -929,7 +929,6 @@ struct PageSynopsis: PageView {
             }
         }
         if self.isCheckRecommand {
-            
             self.checkRecommand(obj: self.pageObject)
         }
     }
